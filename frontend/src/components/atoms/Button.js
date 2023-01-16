@@ -31,6 +31,7 @@ const BtnWrapper = styled.button`
   white-space: nowrap;
   transition: background-color ease 0.1s;
   font-weight: 600;
+  text-align: center;
 
   &.blueColor-btn {
     background-color: ${({ theme }) => theme.blueBgColor};
