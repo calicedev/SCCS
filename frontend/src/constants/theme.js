@@ -15,6 +15,7 @@ const theme = {
   indigoColor: '#2000842',
   grayColor: '#999999',
   redColor: '#EF0A0A',
+  whiteColor: '#FFFFFF',
 }
 
 export default theme
