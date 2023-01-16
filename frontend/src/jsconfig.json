@@ -1,6 +1,6 @@
-// jsconfig.json
 {
   "compilerOptions": {
     "baseUrl": "src"
-  }
+  },
+  "includes": ["src"]
 }
