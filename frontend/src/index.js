@@ -6,9 +6,9 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { Provider } from 'react-redux'
-import GlobalStyle from 'constants/GlobalStyle'
-import store from 'redux/store'
-import theme from 'constants/theme'
+import GlobalStyle from './constants/GlobalStyle'
+import store from './redux/store'
+import theme from './constants/theme'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
