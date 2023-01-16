@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src"
+  },
+  "includes": ["src"]
+<<<<<<< HEAD:frontend/src/jsconfig.json
+}
+=======
+}
+>>>>>>> task55:frontend/jsconfig.json
