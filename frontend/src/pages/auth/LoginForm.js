@@ -5,7 +5,7 @@ import InputBox from 'components/atoms/InputBox'
 import Check from 'components/atoms/Check'
 import passwordLogo from 'assets/img/password_logo.png'
 import { useNavigate } from 'react-router-dom'
-import checkValidation from 'libs/validation'
+import checkValidation from 'libs/regExp'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
