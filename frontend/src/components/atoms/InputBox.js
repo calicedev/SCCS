@@ -3,7 +3,15 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import userLogo from 'assets/img/user_logo.png'
 
-const InputBox = ({ label, logo, placeHolder, value, onChange, result }) => {
+const InputBox = ({
+  label,
+  logo,
+  placeHolder,
+  value,
+  onChange,
+  result,
+  isValid,
+}) => {
   return (
     <div>
       <Label>{label}</Label>
@@ -12,7 +20,7 @@ const InputBox = ({ label, logo, placeHolder, value, onChange, result }) => {
         {/* src={'/public_assets/logo512.png'} */}
         <Input placeholder={placeHolder} value={value} onChange={onChange} />
       </ImgWrapper>
-      <div>{result}</div>
+      <Result>{result}</Result>
     </div>
   )
 }
@@ -22,6 +30,7 @@ InputBox.propTypes = {
   logo: PropTypes.string,
   placeHolder: PropTypes.string,
   onChange: PropTypes.func,
+  isValid: PropTypes.bool,
 }
 
 InputBox.defaultProps = {
@@ -29,6 +38,7 @@ InputBox.defaultProps = {
   logo: userLogo,
   placeHolder: '값을 입력하세요',
   onChange: undefined,
+  isValid: true,
 }
 
 const ImgWrapper = styled.div`
@@ -54,6 +64,10 @@ const Input = styled.input`
 const Label = styled.div`
   font-size: 1.5rem;
   color: gray;
+`
+const Result = styled.div`
+  color: ${(props) => (props.isValid ? '#2677C2' : '#EF0A0A')};
+  font-size: 0.8rem;
 `
 
 export default InputBox
