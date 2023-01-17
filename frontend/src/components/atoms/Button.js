@@ -6,7 +6,11 @@ const Button = ({ size, type, onClick, value }) => {
   const sizeClass = size === 'small' ? 'sm-btn' : 'medium' ? 'md-btn' : 'lg-btn'
   const typeClass = `${type}-btn`
 
-  return <BtnWrapper className={`${sizeClass} ${typeClass}`}>하윙</BtnWrapper>
+  return (
+    <BtnWrapper className={`${sizeClass} ${typeClass}`} onClick={onClick}>
+      {value}
+    </BtnWrapper>
+  )
 }
 
 Button.propTypes = {
@@ -27,11 +31,13 @@ Button.defaultProps = {
 
 const BtnWrapper = styled.button`
   display: inline-flex;
+  justify-content: center;
   border-radius: 10px;
   white-space: nowrap;
   transition: background-color ease 0.1s;
   font-weight: 600;
   text-align: center;
+  margin: 0 auto;
 
   &.blueColor-btn {
     background-color: ${({ theme }) => theme.blueBgColor};
@@ -57,16 +63,16 @@ const BtnWrapper = styled.button`
   }
 
   &.sm-btn {
-    padding: 0.2rem 0.75rem;
-    font-size: 1.3rem;
-  }
-  &.md-btn {
-    padding: 0.3rem 0.85rem;
+    padding: 0.5rem 1rem;
     font-size: 1.5rem;
   }
+  &.md-btn {
+    padding: 0.7rem 1.3rem;
+    font-size: 1.8rem;
+  }
   &.lg-btn {
-    padding: 0.4rem 0.95rem;
-    font-size: 1.7rem;
+    padding: 0.9rem 1.5rem;
+    font-size: 2rem;
   }
 `
 export default Button
