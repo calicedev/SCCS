@@ -12,7 +12,7 @@ const LeftPane = styled.div`
 `
 
 const RightPane = styled.div`
-  flex-grow: 5;
+  flex-grow: 1;
 `
 
 export default function MyPageLayout({ children }) {

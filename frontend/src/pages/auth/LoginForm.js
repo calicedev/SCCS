@@ -6,6 +6,8 @@ import Check from 'components/atoms/Check'
 import passwordLogo from 'assets/img/password_logo.png'
 import { useNavigate } from 'react-router-dom'
 import checkValidation from 'libs/validation'
+import axios from 'libs/axios'
+import api from 'apis/api'
 
 export default function LoginForm() {
   const navigate = useNavigate()
@@ -40,6 +42,17 @@ export default function LoginForm() {
       id,
       password,
     }
+
+    const url = api('login')
+
+    axios
+      .post(url, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
   return (
     <Login>
@@ -65,7 +78,7 @@ export default function LoginForm() {
       ></InputBox>
       <InputBox
         value={password}
-        onChange={setPassword}
+        onChange={(e) => setPassword(e.target.value)}
         label="Password"
         placeHolder="비밀번호를 입력하세요."
         logo={passwordLogo}
