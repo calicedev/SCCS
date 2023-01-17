@@ -6,6 +6,8 @@ import Check from 'components/atoms/Check'
 import passwordLogo from 'assets/img/password_logo.png'
 import { useNavigate } from 'react-router-dom'
 import checkValidation from 'libs/validation'
+import axios from 'libs/axios'
+import api from 'apis/api'
 
 export default function LoginForm() {
   const navigate = useNavigate()
@@ -14,33 +16,70 @@ export default function LoginForm() {
 
   const [messages, setMessages] = useState({
     id: '',
+    idValid: false,
     password: '',
+    pwValid: false,
   })
+
 
   const onChangeId = (e) => {
     setId(e.target.value)
   }
-
+  
+  const onChangePassword = (e) => {
+    setPassword(e.target.value)
+  }
+  
   useEffect(() => {
-    console.log(id)
-    if (!checkValidation('id', id)) {
+    if (!id) return
+    if (!checkValidation('id', id))  {
       const newMessage = { ...messages }
       newMessage.id = '유효성 검사를 통과 못함'
+      newMessage.idValid = false
       setMessages(newMessage)
       return
     }
     const newMessage = { ...messages }
     newMessage.id = '유효성 검사를 통과함!!'
+    newMessage.idValid = true
     setMessages(newMessage)
     return
   }, [id])
+
+  useEffect(() => {
+    if (!password) return
+    if (!checkValidation('password', password)) {
+      const newMessage = { ...messages }
+      newMessage.password = '유효성 검사를 통과 못함'
+      newMessage.pwValid = false
+      setMessages(newMessage)
+      return
+    }
+    const newMessage = { ...messages }
+    newMessage.password = '유효성 검사를 통과함!!'
+    newMessage.pwValid = true
+    setMessages(newMessage)
+    return
+  }, [password])
 
   const login = () => {
     const data = {
       id,
       password,
     }
+
+    const url = api('checkId', {id})
+
+    axios.post(url, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
+
+
   return (
     <Login>
       <H1>Login</H1>
@@ -62,14 +101,16 @@ export default function LoginForm() {
         label="ID"
         placeHolder="ID를 입력하세요."
         result={messages.id}
+        isValid = {messages.idValid}
       ></InputBox>
       <InputBox
         value={password}
-        onChange={setPassword}
+        onChange={onChangePassword}
         label="Password"
         placeHolder="비밀번호를 입력하세요."
         logo={passwordLogo}
         result={messages.password}
+        isValid = {messages.pwValid}
       ></InputBox>
       <Container>
         <Check></Check>
@@ -117,3 +158,4 @@ const Description = styled.div`
     cursor: pointer;
   }
 `
+
