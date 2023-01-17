@@ -7,8 +7,12 @@ const Container = styled.div`
 `
 // 상단 NavBar 어떻게 구성하면 좋을지
 // 왼쪽 NavBar:오른쪽 컨텐츠 1:3 비율정도로 맞춰보기
-const Pane = styled.div`
-  flex: 1;
+const LeftPane = styled.div`
+  flex-grow: 1;
+`
+
+const RightPane = styled.div`
+  flex-grow: 5;
 `
 
 export default function MyPageLayout({ children }) {
@@ -16,8 +20,8 @@ export default function MyPageLayout({ children }) {
 
   return (
     <Container>
-      <Pane>{Left}</Pane>
-      <Pane>{Right}</Pane>
+      <LeftPane>{Left}</LeftPane>
+      <RightPane>{Right}</RightPane>
     </Container>
   )
 }
