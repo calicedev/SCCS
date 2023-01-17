@@ -5,7 +5,7 @@ import userLogo from 'assets/img/user_logo.png'
 import passwordLogo from 'assets/img/password_logo.png'
 import emailLogo from 'assets/img/email_logo.png'
 
-const InputBox = ({ type, value, onChange, message, isValid }) => {
+const InputBox = ({ type, value, onChange, message }) => {
   const typeObj = {
     id: {
       label: 'Id',
@@ -42,7 +42,7 @@ const InputBox = ({ type, value, onChange, message, isValid }) => {
   return (
     <div>
       <Label>{typeObj[type].label}</Label>
-      <ImgWrapper>
+      <FlexBox>
         <Img src={typeObj[type].logo} alt="로그인 이미지" />
         {/* src={'/public_assets/logo512.png'} */}
         <Input
@@ -50,8 +50,8 @@ const InputBox = ({ type, value, onChange, message, isValid }) => {
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />
-      </ImgWrapper>
-      <Message>{message}</Message>
+      </FlexBox>
+      <Message isValid={message.isValid}>{message.text}</Message>
     </div>
   )
 }
@@ -75,12 +75,11 @@ InputBox.defaultProps = {
   result: '',
 }
 
-const ImgWrapper = styled.div`
+const FlexBox = styled.div`
   display: flex;
   align-items: center;
   border-bottom: 1px solid gray;
   padding: 0.4rem 0rem;
-  margin-bottom: 2rem;
 `
 
 const Img = styled.img`
@@ -103,6 +102,7 @@ const Label = styled.div`
 const Message = styled.div`
   color: ${(props) =>
     props.isValid ? props.theme.blueColor : props.theme.redColor};
+  margin-bottom: 1rem;
 `
 
 export default InputBox

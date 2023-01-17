@@ -8,7 +8,6 @@ const apiRequest = axios.create({
 
 apiRequest.interceptors.request.use(
   (config) => {
-    console.log(config)
     return {
       ...config,
       // headers: { Authorization: null },

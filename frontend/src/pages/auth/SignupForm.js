@@ -2,46 +2,62 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
 import InputBox from 'components/atoms/InputBox'
-import checkValidation from 'libs/validation'
-import { useNavigate } from 'react-router-dom'
-import { useInput } from 'hooks/useInput'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuthInput } from 'hooks/useAuthInput'
+import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
 export default function SignupForm() {
-  const [id, setId, idMsg] = useInput('id', '')
-  const [name, setName, nameMsg] = useInput('name', '')
-  const [nickname, setNickname, nicknameMsg] = useInput('nickname', '')
-  const [email, setEmail, emailMsg] = useInput('email', '')
-  const [password, setPassword, passwordMsg] = useInput('password', '')
-  const [confirmPassword, setConfirmPassword, confirmPasswordMsg] = useInput(
+  // useAuthInput(타입, 초깃값, 정규식검사, 서버검사)
+  const [id, setId, idMsg] = useAuthInput('id', '', true, true)
+  const [name, setName, nameMsg] = useAuthInput('name', '', true, false)
+  const [nickname, setNickname, nicknameMsg] = useAuthInput(
+    'nickname',
+    '',
+    true,
+    true,
+  )
+  const [email, setEmail, emailMsg] = useAuthInput('email', '', true, false)
+  const [password, setPassword, passwordMsg] = useAuthInput(
     'password',
     '',
+    true,
+    false,
   )
+  const [confirmPwd, setConfirmPwd, confirmPwdMsg] = useConfirmPwd('', password)
 
-  console.log(id)
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if (!checkValidation('id', id)) {
-  //     const newMessage = { ...messages }
-  //     newMessage.id = '영,숫자 조합 6~20자'
-  //     setMessages(newMessage)
-  //     return
-  //   }
-  //   axios
-  //     .get(api('checkId', { id }))
-  //     .then((res) => {
-  //       const newMessage = { ...messages }
-  //       newMessage.id = '유효한 아이디입니다'
-  //       setMessages(newMessage)
-  //     })
-  //     .catch((err) => {
-  //       const newMessage = { ...messages }
-  //       newMessage.id = '이미 존재하는 아이디입니다.'
-  //       setMessages(newMessage)
-  //     })
-  // }, [id])
+  // 회원가입 서버 요청
+  const signup = () => {
+    if (
+      idMsg.isValid &&
+      nameMsg.isValid &&
+      nicknameMsg.isValid &&
+      emailMsg.isValid &&
+      passwordMsg.isValid &&
+      confirmPwdMsg.isValid
+    ) {
+      const data = {
+        id,
+        name,
+        nickname,
+        email,
+        password,
+      }
+      axios
+        .get(api('signup', data))
+        .then((res) => {
+          navigate('/main')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      return
+    }
+    alert('입력 양식을 모두 채워주세요')
+  }
 
   return (
     <Signup>
@@ -49,58 +65,45 @@ export default function SignupForm() {
 
       <Description>
         If you don't have an account register
-        <br /> You can{' '}
-        <span
-          onClick={() => {
-            navigate('/auth/login')
-          }}
-        >
-          Login here!
-        </span>
+        <br /> You can <Link to="/login">Login here!</Link>
       </Description>
       <InputBox
         type="id"
         value={id}
         onChange={setId}
-        message={idMsg.text}
-        isValid={idMsg.isValid}
+        message={idMsg}
       ></InputBox>
       <InputBox
         type="name"
         value={name}
         onChange={setName}
-        message={nameMsg.text}
-        isValid={nameMsg.isValid}
+        message={nameMsg}
       ></InputBox>
       <InputBox
         type="nickname"
         value={nickname}
         onChange={setNickname}
-        message={nicknameMsg.text}
-        isValid={nicknameMsg.isValid}
+        message={nicknameMsg}
       ></InputBox>
       <InputBox
         type="email"
         value={email}
         onChange={setEmail}
-        message={emailMsg.text}
-        isValid={emailMsg.isValid}
+        message={emailMsg}
       ></InputBox>
       <InputBox
         type="password"
         value={password}
         onChange={setPassword}
-        message={passwordMsg.text}
-        isValid={passwordMsg.isValid}
+        message={passwordMsg}
       ></InputBox>
       <InputBox
         type="confirmPassword"
-        value={confirmPassword}
-        onChange={setConfirmPassword}
-        message={confirmPasswordMsg.text}
-        isValid={confirmPasswordMsg.isValid}
+        value={confirmPwd}
+        onChange={setConfirmPwd}
+        message={confirmPwdMsg}
       ></InputBox>
-      <Button size="medium"></Button>
+      <Button size="medium" onClick={signup} value="회원가입"></Button>
     </Signup>
   )
 }
@@ -123,7 +126,7 @@ const Description = styled.div`
   margin: 1rem 0rem 2rem;
   font-size: 1.2rem;
 
-  > span {
+  > a {
     font-weight: 500;
     color: ${({ theme }) => theme.blueColor};
   }
