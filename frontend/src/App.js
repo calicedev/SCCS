@@ -11,8 +11,6 @@ import MyPage from './pages/mypage/MyPage'
 import UserInfo from './pages/mypage/UserInfo'
 import ProblemHistory from './pages/mypage/ProblemHistory'
 import StudyHistory from './pages/mypage/StudyHistory'
-import SignupForm from 'pages/auth/SignupForm'
-import FindIdForm from 'pages/auth/FindIdForm'
 
 function App() {
   return (

@@ -69,10 +69,6 @@ const Result = styled.div`
   font-size: 0.8rem;
 `
 
-const Result = styled.div`
-  color: ${props => props.isValid ? "#2677C2" : "#EF0A0A"};
-  font-size: 0.8rem;
-`
 
 
 export default InputBox
