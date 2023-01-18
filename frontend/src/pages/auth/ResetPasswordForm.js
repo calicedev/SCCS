@@ -10,14 +10,10 @@ export default function ResetPasswordForm() {
   const navigate = useNavigate()
   const [id, setId] = useState('')
   const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
-
-  const onChangeId = (e) => {
-    setId(e.target.value)
-  }
-  const onChangeEmail = (e) => {
-    setEmail(e.target.value)
-  }
+  const [message, setMessage] = useState({
+    text: '',
+    isValid: false,
+  })
 
   const data = [
     {
@@ -39,15 +35,20 @@ export default function ResetPasswordForm() {
     // console.log({ id }, { email })
 
     if ((data[0].id === id) & (data[0].email === email)) {
-      // const data = '아이디 찾기 성공'
       console.log('성공')
-      setMessage(`${email}으로 임시 비밀번호를 전송했습니다.`)
+      const copy = { ...message }
+      copy.text = `${email}으로 임시 비밀번호를 전송했습니다.`
+      copy.isValid = true
+      setMessage(copy)
       // console.log(message)
       return
     }
     // const data = '아이디 찾기 실패'
     console.log('실패')
-    setMessage('존재하지 않는 회원입니다.')
+    const copy = { ...message }
+    copy.text = '존재하지 않는 회원임 ㅋㅋㅋㅋㅋㅋㅋ'
+    copy.isValid = false
+    setMessage(copy)
     // console.log(message)
     return
   }
@@ -60,19 +61,21 @@ export default function ResetPasswordForm() {
         issued
       </Description>
       <InputBox
+        type="id"
         value={id}
-        onChange={onChangeId}
-        label="ID"
-        placeHolder="아이디를 입력하세요."
+        onChange={(e) => {
+          setId(e.target.value)
+        }}
       ></InputBox>
       <InputBox
+        type="email"
         value={email}
-        onChange={onChangeEmail}
-        label="Email"
-        placeHolder="이메일 주소를 입력하세요."
-        logo={emailLogo}
+        onChange={(e) => {
+          setEmail(e.target.value)
+        }}
         result={message}
       ></InputBox>
+      <Message isValid={message.isValid}>{message.text}</Message>
       <Button onClick={resetPassword} value="Submit" size="medium"></Button>
     </ResetPassword>
   )
@@ -96,4 +99,9 @@ const Description = styled.div`
   margin: 1rem 0rem 2rem;
   font-size: 1.2rem;
   opacity: 70%;
+`
+const Message = styled.div`
+  color: ${(props) =>
+    props.isValid ? props.theme.blueColor : props.theme.redColor};
+  margin-bottom: 1rem;
 `
