@@ -3,13 +3,24 @@ import styled from 'styled-components'
 import Button from 'components/atoms/Button'
 import InputBox from 'components/atoms/InputBox'
 import Check from 'components/atoms/Check'
-import emailLogo from 'assets\img\email.png'
+import emailLogo from 'assets/img/email.png'
+import backLogo from 'assets/img/Undo_Up.png'
+import { useNavigate } from 'react-router-dom'
 
 export default function FindidForm() {
+  const navigate = useNavigate()
+
+
   return (
     <Signup>
-      <div img={img}>로그인 하러 가기</div>
-      <H1>Find Id</H1>
+      <Goback logo={backLogo}>
+        <span 
+          onClick={() => {
+            navigate('/auth/login')
+          }}>로그인 하러 가기</span> 
+
+      </Goback>
+      <H1>Find ID</H1>
 
       <Description>
         Enter your name and Email to find your ID
@@ -20,14 +31,14 @@ export default function FindidForm() {
         placeHolder="Email을 입력하세요."
         logo={emailLogo}
       ></InputBox>
-      <Container>
+      {/* <Container>
         <Check></Check>
         <div>
           <ForgotSpan></ForgotSpan>
           <ForgotSpan></ForgotSpan>
         </div>
-      </Container>
-      <Button size="medium">Find</Button>
+      </Container> */}
+      <Button size="medium" value="Find ID"></Button>
     </Signup>
   )
 }
@@ -60,8 +71,13 @@ const Description = styled.div`
   margin: 1rem 0rem 2rem;
   font-size: 1.2rem;
 
+  `
+  const Goback = styled.div`
+  font-size: 1rem;
+  
   > span {
     font-weight: 500;
-    color: ${({ theme }) => theme.blueColor};
+    color: ${({ theme }) => theme.blueColor}; 
+    cursor: pointer;
   }
 `
