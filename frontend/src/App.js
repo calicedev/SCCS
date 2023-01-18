@@ -1,24 +1,29 @@
-import logo from './logo.svg'
 import './App.css'
+
+import { Routes, Route } from 'react-router-dom'
+import AuthPage from './pages/auth/AuthPage'
+import MainPage from './pages/study/MainPage'
+import LoginForm from './pages/auth/LoginForm'
+import MyPage from './pages/mypage/MyPage'
+import UserInfo from './pages/mypage/UserInfo'
+import ProblemHistory from './pages/mypage/ProblemHistory'
+import StudyHistory from './pages/mypage/StudyHistory'
+import SignupForm from 'pages/auth/SignupForm'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/auth" element={<AuthPage />}>
+        <Route path="login" element={<LoginForm />} />
+        <Route path="signup" element={<SignupForm />} />
+      </Route>
+      <Route path="/main" element={<MainPage />} />
+      <Route path="/mypage" element={<MyPage />}>
+        <Route path="userinfo" element={<UserInfo />}></Route>
+        <Route path="studyhistory" element={<StudyHistory />}></Route>
+        <Route path="problemhistory" element={<ProblemHistory />}></Route>
+      </Route>
+    </Routes>
   )
 }
 

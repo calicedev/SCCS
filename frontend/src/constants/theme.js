@@ -12,9 +12,10 @@ const theme = {
   //font color
   blackColor: '#262626',
   blueColor: '#2677C2',
-  indigoColor: '#2000842',
+  indigoColor: '#200842',
   grayColor: '#999999',
   redColor: '#EF0A0A',
+  whiteColor: '#FFFFFF',
 }
 
 export default theme

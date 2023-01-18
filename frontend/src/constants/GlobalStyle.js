@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: 100%;
+    font-size: 160%;
     font: inherit;
     vertical-align: baseline;
     box-sizing: border-box;
@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     width: 100%;
     height: 100%;
-    color: #FFFFFF;
+    color: #000000;
     font-size: 100%;
     line-height: 1.2;
   }
