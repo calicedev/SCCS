@@ -11,6 +11,13 @@ const typeToKorean = {
   password: '비밀번호',
 }
 
+/* 
+
+ 사용자 인증관련 input 커스텀 훅
+ input: (type지정, 초깃값, 정규식체크여부, 서버중복체크여부)
+ output: [value, setValue, message{text: String , isValid: Bool}]
+ 
+*/
 export function useAuthInput(
   type,
   initialValue,

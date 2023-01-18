@@ -106,6 +106,7 @@ const Input = styled.input`
 const Label = styled.div`
   font-size: 1.5rem;
   color: gray;
+  margin-top: 1rem;
 `
 
 const Message = styled.div`

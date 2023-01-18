@@ -1,50 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
 import InputBox from 'components/atoms/InputBox'
 import Check from 'components/atoms/Check'
-import passwordLogo from 'assets/img/password_logo.png'
 import { useNavigate } from 'react-router-dom'
-import checkValidation from 'libs/regExp'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
+import { useAuthInput } from 'hooks/useAuthInput'
+
 export default function LoginForm() {
   const navigate = useNavigate()
-  const [id, setId] = useState('')
-  const [password, setPassword] = useState('')
 
-  const [messages, setMessages] = useState({
-    id: '',
-    password: '',
-  })
-
-  const onChangeId = (e) => {
-    setId(e.target.value)
-  }
-
-  useEffect(() => {
-    console.log(id)
-    if (!checkValidation('id', id)) {
-      const newMessage = { ...messages }
-      newMessage.id = '유효성 검사를 통과 못함'
-      setMessages(newMessage)
-      return
-    }
-    const newMessage = { ...messages }
-    newMessage.id = '유효성 검사를 통과함!!'
-    setMessages(newMessage)
-    return
-  }, [id])
+  const [id, setId, idMsg] = useAuthInput('id', '')
+  const [password, setPassword, passwordMsg] = useAuthInput('password', '')
 
   const login = () => {
     const data = {
       id,
       password,
     }
-
     const url = api('login')
-
     axios
       .post(url, data)
       .then((res) => {
@@ -54,6 +30,7 @@ export default function LoginForm() {
         console.log(err)
       })
   }
+
   return (
     <Login>
       <H1>Login</H1>
@@ -70,19 +47,16 @@ export default function LoginForm() {
         </span>
       </Description>
       <InputBox
+        type="id"
         value={id}
-        onChange={onChangeId}
-        label="ID"
-        placeHolder="ID를 입력하세요."
-        result={messages.id}
+        onChange={(e) => setId(e.target.value)}
+        message={idMsg}
       ></InputBox>
       <InputBox
+        type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        label="Password"
-        placeHolder="비밀번호를 입력하세요."
-        logo={passwordLogo}
-        result={messages.password}
+        message={passwordMsg}
       ></InputBox>
       <Container>
         <Check></Check>

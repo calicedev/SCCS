@@ -1,9 +1,9 @@
-const api = function (type, options) {
+const api = function (type, options = {}) {
   const apiObject = {
     login: '/login',
     signup: '/signup',
-    check_id: `/check/id/${options.inputValue}`,
-    check_nickname: `/check/nickname/${options.inputValue}`,
+    check_id: `/check/id/${options.id}`,
+    check_nickname: `/check/nickname/${options.nickname}`,
   }
 
   return apiObject[type]
