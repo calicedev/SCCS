@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import userLogo from 'assets/img/user_logo.png'
 
+
 const InputBox = ({ label, logo, placeHolder, value, onChange, result, isValid }) => {
+
   return (
     <div>
       <Label>{label}</Label>
@@ -12,7 +14,11 @@ const InputBox = ({ label, logo, placeHolder, value, onChange, result, isValid }
         {/* src={'/public_assets/logo512.png'} */}
         <Input placeholder={placeHolder} value={value} onChange={onChange} />
       </ImgWrapper>
+
       <Result isValid={isValid}>{result}</Result>
+
+
+
     </div>
   )
 }
@@ -57,6 +63,10 @@ const Label = styled.div`
   font-size: 1.5rem;
   color: gray;
   margin-top: 1rem;
+`
+const Result = styled.div`
+  color: ${(props) => (props.isValid ? '#2677C2' : '#EF0A0A')};
+  font-size: 0.8rem;
 `
 
 const Result = styled.div`

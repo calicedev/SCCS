@@ -13,7 +13,6 @@ export default function LoginForm() {
   const navigate = useNavigate()
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
-
   const [messages, setMessages] = useState({
     id: '',
     idValid: false,
