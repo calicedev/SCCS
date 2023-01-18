@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
 import InputBox from 'components/atoms/InputBox'
@@ -15,7 +15,23 @@ export default function LoginForm() {
   const [id, setId, idMsg] = useAuthInput('id', '')
   const [password, setPassword, passwordMsg] = useAuthInput('password', '')
 
+  const [message, setMessage] = useState(
+    {
+    text: '',
+    isValid: '',
+    }
+  )
   const login = () => {
+
+    if (!(id && password)) {
+      const checkmsg = {...message}
+      checkmsg.text= '아이디와 패스워드를 입력해주세요'
+      checkmsg.isValid = false
+      setMessage(checkmsg)
+      return
+    }
+
+
     const data = {
       id,
       password,
@@ -27,7 +43,11 @@ export default function LoginForm() {
         console.log(res)
       })
       .catch((err) => {
-        console.log(err)
+
+        const checkmsg = {...message}
+        checkmsg.text= '아이디 혹은 패스워드를 잘못 입력했습니다'
+        checkmsg.isValid = false
+        setMessage(checkmsg)
       })
   }
 
@@ -58,6 +78,8 @@ export default function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         message={passwordMsg}
       ></InputBox>
+
+      <Message isValid={message.isValid}>{message.text}</Message>
       <Container>
         <Check></Check>
         <div>
@@ -65,6 +87,7 @@ export default function LoginForm() {
           <ForgotSpan>Forgot Password?</ForgotSpan>
         </div>
       </Container>
+
       <Button onClick={login} value="Login" size="medium"></Button>
     </Login>
   )
@@ -103,4 +126,10 @@ const Description = styled.div`
     color: ${({ theme }) => theme.blueColor};
     cursor: pointer;
   }
+`
+
+const Message = styled.div`
+  color: ${(props) =>
+    props.isValid ? props.theme.blueColor : props.theme.redColor};
+  margin-bottom: 1rem;
 `
