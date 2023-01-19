@@ -65,7 +65,7 @@ export default function SignupForm() {
 
       <Description>
         If you don't have an account register
-        <br /> You can <Link to="/login">Login here!</Link>
+        <br /> You can <Link to="/auth/login">Login here!</Link>
       </Description>
       <InputBox
         type="id"
