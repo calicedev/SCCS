@@ -5,20 +5,16 @@ import InputBox from 'components/atoms/InputBox'
 import Goback from 'components/atoms/Goback'
 import emailLogo from 'assets/img/email_logo.png'
 import { useNavigate } from 'react-router-dom'
-import checkValidation from 'libs/validation'
 
 export default function FindIdForm() {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState({
+    text: '',
+    isValid: false,
+  })
 
-  const onChangeName = (e) => {
-    setName(e.target.value)
-  }
-  const onChangeEmail = (e) => {
-    setEmail(e.target.value)
-  }
   const data = [
     {
       name: '손민혁',
@@ -35,19 +31,22 @@ export default function FindIdForm() {
   ]
 
   const findId = () => {
-    // console.log(data[0].name, data[0].email)
-    // console.log({ name }, { email })
-
     if ((data[0].name === name) & (data[0].email === email)) {
       // const data = '아이디 찾기 성공'
       console.log('성공')
-      setMessage(`${name}님의 ID는 블라블라입니다.`)
+      const copy = { ...message }
+      copy.text = '유효성검사 성공~~~'
+      copy.isValid = true
+      setMessage(copy)
       // console.log(message)
       return
     }
     // const data = '아이디 찾기 실패'
     console.log('실패')
-    setMessage('존재하지 않는 회원입니다.')
+    const copy = { ...message }
+    copy.text = '유효성검사 실패~~~'
+    copy.isValid = false
+    setMessage(copy)
     // console.log(message)
     return
   }
@@ -58,19 +57,16 @@ export default function FindIdForm() {
       <H1>Find ID</H1>
       <Description>Enter your name and email to find your ID</Description>
       <InputBox
+        type="id"
         value={name}
-        onChange={onChangeName}
-        label="Name"
-        placeHolder="닉네임을 입력하세요."
+        onChange={(e) => setName(e.target.value)}
       ></InputBox>
       <InputBox
+        type="email"
         value={email}
-        onChange={onChangeEmail}
-        label="Email"
-        placeHolder="이메일 주소를 입력하세요."
-        logo={emailLogo}
-        result={message}
+        onChange={(e) => setEmail(e.target.value)}
       ></InputBox>
+      <Message isValid={message.isValid}>{message.text}</Message>
       <Button onClick={findId} value="Find" size="medium"></Button>
     </FindId>
   )
@@ -94,4 +90,9 @@ const Description = styled.div`
   margin: 1rem 0rem 2rem;
   font-size: 1.2rem;
   opacity: 70%;
+`
+const Message = styled.div`
+  color: ${(props) =>
+    props.isValid ? props.theme.blueColor : props.theme.redColor};
+  margin-bottom: 1rem;
 `
