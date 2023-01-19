@@ -7,31 +7,25 @@ import { GrNotes } from 'react-icons/gr'
 const SideNavbar = () => {
   const changeBg = () => {
     // 이부분 어떻게 구현할지 고민해보자!
-    console.log('클릭된 카테고리 배경색상을 바꿔라~~~')
+    console.log('클릭된 카테고리의 배경색상을 바꿔라~~~')
   }
 
   return (
     <Container>
-      <Link onClick={changeBg} to={'./studyhistory'}>
-        <LinkContainer>
-          <FaRegBookmark />
-          <TextSpan>스터디 기록</TextSpan>
-        </LinkContainer>
-      </Link>
+      <StyledLink onClick={changeBg} to={'./studyhistory'}>
+        <FaRegBookmark />
+        <TextSpan>스터디 기록</TextSpan>
+      </StyledLink>
       <br />
-      <Link onClick={changeBg} to={'./problemhistory'}>
-        <LinkContainer>
-          <GrNotes />
-          <TextSpan>내가 푼 문제</TextSpan>
-        </LinkContainer>
-      </Link>
+      <StyledLink onClick={changeBg} to={'./problemhistory'}>
+        <GrNotes />
+        <TextSpan>내가 푼 문제</TextSpan>
+      </StyledLink>
       <br />
-      <Link onClick={changeBg} to={'./userinfo'}>
-        <LinkContainer>
-          <FaRegUser />
-          <TextSpan>회원 정보</TextSpan>
-        </LinkContainer>
-      </Link>
+      <StyledLink onClick={changeBg} to={'./userinfo'}>
+        <FaRegUser />
+        <TextSpan>회원 정보</TextSpan>
+      </StyledLink>
       <br />
     </Container>
   )
@@ -44,7 +38,7 @@ const Container = styled.div`
   margin-left: 3rem;
 `
 
-const LinkContainer = styled.div`
+const StyledLink = styled(Link)`
   font-size: 2rem;
   display: flex;
   align-items: center;
