@@ -16,13 +16,13 @@ public class MemberServiceImpl implements MemberService {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
     // 생성자 주입
-    private final MemberMapper memberRepository;
+    private final MemberMapper memberMapper;
 
     // 회원 가입 (임시)
     @Override
     public String signup(MemberDto memberDto) {
         try {
-            memberRepository.signup(memberDto);
+            memberMapper.signup(memberDto);
             return SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();

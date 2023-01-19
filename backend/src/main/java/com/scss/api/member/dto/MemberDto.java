@@ -17,5 +17,5 @@ public class MemberDto {
     String email;
     String profile_image;
     int score;
-    LocalDate join_date;
+    String join_date;
 }
