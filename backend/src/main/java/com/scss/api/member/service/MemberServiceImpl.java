@@ -2,6 +2,7 @@ package com.scss.api.member.service;
 
 import com.scss.api.member.dto.MemberDto;
 import com.scss.api.member.mapper.MemberMapper;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +17,28 @@ public class MemberServiceImpl implements MemberService {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
     // 생성자 주입
-    private final MemberMapper memberRepository;
+    private final MemberMapper memberMapper;
 
-    // 회원 가입 (임시)
+
+    // 회원 가입
     @Override
-    public String signup(MemberDto memberDto) {
+    public String signUp(MemberDto memberDto) {
         try {
-            memberRepository.signup(memberDto);
+            memberMapper.signUp(memberDto);
             return SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
+            return FAIL;
+        }
+    }
+
+    // 로그인
+    @Override
+    public String logIn(Map<String, Object> map) {
+        logger.debug("{}", map.get("id"));
+        if (memberMapper.logIn(map) != null) {
+            return SUCCESS;
+        } else {
             return FAIL;
         }
     }

@@ -6,15 +6,15 @@
 
 <mapper namespace="com.scss.api.member.mapper.MemberMapper">
 
-  <insert id="signup" parameterType="MemberDto">
+  <insert id="signUp" parameterType="MemberDto">
     insert into member(
     id,
     password,
     name,
     nickname,
     email,
-    profile_image,
     score,
+    profile_image,
     join_date
     )
     values(
@@ -23,10 +23,16 @@
     #{name},
     #{nickname},
     #{email},
-    #{profile_image},
-    #{score},
+    0,
+    null,
     now()
     )
   </insert>
+
+  <select id="logIn" parameterType="hashMap" resultType="String">
+    select *
+    from member
+    where id = #{id} and password = "#{password}"
+  </select>
 
 </mapper>
