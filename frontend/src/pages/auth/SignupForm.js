@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/InputBox'
+import InputBox from 'components/molecules/InputBox'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
