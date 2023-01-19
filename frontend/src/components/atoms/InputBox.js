@@ -1,45 +1,46 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import userLogo from 'assets/img/user_logo.png'
-import passwordLogo from 'assets/img/password_logo.png'
-import emailLogo from 'assets/img/email_logo.png'
+import { BiUser } from 'react-icons/bi'
+import { RiLockPasswordLine } from 'react-icons/ri'
+import { MdOutlineEmail } from 'react-icons/md'
+import Message from 'components/atoms/Message'
 
 const typeObj = {
   id: {
     type: 'text',
     label: 'Id',
-    logo: userLogo,
+    logo: <BiUser />,
     placeholder: '아이디를 입력하세요',
   },
   password: {
     type: 'password',
     label: 'Password',
-    logo: passwordLogo,
+    logo: <RiLockPasswordLine />,
     placeholder: '비밀번호를 입력하세요',
   },
   confirmPassword: {
     type: 'password',
     label: 'Confirm Password',
-    logo: passwordLogo,
+    logo: <RiLockPasswordLine />,
     placeholder: '비밀번호를 확인하세요',
   },
   name: {
     type: 'text',
     label: 'Name',
-    logo: userLogo,
+    logo: <BiUser />,
     placeholder: '이름을 입력하세요',
   },
   nickname: {
     type: 'text',
     label: 'Nickname',
-    logo: userLogo,
+    logo: <BiUser />,
     placeholder: '닉네임을 입력하세요',
   },
   email: {
     type: 'email',
     label: 'Email',
-    logo: emailLogo,
+    logo: <MdOutlineEmail />,
     placeholder: '이메일을 입력하세요',
   },
 }
@@ -49,8 +50,7 @@ const InputBox = ({ type, value, onChange, message }) => {
     <div>
       <Label>{typeObj[type].label}</Label>
       <FlexBox>
-        <Img src={typeObj[type].logo} alt="로그인 이미지" />
-        {/* src={'/public_assets/logo512.png'} */}
+        {typeObj[type].logo}
         <Input
           type={typeObj[type].type}
           placeholder={typeObj[type].placeholder}
@@ -58,7 +58,7 @@ const InputBox = ({ type, value, onChange, message }) => {
           onChange={onChange}
         />
       </FlexBox>
-      <Message isValid={message.isValid}>{message.text}</Message>
+      <Message isValid={message.isValid} text={message.text}></Message>
     </div>
   )
 }
@@ -89,13 +89,12 @@ const FlexBox = styled.div`
   align-items: center;
   border-bottom: 1px solid gray;
   padding: 0.4rem 0rem;
-`
-
-const Img = styled.img`
-  width: 1.5rem;
-  height: 1.5rem;
-  filter: opacity(60%);
-  margin-right: 0.8rem;
+  & > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    filter: opacity(60%);
+    margin-right: 0.8rem;
+  }
 `
 
 const Input = styled.input`
@@ -107,12 +106,6 @@ const Label = styled.div`
   font-size: 1.5rem;
   color: gray;
   margin-top: 1rem;
-`
-
-const Message = styled.div`
-  color: ${(props) =>
-    props.isValid ? props.theme.blueColor : props.theme.redColor};
-  margin-bottom: 1rem;
 `
 
 export default InputBox
