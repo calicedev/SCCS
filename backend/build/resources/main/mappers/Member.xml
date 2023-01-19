@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.scss.api.member.mapper.MemberMapper">
+
+  <insert id="signup" parameterType="MemberDto">
+    insert into member(
+    id,
+    password,
+    name,
+    nickname,
+    email,
+    profile_image,
+    score,
+    join_date
+    )
+    values(
+    #{id},
+    #{password},
+    #{name},
+    #{nickname},
+    #{email},
+    #{profile_image},
+    #{score},
+    now()
+    )
+  </insert>
+
+</mapper>
