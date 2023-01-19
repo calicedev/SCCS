@@ -9,9 +9,9 @@ import FindIdForm from './pages/auth/FindIdForm'
 import ResetPasswordForm from './pages/auth/ResetPasswordForm'
 
 import MyPage from './pages/mypage/MyPage'
-import UserInfo from './pages/mypage/UserInfo'
-import ProblemHistory from './pages/mypage/ProblemHistory'
-import StudyHistory from './pages/mypage/StudyHistory'
+import Profile from './pages/mypage/Profile'
+import ProblemList from './pages/mypage/ProblemList'
+import Study from './pages/mypage/Study'
 
 function App() {
   return (
@@ -21,13 +21,12 @@ function App() {
         <Route path="signup" element={<SignupForm />} />
         <Route path="findid" element={<FindIdForm />} />
         <Route path="resetpassword" element={<ResetPasswordForm />} />
-
       </Route>
       <Route path="/main" element={<MainPage />} />
       <Route path="/mypage" element={<MyPage />}>
-        <Route path="userinfo" element={<UserInfo />}></Route>
-        <Route path="studyhistory" element={<StudyHistory />}></Route>
-        <Route path="problemhistory" element={<ProblemHistory />}></Route>
+        <Route path="profile" element={<Profile />}></Route>
+        <Route path="study" element={<Study />}></Route>
+        <Route path="problem" element={<ProblemList />}></Route>
       </Route>
     </Routes>
   )

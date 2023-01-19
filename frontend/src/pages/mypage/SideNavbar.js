@@ -12,21 +12,21 @@ const SideNavbar = () => {
 
   return (
     <Container>
-      <Link onClick={changeBg} to={'./studyhistory'}>
+      <Link onClick={changeBg} to={'./study'}>
         <LinkContainer>
           <FaRegBookmark />
           <TextSpan>스터디 기록</TextSpan>
         </LinkContainer>
       </Link>
       <br />
-      <Link onClick={changeBg} to={'./problemhistory'}>
+      <Link onClick={changeBg} to={'./problem'}>
         <LinkContainer>
           <GrNotes />
           <TextSpan>내가 푼 문제</TextSpan>
         </LinkContainer>
       </Link>
       <br />
-      <Link onClick={changeBg} to={'./userinfo'}>
+      <Link onClick={changeBg} to={'./profile'}>
         <LinkContainer>
           <FaRegUser />
           <TextSpan>회원 정보</TextSpan>
