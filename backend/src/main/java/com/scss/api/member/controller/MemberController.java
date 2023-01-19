@@ -20,7 +20,6 @@ public class MemberController {
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-
     private final MemberService memberService;
 
 
