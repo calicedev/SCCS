@@ -10,8 +10,8 @@ const Message = ({ text, isValid }) => {
 }
 
 const MessageDiv = styled.div`
-  color: ${(props) =>
-    props.isValid ? props.theme.blueColor : props.theme.redColor};
+  color: ${( { isValid, theme } ) =>
+    isValid ? theme.blueColor : theme.redColor};
   margin-bottom: 1rem;
 `
 export default Message
