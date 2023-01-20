@@ -30,12 +30,12 @@ const typeObj = {
     placeholder: 'user.password',
   },
   newpassword: {
-    type: 'password',
+    type: 'nowpassword',
     label: 'NewPassword',
     placeholder: 'user.newpassword',
   },
   confirmpassword: {
-    type: 'password',
+    type: 'confirmpassword',
     label: 'Confirm Password',
     placeholder: 'user.confirmpassowrd',
   },
