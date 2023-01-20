@@ -7,7 +7,7 @@ export default function WeekDays() {
   return (
     <FlexBox>
       {weekDays.map((day) => {
-        return <div>{day}</div>
+        return <div key={day}>{day}</div>
       })}
     </FlexBox>
   )
