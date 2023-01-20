@@ -10,6 +10,8 @@ import ResetPasswordForm from './pages/auth/ResetPasswordForm'
 
 import MyPage from './pages/mypage/MyPage'
 import Profile from './pages/mypage/Profile'
+import ProfileEdit from './pages/mypage/ProfileEdit'
+import PasswordEdit from './pages/mypage/PasswordEdit'
 import ProblemList from './pages/mypage/ProblemList'
 import Study from './pages/mypage/Study'
 
@@ -25,6 +27,8 @@ function App() {
       <Route path="/main" element={<MainPage />} />
       <Route path="/mypage" element={<MyPage />}>
         <Route path="profile" element={<Profile />}></Route>
+        <Route path="profileedit" element={<ProfileEdit />}></Route>
+        <Route path="passwordedit" element={<PasswordEdit />}></Route>
         <Route path="study" element={<Study />}></Route>
         <Route path="problem" element={<ProblemList />}></Route>
       </Route>
