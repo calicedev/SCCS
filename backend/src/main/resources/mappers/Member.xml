@@ -15,7 +15,8 @@
     email,
     score,
     profile_image,
-    join_date
+    join_date,
+    salt
     )
     values(
     #{id},
@@ -25,14 +26,15 @@
     #{email},
     0,
     null,
-    now()
+    now(),
+    #{salt}
     )
   </insert>
 
-  <select id="logIn" parameterType="hashMap" resultType="String">
+  <select id="memberInfo" parameterType="String" resultType="MemberDto">
     select *
     from member
-    where id = #{id} and password = "#{password}"
+    where id = #{id}
   </select>
 
 </mapper>

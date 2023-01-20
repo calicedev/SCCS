@@ -9,5 +9,5 @@ public interface MemberService {
 
     public String signUp(MemberDto memberDto);
 
-    public String logIn(Map<String, Object> map);
+    public MemberDto memberInfo(String id);
 }

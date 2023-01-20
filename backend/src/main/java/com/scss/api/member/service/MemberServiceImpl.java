@@ -25,21 +25,18 @@ public class MemberServiceImpl implements MemberService {
     public String signUp(MemberDto memberDto) {
         try {
             memberMapper.signUp(memberDto);
+            logger.debug("회원 가입 성공");
             return SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.debug("회원 가입 실패 [아이디 혹은 이메일 중복]");
             return FAIL;
         }
     }
 
-    // 로그인
+
     @Override
-    public String logIn(Map<String, Object> map) {
-        logger.debug("{}", map.get("id"));
-        if (memberMapper.logIn(map) != null) {
-            return SUCCESS;
-        } else {
-            return FAIL;
-        }
+    public MemberDto memberInfo(String id) {
+
+        return memberMapper.memberInfo(id);
     }
 }

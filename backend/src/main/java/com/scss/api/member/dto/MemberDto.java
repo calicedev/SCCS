@@ -18,4 +18,5 @@ public class MemberDto {
     String profile_image;
     int score;
     LocalDate join_date;
+    String salt;
 }
