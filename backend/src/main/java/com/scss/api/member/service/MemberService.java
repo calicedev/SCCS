@@ -10,4 +10,6 @@ public interface MemberService {
     public String signUp(MemberDto memberDto);
 
     public MemberDto memberInfo(String id);
+
+    public String findId(Map<String, String> map);
 }

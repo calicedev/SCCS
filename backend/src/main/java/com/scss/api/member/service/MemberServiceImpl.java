@@ -39,4 +39,9 @@ public class MemberServiceImpl implements MemberService {
 
         return memberMapper.memberInfo(id);
     }
+
+    @Override
+    public String findId(Map<String, String> map) {
+        return memberMapper.findId(map);
+    }
 }

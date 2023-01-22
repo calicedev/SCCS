@@ -11,6 +11,7 @@ public interface MemberMapper {
 
     public void signUp(MemberDto memberDto);
 
-
     public MemberDto memberInfo(String id);
+
+    public String findId(Map<String, String> map);
 }

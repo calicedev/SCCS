@@ -11,18 +11,14 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping( "/api")
@@ -104,13 +100,47 @@ public class MemberController {
                 return new ResponseEntity<Map>(resultmap, HttpStatus.OK);
             } else {
                 logger.debug("비밀번호 불일치!!!");
-                return new ResponseEntity<String>(FAIL, HttpStatus.UNAUTHORIZED);
+                resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
+                return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED);
             }
 
         } catch (Exception e) {
             logger.debug("아이디가 존재하지 않습니다.");
-            return new ResponseEntity<String>(FAIL, HttpStatus.UNAUTHORIZED);
+            resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
+            return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    // 회원 정보
+    @GetMapping("/member")
+    public ResponseEntity<?> memberInfo(@RequestParam("id") String id) {
+        logger.debug("memberInfo() is called // member id : {}", id);
+
+        Map<String, Object> resultMap = new HashMap<>();
+
+        MemberDto memberDto = memberService.memberInfo(id);
+        if (memberDto != null) {
+            System.out.println(memberDto);
+            resultMap.put("data", memberDto);
+            return new ResponseEntity<>(resultMap, HttpStatus.OK);
+        } else {
+            logger.debug("아이디가 존재하지 않습니다.");
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    // 아이디 찾기 : 이름과 이메일로 아이디 찾기
+    @PostMapping("/member/id")
+    public ResponseEntity<?> findId(@RequestBody HashMap<String, String> map) {
+
+        String id = memberService.findId(map);
+
+        if (id != null) {
+            return new ResponseEntity<String>(id,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        }
+
     }
 
     // 토큰 검증
