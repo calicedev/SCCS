@@ -78,8 +78,8 @@ export default function LoginForm() {
       <Container>
         <Check></Check>
         <div>
-          <ForgotSpan>Forgot ID?</ForgotSpan>
-          <ForgotSpan>Forgot Password?</ForgotSpan>
+          <ForgotSpan onClick={() => { navigate(`/auth/findid`)}}>Forgot ID?</ForgotSpan>
+          <ForgotSpan onClick={() => { navigate(`/auth/resetpassword`)}}>Forgot Password?</ForgotSpan>
         </div>
       </Container>
 
@@ -104,6 +104,7 @@ const Container = styled.div`
 
 const ForgotSpan = styled.span`
   margin: 0.8rem 0.4rem;
+  cursor: pointer;
 `
 
 const H1 = styled.h1`
