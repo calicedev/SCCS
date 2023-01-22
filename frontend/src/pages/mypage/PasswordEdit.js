@@ -6,11 +6,10 @@ import ProfileImg from 'components/atoms/ProfileImg'
 import { useNavigate } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 
-export default function ProfileEdit() {
-
-  const [nickname, setNickname] = useAuthInput('nickname', '')
-  const [email, setEmail] = useAuthInput('email', '')
-
+export default function PasswordEdit() {
+  const [password,setPassword] = useAuthInput('password', '')
+  const [newpassword,setNewPassword] = useAuthInput('newpassword', '')
+  const [confirmpassword,setConfirmPassword] = useAuthInput('confirmpassword', '')
 
   const navigate = useNavigate()
   return(
@@ -18,38 +17,34 @@ export default function ProfileEdit() {
     <ProfileContent>
       <Header>Edit Profile</Header>
       <EditBtn>
-        <Button value='기본정보' ></Button>
-        <Button value='비밀번호' onClick={() => {
-            navigate('/mypage/PasswordEdit')
+        <Button value='기본정보' onClick={() => {
+            navigate('/mypage/ProfileEdit')
           }}></Button>
+        <Button value='비밀번호' ></Button>
       </EditBtn>
       <Saad>
         <ProfileImg></ProfileImg>
       </Saad>
       <ProfileInput
-          type="name"
-
-      ></ProfileInput>
-
-      <Container>
-        <ProfileInput
-            type="id"
-
-        ></ProfileInput >
-        <ProfileInput
-          type="nickname"
-          value={nickname}
+          type="password"
+          value={password}
           disabled = {false}
-          onChange={(e) => setNickname(e.target.value)}
-        ></ProfileInput>
-      </Container>
-
-      <ProfileInput
-        type="email"
-        value={email}
-        disabled = {false}
-        onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
       ></ProfileInput>
+      <ProfileInput
+          type="newpassword"
+          value={newpassword}
+          disabled = {false}
+          onChange={(e) => setNewPassword(e.target.value)}
+      ></ProfileInput>
+      <ProfileInput
+          type="confirmpassword"
+          value={confirmpassword}
+          disabled = {false}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+      ></ProfileInput>
+
+
       <Button value="Edit" onClick={() => {
             navigate('/mypage/Profile')
           }}></Button>
@@ -71,15 +66,10 @@ const ProfileContent = styled.div`
   min-height: 100%;
   width: 70%;
 `
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 55%;
-`
 
 const Saad = styled.div`
   display: flex;
-  positipn: fixed;
+  positipn: absolute;
   justify-content: right;
 `
 

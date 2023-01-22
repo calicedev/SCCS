@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/InputBox'
+import InputBox from 'components/molecules/InputBox'
 import Goback from 'components/atoms/Goback'
-import emailLogo from 'assets/img/email_logo.png'
-import { useNavigate } from 'react-router-dom'
 
 export default function ResetPasswordForm() {
-  const navigate = useNavigate()
   const [id, setId] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState({
