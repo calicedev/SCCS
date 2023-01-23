@@ -31,7 +31,7 @@ Button.propTypes = {
   ]),
   onClick: PropTypes.func,
   value: PropTypes.string,
-  logo: PropTypes.elementType,
+  logo: PropTypes.object,
   borderRadius: PropTypes.string,
 }
 
