@@ -1,47 +1,56 @@
 import React, { useState } from 'react'
-import { add, sub } from 'date-fns'
+import { addMonths, subMonths } from 'date-fns'
 import Calendar from 'components/molecules/Calendar'
 import WeekDays from 'components/atoms/WeekDays'
 import DateSelector from 'components/molecules/DateSelector'
 import styled from 'styled-components'
 
+const studies = [
+  {
+    id: 1,
+    title: '커피 내기 SSAFY기 (A301)',
+    created_datetime: '2023-01-17 17:18:53',
+    problems: [
+      { id: 1, title: '미로찾기' },
+      { id: 2, title: '치즈 녹이기' },
+    ],
+  },
+  {
+    id: 2,
+    title: '커피 내기 SSAFY기2 (A301)',
+    created_datetime: '2023-01-17 21:18:53',
+    problems: [
+      { id: 3, title: '미로찾기2' },
+      { id: 2, title: '치즈 녹이기' },
+    ],
+  },
+]
+
 export default function Study() {
-  const [currentDate, setCurrentDate] = useState(() => {
-    const date = new Date()
-    // ISO 8601 형식으로 YYYY-MM-DD
-    return date.toISOString().slice(0, 7)
-  })
+  const [currentDate, setCurrentDate] = useState(new Date())
 
   const previousDate = () => {
-    const previousDate = sub(
-      new Date(currentDate.slice(0, 4), currentDate.slice(5, 7)),
-      { months: 1 },
-    )
-      .toISOString()
-      .slice(0, 7)
-    setCurrentDate(previousDate)
+    setCurrentDate(subMonths(currentDate, 1))
   }
 
   const nextDate = () => {
-    const nextDate = add(
-      new Date(currentDate.slice(0, 4), currentDate.slice(5, 7)),
-      { months: 1 },
-    )
-      .toISOString()
-      .slice(0, 7)
-    setCurrentDate(nextDate)
+    setCurrentDate(addMonths(currentDate, 1))
   }
 
   return (
     <Container>
       <DateSelector
         currentDate={currentDate}
-        onChange={(e) => setCurrentDate(e.target.value)}
+        onChange={(e) => setCurrentDate(new Date(e.target.value))}
         onClickPrevious={previousDate}
         onClickNext={nextDate}
       />
       <WeekDays />
-      <Calendar />
+      <Calendar
+        currentDate={currentDate}
+        setCurrentDate={setCurrentDate}
+        studies={studies}
+      />
     </Container>
   )
 }

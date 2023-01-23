@@ -10,7 +10,7 @@ const Message = ({ text, isValid }) => {
 }
 
 const MessageDiv = styled.div`
-  color: ${( { isValid, theme } ) =>
+  color: ${({ isValid, theme }) =>
     isValid ? theme.blueColor : theme.redColor};
   margin-bottom: 1rem;
 `

@@ -7,7 +7,7 @@ export default function WeekDays() {
   return (
     <FlexBox>
       {weekDays.map((day) => {
-        return <div>{day}</div>
+        return <div key={day}>{day}</div>
       })}
     </FlexBox>
   )
@@ -15,6 +15,6 @@ export default function WeekDays() {
 
 const FlexBox = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
 `
