@@ -43,4 +43,16 @@
     where name = #{name} and email = #{email}
   </select>
 
+  <update id="modify" parameterType="memberDto">
+    update member
+    set nickname = #{nickname}, email = #{email}, profile_image = #{profile_image}
+    where id = #{id}
+  </update>
+
+  <update id="modifyPassword" parameterType="memberDto">
+    update member
+    set password = #{password}
+    where id = #{id}
+  </update>
+
 </mapper>

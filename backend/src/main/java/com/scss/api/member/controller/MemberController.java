@@ -13,12 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping( "/api")
@@ -143,7 +147,74 @@ public class MemberController {
 
     }
 
-    // 토큰 검증
+    // 회원 정보 수정
+    @PatchMapping("/member")
+    public ResponseEntity<?> modify(@RequestBody HashMap<String, String> param, HttpServletRequest request) {
+
+        Cookie[] list = request.getCookies(); // 클라이언트에서 넘어온 토큰 리스트
+        for (Cookie cookie : list) {
+            if (cookie.getName().equalsIgnoreCase("accesstoken")) { // 토큰 이름이 accesstoken일 때
+                String accessToken = cookie.getValue(); // 쿠키에서 accessToken 파싱
+                Claims claims = jwtService.getToken(accessToken); // accessToken에서 Claims 파싱
+                String id = (String) claims.get("member_id"); // accessToken에서 회원 id 파싱
+
+                MemberDto memberDto = memberService.memberInfo(id);
+
+                logger.debug("수정 전 : {}", memberDto);
+                if (param.get("nickname") != null) memberDto.setNickname(param.get("nickname")); // null 이 넘어오면 수정 x (기존 값 유지)
+                if (param.get("email") != null) memberDto.setEmail(param.get("email"));
+                if (param.get("profile_image") != null) memberDto.setProfile_image(param.get("profile_image"));
+                logger.debug("수정 후 : {}", memberDto);
+
+                Map<String, String> resultMap = new HashMap<>();
+
+                if (memberService.modify(memberDto).equals(SUCCESS)) {
+                    resultMap.put("message", "성공");
+                    return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
+                } else {
+                    resultMap.put("message", "권한이 없습니다");
+                    return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
+        return null;
+    }
+
+    // 비밀번호 수정
+    @PatchMapping("/member/password")
+    public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> param, HttpServletRequest request) {
+
+        String newPassword = param.get("new_password");
+        logger.debug("새로운 비밀번호 : {}", newPassword);
+
+        Cookie[] list = request.getCookies(); // 클라이언트에서 넘어온 토큰 리스트
+        for (Cookie cookie : list) {
+            if (cookie.getName().equalsIgnoreCase("accesstoken")) { // 토큰 이름이 accesstoken일 때
+                String accessToken = cookie.getValue(); // 쿠키에서 accessToken 파싱
+                Claims claims = jwtService.getToken(accessToken); // accessToken에서 Claims 파싱
+                String id = (String) claims.get("member_id"); // accessToken에서 회원 id 파싱
+
+                MemberDto memberDto = memberService.memberInfo(id);
+
+                logger.debug("비밀번호 수정 전 : {}", memberDto);
+                if (param.get("new_password") != null)
+                    memberDto.setPassword(param.get("new_password")); // null 이 넘어오면 수정 x (기존 값 유지)
+                logger.debug("비밀번호 수정 후 : {}", memberDto);
+
+                Map<String, String> resultMap = new HashMap<>();
+
+                if (memberService.modifyPassword(memberDto).equals(SUCCESS)) {
+                    resultMap.put("message", "성공");
+                    return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
+                } else {
+                    resultMap.put("message", "권한이 없습니다");
+                    return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
+
+        return null;
+    }
 
 
 }
