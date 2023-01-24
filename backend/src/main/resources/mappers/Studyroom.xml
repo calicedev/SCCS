@@ -6,7 +6,7 @@
 
 <mapper namespace="com.scss.api.studyroom.mapper.StudyroomMapper">
 
-  <insert id="createStudyroom" parameterType="StudyroomDto">
+  <insert id="createStudyroom" parameterType="StudyroomDto" useGeneratedKeys="true" keyProperty="id">
     insert into studyroom(
     title,
     password,
@@ -15,19 +15,64 @@
     values(
     #{title},
     #{password},
-    #{is_private}
+    #{isPrivate}
     )
   </insert>
-  <insert id="createStudyroom" parameterType="StudyroomDto">
-    insert into studyroom(
-    title,
-    password,
-    is_private
+  <insert id="insertLanguageId" parameterType="StudyroomLanguageDto">
+    insert into studyroom_language(
+    language_id,
+    studyroom_id
     )
     values(
-    #{title},
-    #{password},
-    #{is_private}
+    #{languageId},
+    #{studyroomId}
     )
   </insert>
+  <insert id="insertAlgoId" parameterType="StudyroomAlgoDto">
+    insert into studyroom_algo(
+    algo_id,
+    studyroom_id
+    )
+    values(
+    #{algoId},
+    #{studyroomId}
+    )
+  </insert>
+
+  <select id="selectProblemCount" parameterType="int" resultType="int">
+    select count(*) from problem where algo_id=#{algoId}
+  </select>
+
+  <insert id="insertProblemId" parameterType="StudyroomProblemDto">
+    insert into studyroom_problem(
+    problem_id,
+    studyroom_id
+    )
+    values(
+    #{problemId},
+    #{studyroomId}
+    )
+  </insert>
+
+  <select id="selectProblemId" parameterType="String" resultType="int">
+    select id from problem where problem_folder=#{path}
+  </select>
+
+
+  <insert id="insertMemberId" parameterType="StudyroomMemberDto">
+    insert into studyroom_member(
+    member_id,
+    studyroom_id
+    )
+    values(
+    #{memberId},
+    #{studyroomId}
+    )
+  </insert>
+
+  <select id="selectAllStudyroom" resultType="StudyroomDto">
+    select * from studyroom where is_active=1
+  </select>
+
+
 </mapper>
