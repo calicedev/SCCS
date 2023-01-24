@@ -1,6 +1,7 @@
 package com.scss.api.member.service;
 
 import com.scss.api.member.dto.MemberDto;
+import com.scss.api.member.dto.UniqueDto;
 import com.scss.api.member.mapper.MemberMapper;
 
 import java.math.BigInteger;
@@ -83,5 +84,13 @@ public class MemberServiceImpl implements MemberService {
             logger.debug("비밀번호 수정 실패");
             return FAIL;
         }
+    }
+
+    @Override
+    public String uniqueParam(UniqueDto uniqueDto) {
+
+        String result = memberMapper.uniqueParam(uniqueDto);
+
+        return result;
     }
 }

@@ -55,4 +55,21 @@
     where id = #{id}
   </update>
 
+  <select id="uniqueParam" parameterType="uniqueDto" resultType="string">
+    select id
+    from member
+    <bind name="types" value="_parameter.getType()"/>
+    <choose>
+      <when test="types.equals('id')">
+        where id = #{param}
+      </when>
+      <when test="types.equals('email')">
+        where email = #{param}
+      </when>
+      <when test="types.equals('nickname')">
+        where nickname = #{param}
+      </when>
+    </choose>
+  </select>
+
 </mapper>
