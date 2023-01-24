@@ -1,6 +1,7 @@
 package com.scss.api.member.controller;
 
 import com.scss.api.member.dto.MemberDto;
+import com.scss.api.member.dto.UniqueDto;
 import com.scss.api.member.service.JWTService;
 import com.scss.api.member.service.MemberService;
 import java.lang.reflect.Member;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -216,5 +218,27 @@ public class MemberController {
         return null;
     }
 
+
+    @GetMapping("/unique/{type}/{param}")
+    public ResponseEntity<?> test(@PathVariable String type, @PathVariable String param) {
+        UniqueDto uniqueDto = new UniqueDto(); // 중복여부를 관리하는 DTO
+        uniqueDto.setType(type);
+        uniqueDto.setParam(param);
+
+        String result = memberService.uniqueParam(uniqueDto);
+
+        Map<String, Object> resultMap = new HashMap<>();
+
+        if (result == null) { // 중복이 존재하지 않는 경우 unique = true
+            resultMap.put("unique", true);
+            resultMap.put("message", "사용 가능한 " + uniqueDto.getType() + " 입니다");
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+        } else { // 중복인 경우 unique = false
+            resultMap.put("unique", false);
+            resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + " 입니다");
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+        }
+
+    }
 
 }
