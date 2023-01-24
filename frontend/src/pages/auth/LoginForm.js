@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
 import InputBox from 'components/molecules/InputBox'
-import Check from 'components/atoms/Check'
+import Check from 'components/atoms/Checkbox'
 import { useNavigate } from 'react-router-dom'
 import axios from 'libs/axios'
 import api from 'apis/api'
@@ -77,8 +77,20 @@ export default function LoginForm() {
       <Container>
         <Check></Check>
         <div>
-          <ForgotSpan onClick={() => { navigate(`/auth/findid`)}}>Forgot ID?</ForgotSpan>
-          <ForgotSpan onClick={() => { navigate(`/auth/resetpassword`)}}>Forgot Password?</ForgotSpan>
+          <ForgotSpan
+            onClick={() => {
+              navigate(`/auth/findid`)
+            }}
+          >
+            Forgot ID?
+          </ForgotSpan>
+          <ForgotSpan
+            onClick={() => {
+              navigate(`/auth/resetpassword`)
+            }}
+          >
+            Forgot Password?
+          </ForgotSpan>
         </div>
       </Container>
 
