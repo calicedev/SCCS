@@ -1,54 +1,40 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-export default function DateBox({ date, disabled, setCurrentDate, studies }) {
-  const [isHovered, setIsHovered] = useState(false)
+export default function DateBox({
+  date,
+  disabled,
+  content,
+  onClick,
+  onMouseEnter,
+}) {
+  // const [isHovered, setIsHovered] = useState(false)
 
-  const onMouseEnter = () => {
+  const mouseEnter = (e) => {
     if (disabled) return
-    setIsHovered(true)
+    onMouseEnter(date)
   }
 
-  const onMouseLeave = () => {
+  const mouseLeave = (e) => {
     if (disabled) return
-    setIsHovered(false)
   }
 
-  const onClick = () => {
+  const click = (e) => {
     if (!disabled) return
-    setCurrentDate(date)
+    onClick(e)
   }
 
-  const day = date.getDate()
-
   return (
-    <>
-      <Container
-        disabled={disabled}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onClick={onClick}
-      >
-        <div>{day}</div>
-        {studies?.map((study) => (
-          <Study study={study} isHovered={isHovered} key={study.id} />
-        ))}
-      </Container>
-      <div hidden={!isHovered}></div>
-    </>
-  )
-}
-
-function Study({ study, isHovered }) {
-  return (
-    <div>
-      {study?.title}
-      <div className="problems" hidden={!isHovered}>
-        {study?.problems.map((problem) => (
-          <li key={problem.id}>{problem.title}</li>
-        ))}
-      </div>
-    </div>
+    <Container
+      id={date}
+      disabled={disabled}
+      onMouseEnter={mouseEnter}
+      onMouseLeave={mouseLeave}
+      onClick={click}
+    >
+      {date.slice(-2)}
+      {content}
+    </Container>
   )
 }
 
@@ -58,10 +44,6 @@ const Container = styled.div`
   border: 1px solid black;
   background-color: ${({ disabled }) => (disabled ? 'gray' : 'white')};
 
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    position: absolute;
-    z-index; 1;
-  }
+  white-space: nowrap;
+  overflow: hidden;
 `
