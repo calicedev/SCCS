@@ -41,18 +41,20 @@ public class JWTServiceImpl implements JWTService{
 
     // 토큰 검증
     @Override
-    public String getToken(String token) {
+    public Claims getToken(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            return claims.getSubject();
+            return claims;
         } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
-            return "토큰 만료";
+            logger.debug("토큰 만료");
+            return null;
         } catch (Exception e) {
-            return "토큰 검증 에러";
+            logger.debug("토큰 검증 에러");
+            return null;
         }
 
     }

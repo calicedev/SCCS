@@ -8,10 +8,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MemberMapper {
-
     public void signUp(MemberDto memberDto);
-
     public MemberDto memberInfo(String id);
-
     public String findId(Map<String, String> map);
+    public void modify(MemberDto memberDto);
+    public void modifyPassword(MemberDto memberDto);
 }

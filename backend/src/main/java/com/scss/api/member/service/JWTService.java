@@ -5,6 +5,6 @@ import io.jsonwebtoken.Jwts;
 
 public interface JWTService {
     public String createToken(String id, String subject, long expTime);
-    public String getToken(String token);
+    public Claims getToken(String token);
 
 }
