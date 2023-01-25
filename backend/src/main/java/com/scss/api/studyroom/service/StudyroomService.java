@@ -10,4 +10,6 @@ public interface StudyroomService {
     public List<Map<String, Object>> selectAllStudyroom();
 
     public String checkStudyroomPassword(StudyroomDto studyroomDto);
+
+    public List<StudyroomDto> searchStudyroom(StudyroomDto studyroomDto);
 }

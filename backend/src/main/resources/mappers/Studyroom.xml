@@ -75,8 +75,35 @@
     where is_active=1 order by create_datetime desc;
   </select>
 
+  <select id="searchStudyroom" parameterType="StudyroomDto" resultType="StudyroomDto">
+    SELECT s.id, s.title, s.is_private, s.type, sa.algo_id, sl.language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    where is_active=1
+    <choose>
+
+     <when test="id != 0">
+       AND s.id= #{id}
+     </when>
+     <when test="title!=null">
+       AND s.title = #{title}
+     </when>
+      <when test="title==null and id == 0">
+       <foreach collection="algoIds" item="item" open="AND sa.algo_id=" close="" separator="OR sa.algo_id=">
+         #{item}
+       </foreach>
+        <foreach collection="languageIds" item="item" open="AND sl.language_id=" close="" separator="OR sl.language_id=">
+          #{item}
+        </foreach>
+     </when>
+    </choose>
+    order by create_datetime desc;
+  </select>
+
 
   <select id="checkStudyroomPassword" parameterType="StudyroomDto" resultType="int">
     select count(*) from studyroom where id = #{id} and password = #{password}
   </select>
+
+
+
+
 </mapper>

@@ -24,4 +24,6 @@ public interface StudyroomMapper {
     public List<StudyroomDto> selectAllStudyroom();
 
     public int checkStudyroomPassword(StudyroomDto studyroomDto);
+
+    public List<StudyroomDto> searchStudyroom(StudyroomDto studyroomDto);
 }

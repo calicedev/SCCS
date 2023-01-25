@@ -51,5 +51,9 @@ public class StudyroomController {
     }
 
 
+    @PostMapping("/studyroom/detail")
+    public ResponseEntity<List<StudyroomDto>> searchStudyroom(@RequestBody StudyroomDto studyroomDto){
+            return new ResponseEntity<>(studyroomService.searchStudyroom(studyroomDto), HttpStatus.OK);
 
+    }
 }
