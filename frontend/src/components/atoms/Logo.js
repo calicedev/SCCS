@@ -21,5 +21,4 @@ export default function Logo() {
 const Img = styled.img`
   width: 8rem;
   height: 4rem;
-  
 `
