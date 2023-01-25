@@ -6,6 +6,7 @@ export function useConfirmPwd(initialValue, password) {
 
   useEffect(() => {
     // 패스워드랑 비교 감사
+    if (!inputValue) return
     if (password !== inputValue) {
       const newMsg = { ...message }
       newMsg.text = '비밀번호가 일치하지 않습니다.'

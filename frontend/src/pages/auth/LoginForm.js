@@ -2,8 +2,13 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
 import AuthInput from 'components/atoms/AuthInput'
+<<<<<<< HEAD
 import Checkbox from 'components/atoms/Checkbox'
 import { useNavigate, Link } from 'react-router-dom'
+=======
+import Check from 'components/atoms/Checkbox'
+import { useNavigate } from 'react-router-dom'
+>>>>>>> task164
 import axios from 'libs/axios'
 import api from 'apis/api'
 import Typography from 'components/atoms/Typography'
@@ -26,20 +31,20 @@ export default function LoginForm() {
 
 
   const login = () => {
-    if (!(id && password)) {
-      const checkmsg = { ...message }
-      checkmsg.text = '아이디와 패스워드를 입력해주세요'
-      checkmsg.isValid = false
-      setMessage(checkmsg)
+    if (!id || !password) {
+      const newMsg = { ...message }
+      newMsg.text = '아이디와 패스워드를 모두 입력해주세요'
+      newMsg.isValid = false
+      setMessage(newMsg)
       return
     }
     const data = {
       id,
       password,
     }
-    const url = api('login')
-    axios
-      .post(url, data)
+    const [url, method] = api('login')
+    const config = { method, data }
+    axios(url, config)
       .then((res) => {
         console.log(res)
         setCookie('refresh_token', res.data['refresh_token'])
@@ -57,23 +62,46 @@ export default function LoginForm() {
     <Login>
       <Typography type='h1' value='Login'></Typography>
 
+<<<<<<< HEAD
       <Typography type='h3' value="If you don't have an account register">
       </Typography>
       <Link to="/auth/signup">
         <Typography type='h3' value='Register here!' color='pass'></Typography>
       </Link>
+=======
+      <Description>
+        If you don't have an account register
+        <br /> You can{' '}
+        <span
+          onClick={() => {
+            navigate('/auth/signup')
+          }}
+        >
+          Register here!
+        </span>
+      </Description>
+>>>>>>> task164
       <AuthInput
         type="id"
         value={id}
         onChange={(e) => setId(e.target.value)}
+<<<<<<< HEAD
+=======
+        message={idMsg}
+>>>>>>> task164
       ></AuthInput>
       <AuthInput
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+<<<<<<< HEAD
       ></AuthInput>
 
       <Typography type='c' value={message.text} color={message.isValid? 'pass' : 'error'} />
+=======
+        message={passwordMsg}
+      ></AuthInput>
+>>>>>>> task164
 
       <Container>
         <Checkbox label='Remember Me' value={isChecked} onChange={(e) => setIsChecked(e.target.value)}></Checkbox>

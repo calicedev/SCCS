@@ -1,10 +1,16 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/AuthInput'
-import Goback from 'components/atoms/Goback'
+import AuthInput from 'components/atoms/AuthInput'
+import IconButton from 'components/atoms/IconButton'
+import { RiArrowGoBackFill } from 'react-icons/ri'
+import { useNavigate } from 'react-router-dom'
+import Typography from 'components/atoms/Typography'
+import axios from 'libs/axios'
+import api from 'apis/api'
 
 export default function FindIdForm() {
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState({
@@ -12,84 +18,71 @@ export default function FindIdForm() {
     isValid: false,
   })
 
-  const data = [
-    {
-      name: '손민혁',
-      email: 'react1@naver.com',
-    },
-    {
-      name: '발민혁',
-      email: 'react2@naver.com',
-    },
-    {
-      name: '민혁',
-      email: 'react3@naver.com',
-    },
-  ]
-
   const findId = () => {
-    if ((data[0].name === name) & (data[0].email === email)) {
-      // const data = '아이디 찾기 성공'
-      console.log('성공')
-      const copy = { ...message }
-      copy.text = '유효성검사 성공~~~'
-      copy.isValid = true
-      setMessage(copy)
-      // console.log(message)
+    if (!name || !email) {
+      const newMsg = { ...message }
+      newMsg.text = '이름과 이메일을 모두 입력해주세요'
+      newMsg.isValid = false
+      setMessage(newMsg)
       return
     }
-    // const data = '아이디 찾기 실패'
-    console.log('실패')
-    const copy = { ...message }
-    copy.text = '유효성검사 실패~~~'
-    copy.isValid = false
-    setMessage(copy)
-    // console.log(message)
-    return
+    const data = {
+      name,
+      email,
+    }
+    const [url, method] = api('findId')
+    const config = { method, data }
+    axios(url, config)
+      .then((res) => {
+        const id = res.data.id
+        const newMsg = { ...message }
+        newMsg.text = `회원님의 아이디는 ${id}입니다.`
+        newMsg.isValid = true
+        setMessage(newMsg)
+      })
+      .catch((err) => {
+        const newMsg = { ...message }
+        newMsg.text = '해당 정보의 회원이 존재하지 않습니다.'
+        newMsg.isValid = false
+        setMessage(newMsg)
+      })
   }
 
   return (
-    <FindId>
-      <Goback alt="뒤로가기" />
-      <H1>Find ID</H1>
-      <Description>Enter your name and email to find your ID</Description>
-      <InputBox
+    <Flexbox>
+      <IconButton
+        icon={<RiArrowGoBackFill />}
+        size={'small'}
+        text={'로그인으로'}
+        onClick={() => {
+          navigate('/auth/login')
+        }}
+      />
+      <Typography type="h1" value="Find ID" />
+      <Typography type="h3" value="Enter your name and email to find your ID" />
+      <AuthInput
         type="id"
         value={name}
         onChange={(e) => setName(e.target.value)}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-      ></InputBox>
-      <Message isValid={message.isValid}>{message.text}</Message>
+      ></AuthInput>
+      <Typography
+        color={message.isValid ? 'pass' : 'error'}
+        value={message.text}
+      />
       <Button onClick={findId} value="Find" size="medium"></Button>
-    </FindId>
+    </Flexbox>
   )
 }
 
-const FindId = styled.div`
+const Flexbox = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0rem 8rem;
-`
-
-const H1 = styled.h1`
-  font-size: 3rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.indigoColor};
-`
-
-const Description = styled.div`
-  margin: 1rem 0rem 2rem;
-  font-size: 1.2rem;
-  opacity: 70%;
-`
-const Message = styled.div`
-  color: ${(props) =>
-    props.isValid ? props.theme.blueColor : props.theme.redColor};
-  margin-bottom: 1rem;
 `

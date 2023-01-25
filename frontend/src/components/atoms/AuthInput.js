@@ -60,7 +60,7 @@ const AuthInput = ({ type, value, onChange, message }) => {
       </FlexBox>
       <Typography
         color={message.isValid ? 'pass' : 'error'}
-        vlaue={message.text}
+        value={message.text}
       />
     </Wrapper>
   )
@@ -88,14 +88,14 @@ AuthInput.defaultProps = {
 }
 
 const Wrapper = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 0.2rem;
 `
 
 const FlexBox = styled.div`
   display: flex;
   align-items: center;
   border-bottom: 1px solid gray;
-  padding: 0.4rem 0rem;
+  padding: 0.3rem 0rem;
   & > svg {
     width: 1.5rem;
     height: 1.5rem;
@@ -105,12 +105,12 @@ const FlexBox = styled.div`
 `
 
 const Input = styled.input`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   padding: 0.2rem 0.1rem;
   box-sizing: boder-box;
 `
 const Label = styled.div`
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.fontColor};
   margin-top: 1rem;
 `
