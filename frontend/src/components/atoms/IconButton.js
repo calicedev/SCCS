@@ -1,14 +1,13 @@
-import React from 'react' 
+import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-
-const IconButton =({icon, size, bgColor, onClick}) => {
+const IconButton = ({ icon, size, text, bgColor, onClick }) => {
   const sizeClass = `${size}`
-  const bgColorClass= `${bgColor}`
+  const bgColorClass = `${bgColor}`
   return (
     <IconWrapper className={`${sizeClass} ${bgColorClass}`} onClick={onClick}>
-      {icon}
+      {icon} {text}
     </IconWrapper>
   )
 }
@@ -18,7 +17,6 @@ IconButton.propTypes = {
   size: PropTypes.oneOf(['small', 'middle', 'large']),
   bgColor: PropTypes.string,
   onClick: PropTypes.func,
-    
 }
 IconButton.defaultProps = {
   icon: {},
@@ -27,19 +25,17 @@ IconButton.defaultProps = {
   onChange: undefined,
 }
 
-const IconWrapper=styled.div`
-  &.small{
-    width: 4rem;
-    height: 2rem;
-  }
-  &.middle{
-    width: 6rem;
-    height: 3rem;
-  }
-  &.large{
-    width: 8rem;
-    height: 4rem;
-  }
+const IconWrapper = styled.div`
+  cursor: pointer;
 
+  &.small {
+    font-size: 1rem;
+  }
+  &.middle {
+    font-size: 2rem;
+  }
+  &.large {
+    font-size: 3rem;
+  }
 `
 export default IconButton

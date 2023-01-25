@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/AuthInput'
+import AuthInput from 'components/atoms/AuthInput'
 import Check from 'components/atoms/Checkbox'
 import { useNavigate } from 'react-router-dom'
 import axios from 'libs/axios'
@@ -20,20 +20,20 @@ export default function LoginForm() {
     isValid: '',
   })
   const login = () => {
-    if (!(id && password)) {
-      const checkmsg = { ...message }
-      checkmsg.text = '아이디와 패스워드를 입력해주세요'
-      checkmsg.isValid = false
-      setMessage(checkmsg)
+    if (!id || !password) {
+      const newMsg = { ...message }
+      newMsg.text = '아이디와 패스워드를 모두 입력해주세요'
+      newMsg.isValid = false
+      setMessage(newMsg)
       return
     }
     const data = {
       id,
       password,
     }
-    const url = api('login')
-    axios
-      .post(url, data)
+    const [url, method] = api('login')
+    const config = { method, data }
+    axios(url, config)
       .then((res) => {
         console.log(res)
       })
@@ -60,18 +60,18 @@ export default function LoginForm() {
           Register here!
         </span>
       </Description>
-      <InputBox
+      <AuthInput
         type="id"
         value={id}
         onChange={(e) => setId(e.target.value)}
         message={idMsg}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         message={passwordMsg}
-      ></InputBox>
+      ></AuthInput>
 
       <Message isValid={message.isValid}>{message.text}</Message>
       <Container>

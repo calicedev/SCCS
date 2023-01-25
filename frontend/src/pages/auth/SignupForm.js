@@ -1,11 +1,12 @@
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/AuthInput'
+import AuthInput from 'components/atoms/AuthInput'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
 import api from 'apis/api'
+import Typography from 'components/atoms/Typography'
 
 export default function SignupForm() {
   // useAuthInput(타입, 초깃값, 정규식검사, 서버검사)
@@ -31,102 +32,86 @@ export default function SignupForm() {
   // 회원가입 서버 요청
   const signup = () => {
     if (
-      idMsg.isValid &&
-      nameMsg.isValid &&
-      nicknameMsg.isValid &&
-      emailMsg.isValid &&
-      passwordMsg.isValid &&
-      confirmPwdMsg.isValid
+      !idMsg.isValid ||
+      !nameMsg.isValid ||
+      !nicknameMsg.isValid ||
+      !emailMsg.isValid ||
+      !passwordMsg.isValid ||
+      !confirmPwdMsg.isValid
     ) {
-      const data = {
-        id,
-        name,
-        nickname,
-        email,
-        password,
-      }
-      axios
-        .get(api('signup', data))
-        .then((res) => {
-          navigate('/main')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      alert('입력 양식을 모두 유효하게 입력해주세요')
       return
     }
-    alert('입력 양식을 모두 채워주세요')
+    const data = {
+      id,
+      name,
+      nickname,
+      email,
+      password,
+    }
+    const [url, method] = api('signup')
+    const config = { method, data }
+    axios(url, config)
+      .then((res) => {
+        navigate('/main')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   return (
-    <Signup>
-      <H1>SigupForm</H1>
-
-      <Description>
-        If you don't have an account register
-        <br /> You can <Link to="/auth/login">Login here!</Link>
-      </Description>
-      <InputBox
+    <Flexbox>
+      <Typography type="h1" value="Sign up" />
+      <Typography type="h3" value="If you don't have an account register" />
+      <Link to="/auth/login">
+        <Typography type="h3" value="Login Here" color="pass" />
+      </Link>
+      <AuthInput
         type="id"
         value={id}
         onChange={(e) => setId(e.target.value)}
         message={idMsg}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         message={nameMsg}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="nickname"
         value={nickname}
         onChange={(e) => setNickname(e.target.value)}
         message={nicknameMsg}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         message={emailMsg}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         message={passwordMsg}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="confirmPassword"
         value={confirmPwd}
         onChange={(e) => setConfirmPwd(e.target.value)}
         message={confirmPwdMsg}
-      ></InputBox>
+      ></AuthInput>
       <Button size="medium" onClick={signup} value="회원가입"></Button>
-    </Signup>
+    </Flexbox>
   )
 }
 
-const Signup = styled.div`
+const Flexbox = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0rem 8rem;
-`
-
-const H1 = styled.h1`
-  font-size: 3rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.indigoColor};
-`
-
-const Description = styled.div`
-  margin: 1rem 0rem 2rem;
-  font-size: 1.2rem;
-
-  > a {
-    font-weight: 500;
-    color: ${({ theme }) => theme.blueColor};
-  }
 `

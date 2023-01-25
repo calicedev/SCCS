@@ -1,10 +1,16 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/AuthInput'
-import Goback from 'components/atoms/Goback'
+import AuthInput from 'components/atoms/AuthInput'
+import { useNavigate } from 'react-router-dom'
+import IconButton from 'components/atoms/IconButton'
+import { RiArrowGoBackFill } from 'react-icons/ri'
+import axios from 'libs/axios'
+import api from 'apis/api'
+import Typography from 'components/atoms/Typography'
 
 export default function ResetPasswordForm() {
+  const navigate = useNavigate()
   const [id, setId] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState({
@@ -12,93 +18,81 @@ export default function ResetPasswordForm() {
     isValid: false,
   })
 
-  const data = [
-    {
-      id: '손민혁',
-      email: 'react1@naver.com',
-    },
-    {
-      id: '발민혁',
-      email: 'react2@naver.com',
-    },
-    {
-      id: '민혁',
-      email: 'react3@naver.com',
-    },
-  ]
-
   const resetPassword = () => {
     // console.log(data[0].id, data[0].email)
     // console.log({ id }, { email })
 
-    if ((data[0].id === id) & (data[0].email === email)) {
-      console.log('성공')
-      const copy = { ...message }
-      copy.text = `${email}으로 임시 비밀번호를 전송했습니다.`
-      copy.isValid = true
-      setMessage(copy)
-      // console.log(message)
+    if (!id || !email) {
+      const newMsg = { ...message }
+      newMsg.text = '아이디와 이메일을 모두 입력해주세요'
+      newMsg.isValid = false
+      setMessage(newMsg)
       return
     }
-    // const data = '아이디 찾기 실패'
-    console.log('실패')
-    const copy = { ...message }
-    copy.text = '존재하지 않는 회원임 ㅋㅋㅋㅋㅋㅋㅋ'
-    copy.isValid = false
-    setMessage(copy)
-    // console.log(message)
-    return
+    const data = {
+      id,
+      email,
+    }
+    const [url, method] = api('resetPassword')
+    const config = { method, data }
+    axios(url, config)
+      .then((res) => {
+        const newMsg = { ...message }
+        newMsg.text = `입력하신 이메일로 임시 비밀번호가 발급되었습니다.`
+        newMsg.isValid = true
+        setMessage(newMsg)
+      })
+      .catch((err) => {
+        const newMsg = { ...message }
+        newMsg.text = '해당 정보의 회원이 존재하지 않습니다.'
+        newMsg.isValid = false
+        setMessage(newMsg)
+      })
   }
   return (
-    <ResetPassword>
-      <Goback alt="뒤로가기" />
-      <H1>Password Reset</H1>
-      <Description>
-        If you enter your ID and email, <br />a temporary password will be
-        issued
-      </Description>
-      <InputBox
+    <Flexbox>
+      <IconButton
+        icon={<RiArrowGoBackFill />}
+        size={'small'}
+        text={'로그인으로'}
+        onClick={() => {
+          navigate('/auth/login')
+        }}
+      />
+      <Typography type="h1" value="Password Reset" />
+      <Typography
+        type="h3"
+        value="If you enter your ID and email, a temporary password will be
+        issued"
+      />
+      <AuthInput
         type="id"
         value={id}
         onChange={(e) => {
           setId(e.target.value)
         }}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="email"
         value={email}
         onChange={(e) => {
           setEmail(e.target.value)
         }}
         result={message}
-      ></InputBox>
-      <Message isValid={message.isValid}>{message.text}</Message>
+      ></AuthInput>
+      <Typography
+        color={message.isValid ? 'pass' : 'error'}
+        value={message.text}
+      />
       <Button onClick={resetPassword} value="Submit" size="medium"></Button>
-    </ResetPassword>
+    </Flexbox>
   )
 }
 
-const ResetPassword = styled.div`
+const Flexbox = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0rem 8rem;
-`
-
-const H1 = styled.h1`
-  font-size: 3rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.indigoColor};
-`
-
-const Description = styled.div`
-  margin: 1rem 0rem 2rem;
-  font-size: 1.2rem;
-  opacity: 70%;
-`
-const Message = styled.div`
-  color: ${(props) =>
-    props.isValid ? props.theme.blueColor : props.theme.redColor};
-  margin-bottom: 1rem;
 `
