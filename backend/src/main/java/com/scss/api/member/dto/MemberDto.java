@@ -1,5 +1,6 @@
 package com.scss.api.member.dto;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,6 @@ public class MemberDto {
     String email;
     String profile_image;
     int score;
-    LocalDate join_date;
+    Timestamp join_date;
     String salt;
 }
