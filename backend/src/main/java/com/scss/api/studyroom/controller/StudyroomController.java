@@ -2,6 +2,7 @@ package com.scss.api.studyroom.controller;
 
 import com.scss.api.studyroom.dto.StudyroomDto;
 import com.scss.api.studyroom.service.StudyroomService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +36,18 @@ public class StudyroomController {
     }
 
     @GetMapping("/studyroom")
-    public ResponseEntity<List<StudyroomDto>> selectAllStudyroom() {
-        return new ResponseEntity<List<StudyroomDto>>(studyroomService.selectAllStudyroom(), HttpStatus.OK);
+    public ResponseEntity<List<Map<String, Object>>> selectAllStudyroom() {
+        return new ResponseEntity<>(studyroomService.selectAllStudyroom(), HttpStatus.OK);
+    }
+
+    @PostMapping("/studyroom/password")
+    public ResponseEntity<?> checkStudyroomPassword(@RequestBody StudyroomDto studyroomDto){
+
+        if (studyroomService.checkStudyroomPassword(studyroomDto).equals(SUCCESS)) {
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+        }
     }
 
 

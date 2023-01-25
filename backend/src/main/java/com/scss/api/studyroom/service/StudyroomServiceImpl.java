@@ -2,6 +2,10 @@ package com.scss.api.studyroom.service;
 
 import com.scss.api.studyroom.dto.*;
 import com.scss.api.studyroom.mapper.StudyroomMapper;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +29,7 @@ public class StudyroomServiceImpl implements StudyroomService{
 
             // 스터디 룸 생성
             studyroomMapper.createStudyroom(studyroomDto);
-
+            System.out.println("during");
             // studuroom_language 에 언어 유형 입력
             int id = studyroomDto.getId();
             List<Integer> language_ids =  studyroomDto.getLanguageIds();
@@ -123,8 +127,73 @@ public class StudyroomServiceImpl implements StudyroomService{
     }
 
     @Override
-    public List<StudyroomDto> selectAllStudyroom() {
-            return studyroomMapper.selectAllStudyroom();
+    public List<Map<String, Object>> selectAllStudyroom() {
+        // 담을 곳
+        List<Map<String, Object>> studyroomDtoTemp = new ArrayList<>();
+
+        // 날린 쿼리 받아오는 곳
+        List<StudyroomDto> studyroomDto =  studyroomMapper.selectAllStudyroom();
+
+        int size = studyroomDto.size();
+
+        // 변수 초기화
+        int id = studyroomDto.get(0).getId();
+        int head =0;
+
+        // set 초기화
+        HashSet<Integer> setLan = new HashSet<>();
+        HashSet<Integer> setAlgo = new HashSet<>();
+
+        // 이제 하나식 List 에서 꺼내본다.
+        for(int i=0; i<size;i++){
+
+            // 만약 헤드 아이디와 다음의 아이디가 같다면
+            if(studyroomDto.get(i).getId()==id){
+                setLan.add(studyroomDto.get(i).getLanguageId());
+                setAlgo.add(studyroomDto.get(i).getAlgoId());
+            }
+
+            // 만약 다르면 그 전 까지는 저장해주고
+            else{
+                List<Integer> list = new ArrayList<>(setLan);
+                List<Integer> list2 = new ArrayList<>(setAlgo);
+
+
+                studyroomDto.get(head).setLanguageIds(list);
+                studyroomDto.get(head).setAlgoIds(list2);
+
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("id", studyroomDto.get(head).getId());
+                resultMap.put("title", studyroomDto.get(head).getTitle());
+                resultMap.put("type", studyroomDto.get(head).getType());
+                resultMap.put( "language_ids", list );
+                resultMap.put( "algo_ids", list2 );
+                resultMap.put("is_private", studyroomDto.get(head).getIsPrivate());
+
+                studyroomDtoTemp.add(resultMap);
+                id = studyroomDto.get(i).getId();
+                head = i;
+                setLan = new HashSet<>();
+                setAlgo = new HashSet<>();
+                setLan.add(studyroomDto.get(i).getLanguageId());
+                setAlgo.add(studyroomDto.get(i).getAlgoId());
+            }
+        }
+        return studyroomDtoTemp;
+    }
+
+    @Override
+    public String checkStudyroomPassword(StudyroomDto studyroomDto) {
+        try {
+            if(studyroomMapper.checkStudyroomPassword(studyroomDto)==1){
+                return SUCCESS;
+            }else{
+                return FAIL;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return FAIL;
+        }
     }
 
     private static boolean checkout(int n[], int index) {

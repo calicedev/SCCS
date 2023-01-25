@@ -15,7 +15,7 @@ public class StudyroomDto {
     String password;
     Timestamp createDateTime;
     Timestamp destroyDatetime;
-    Boolean is_active;
+    Boolean isActive;
     Boolean type;
     List<Integer> languageIds;
     List<Integer> algoIds;

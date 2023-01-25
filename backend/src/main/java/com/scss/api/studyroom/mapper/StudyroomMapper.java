@@ -22,4 +22,6 @@ public interface StudyroomMapper {
     public void insertMemberId(StudyroomMemberDto studyroomMemberDto);
 
     public List<StudyroomDto> selectAllStudyroom();
+
+    public int checkStudyroomPassword(StudyroomDto studyroomDto);
 }
