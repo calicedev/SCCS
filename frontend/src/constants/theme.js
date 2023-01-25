@@ -1,6 +1,5 @@
 const theme = {
   light: {
-    //background color
     primaryColor: '#2B6EC9',
     secondaryColor: '#A8D5FF',
     tertiaryColor: '#97A7BD',

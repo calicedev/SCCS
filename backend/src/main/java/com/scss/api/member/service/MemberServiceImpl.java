@@ -4,6 +4,7 @@ import com.scss.api.member.dto.MemberDto;
 import com.scss.api.member.dto.UniqueDto;
 import com.scss.api.member.mapper.MemberMapper;
 
+import com.scss.api.member.util.EncryptService;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class MemberServiceImpl implements MemberService {
     private static final String FAIL = "fail";
     // 생성자 주입
     private final MemberMapper memberMapper;
+    private final EncryptService encryptService;
 
     // 회원 가입
     @Override
@@ -60,24 +62,18 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    // 비밀번호 수정
+    /** 비밀번호 수정 **/
     @Override
     public String modifyPassword(MemberDto memberDto) {
         try {
-            // 비밀번호 암호화
             String password = memberDto.getPassword();
-
-            String hex = "";
             String salt = memberDto.getSalt();
-            String rawAndSalt = password + salt;
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            md.update(rawAndSalt.getBytes());
-            hex = String.format("%064x", new BigInteger(1, md.digest()));
+            logger.debug("저장된 salt  : {} ", salt);
+            String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
+            logger.debug("새로운 비번 + 암호화 : {}", hex);
             memberDto.setPassword(hex);
 
-
-            memberMapper.modifyPassword(memberDto);
+            memberMapper.modifyPassword(memberDto); // DB 값 수정
             logger.debug("비밀번호 수정 성공");
             return SUCCESS;
         } catch (Exception e) {
@@ -88,9 +84,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public String uniqueParam(UniqueDto uniqueDto) {
-
-        String result = memberMapper.uniqueParam(uniqueDto);
-
-        return result;
+        return memberMapper.uniqueParam(uniqueDto);
     }
 }

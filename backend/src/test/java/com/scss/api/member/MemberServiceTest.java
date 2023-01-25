@@ -20,8 +20,8 @@ public class MemberServiceTest {
     @Test
     @Transactional
     void signUp(){
-        MemberDto memberDto = new MemberDto("ssassfywwswweb", "your_pawwssssdword","임혜ss은","casslice","calicewsdsssdeweedeb@fjdks","dsdd",0,"2023-01-17 17:11:02");
-        String res = memberService.signup(memberDto);
+        MemberDto memberDto = new MemberDto("ssassfywwswweb", "your_pawwssssdword","임혜ss은","casslice","calicewsdsssdeweedeb@fjdks","dsdd",0,null,"cvhxcivuhxiu");
+        String res = memberService.signUp(memberDto);
         Assertions.assertThat(res).isEqualTo("success");
     }
 }
