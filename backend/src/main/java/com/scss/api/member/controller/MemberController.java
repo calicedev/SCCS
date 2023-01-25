@@ -66,6 +66,7 @@ public class MemberController {
     }
 
     /** 로그인 : 아이디, 비밀번호 일치시 토큰 생성 **/
+    // ToDo : refreshtoken Redis에 저장하기 (key: member_id, value: refreshtoken)
     @PostMapping("/member/login")
     public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap)
             throws NoSuchAlgorithmException {
@@ -77,34 +78,35 @@ public class MemberController {
             String salt = memberDto.getSalt(); // DTO에 저장된 salt 값 불러오기
             String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
-            logger.debug("로그인 시도 비번 : {}", hex);
-            logger.debug("기존 비밀번호 : {}", memberDto.getPassword());
+            logger.debug("[logIn]로그인 시도 비번 : {}", hex);
+            logger.debug("[logIn]기존 비밀번호 : {}", memberDto.getPassword());
 
             if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
-                String accessToken = jwtService.createToken(paramMap.get("id"), "access",
-                        (2 * 1000 * 60));
-                String refreshToken = jwtService.createToken(paramMap.get("id"), "refresh",
-                        (5 * 1000 * 60));
-                resultmap.put("accessToken", accessToken);
-                resultmap.put("refreshToken", refreshToken);
+                String accessToken = jwtService.createToken(paramMap.get("id"), "accesstoken",
+                        (5 * 1000 * 60)); // 5분
+                String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshtoken",
+                        (10 * 1000 * 60)); // 10분
+                resultmap.put("accesstoken", accessToken);
+                resultmap.put("refreshtoken", refreshToken);
 
-                logger.debug("로그인 성공");
-                logger.debug("accessToken : {}", accessToken);
-                logger.debug("refreshToken : {}", refreshToken);
+                logger.debug("[logIn]로그인 성공");
+                logger.debug("accesstoken : {}", accessToken);
+                logger.debug("refreshtoken : {}", refreshToken);
                 return new ResponseEntity<Map>(resultmap, HttpStatus.OK);
             } else {
-                logger.debug("비밀번호 불일치!!!");
+                logger.debug("[logIn]비밀번호 불일치!!!");
                 resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
                 return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            logger.debug("아이디가 존재하지 않습니다.");
+            logger.debug("[logIn]아이디가 존재하지 않습니다.");
             resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
             return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED);
         }
     }
 
     /** 회원 정보 **/
+    // ToDo : accesstoken 검증 로직 추가하기
     @GetMapping("/member")
     public ResponseEntity<?> memberInfo(@RequestParam("id") String id) {
         logger.debug("memberInfo() is called // member id : {}", id);
@@ -116,7 +118,7 @@ public class MemberController {
             resultMap.put("data", memberDto);
             return new ResponseEntity<>(resultMap, HttpStatus.OK);
         } else {
-            logger.debug("아이디가 존재하지 않습니다.");
+            logger.debug("[memberInfo]아이디가 존재하지 않습니다.");
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }
     }
@@ -146,11 +148,11 @@ public class MemberController {
 
                 MemberDto memberDto = memberService.memberInfo(id);
 
-                logger.debug("수정 전 : {}", memberDto);
+                logger.debug("[modify]수정 전 : {}", memberDto);
                 if (param.get("nickname") != null) memberDto.setNickname(param.get("nickname")); // null 이 넘어오면 수정 x (기존 값 유지)
                 if (param.get("email") != null) memberDto.setEmail(param.get("email"));
                 if (param.get("profile_image") != null) memberDto.setProfile_image(param.get("profile_image"));
-                logger.debug("수정 후 : {}", memberDto);
+                logger.debug("[modify]수정 후 : {}", memberDto);
 
                 Map<String, String> resultMap = new HashMap<>();
 
@@ -166,36 +168,41 @@ public class MemberController {
         return null;
     }
 
-    // 비밀번호 수정
+    /** 비밀번호 수정 **/
     @PatchMapping("/member/password")
     public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> param, HttpServletRequest request) {
         String newPassword = param.get("new_password"); // 클라이언트에서 넘어온 변경하고자 하는 비밀번호
         logger.debug("변경하고자 하는 비밀번호 : {}", newPassword);
 
+        Map<String, String> resultMap = new HashMap<>(); // 결과를 담을 자료구조
         Cookie[] list = request.getCookies(); // 클라이언트에서 넘어온 토큰 리스트
         for (Cookie cookie : list) {
             if (cookie.getName().equalsIgnoreCase("accesstoken")) { // 토큰 이름이 accesstoken일 때
                 String accessToken = cookie.getValue(); // 쿠키에서 accessToken 파싱
                 Claims claims = jwtService.getToken(accessToken); // accessToken에서 Claims 파싱
-                logger.debug("토큰 검증 성공 !!");
-                String id = (String) claims.get("member_id"); // accessToken에서 회원 id 파싱
-                logger.debug("회원 아이디 : {}", id);
+                if (claims != null) {
+                    String id = (String) claims.get("member_id"); // accessToken에서 회원 id 파싱
 
-                MemberDto memberDto = memberService.memberInfo(id); // DB에서 회원 정보 조회
+                    logger.debug("회원 아이디 : {}", id);
 
-                Map<String, String> resultMap = new HashMap<>(); // 결과를 담을 자료구조
-                memberDto.setPassword(newPassword);
+                    MemberDto memberDto = memberService.memberInfo(id); // DB에서 회원 정보 조회
 
-                if (memberService.modifyPassword(memberDto).equals(SUCCESS)) {
-                    resultMap.put("message", "성공");
-                    return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
+                    memberDto.setPassword(newPassword);
+
+                    if (memberService.modifyPassword(memberDto).equals(SUCCESS)) {
+                        resultMap.put("message", "성공");
+                        return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
+                    } else {
+                        resultMap.put("message", "실패");
+                        return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.UNAUTHORIZED);
+                    }
                 } else {
-                    resultMap.put("message", "권한이 없습니다");
+                    resultMap.put("message", "토큰 정보가 유효하지 않거나 토큰이 만료되었습니다");
                     return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.UNAUTHORIZED);
                 }
             }
         }
-        return null;
+        return null; // \\ 이렇게 두는게 맞을까?? //
     }
 
 

@@ -23,6 +23,8 @@ mybatis:
   mapper-locations: classpath*:mappers/*.xml
   type-aliases-package: com.scss.api.*.*
 
+jwt:
+  secret: oekcERFVSD3nvc9vdSGci3dzke3f09cDFiv9we3uihcdskj3vcnhzvredxzvuheanwaDDSFf3fuhvcxzGVFsgjvhnbdas8ghrf4whfgdsafvcijhsdiufgh
 
 
 
