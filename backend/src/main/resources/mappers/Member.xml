@@ -6,16 +6,17 @@
 
 <mapper namespace="com.scss.api.member.mapper.MemberMapper">
 
-  <insert id="signup" parameterType="MemberDto">
+  <insert id="signUp" parameterType="MemberDto">
     insert into member(
     id,
     password,
     name,
     nickname,
     email,
-    profile_image,
     score,
-    join_date
+    profile_image,
+    join_date,
+    salt
     )
     values(
     #{id},
@@ -23,10 +24,52 @@
     #{name},
     #{nickname},
     #{email},
-    #{profile_image},
-    #{score},
-    now()
+    0,
+    null,
+    now(),
+    #{salt}
     )
   </insert>
+
+  <select id="memberInfo" parameterType="String" resultType="MemberDto">
+    select *
+    from member
+    where id = #{id}
+  </select>
+
+  <select id="findId" parameterType="hashmap" resultType="String" >
+    select id
+    from member
+    where name = #{name} and email = #{email}
+  </select>
+
+  <update id="modify" parameterType="memberDto">
+    update member
+    set nickname = #{nickname}, email = #{email}, profile_image = #{profile_image}
+    where id = #{id}
+  </update>
+
+  <update id="modifyPassword" parameterType="memberDto">
+    update member
+    set password = #{password}
+    where id = #{id}
+  </update>
+
+  <select id="uniqueParam" parameterType="uniqueDto" resultType="string">
+    select id
+    from member
+    <bind name="types" value="_parameter.getType()"/>
+    <choose>
+      <when test="types.equals('id')">
+        where id = #{param}
+      </when>
+      <when test="types.equals('email')">
+        where email = #{param}
+      </when>
+      <when test="types.equals('nickname')">
+        where nickname = #{param}
+      </when>
+    </choose>
+  </select>
 
 </mapper>

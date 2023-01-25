@@ -2,12 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const Button = ({ size, type, onClick, value }) => {
+const Button = ({ size, type, onClick, value, logo, borderRadius }) => {
   const sizeClass = size === 'small' ? 'sm-btn' : 'medium' ? 'md-btn' : 'lg-btn'
   const typeClass = `${type}-btn`
 
   return (
-    <BtnWrapper className={`${sizeClass} ${typeClass}`} onClick={onClick}>
+    <BtnWrapper
+      borderRadius={borderRadius}
+      className={`${sizeClass} ${typeClass}`}
+      onClick={onClick}
+    >
+      {logo}
       {value}
     </BtnWrapper>
   )
@@ -17,9 +22,17 @@ Button.propTypes = {
   // 버튼 크기
   size: PropTypes.oneOf(['small', 'medium', 'large']),
   // 버튼 커스터마이징 (글자색, 배경색, border-radius)
-  type: PropTypes.oneOf(['blueColor', 'skyblueColor', 'redColor', 'grayColor']),
+  type: PropTypes.oneOf([
+    'blueColor',
+    'skyblueColor',
+    'redColor',
+    'grayColor',
+    'transparent',
+  ]),
   onClick: PropTypes.func,
   value: PropTypes.string,
+  logo: PropTypes.object,
+  borderRadius: PropTypes.string,
 }
 
 Button.defaultProps = {
@@ -27,12 +40,14 @@ Button.defaultProps = {
   type: 'skyblueColor',
   onClick: undefined,
   value: '',
+  logo: undefined,
+  borderRadius: '1rem',
 }
 
 const BtnWrapper = styled.button`
   display: inline-flex;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: ${({ borderRadius }) => borderRadius};
   white-space: nowrap;
   transition: background-color ease 0.1s;
   font-weight: 600;
@@ -61,7 +76,10 @@ const BtnWrapper = styled.button`
     background-color: ${({ theme }) => theme.grayBgColor};
     color: ${({ theme }) => theme.whiteColor};
   }
-
+  &.transparent-btn {
+    background-color: opacity: 0;
+    color: ${({ theme }) => theme.grayBgColor};
+  }
   &.sm-btn {
     padding: 0.5rem 1rem;
     font-size: 1.5rem;

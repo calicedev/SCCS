@@ -1,66 +1,110 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
+
 
 const typeObj = {
   name: {
     type: 'text',
     label: 'Name',
-    placeholder: '이름을 입력하세요',
+    placeholder: 'user.name',
   },
   nickname: {
     type: 'text',
     label: 'Nickname',
-    placeholder: '닉네임을 입력하세요',
+    placeholder: 'user.nickname',
   },
   id: {
     type: 'text',
-    label: 'Id',
-    placeholder: '아이디를 입력하세요',
+    label: 'ID',
+    placeholder: 'user.id',
   },
   email: {
-    type: 'email',
+    type: 'Email',
     label: 'Email',
-    placeholder: '이메일을 입력하세요',
+    placeholder: 'user.email@email.com',
   },
   password: {
     type: 'password',
     label: 'Password',
-    placeholder: '비밀번호를 입력하세요',
+    placeholder: 'user.password',
   },
   newpassword: {
-    type: 'password',
-    label: 'Password',
-    placeholder: '비밀번호를 입력하세요',
+    type: 'nowpassword',
+    label: 'NewPassword',
+    placeholder: 'user.newpassword',
   },
-  confirmPassword: {
-    type: 'password',
+  confirmpassword: {
+    type: 'confirmpassword',
     label: 'Confirm Password',
-    placeholder: '비밀번호를 확인하세요',
+    placeholder: 'user.confirmpassowrd',
   },
 }
 
-const InputBox = ({ type, value, onChange, message }) => {
+const ProfileInput = ({ type, value, onChange, disabled }) => {
   return (
-    <div>
-      {/* <Label>{typeObj[type].label}</Label>
-      <FlexBox>
+    <InputBox>
+      <Label>{typeObj[type].label}</Label>
+      
         
-        <Input
-          type={typeObj[type].type}
-          placeholder={typeObj[type].placeholder}
-          value={value}
-          onChange={onChange}
-        />
-      </FlexBox>
-      <Message isValid={message.isValid}>{message.text}</Message> */}
-    </div>
+      <Input
+        type={typeObj[type].type}
+        placeholder={typeObj[type].placeholder}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+      />
+    
+    </InputBox>
   )
+}
+
+const InputBox = styled.div`
+  
+  border: 1px;
+`
+
+ProfileInput.propTypes = {
+  type: PropTypes.oneOf([
+    'name',
+    'nickname',
+    'id',
+    'email',
+    'password',
+    'newpassword',
+    'confirmPassword',
+  ]),
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  message: PropTypes.object,
+  disabled: PropTypes.bool,
+}
+
+ProfileInput.defaultProps = {
+  type: 'id',
+  value: '',
+  onChange: undefined,
+  message: { text: '', isValid: false },
+  disabled: true,
 }
 
 
 
-export default function ProfileInput() {
-  return (
-    <div>ProfileInput</div>
-  )
-}
+const Input = styled.input`
+  font-size: 1.5rem;
+  padding: 0.2rem 0.1rem;
+  height: 3rem;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: ${({disabled}) => disabled ? '#CCCCCC' : 'white'}
+`
+
+const Label = styled.div`
+  font-size: 1.4rem;
+  color: black;
+  margin-top: 1rem;
+`
+
+
+export default ProfileInput
+

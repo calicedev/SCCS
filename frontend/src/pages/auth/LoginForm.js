@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/InputBox'
-import Check from 'components/atoms/Check'
+import InputBox from 'components/molecules/InputBox'
+import Check from 'components/atoms/Checkbox'
 import { useNavigate } from 'react-router-dom'
 import axios from 'libs/axios'
 import api from 'apis/api'
-
 
 import { useAuthInput } from 'hooks/useAuthInput'
 
@@ -16,23 +15,18 @@ export default function LoginForm() {
   const [id, setId, idMsg] = useAuthInput('id', '')
   const [password, setPassword, passwordMsg] = useAuthInput('password', '')
 
-  const [message, setMessage] = useState(
-    {
+  const [message, setMessage] = useState({
     text: '',
     isValid: '',
-    }
-  )
+  })
   const login = () => {
-
     if (!(id && password)) {
-      const checkmsg = {...message}
-      checkmsg.text= '아이디와 패스워드를 입력해주세요'
+      const checkmsg = { ...message }
+      checkmsg.text = '아이디와 패스워드를 입력해주세요'
       checkmsg.isValid = false
       setMessage(checkmsg)
       return
     }
-
-
     const data = {
       id,
       password,
@@ -44,9 +38,8 @@ export default function LoginForm() {
         console.log(res)
       })
       .catch((err) => {
-
-        const checkmsg = {...message}
-        checkmsg.text= '아이디 혹은 패스워드를 잘못 입력했습니다'
+        const checkmsg = { ...message }
+        checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
         checkmsg.isValid = false
         setMessage(checkmsg)
       })
@@ -54,9 +47,8 @@ export default function LoginForm() {
 
   return (
     <Login>
-      
       <H1>Login</H1>
-      
+
       <Description>
         If you don't have an account register
         <br /> You can{' '}
@@ -85,8 +77,20 @@ export default function LoginForm() {
       <Container>
         <Check></Check>
         <div>
-          <ForgotSpan>Forgot ID?</ForgotSpan>
-          <ForgotSpan>Forgot Password?</ForgotSpan>
+          <ForgotSpan
+            onClick={() => {
+              navigate(`/auth/findid`)
+            }}
+          >
+            Forgot ID?
+          </ForgotSpan>
+          <ForgotSpan
+            onClick={() => {
+              navigate(`/auth/resetpassword`)
+            }}
+          >
+            Forgot Password?
+          </ForgotSpan>
         </div>
       </Container>
 
@@ -111,6 +115,7 @@ const Container = styled.div`
 
 const ForgotSpan = styled.span`
   margin: 0.8rem 0.4rem;
+  cursor: pointer;
 `
 
 const H1 = styled.h1`

@@ -19,7 +19,7 @@ export default function Logo() {
 }
 
 const Img = styled.img`
-  width: 6rem;
-  height: 6rem;
+  width: 8rem;
+  height: 4rem;
   
 `
