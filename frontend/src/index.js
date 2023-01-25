@@ -9,18 +9,21 @@ import { Provider } from 'react-redux'
 import GlobalStyle from './constants/GlobalStyle'
 import store from './redux/store'
 import theme from './constants/theme'
+import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme.light}>
-        <GlobalStyle />
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
+    <CookiesProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme.light}>
+          <GlobalStyle />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </CookiesProvider>
   </React.StrictMode>,
 )
 

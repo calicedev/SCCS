@@ -4,7 +4,7 @@ import Calendar from 'components/molecules/Calendar'
 import DateSelector from 'components/molecules/DateSelector'
 import styled from 'styled-components'
 import { format } from 'date-fns'
-import Study from 'components/molecules/Study'
+import Study from 'components/atoms/StudyItem'
 
 const studies = [
   {

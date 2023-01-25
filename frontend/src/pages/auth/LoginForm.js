@@ -1,24 +1,30 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/atoms/AuthInput'
-import Check from 'components/atoms/Checkbox'
-import { useNavigate } from 'react-router-dom'
+import AuthInput from 'components/atoms/AuthInput'
+import Checkbox from 'components/atoms/Checkbox'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'libs/axios'
 import api from 'apis/api'
-
+import Typography from 'components/atoms/Typography'
 import { useAuthInput } from 'hooks/useAuthInput'
+import { useCookies } from 'react-cookie';
+
 
 export default function LoginForm() {
   const navigate = useNavigate()
+  const [cookie, setCookie] = useCookies(['id'])
 
-  const [id, setId, idMsg] = useAuthInput('id', '')
-  const [password, setPassword, passwordMsg] = useAuthInput('password', '')
-
+  const [id, setId] = useAuthInput('id', '')
+  const [password, setPassword] = useAuthInput('password', '')
   const [message, setMessage] = useState({
     text: '',
     isValid: '',
+    
   })
+  const [isChecked, setIsChecked] = useState(false)
+
+
   const login = () => {
     if (!(id && password)) {
       const checkmsg = { ...message }
@@ -36,6 +42,8 @@ export default function LoginForm() {
       .post(url, data)
       .then((res) => {
         console.log(res)
+        setCookie('refresh_token', res.data['refresh_token'])
+        setCookie('access_token', res.data['access_token'])
       })
       .catch((err) => {
         const checkmsg = { ...message }
@@ -47,35 +55,28 @@ export default function LoginForm() {
 
   return (
     <Login>
-      <H1>Login</H1>
+      <Typography type='h1' value='Login'></Typography>
 
-      <Description>
-        If you don't have an account register
-        <br /> You can{' '}
-        <span
-          onClick={() => {
-            navigate('/auth/signup')
-          }}
-        >
-          Register here!
-        </span>
-      </Description>
-      <InputBox
+      <Typography type='h3' value="If you don't have an account register">
+      </Typography>
+      <Link to="/auth/signup">
+        <Typography type='h3' value='Register here!' color='pass'></Typography>
+      </Link>
+      <AuthInput
         type="id"
         value={id}
         onChange={(e) => setId(e.target.value)}
-        message={idMsg}
-      ></InputBox>
-      <InputBox
+      ></AuthInput>
+      <AuthInput
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        message={passwordMsg}
-      ></InputBox>
+      ></AuthInput>
 
-      <Message isValid={message.isValid}>{message.text}</Message>
+      <Typography type='c' value={message.text} color={message.isValid? 'pass' : 'error'} />
+
       <Container>
-        <Check></Check>
+        <Checkbox label='Remember Me' value={isChecked} onChange={(e) => setIsChecked(e.target.value)}></Checkbox>
         <div>
           <ForgotSpan
             onClick={() => {

@@ -6,7 +6,7 @@ export default function Checkbox({ id, value, label, onChange }) {
   return (
     <div>
       <InputCheck type="checkbox" id={id} value={value} onChange={onChange} />
-      <label for={id} value={label} />
+      <label for={id}>{label}</label>
     </div>
   )
 }

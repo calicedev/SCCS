@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useState } from 'react'
-import ProblemItem from 'components/molecules/ProblemItem'
+import ProblemItem from 'components/atoms/ProblemItem'
 import Pagination from 'components/molecules/Pagination'
 import Button from 'components/atoms/Button'
 
