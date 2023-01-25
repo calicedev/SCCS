@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import PropTypes from 'prop-types'
 import gobackLogo from 'assets/img/goback_logo.png'
 import { useNavigate } from 'react-router-dom'
 

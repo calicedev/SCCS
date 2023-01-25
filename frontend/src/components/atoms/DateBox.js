@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import Typography from 'components/atoms/Typography'
 
 export default function DateBox({
   date,
@@ -7,43 +8,36 @@ export default function DateBox({
   content,
   onClick,
   onMouseEnter,
+  onMouseLeave,
 }) {
-  // const [isHovered, setIsHovered] = useState(false)
-
-  const mouseEnter = (e) => {
-    if (disabled) return
-    onMouseEnter(date)
-  }
-
-  const mouseLeave = (e) => {
-    if (disabled) return
-  }
-
-  const click = (e) => {
-    if (!disabled) return
-    onClick(e)
-  }
+  const disabledClass = disabled ? 'disabled' : 'abled'
 
   return (
-    <Container
+    <FlexBox
       id={date}
-      disabled={disabled}
-      onMouseEnter={mouseEnter}
-      onMouseLeave={mouseLeave}
-      onClick={click}
+      className={disabledClass}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
-      {date.slice(-2)}
+      <Typography type="p" value={date.slice(-2)} />
       {content}
-    </Container>
+    </FlexBox>
   )
 }
 
-const Container = styled.div`
+const FlexBox = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
-  background-color: ${({ disabled }) => (disabled ? 'gray' : 'white')};
+
+  overflow: hidden;
+
+  border: 1px solid gray;
+  border-radius: 5px;
 
   white-space: nowrap;
-  overflow: hidden;
+
+  &.disabled {
+    background-color: ${({ theme }) => theme.grayColor};
+  }
 `
