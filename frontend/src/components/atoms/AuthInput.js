@@ -115,4 +115,4 @@ const Label = styled.div`
   margin-top: 1rem;
 `
 
-export default InputBox
+export default AuthInput
