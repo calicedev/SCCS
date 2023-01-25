@@ -41,6 +41,11 @@ dependencies {
 
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
 
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // lettuce : open source connector
+    implementation 'io.lettuce:lettuce-core:6.2.2.RELEASE'
+
 }
 
 tasks.named('test') {
