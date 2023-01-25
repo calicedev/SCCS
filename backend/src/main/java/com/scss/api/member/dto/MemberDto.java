@@ -18,6 +18,6 @@ public class MemberDto {
     String email;
     String profile_image;
     int score;
-    Timestamp join_date;
+    Timestamp joinDate;
     String salt;
 }
