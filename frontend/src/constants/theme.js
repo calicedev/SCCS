@@ -1,21 +1,31 @@
 const theme = {
-  // Bgcolor
-  blackBgColor: '#000000',
-  blueBgColor: '#2B6EC9',
-  grayBgColor: '#979797',
-  grayishBlueBgColor: '#97A7BD',
-  indigoBgColor: '#001A73',
-  redBgColor: '#AB342E',
-  skyblueBgColor: '#CAE0FF',
-  whiteBgColor: '#FFFFFF',
+  light: {
+    //background color
+    primaryColor: '#2B6EC9',
+    secondaryColor: '#A8D5FF',
+    tertiaryColor: '#97A7BD',
+    grayColor: '#979797',
+    dangerColor: '#E20808',
 
-  //font color
-  blackColor: '#262626',
-  blueColor: '#2677C2',
-  indigoColor: '#200842',
-  grayColor: '#999999',
-  redColor: '#EF0A0A',
-  whiteColor: '#FFFFFF',
+    passColor: '#1C6FBC',
+    errorColor: '#EF0A0A',
+
+    bgColor: '#FFFFFF',
+    fontColor: '#000000',
+  },
+  dark: {
+    primaryColor: '#A8D5FF',
+    secondaryColor: '#2B6EC9',
+    tertiaryColor: '#97A7BD',
+    grayColor: '#979797',
+    dangerColor: '#E20808',
+
+    passColor: '#1C6FBC',
+    errorColor: '#EF0A0A',
+
+    bgColor: '#FFFFFF',
+    fontColor: '#000000',
+  },
 }
 
 export default theme

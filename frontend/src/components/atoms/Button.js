@@ -2,83 +2,75 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const Button = ({ size, type, onClick, value, logo, borderRadius }) => {
-  const sizeClass = size === 'small' ? 'sm-btn' : 'medium' ? 'md-btn' : 'lg-btn'
+const Button = ({ size, type, onClick, value }) => {
+  const sizeClass =
+    size === 'tiny'
+      ? 'xs-btn'
+      : 'small'
+      ? 'sm-btn'
+      : 'medium'
+      ? 'md-btn'
+      : 'lg-btn'
   const typeClass = `${type}-btn`
 
   return (
-    <BtnWrapper
-      borderRadius={borderRadius}
-      className={`${sizeClass} ${typeClass}`}
-      onClick={onClick}
-    >
-      {logo}
+    <BtnWrapper className={`${sizeClass} ${typeClass}`} onClick={onClick}>
       {value}
     </BtnWrapper>
   )
 }
 
 Button.propTypes = {
-  // 버튼 크기
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  // 버튼 커스터마이징 (글자색, 배경색, border-radius)
-  type: PropTypes.oneOf([
-    'blueColor',
-    'skyblueColor',
-    'redColor',
-    'grayColor',
-    'transparent',
-  ]),
+  size: PropTypes.oneOf(['tiny', 'small', 'medium', 'large']), // 버튼 크기
+  type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'danger']), // 버튼 커스터마이징 (글자색, 배경색, border-radius)
   onClick: PropTypes.func,
   value: PropTypes.string,
-  logo: PropTypes.object,
-  borderRadius: PropTypes.string,
 }
 
 Button.defaultProps = {
   size: 'small',
-  type: 'skyblueColor',
+  type: 'primary',
   onClick: undefined,
   value: '',
-  logo: undefined,
-  borderRadius: '1rem',
 }
 
 const BtnWrapper = styled.button`
   display: inline-flex;
   justify-content: center;
-  border-radius: ${({ borderRadius }) => borderRadius};
-  white-space: nowrap;
-  transition: background-color ease 0.1s;
-  font-weight: 600;
-  text-align: center;
+
   margin: 0 auto;
 
-  &.blueColor-btn {
-    background-color: ${({ theme }) => theme.blueBgColor};
-    color: ${({ theme }) => theme.whiteColor};
+  border-radius: 10px;
+
+  text-align: center;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+
+  transition: background-color ease 0.1s;
+
+  &.primary-btn {
+    background-color: ${({ theme }) => theme.primaryColor};
+  }
+  &.secondary-btn {
+    background-color: ${({ theme }) => theme.secondaryColor};
     &:hover {
-      background-color: ${({ theme }) => theme.indigoBgColor};
+      background-color: ${({ theme }) => theme.primaryColor};
     }
   }
-  &.skyblueColor-btn {
-    background-color: ${({ theme }) => theme.skyblueBgColor};
-    color: ${({ theme }) => theme.whiteColor};
-    &:hover {
-      background-color: ${({ theme }) => theme.blueBgColor};
-    }
+  &.tertiary-btn {
+    background-color: ${({ theme }) => theme.tertiaryColor};
   }
-  &.redColor-btn {
-    background-color: ${({ theme }) => theme.redBgColor};
-    color: ${({ theme }) => theme.whiteColor};
+  &.gray-btn {
+    background-color: ${({ theme }) => theme.grayColor};
   }
-  &.grayColor-btn {
-    background-color: ${({ theme }) => theme.grayBgColor};
-    color: ${({ theme }) => theme.whiteColor};
+  &.warning-btn {
+    background-color: ${({ theme }) => theme.warningColor};
   }
-  &.transparent-btn {
-    background-color: opacity: 0;
-    color: ${({ theme }) => theme.grayBgColor};
+  &.xs-btn {
+    padding: 0.5rem 0.5rem;
+    border-radius: 50%;
+    font-size: 1.2rem;
   }
   &.sm-btn {
     padding: 0.5rem 1rem;

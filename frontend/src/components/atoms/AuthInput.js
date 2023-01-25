@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { BiUser } from 'react-icons/bi'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdOutlineEmail } from 'react-icons/md'
-import Message from 'components/atoms/Message'
+import Typography from 'components/atoms/Typography'
 
 const typeObj = {
   id: {
@@ -45,9 +45,9 @@ const typeObj = {
   },
 }
 
-const InputBox = ({ type, value, onChange, message }) => {
+const AuthInput = ({ type, value, onChange, message }) => {
   return (
-    <div>
+    <Wrapper>
       <Label>{typeObj[type].label}</Label>
       <FlexBox>
         {typeObj[type].logo}
@@ -58,12 +58,15 @@ const InputBox = ({ type, value, onChange, message }) => {
           onChange={onChange}
         />
       </FlexBox>
-      <Message isValid={message.isValid} text={message.text}></Message>
-    </div>
+      <Typography
+        color={message.isValid ? 'pass' : 'error'}
+        vlaue={message.text}
+      />
+    </Wrapper>
   )
 }
 
-InputBox.propTypes = {
+AuthInput.propTypes = {
   type: PropTypes.oneOf([
     'id',
     'password',
@@ -77,12 +80,16 @@ InputBox.propTypes = {
   message: PropTypes.object,
 }
 
-InputBox.defaultProps = {
+AuthInput.defaultProps = {
   type: 'id',
   value: '',
   onChange: undefined,
   message: { text: '', isValid: false },
 }
+
+const Wrapper = styled.div`
+  margin-bottom: 1rem;
+`
 
 const FlexBox = styled.div`
   display: flex;
@@ -104,7 +111,7 @@ const Input = styled.input`
 `
 const Label = styled.div`
   font-size: 1.5rem;
-  color: gray;
+  color: ${({ theme }) => theme.fontColor};
   margin-top: 1rem;
 `
 

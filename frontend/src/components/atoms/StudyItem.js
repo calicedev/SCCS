@@ -2,8 +2,9 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Typography from 'components/atoms/Typography'
 
-export default function Study({ studies }) {
+export default function StudyItem({ studies }) {
   const [showOptions, setShowOptions] = useState(false)
   const navigate = useNavigate()
 
@@ -15,29 +16,27 @@ export default function Study({ studies }) {
     setShowOptions(false)
   }
 
-  const onClick = () => {}
-
   return (
     <Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {studies.map((study) => (
-        <div key={study.id}>
-          {study.title}
+        <Study key={study.id} onClick={navigate('mypage/study')}>
+          <Typography type="p" value={study.title} />
           {study.problems?.map((problem) => (
             <Option key={problem.id} hidden={!showOptions}>
-              {problem.title}
+              <Typography type="c" value={problem.title} />
             </Option>
           ))}
-        </div>
+        </Study>
       ))}
     </Wrapper>
   )
 }
 
-Study.propTypes = {
+StudyItem.propTypes = {
   studies: PropTypes.array,
 }
 
-Study.defaultProps = {
+StudyItem.defaultProps = {
   studies: [],
 }
 
@@ -46,7 +45,9 @@ const Wrapper = styled.div`
   height: 100%;
 `
 
-const Title = styled.div``
+const Study = styled.div`
+  margin-bottom: 0.5rem;
+`
 
 /* @keyframes duration | easing-function | delay |
 iteration-count | direction | fill-mode | play-state | name */

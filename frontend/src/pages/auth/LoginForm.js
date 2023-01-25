@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/molecules/InputBox'
+import InputBox from 'components/atoms/AuthInput'
 import Check from 'components/atoms/Checkbox'
 import { useNavigate } from 'react-router-dom'
 import axios from 'libs/axios'

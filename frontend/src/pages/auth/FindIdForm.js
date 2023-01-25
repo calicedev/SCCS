@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
-import InputBox from 'components/molecules/InputBox'
+import InputBox from 'components/atoms/AuthInput'
 import Goback from 'components/atoms/Goback'
 
 export default function FindIdForm() {
