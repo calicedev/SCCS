@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-
+import Typography from './Typography'
 
 const typeObj = {
   name: {
@@ -41,12 +41,10 @@ const typeObj = {
   },
 }
 
-const ProfileInput = ({ type, value, onChange, disabled }) => {
+const ProfileInput = ({ type, value, onChange, disabled, message }) => {
   return (
     <InputBox>
       <Label>{typeObj[type].label}</Label>
-      
-        
       <Input
         type={typeObj[type].type}
         placeholder={typeObj[type].placeholder}
@@ -54,7 +52,10 @@ const ProfileInput = ({ type, value, onChange, disabled }) => {
         onChange={onChange}
         disabled={disabled}
       />
-    
+      <Typography
+        color={message.isValid ? 'pass' : 'error'}
+        vlaue={message.text}
+      ></Typography>
     </InputBox>
   )
 }
@@ -85,10 +86,8 @@ ProfileInput.defaultProps = {
   value: '',
   onChange: undefined,
   message: { text: '', isValid: false },
-  disabled: true,
+  disabled: false,
 }
-
-
 
 const Input = styled.input`
   font-size: 1.5rem;
@@ -101,7 +100,7 @@ const Input = styled.input`
 
 const Label = styled.div`
   font-size: 1.4rem;
-  color: black;
+  color: ${({theme}) => theme.fontColor};
   margin-top: 1rem;
 `
 
