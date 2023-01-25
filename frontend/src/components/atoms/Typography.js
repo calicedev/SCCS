@@ -28,6 +28,7 @@ const TypoWrapper = styled.p`
   &.h1 {
     font-size: 3rem;
     font-weight: 700;
+    margin: 1rem 0rem;
   }
   &.h2 {
     font-size: 2rem;
