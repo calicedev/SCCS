@@ -13,7 +13,7 @@ mybatis:
     jdbc-type-for-null: varchar
     default-fetch-size: 500
   mapper-locations: classpath*:mappers/*.xml
-  type-aliases-package: com.scss.api.member.*
+  type-aliases-package: com.scss.api.*.*
 
 
 logging:
