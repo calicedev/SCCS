@@ -4,6 +4,7 @@ import com.scss.api.member.dto.MemberDto;
 import com.scss.api.member.dto.UniqueDto;
 import com.scss.api.member.service.JWTService;
 import com.scss.api.member.service.MemberService;
+import com.scss.api.member.util.EncryptService;
 import java.lang.reflect.Member;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -35,33 +36,23 @@ public class MemberController {
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-    private static final int SALT_SIZE = 16;
+    //private static final int SALT_SIZE = 16;
 
     private final MemberService memberService;
     private final JWTService jwtService;
+    private final EncryptService encryptService;
 
-    // 회원 가입
+    /** 회원 가입 **/
     @PostMapping("/member")
     public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto)
             throws NoSuchAlgorithmException {
-
         String password = memberDto.getPassword(); // 암호화 전 비밀번호
-        String hex = ""; // 암호화 후 비밀번호
-        SecureRandom random = SecureRandom.getInstance("SHA1PRNG"); // 암호용을 강화된 난수 생성 객체
-        byte[] bytes = new byte[16];
-        random.nextBytes(bytes); // 암호용 난수 바이트 생성
+        String salt = encryptService.newSalt(); // 암호용 난수
+        String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
-        String salt = new String(Base64.getEncoder().encode(bytes)); // 암호용 난수 생성
-        String rawAndSalt = password + salt; // 암호화 전 비밀번호 + 암호용 난수
-        MessageDigest md = MessageDigest.getInstance("SHA-256"); // 암호화 알고리즘 선택
-
-        // 평문 + 암호화
-        md.update(rawAndSalt.getBytes()); // 암호화 전 비밀번호 + 암호용 난수 ==> 해쉬
-        hex = String.format("%064x", new BigInteger(1, md.digest())); // 16진수 64바이트로 암호화 후 비밀번호 생성
-        logger.debug("암호화 후 비밀번호 : {}", hex);
-
-        memberDto.setPassword(hex);
-        memberDto.setSalt(salt);
+        logger.debug("[signUp]암호화 후 비밀번호 : {}", hex);
+        memberDto.setPassword(hex); // 설정된 DTO가 DB에 반영될 예정
+        memberDto.setSalt(salt); // salt 값을 기록. 로그인 처리시 비밀번호 검증시 사용
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -74,25 +65,22 @@ public class MemberController {
         }
     }
 
-    // 로그인 : 아이디, 비밀번호 일치시 토큰 생성
+    /** 로그인 : 아이디, 비밀번호 일치시 토큰 생성 **/
     @PostMapping("/member/login")
     public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap)
             throws NoSuchAlgorithmException {
         Map<String, String> resultmap = new HashMap<>(); // 결과를 담는 자료구조
-
         try {
             MemberDto memberDto = memberService.memberInfo(paramMap.get("id")); // member를 DB에서 조회
 
-            String password = paramMap.get("password");
-            String salt = memberDto.getSalt();
-            String rawAndSalt = password + salt;
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            String password = paramMap.get("password"); // 암호화 전 비밀번호
+            String salt = memberDto.getSalt(); // DTO에 저장된 salt 값 불러오기
+            String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
-            String hex = "";
-            // 평문 + 암호화
-            md.update(rawAndSalt.getBytes());
-            hex = String.format("%064x", new BigInteger(1, md.digest()));
-            if (hex.equals(memberDto.getPassword())) {
+            logger.debug("로그인 시도 비번 : {}", hex);
+            logger.debug("기존 비밀번호 : {}", memberDto.getPassword());
+
+            if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
                 String accessToken = jwtService.createToken(paramMap.get("id"), "access",
                         (2 * 1000 * 60));
                 String refreshToken = jwtService.createToken(paramMap.get("id"), "refresh",
@@ -101,15 +89,14 @@ public class MemberController {
                 resultmap.put("refreshToken", refreshToken);
 
                 logger.debug("로그인 성공");
-                logger.debug("accessToken:: {}", accessToken);
-                logger.debug("refreshToken:: {}", refreshToken);
+                logger.debug("accessToken : {}", accessToken);
+                logger.debug("refreshToken : {}", refreshToken);
                 return new ResponseEntity<Map>(resultmap, HttpStatus.OK);
             } else {
                 logger.debug("비밀번호 불일치!!!");
                 resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
                 return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED);
             }
-
         } catch (Exception e) {
             logger.debug("아이디가 존재하지 않습니다.");
             resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
@@ -117,14 +104,13 @@ public class MemberController {
         }
     }
 
-    // 회원 정보
+    /** 회원 정보 **/
     @GetMapping("/member")
     public ResponseEntity<?> memberInfo(@RequestParam("id") String id) {
         logger.debug("memberInfo() is called // member id : {}", id);
+        Map<String, Object> resultMap = new HashMap<>(); // 결과를 담는 자료구조
 
-        Map<String, Object> resultMap = new HashMap<>();
-
-        MemberDto memberDto = memberService.memberInfo(id);
+        MemberDto memberDto = memberService.memberInfo(id); // id값과 일치하는 회원정보 조회
         if (memberDto != null) {
             System.out.println(memberDto);
             resultMap.put("data", memberDto);
@@ -135,21 +121,19 @@ public class MemberController {
         }
     }
 
-    // 아이디 찾기 : 이름과 이메일로 아이디 찾기
+    /** 아이디 찾기 : 이름과 이메일로 아이디 찾기 **/
     @PostMapping("/member/id")
     public ResponseEntity<?> findId(@RequestBody HashMap<String, String> map) {
-
-        String id = memberService.findId(map);
+        String id = memberService.findId(map); // 이름과 이메일이 담겨있는 map을 넘겨주어 일치하는 아이디 값을 가져온다.
 
         if (id != null) {
             return new ResponseEntity<String>(id,HttpStatus.OK);
         } else {
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }
-
     }
 
-    // 회원 정보 수정
+    /** 회원 정보 수정 **/
     @PatchMapping("/member")
     public ResponseEntity<?> modify(@RequestBody HashMap<String, String> param, HttpServletRequest request) {
 
@@ -185,25 +169,22 @@ public class MemberController {
     // 비밀번호 수정
     @PatchMapping("/member/password")
     public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> param, HttpServletRequest request) {
-
-        String newPassword = param.get("new_password");
-        logger.debug("새로운 비밀번호 : {}", newPassword);
+        String newPassword = param.get("new_password"); // 클라이언트에서 넘어온 변경하고자 하는 비밀번호
+        logger.debug("변경하고자 하는 비밀번호 : {}", newPassword);
 
         Cookie[] list = request.getCookies(); // 클라이언트에서 넘어온 토큰 리스트
         for (Cookie cookie : list) {
             if (cookie.getName().equalsIgnoreCase("accesstoken")) { // 토큰 이름이 accesstoken일 때
                 String accessToken = cookie.getValue(); // 쿠키에서 accessToken 파싱
                 Claims claims = jwtService.getToken(accessToken); // accessToken에서 Claims 파싱
+                logger.debug("토큰 검증 성공 !!");
                 String id = (String) claims.get("member_id"); // accessToken에서 회원 id 파싱
+                logger.debug("회원 아이디 : {}", id);
 
-                MemberDto memberDto = memberService.memberInfo(id);
+                MemberDto memberDto = memberService.memberInfo(id); // DB에서 회원 정보 조회
 
-                logger.debug("비밀번호 수정 전 : {}", memberDto);
-                if (param.get("new_password") != null)
-                    memberDto.setPassword(param.get("new_password")); // null 이 넘어오면 수정 x (기존 값 유지)
-                logger.debug("비밀번호 수정 후 : {}", memberDto);
-
-                Map<String, String> resultMap = new HashMap<>();
+                Map<String, String> resultMap = new HashMap<>(); // 결과를 담을 자료구조
+                memberDto.setPassword(newPassword);
 
                 if (memberService.modifyPassword(memberDto).equals(SUCCESS)) {
                     resultMap.put("message", "성공");
@@ -214,20 +195,20 @@ public class MemberController {
                 }
             }
         }
-
         return null;
     }
 
 
+    /** 아이디, 이메일, 닉네임 중복 검사 **/
     @GetMapping("/unique/{type}/{param}")
     public ResponseEntity<?> test(@PathVariable String type, @PathVariable String param) {
         UniqueDto uniqueDto = new UniqueDto(); // 중복여부를 관리하는 DTO
         uniqueDto.setType(type);
         uniqueDto.setParam(param);
 
-        String result = memberService.uniqueParam(uniqueDto);
+        String result = memberService.uniqueParam(uniqueDto); // DB에서 해당 param이 있는지 조회 (값이 있다면 중복임)
 
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>(); // 결과를 담는 자료구조
 
         if (result == null) { // 중복이 존재하지 않는 경우 unique = true
             resultMap.put("unique", true);
@@ -238,7 +219,6 @@ public class MemberController {
             resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + " 입니다");
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
         }
-
     }
 
 }
