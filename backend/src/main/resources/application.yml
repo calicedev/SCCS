@@ -14,17 +14,16 @@ spring:
     host: 127.0.0.1
 
   mail:
-    host: smtp.gmail.com
+    host: smtp.naver.com
     port: 587
-    username: sccsdevteam@gmail.com
+    username: dojsfffff@gmail.com
     password: wrbheammwdtcmxfc
     properties:
+      debug: true
       mail:
         smtp:
           auth: true
-          starttls:
-            enable: true
-            required: true
+          ssl.enable: true
 
 mybatis:
   configuration:
