@@ -45,6 +45,7 @@ public class MemberController {
     private final JWTService jwtService;
     private final EncryptService encryptService;
     private final EmailService emailService;
+    private final RedisService redisService;
 
     /** 회원 가입 **/
     @PostMapping("/member")
