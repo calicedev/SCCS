@@ -6,6 +6,7 @@ import com.scss.api.member.service.JWTService;
 import com.scss.api.member.service.MemberService;
 import com.scss.api.member.util.EmailService;
 import com.scss.api.member.util.EncryptService;
+import com.scss.api.member.util.RedisService;
 import java.lang.reflect.Member;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -69,7 +70,7 @@ public class MemberController {
     }
 
     /** 로그인 : 아이디, 비밀번호 일치시 토큰 생성 **/
-    // ToDo : refreshtoken Redis에 저장하기 (key: member_id, value: refreshtoken)
+    // ToDo : refreshtoken Redis에 저장하기 (key: 'refreshToken:사용자 id', value: refreshToken)
     @PostMapping("/member/login")
     public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap)
             throws NoSuchAlgorithmException {
@@ -91,6 +92,11 @@ public class MemberController {
                         (10 * 1000 * 60)); // 10분
                 resultmap.put("accesstoken", accessToken);
                 resultmap.put("refreshtoken", refreshToken);
+
+                // Redis에 회원 id 값으로, refreshToken 저장
+                String refreshTokenKey = "refreshToken:"+memberDto.getId();
+                redisService.setRefreshTokenWithRedis(refreshTokenKey, refreshToken);
+                logger.debug("[logIn]Redis에 refreshToken 저장완료 id : {}, token : {}", memberDto.getId(), refreshToken);
 
                 logger.debug("[logIn]로그인 성공");
                 logger.debug("accesstoken : {}", accessToken);
