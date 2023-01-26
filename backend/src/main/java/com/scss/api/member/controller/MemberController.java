@@ -4,6 +4,7 @@ import com.scss.api.member.dto.MemberDto;
 import com.scss.api.member.dto.UniqueDto;
 import com.scss.api.member.service.JWTService;
 import com.scss.api.member.service.MemberService;
+import com.scss.api.member.util.EmailService;
 import com.scss.api.member.util.EncryptService;
 import java.lang.reflect.Member;
 import java.math.BigInteger;
@@ -17,6 +18,7 @@ import java.util.Objects;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.Claims;
+import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,7 @@ public class MemberController {
     private final MemberService memberService;
     private final JWTService jwtService;
     private final EncryptService encryptService;
+    private final EmailService emailService;
 
     /** 회원 가입 **/
     @PostMapping("/member")
@@ -208,7 +211,7 @@ public class MemberController {
 
     /** 아이디, 이메일, 닉네임 중복 검사 **/
     @GetMapping("/unique/{type}/{param}")
-    public ResponseEntity<?> test(@PathVariable String type, @PathVariable String param) {
+    public ResponseEntity<?> duplicateParam(@PathVariable String type, @PathVariable String param) {
         UniqueDto uniqueDto = new UniqueDto(); // 중복여부를 관리하는 DTO
         uniqueDto.setType(type);
         uniqueDto.setParam(param);
@@ -226,6 +229,20 @@ public class MemberController {
             resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + " 입니다");
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
         }
+    }
+
+    @PostMapping("/member/email")
+    public ResponseEntity<?> test(@RequestBody Map<String, Object> paramMap)
+            throws MessagingException {
+
+        logger.debug("paramMap : {}", paramMap);
+
+        String mail = "dojsfffff@naver.com";
+        String title = "안녕";
+        String message = "하이~";
+        emailService.sendEmail(mail, title, message);
+
+        return new ResponseEntity<String>("응답임", HttpStatus.OK);
     }
 
 }

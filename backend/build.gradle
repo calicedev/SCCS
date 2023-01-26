@@ -46,6 +46,8 @@ dependencies {
     // lettuce : open source connector
     implementation 'io.lettuce:lettuce-core:6.2.2.RELEASE'
 
+    // email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
