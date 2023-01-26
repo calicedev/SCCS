@@ -68,7 +68,7 @@ public class MemberController {
     }
 
     /** 로그인 : 아이디, 비밀번호 일치시 토큰 생성 **/
-    // ToDo : refreshtoken Redis에 저장하기 (key: 사용자 id, value: refreshToken)
+    // ToDo : refreshtoken Redis에 저장하기 (key: 'refreshToken:사용자 id', value: refreshToken)
     @PostMapping("/member/login")
     public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap)
             throws NoSuchAlgorithmException {
