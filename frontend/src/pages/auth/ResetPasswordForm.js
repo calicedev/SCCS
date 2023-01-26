@@ -7,7 +7,7 @@ import IconButton from 'components/atoms/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import axios from 'libs/axios'
 import api from 'apis/api'
-import Typography from 'components/atoms/Typography'
+import Typo, { TypoCss } from 'styles/Typo'
 
 export default function ResetPasswordForm() {
   const navigate = useNavigate()
@@ -59,31 +59,29 @@ export default function ResetPasswordForm() {
           navigate('/auth/login')
         }}
       />
-      <Typography type="h1" value="Password Reset" />
-      <Typography
-        type="h3"
-        value="If you enter your ID and email, a temporary password will be
-        issued"
-      />
-      <AuthInput
-        type="id"
-        value={id}
-        onChange={(e) => {
-          setId(e.target.value)
-        }}
-      ></AuthInput>
-      <AuthInput
-        type="email"
-        value={email}
-        onChange={(e) => {
-          setEmail(e.target.value)
-        }}
-        result={message}
-      ></AuthInput>
-      <Typography
-        color={message.isValid ? 'pass' : 'error'}
-        value={message.text}
-      />
+      <Typo className="h1">Password Reset</Typo>
+      <Typo>
+        If you enter your ID and email,
+        <br /> a temporary password will be issued
+      </Typo>
+      <Form>
+        <AuthInput
+          type="id"
+          value={id}
+          onChange={(e) => {
+            setId(e.target.value)
+          }}
+        ></AuthInput>
+        <AuthInput
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value)
+          }}
+          result={message}
+        ></AuthInput>
+        <Typo color={message.isValid ? 'pass' : 'error'} value={message.text} />
+      </Form>
       <Button onClick={resetPassword} value="Submit" size="medium"></Button>
     </Flexbox>
   )
@@ -95,4 +93,7 @@ const Flexbox = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 0rem 8rem;
+`
+const Form = styled.div`
+  margin: 3rem 0rem;
 `
