@@ -82,7 +82,7 @@ public class MemberController {
             String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
             logger.debug("[logIn]로그인 시도 비번 : {}", hex);
-            logger.debug("[logIn]기존 비밀번호 : {}", memberDto.getPassword());
+            logger.debug("[logIn]기존   비밀번호 : {}", memberDto.getPassword());
 
             if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
                 String accessToken = jwtService.createToken(paramMap.get("id"), "accesstoken",
@@ -231,16 +231,16 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/member/email")
-    public ResponseEntity<?> test(@RequestBody Map<String, Object> paramMap)
+    /** 비밀번호 초기화 **/
+    @PostMapping("/member/password")
+    public ResponseEntity<?> initPassword(@RequestBody Map<String, String> paramMap)
             throws MessagingException {
 
         logger.debug("paramMap : {}", paramMap);
+        String mail = paramMap.get("email"); // 받는 사람 주소
+        String id = paramMap.get("id"); // 회원 아이디
 
-        String mail = "dojsfffff@naver.com";
-        String title = "안녕";
-        String message = "하이~";
-        emailService.sendEmail(mail, title, message);
+        emailService.sendEmail(id, mail);
 
         return new ResponseEntity<String>("응답임", HttpStatus.OK);
     }
