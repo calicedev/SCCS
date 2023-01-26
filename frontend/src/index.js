@@ -6,10 +6,10 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { Provider } from 'react-redux'
-import GlobalStyle from './constants/GlobalStyle'
+import GlobalStyle from './styles/GlobalStyle'
 import store from './redux/store'
-import theme from './constants/theme'
-import { CookiesProvider } from 'react-cookie';
+import theme from './styles/theme'
+import { CookiesProvider } from 'react-cookie'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

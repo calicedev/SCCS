@@ -5,6 +5,7 @@ import { BiUser } from 'react-icons/bi'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdOutlineEmail } from 'react-icons/md'
 import Typography from 'components/atoms/Typography'
+import Typo, { TypoCss } from 'styles/Typo'
 
 const typeObj = {
   id: {
@@ -45,23 +46,23 @@ const typeObj = {
   },
 }
 
-const AuthInput = ({ type, value, onChange, message }) => {
+export default function AuthInput({ type, value, onChange, message }) {
   return (
     <Wrapper>
-      <Label>{typeObj[type].label}</Label>
+      <Label for={type}>{typeObj[type].label}</Label>
       <FlexBox>
         {typeObj[type].logo}
         <Input
+          id={type}
           type={typeObj[type].type}
           placeholder={typeObj[type].placeholder}
           value={value}
           onChange={onChange}
         />
       </FlexBox>
-      <Typography
-        color={message.isValid ? 'pass' : 'error'}
-        value={message.text}
-      />
+      <Typo className={`c ${message.isValid ? 'pass' : 'error'}`}>
+        {message.text}
+      </Typo>
     </Wrapper>
   )
 }
@@ -88,31 +89,18 @@ AuthInput.defaultProps = {
 }
 
 const Wrapper = styled.div`
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.8rem;
 `
-
 const FlexBox = styled.div`
-  display: flex;
-  align-items: center;
+  ${TypoCss}
   border-bottom: 1px solid gray;
   padding: 0.3rem 0rem;
-  & > svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    filter: opacity(60%);
-    margin-right: 0.8rem;
-  }
 `
-
-const Input = styled.input`
-  font-size: 1.3rem;
-  padding: 0.2rem 0.1rem;
-  box-sizing: boder-box;
-`
-const Label = styled.div`
+const Label = styled.label`
   font-size: 1rem;
   color: ${({ theme }) => theme.fontColor};
   margin-top: 1rem;
 `
-
-export default AuthInput
+const Input = styled.input`
+  padding-left: 0.5rem;
+`

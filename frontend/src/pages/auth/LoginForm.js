@@ -1,34 +1,28 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Button from 'components/atoms/Button'
-import AuthInput from 'components/atoms/AuthInput'
-<<<<<<< HEAD
-import Checkbox from 'components/atoms/Checkbox'
 import { useNavigate, Link } from 'react-router-dom'
-=======
-import Check from 'components/atoms/Checkbox'
-import { useNavigate } from 'react-router-dom'
->>>>>>> task164
+import { useCookies } from 'react-cookie'
+import { useSelector } from 'react-redux'
+import AuthInput from 'components/atoms/AuthInput'
+import Button from 'components/atoms/Button'
+import Checkbox from 'components/atoms/Checkbox'
+import Typo, { TypoCss } from 'styles/Typo'
 import axios from 'libs/axios'
 import api from 'apis/api'
-import Typography from 'components/atoms/Typography'
-import { useAuthInput } from 'hooks/useAuthInput'
-import { useCookies } from 'react-cookie';
-
 
 export default function LoginForm() {
   const navigate = useNavigate()
   const [cookie, setCookie] = useCookies(['id'])
 
-  const [id, setId] = useAuthInput('id', '')
-  const [password, setPassword] = useAuthInput('password', '')
+  const [id, setId] = useState('')
+  const [password, setPassword] = useState('')
   const [message, setMessage] = useState({
     text: '',
     isValid: '',
-    
   })
   const [isChecked, setIsChecked] = useState(false)
 
+  const userSlice = useSelector((state) => state)
 
   const login = () => {
     if (!id || !password) {
@@ -50,6 +44,9 @@ export default function LoginForm() {
         setCookie('refresh_token', res.data['refresh_token'])
         setCookie('access_token', res.data['access_token'])
       })
+      .then(() => {
+        console.log(userSlice.name)
+      })
       .catch((err) => {
         const checkmsg = { ...message }
         checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
@@ -59,76 +56,42 @@ export default function LoginForm() {
   }
 
   return (
-    <Login>
-      <Typography type='h1' value='Login'></Typography>
-
-<<<<<<< HEAD
-      <Typography type='h3' value="If you don't have an account register">
-      </Typography>
-      <Link to="/auth/signup">
-        <Typography type='h3' value='Register here!' color='pass'></Typography>
-      </Link>
-=======
-      <Description>
-        If you don't have an account register
-        <br /> You can{' '}
-        <span
-          onClick={() => {
-            navigate('/auth/signup')
-          }}
-        >
-          Register here!
-        </span>
-      </Description>
->>>>>>> task164
-      <AuthInput
-        type="id"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-<<<<<<< HEAD
-=======
-        message={idMsg}
->>>>>>> task164
-      ></AuthInput>
-      <AuthInput
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-<<<<<<< HEAD
-      ></AuthInput>
-
-      <Typography type='c' value={message.text} color={message.isValid? 'pass' : 'error'} />
-=======
-        message={passwordMsg}
-      ></AuthInput>
->>>>>>> task164
-
-      <Container>
-        <Checkbox label='Remember Me' value={isChecked} onChange={(e) => setIsChecked(e.target.value)}></Checkbox>
-        <div>
-          <ForgotSpan
-            onClick={() => {
-              navigate(`/auth/findid`)
-            }}
-          >
-            Forgot ID?
-          </ForgotSpan>
-          <ForgotSpan
-            onClick={() => {
-              navigate(`/auth/resetpassword`)
-            }}
-          >
-            Forgot Password?
-          </ForgotSpan>
-        </div>
-      </Container>
-
+    <Container>
+      <Typo className="h1">Login</Typo>
+      <Typo>If you don't have an account register</Typo>
+      <TypoLink to="/auth/signup" className="pass" weight="500">
+        Register here!
+      </TypoLink>
+      <Form>
+        <AuthInput
+          type="id"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
+        <AuthInput
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Typo color={message.isValid ? 'pass' : 'error'} value={message.text} />
+        <Flexbox>
+          <Checkbox
+            label="Remember Me"
+            value={isChecked}
+            onChange={(e) => setIsChecked(e.target.value)}
+          />
+          <div>
+            <TypoLink to="/auth/findid">Forgot ID?</TypoLink>
+            <TypoLink to="/auth/resetpassword">Forgot Password?</TypoLink>
+          </div>
+        </Flexbox>
+      </Form>
       <Button onClick={login} value="Login" size="medium"></Button>
-    </Login>
+    </Container>
   )
 }
 
-const Login = styled.div`
+const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -136,36 +99,16 @@ const Login = styled.div`
   padding: 0rem 8rem;
 `
 
-const Container = styled.div`
+const Flexbox = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 1.5rem 0rem;
 `
 
-const ForgotSpan = styled.span`
-  margin: 0.8rem 0.4rem;
-  cursor: pointer;
+const Form = styled.div`
+  margin: 3rem 0rem;
 `
 
-const H1 = styled.h1`
-  font-size: 3rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.indigoColor};
-`
-
-const Description = styled.div`
-  margin: 1rem 0rem 2rem;
-  font-size: 1.2rem;
-
-  > span {
-    font-weight: 500;
-    color: ${({ theme }) => theme.blueColor};
-    cursor: pointer;
-  }
-`
-
-const Message = styled.div`
-  color: ${(props) =>
-    props.isValid ? props.theme.blueColor : props.theme.redColor};
-  margin-bottom: 1rem;
+const TypoLink = styled(Link)`
+  ${TypoCss}
 `
