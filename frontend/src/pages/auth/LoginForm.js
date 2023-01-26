@@ -2,18 +2,17 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from 'components/atoms/Button'
 import AuthInput from 'components/atoms/AuthInput'
-<<<<<<< HEAD
-import Checkbox from 'components/atoms/Checkbox'
-import { useNavigate, Link } from 'react-router-dom'
-=======
+
 import Check from 'components/atoms/Checkbox'
 import { useNavigate } from 'react-router-dom'
->>>>>>> task164
+
 import axios from 'libs/axios'
 import api from 'apis/api'
 import Typography from 'components/atoms/Typography'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useCookies } from 'react-cookie';
+import { useSelector, useDispatch } from 'react-redux'
+import { setUserinfo } from 'redux/userSlice'
 
 
 export default function LoginForm() {
@@ -25,10 +24,11 @@ export default function LoginForm() {
   const [message, setMessage] = useState({
     text: '',
     isValid: '',
-    
   })
   const [isChecked, setIsChecked] = useState(false)
 
+  const userSlice = useSelector((state) => state )
+  const dispatch = useDispatch()
 
   const login = () => {
     if (!id || !password) {
@@ -49,7 +49,14 @@ export default function LoginForm() {
         console.log(res)
         setCookie('refresh_token', res.data['refresh_token'])
         setCookie('access_token', res.data['access_token'])
+        
       })
+      // .then(() => {
+      //   userSlice()
+      //   dispatch(setUserinfo())
+      // })
+
+
       .catch((err) => {
         const checkmsg = { ...message }
         checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
@@ -62,13 +69,7 @@ export default function LoginForm() {
     <Login>
       <Typography type='h1' value='Login'></Typography>
 
-<<<<<<< HEAD
-      <Typography type='h3' value="If you don't have an account register">
-      </Typography>
-      <Link to="/auth/signup">
-        <Typography type='h3' value='Register here!' color='pass'></Typography>
-      </Link>
-=======
+
       <Description>
         If you don't have an account register
         <br /> You can{' '}
@@ -80,31 +81,20 @@ export default function LoginForm() {
           Register here!
         </span>
       </Description>
->>>>>>> task164
+
       <AuthInput
         type="id"
         value={id}
         onChange={(e) => setId(e.target.value)}
-<<<<<<< HEAD
-=======
-        message={idMsg}
->>>>>>> task164
       ></AuthInput>
       <AuthInput
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-<<<<<<< HEAD
       ></AuthInput>
-
-      <Typography type='c' value={message.text} color={message.isValid? 'pass' : 'error'} />
-=======
-        message={passwordMsg}
-      ></AuthInput>
->>>>>>> task164
 
       <Container>
-        <Checkbox label='Remember Me' value={isChecked} onChange={(e) => setIsChecked(e.target.value)}></Checkbox>
+        <Check label='Remember Me' value={isChecked} onChange={(e) => setIsChecked(e.target.value)}></Check>
         <div>
           <ForgotSpan
             onClick={() => {

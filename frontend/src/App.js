@@ -14,6 +14,7 @@ import ProfileEdit from './pages/mypage/ProfileEdit'
 import PasswordEdit from './pages/mypage/PasswordEdit'
 import ProblemList from './pages/mypage/ProblemList'
 import StudyCalendar from './pages/mypage/StudyCalendar'
+import SolveProblem from 'pages/mypage/SolveProblem'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="study" element={<StudyCalendar />}></Route>
         <Route path="problem" element={<ProblemList />}></Route>
       </Route>
+      <Route path="/solveproblem" element={<SolveProblem />}></Route>
     </Routes>
   )
 }
