@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Button from 'components/atoms/Button'
+import IconButton from 'components/atoms/IconButton'
 import { AiFillCaretLeft, AiFillCaretRight } from 'react-icons/ai'
 import { format } from 'date-fns'
+import styled from 'styled-components'
 
 export default function DateSelector({
   currentDate,
@@ -10,26 +11,22 @@ export default function DateSelector({
   onClickPrevious,
   onClickNext,
 }) {
-  // const currentDateISO = currentDate.toISOString().slice(0, 7)
+  const month = format(currentDate, 'YYYY-MM')
 
   return (
-    <div>
-      <Button
-        logo={<AiFillCaretLeft />}
-        type={'transparent'}
+    <Flexbox>
+      <IconButton
+        icon={<AiFillCaretLeft />}
+        size={'small'}
         onClick={onClickPrevious}
       />
-      <input
-        type="month"
-        value={format(currentDate, 'yyyy-MM')}
-        onChange={onChange}
-      />
-      <Button
-        logo={<AiFillCaretRight />}
-        type={'transparent'}
+      <input type="month" value={month} onChange={onChange} />
+      <IconButton
+        icon={<AiFillCaretRight />}
+        size={'small'}
         onClick={onClickNext}
       />
-    </div>
+    </Flexbox>
   )
 }
 
@@ -46,3 +43,7 @@ DateSelector.defaultProps = {
   onClickPrevious: undefined,
   onClickNext: undefined,
 }
+
+const Flexbox = styled.div`
+  display: flex;
+`

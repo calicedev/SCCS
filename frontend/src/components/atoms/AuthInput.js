@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { BiUser } from 'react-icons/bi'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdOutlineEmail } from 'react-icons/md'
-import Typography from 'components/atoms/Typography'
 import Typo, { TypoCss } from 'styles/Typo'
 
 const typeObj = {

@@ -1,36 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { addMonths, subMonths } from 'date-fns'
 import Calendar from 'components/molecules/Calendar'
 import DateSelector from 'components/molecules/DateSelector'
 import styled from 'styled-components'
 import { format } from 'date-fns'
 import Study from 'components/atoms/StudyItem'
-
-const studies = [
-  {
-    id: 1,
-    title: '커피 내기 SSAFY기 (A301)',
-    created_datetime: '2023-01-17 17:18:53',
-    problems: [
-      { id: 1, title: '미로찾기' },
-      { id: 2, title: '치즈 녹이기' },
-    ],
-  },
-  {
-    id: 2,
-    title: '커피 내기 SSAFY기2 (A301)',
-    created_datetime: '2023-01-17 21:18:53',
-    problems: [
-      { id: 3, title: '미로찾기2' },
-      { id: 2, title: '치즈 녹이기' },
-    ],
-  },
-]
+import axios from 'libs/axios'
+import api from 'apis/api'
+import { useSelector } from 'react-redux'
 
 export default function StudyCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date())
+  // 리덕스 읽어오기
+  const id = useSelector((state) => state.user.id)
 
+  // useState
+  const [currentDate, setCurrentDate] = useState(new Date())
   // 모달 관련 변수
+  const [studies, setStudies] = useState([])
   const [isHovered, setIsHovered] = useState(false)
   const [modalLeft, setModalLeft] = useState(0)
   const [modalTop, setModalTop] = useState(0)
@@ -39,23 +25,41 @@ export default function StudyCalendar() {
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
 
-  // 스터디 내역을 날짜 별로 분류
-  const hashedStudies = {}
-  studies.forEach((study) => {
-    const date = new Date(study.created_datetime)
-    const key = format(date, 'yyyy-MM-dd')
-    if (!hashedStudies[key]) {
-      hashedStudies[key] = [study]
-      return
-    }
-    hashedStudies[key].push(study)
-  })
-  const dateToStudies = Object.fromEntries(
-    Object.entries(hashedStudies).map(([key, studies]) => [
-      key,
-      <Study studies={studies} />,
-    ]),
-  )
+  // useEffect로 마운트 시에 studies 불러오기
+  useEffect(() => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
+    const [url, method] = api('studyHistory', { id, year, month })
+    const config = { method }
+    axios
+      .request(url, config)
+      .then((res) => {
+        setStudies(res.data)
+      })
+      .catch((err) => {
+        alert('스터디 내역을 불러오지 못했습니다.')
+      })
+  }, [currentDate])
+
+  // useMemo로 studies가 바뀌면 실행. 가능할지 모르겠음
+  const dateToStudies = useMemo(() => {
+    const hashedStudies = {}
+    studies.forEach((study) => {
+      const date = new Date(study.created_datetime)
+      const key = format(date, 'YYYY-MM-DD')
+      if (!hashedStudies[key]) {
+        hashedStudies[key] = [study]
+        return
+      }
+      hashedStudies[key].push(study)
+    })
+    return Object.fromEntries(
+      Object.entries(hashedStudies).map(([key, studies]) => [
+        key,
+        <Study studies={studies} />,
+      ]),
+    )
+  }, [studies])
 
   const previousMonth = () => {
     setCurrentDate(subMonths(currentDate, 1))
@@ -65,12 +69,18 @@ export default function StudyCalendar() {
     setCurrentDate(addMonths(currentDate, 1))
   }
 
-  const changeMonth = (e) => {
-    setCurrentDate(e.target.date)
+  const changeMonth = (id) => {
+    const element = document.getElementById(id)
+    if (element.classList.contains('abled')) return
+    setCurrentDate(id)
   }
 
-  const showModal = (date) => {
-    const element = document.getElementById(date)
+  const showModal = (id) => {
+    const element = document.getElementById(id)
+    if (element.classList.contains('disabled')) {
+      return
+    }
+    const date = element.id
     const scrollX = window.scrollX
     const scrollY = window.scrollY
     setModalLeft(scrollX + element.getBoundingClientRect().left)
@@ -118,12 +128,14 @@ const Container = styled.div`
 `
 
 const Modal = styled.div`
+  overflow: hidden;
   position: absolute;
   z-index: 1;
-  overflow: hidden;
   border: 1px solid red;
+  border-radius: 5px;
   background-color: white;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   white-space: nowrap;
   left: ${({ modalLeft }) => modalLeft}px;
   top: ${({ modalTop }) => modalTop}px;
@@ -146,3 +158,24 @@ const Modal = styled.div`
     }
   }
 `
+
+// const studies = [
+//   {
+//     id: 1,
+//     title: '커피 내기 SSAFY기 (A301)',
+//     created_datetime: '2023-01-17 17:18:53',
+//     problems: [
+//       { id: 1, title: '미로찾기' },
+//       { id: 2, title: '치즈 녹이기' },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: '커피 내기 SSAFY기2 (A301)',
+//     created_datetime: '2023-01-17 21:18:53',
+//     problems: [
+//       { id: 3, title: '미로찾기2' },
+//       { id: 2, title: '치즈 녹이기' },
+//     ],
+//   },
+// ]

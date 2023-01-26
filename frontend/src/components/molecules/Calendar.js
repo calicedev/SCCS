@@ -5,12 +5,13 @@ import WeekDays from 'components/atoms/WeekDays'
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns'
 import { isSameMonth, addDays, format } from 'date-fns'
 
-export default function Calendar({
+const Calendar = ({
   currentDate,
   onClickDateBox,
   onMouseEnterDateBox,
   contents,
-}) {
+}) => {
+  console.log(1)
   const monthStart = startOfMonth(currentDate)
   const monthEnd = endOfMonth(currentDate)
   const calendarStart = startOfWeek(monthStart)
@@ -22,9 +23,9 @@ export default function Calendar({
     dates.push(
       <DateBox
         key={date}
-        date={format(date, 'yyyy-MM-dd')}
+        date={format(date, 'YYYY-MM-DD')}
         disabled={!isSameMonth(date, monthStart) ? true : false}
-        content={contents[format(date, 'yyyy-MM-dd')]}
+        content={contents[format(date, 'YYYY-MM-DD')]}
         onClick={onClickDateBox}
         onMouseEnter={onMouseEnterDateBox}
       />,
@@ -46,5 +47,8 @@ const Container = styled.div`
   width: 100%;
 
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: minmax(130px, 130px);
+
+  gap: 0.2rem 0.2rem;
 `
+
+export default React.memo(Calendar)

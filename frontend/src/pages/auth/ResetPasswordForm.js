@@ -7,7 +7,7 @@ import IconButton from 'components/atoms/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import axios from 'libs/axios'
 import api from 'apis/api'
-import Typo, { TypoCss } from 'styles/Typo'
+import Typo from 'styles/Typo'
 
 export default function ResetPasswordForm() {
   const navigate = useNavigate()

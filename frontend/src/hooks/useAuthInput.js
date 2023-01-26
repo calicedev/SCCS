@@ -56,9 +56,11 @@ export function useAuthInput(
       return
     }
 
+    const [url, method] = api(`check_${type}`, { inputValue })
+    const config = { method }
     // 서버 검사
     axios
-      .get(api(`check_${type}`, { inputValue }))
+      .request(url, config)
       .then((res) => {
         const newMsg = { ...message }
         newMsg.text = `유효한 ${typeToKorean[type]} 입니다`

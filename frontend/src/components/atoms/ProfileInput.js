@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import Typography from './Typography'
+import Typo from 'styles/Typo'
 
 const typeObj = {
   name: {
@@ -52,16 +52,14 @@ const ProfileInput = ({ type, value, onChange, disabled, message }) => {
         onChange={onChange}
         disabled={disabled}
       />
-      <Typography
-        color={message.isValid ? 'pass' : 'error'}
-        vlaue={message.text}
-      ></Typography>
+      <Typo className={`c ${message.isValid ? 'pass' : 'error'}`}>
+        {message.text}
+      </Typo>
     </InputBox>
   )
 }
 
 const InputBox = styled.div`
-  
   border: 1px;
 `
 
@@ -95,15 +93,13 @@ const Input = styled.input`
   height: 3rem;
   border: 1px solid;
   border-radius: 10px;
-  background-color: ${({disabled}) => disabled ? '#CCCCCC' : 'white'}
+  background-color: ${({ disabled }) => (disabled ? '#CCCCCC' : 'white')};
 `
 
 const Label = styled.div`
   font-size: 1.4rem;
-  color: ${({theme}) => theme.fontColor};
+  color: ${({ theme }) => theme.fontColor};
   margin-top: 1rem;
 `
 
-
 export default ProfileInput
-

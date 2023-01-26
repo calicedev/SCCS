@@ -19,7 +19,7 @@ export default function StudyItem({ studies }) {
   return (
     <Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {studies.map((study) => (
-        <Study key={study.id} onClick={navigate('/mypage/study')}>
+        <Study key={study.id} onClick={() => navigate('/mypage/study')}>
           <Typography type="p" value={study.title} />
           {study.problems?.map((problem) => (
             <Option key={problem.id} hidden={!showOptions}>
