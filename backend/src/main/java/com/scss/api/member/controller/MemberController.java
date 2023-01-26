@@ -4,6 +4,7 @@ import com.scss.api.member.dto.MemberDto;
 import com.scss.api.member.dto.UniqueDto;
 import com.scss.api.member.service.JWTService;
 import com.scss.api.member.service.MemberService;
+import com.scss.api.member.util.EmailService;
 import com.scss.api.member.util.EncryptService;
 import com.scss.api.member.util.RedisService;
 import java.lang.reflect.Member;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.Claims;
+import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,7 @@ public class MemberController {
     private final MemberService memberService;
     private final JWTService jwtService;
     private final EncryptService encryptService;
-    private final RedisService redisService;
+    private final EmailService emailService;
 
     /** 회원 가입 **/
     @PostMapping("/member")
@@ -81,7 +83,7 @@ public class MemberController {
             String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
             logger.debug("[logIn]로그인 시도 비번 : {}", hex);
-            logger.debug("[logIn]기존 비밀번호 : {}", memberDto.getPassword());
+            logger.debug("[logIn]기존   비밀번호 : {}", memberDto.getPassword());
 
             if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
                 String accessToken = jwtService.createToken(paramMap.get("id"), "accesstoken",
@@ -215,7 +217,7 @@ public class MemberController {
 
     /** 아이디, 이메일, 닉네임 중복 검사 **/
     @GetMapping("/unique/{type}/{param}")
-    public ResponseEntity<?> test(@PathVariable String type, @PathVariable String param) {
+    public ResponseEntity<?> duplicateParam(@PathVariable String type, @PathVariable String param) {
         UniqueDto uniqueDto = new UniqueDto(); // 중복여부를 관리하는 DTO
         uniqueDto.setType(type);
         uniqueDto.setParam(param);
@@ -235,6 +237,18 @@ public class MemberController {
         }
     }
 
+    /** 비밀번호 초기화 **/
+    @PostMapping("/member/password")
+    public ResponseEntity<?> initPassword(@RequestBody Map<String, String> paramMap)
+            throws MessagingException {
 
+        logger.debug("paramMap : {}", paramMap);
+        String mail = paramMap.get("email"); // 받는 사람 주소
+        String id = paramMap.get("id"); // 회원 아이디
+
+        emailService.sendEmail(id, mail);
+
+        return new ResponseEntity<String>("응답임", HttpStatus.OK);
+    }
 
 }
