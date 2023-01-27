@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Typography from 'components/atoms/Typography'
 
 export default function StudyItem({ studies }) {
   const [showOptions, setShowOptions] = useState(false)
@@ -20,10 +19,10 @@ export default function StudyItem({ studies }) {
     <Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {studies.map((study) => (
         <Study key={study.id} onClick={() => navigate('/mypage/study')}>
-          <Typography type="p" value={study.title} />
+          <p>{study.title}</p>
           {study.problems?.map((problem) => (
             <Option key={problem.id} hidden={!showOptions}>
-              <Typography type="c" value={problem.title} />
+              <p className="c">{problem.title}</p>
             </Option>
           ))}
         </Study>

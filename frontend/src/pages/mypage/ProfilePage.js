@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import ProfileInput from 'components/atoms/ProfileInput'
-import Button from 'components/atoms/Button'
-import ProfileImg from 'components/atoms/ProfileImg'
+import ProfileInput from 'components/mypage/ProfileInput'
+import Button from 'components/common/Button'
+import ProfileImg from 'components/common/ProfileImg'
 import { useNavigate } from 'react-router-dom'
-import Typo from 'styles/Typo'
 import { useSelector } from 'react-redux'
 
 export default function Profile() {
@@ -19,7 +18,7 @@ export default function Profile() {
 
   return (
     <ProfileContent>
-      <Typo className="h1">Profile</Typo>
+      <h1>Profile</h1>
       <ProfileContainer>
         <ProfileImg />
         가입일: {joinDate}

@@ -1,10 +1,9 @@
 import styled from 'styled-components'
-import Button from 'components/atoms/Button'
-import AuthInput from 'components/atoms/AuthInput'
+import Button from 'components/common/Button'
+import AuthInput from 'components/auth/AuthInput'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
-import Typo, { TypoCss } from 'styles/Typo'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
@@ -62,11 +61,11 @@ export default function SignupForm() {
 
   return (
     <Flexbox>
-      <Typo className="h1">Signup</Typo>
-      <Typo>If you already have an account</Typo>
-      <TypoLink to="/auth/login" className="pass" weight="500">
+      <h1>Signup</h1>
+      <p>If you already have an account</p>
+      <Link to="/auth/login" className="pass bold" weight="500">
         Login here!
-      </TypoLink>
+      </Link>
       <Form>
         <AuthInput
           type="id"
@@ -120,8 +119,4 @@ const Flexbox = styled.div`
 
 const Form = styled.div`
   margin: 3em 0rem;
-`
-
-const TypoLink = styled(Link)`
-  ${TypoCss}
 `

@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import ProfileInput from 'components/atoms/ProfileInput'
-import Button from 'components/atoms/Button'
-import ProfileImg from 'components/atoms/ProfileImg'
+import ProfileInput from 'components/mypage/ProfileInput'
+import Button from 'components/common/Button'
+import ProfileImg from 'components/common/ProfileImg'
 import { useNavigate } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useSelector } from 'react-redux'
@@ -82,10 +82,6 @@ const ProfileContent = styled.div`
   flex-direction: column;
   min-height: 100%;
   width: 70%;
-`
-
-const Flexbox = styled.div`
-  display: flex;
 `
 
 const EditBtns = styled.div`

@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import Typo from 'styles/Typo'
 import PropTypes from 'prop-types'
 
 export default function DateBox({
@@ -22,7 +21,7 @@ export default function DateBox({
       onClick={() => (onClick ? onClick(date) : null)}
     >
       <FlexBox>
-        <Typo type="p">{date.slice(-2)}</Typo>
+        <p>{date.slice(-2)}</p>
         {content}
       </FlexBox>
     </DateContainer>

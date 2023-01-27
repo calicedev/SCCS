@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Button from 'components/atoms/Button'
-import AuthInput from 'components/atoms/AuthInput'
-import IconButton from 'components/atoms/IconButton'
+import Button from 'components/common/Button'
+import AuthInput from 'components/auth/AuthInput'
+import IconButton from 'components/common/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
-import Typo from 'styles/Typo'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
@@ -40,7 +39,7 @@ export default function FindIdForm() {
         newMsg.isValid = true
         setMessage(newMsg)
       })
-      .catch((err) => {
+      .catch(() => {
         const newMsg = { ...message }
         newMsg.text = '해당 정보의 회원이 존재하지 않습니다.'
         newMsg.isValid = false
@@ -58,8 +57,8 @@ export default function FindIdForm() {
           navigate('/auth/login')
         }}
       />
-      <Typo className="h1">Find ID</Typo>
-      <Typo>Enter your name and email to find your ID</Typo>
+      <h1>Find ID</h1>
+      <p>Enter your name and email to find your ID</p>
       <Form>
         <AuthInput
           type="id"
@@ -71,7 +70,7 @@ export default function FindIdForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         ></AuthInput>
-        <Typo color={message.isValid ? 'pass' : 'error'} value={message.text} />
+        <p color={message.isValid ? 'pass' : 'error'} value={message.text} />
       </Form>
       <Button onClick={findId} value="Find" size="medium"></Button>
     </Flexbox>

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import Button from 'components/atoms/Button'
-import IconButton from 'components/atoms/IconButton'
+import Button from 'components/common/Button'
+import IconButton from 'components/common/IconButton'
 import {
   FaAngleDoubleLeft,
   FaAngleDoubleRight,

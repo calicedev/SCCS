@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Button from 'components/atoms/Button'
-import AuthInput from 'components/atoms/AuthInput'
+import Button from 'components/common/Button'
+import AuthInput from 'components/auth/AuthInput'
 import { useNavigate } from 'react-router-dom'
-import IconButton from 'components/atoms/IconButton'
+import IconButton from 'components/common/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import axios from 'libs/axios'
 import api from 'apis/api'
-import Typo from 'styles/Typo'
 
 export default function ResetPasswordForm() {
   const navigate = useNavigate()
@@ -59,11 +58,11 @@ export default function ResetPasswordForm() {
           navigate('/auth/login')
         }}
       />
-      <Typo className="h1">Password Reset</Typo>
-      <Typo>
+      <h1>Password Reset</h1>
+      <p>
         If you enter your ID and email,
         <br /> a temporary password will be issued
-      </Typo>
+      </p>
       <Form>
         <AuthInput
           type="id"
@@ -80,7 +79,7 @@ export default function ResetPasswordForm() {
           }}
           result={message}
         ></AuthInput>
-        <Typo color={message.isValid ? 'pass' : 'error'} value={message.text} />
+        <p color={message.isValid ? 'pass' : 'error'} value={message.text} />
       </Form>
       <Button onClick={resetPassword} value="Submit" size="medium"></Button>
     </Flexbox>

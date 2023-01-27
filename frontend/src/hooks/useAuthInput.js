@@ -56,22 +56,28 @@ export function useAuthInput(
       return
     }
 
-    const [url, method] = api(`check_${type}`, { inputValue })
+    const options = {}
+    options[type] = inputValue
+    const [url, method] = api(`check_${type}`, options)
     const config = { method }
     // 서버 검사
     axios
       .request(url, config)
       .then((res) => {
+        if (!res.data.unique) {
+          const newMsg = { ...message }
+          newMsg.text = `이미 사용된 ${type} 입니다.`
+          newMsg.isValid = false
+          setMessage(newMsg)
+          return
+        }
         const newMsg = { ...message }
         newMsg.text = `유효한 ${typeToKorean[type]} 입니다`
         newMsg.isValid = true
         setMessage(newMsg)
       })
       .catch((err) => {
-        const newMsg = { ...message }
-        newMsg.text = `이미 사용된 ${type} 입니다.`
-        newMsg.isValid = false
-        setMessage(newMsg)
+        console.log(err)
       })
   }, [inputValue])
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from 'components/atoms/Logo'
+import Logo from 'components/common/Logo'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 

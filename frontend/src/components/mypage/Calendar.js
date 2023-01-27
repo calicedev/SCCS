@@ -1,10 +1,11 @@
 import React from 'react'
-import DateBox from 'components/atoms/DateBox'
+import DateBox from 'components/mypage/DateBox'
 import styled from 'styled-components'
-import WeekDays from 'components/atoms/WeekDays'
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns'
 import { isSameMonth, addDays, format } from 'date-fns'
 import PropTypes from 'prop-types'
+
+const WEEK_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const Calendar = ({
   currentDate,
@@ -38,7 +39,11 @@ const Calendar = ({
 
   return (
     <>
-      <WeekDays />
+      <FlexBox>
+        {WEEK_DAYS.map((day) => {
+          return <div key={day}>{day}</div>
+        })}
+      </FlexBox>
       <Container>{dates}</Container>
     </>
   )
@@ -68,6 +73,12 @@ const Container = styled.div`
   grid-template-columns: repeat(7, 1fr);
 
   gap: 0.2rem 0.2rem;
+`
+
+const FlexBox = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 `
 
 export default React.memo(Calendar)

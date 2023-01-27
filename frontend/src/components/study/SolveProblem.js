@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import CodeInput from 'components/atoms/CodeInput'
+import CodeInput from 'components/study/CodeInput'
 
 export default function SolveProblem() {
   return (

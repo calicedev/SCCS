@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { BiUser } from 'react-icons/bi'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdOutlineEmail } from 'react-icons/md'
-import Typo, { TypoCss } from 'styles/Typo'
 
 const typeObj = {
   id: {
@@ -59,9 +58,9 @@ export default function AuthInput({ type, value, onChange, message }) {
           onChange={onChange}
         />
       </FlexBox>
-      <Typo className={`c ${message.isValid ? 'pass' : 'error'}`}>
+      <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
         {message.text}
-      </Typo>
+      </p>
     </Wrapper>
   )
 }
@@ -88,7 +87,6 @@ AuthInput.defaultProps = {
 }
 
 const Wrapper = styled.div`
-  ${TypoCss}
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`

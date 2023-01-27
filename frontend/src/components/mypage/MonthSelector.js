@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import IconButton from 'components/atoms/IconButton'
+import IconButton from 'components/common/IconButton'
 import { AiFillCaretLeft, AiFillCaretRight } from 'react-icons/ai'
 import { format } from 'date-fns'
 import styled from 'styled-components'
