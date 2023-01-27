@@ -200,6 +200,7 @@ public class StudyroomServiceImpl implements StudyroomService{
     public List<StudyroomDto> searchStudyroom(StudyroomDto studyroomDto) {
         System.out.println(studyroomDto);
             List<StudyroomDto> s = studyroomMapper.searchStudyroom(studyroomDto);
+        System.out.println(studyroomDto.getAlgoIds().size());
             return s;
 
     }

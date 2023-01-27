@@ -19,6 +19,7 @@ public class StudyroomDto {
     Boolean type;
     List<Integer> languageIds;
     List<Integer> algoIds;
+    List<Integer> memberIds;
     Boolean isPrivate;
     int languageId;
     int algoId;
