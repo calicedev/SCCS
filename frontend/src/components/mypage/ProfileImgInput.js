@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import ProfileImg from 'components/atoms/ProfileImg'
-import IconButton from 'components/atoms/IconButton'
+import ProfileImg from 'components/common/ProfileImg'
+import IconButton from 'components/common/IconButton'
 import { FaTrash } from 'react-icons/fa'
 
 export default function ProfileImgInput({ imgUrl, onChange, onDelete }) {

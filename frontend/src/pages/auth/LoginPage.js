@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import Button from 'components/atoms/Button'
+import Button from 'components/common/Button'
 import styled from 'styled-components'
 import { useNavigate, Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
-import { useSelector, useDispatch } from 'react-redux'
-import AuthInput from 'components/atoms/AuthInput'
-import Checkbox from 'components/atoms/Checkbox'
-import Typo, { TypoCss } from 'styles/Typo'
+import AuthInput from 'components/auth/AuthInput'
+import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
@@ -60,9 +58,9 @@ export default function LoginForm() {
       <h1>Login</h1>
 
       <p>If you don't have an account register</p>
-      <TypoLink to="/auth/signup" className="pass" weight="500">
+      <Link to="/auth/signup" className="pass bold" weight="700">
         Register Here!
-      </TypoLink>
+      </Link>
 
       <Form>
         <AuthInput
@@ -84,8 +82,8 @@ export default function LoginForm() {
           onChange={(e) => setIsChecked(e.target.value)}
         ></Checkbox>
         <div>
-          <TypoLink to="/auth/findid">Forgot ID?</TypoLink>
-          <TypoLink to="/auth/resetpassword">Forgot Password?</TypoLink>
+          <Link to="/auth/findid">Forgot ID?</Link>
+          <Link to="/auth/resetpassword">Forgot Password?</Link>
         </div>
       </Flexbox>
 
@@ -110,8 +108,4 @@ const Flexbox = styled.div`
 
 const Form = styled.div`
   margin: 3rem 0rem;
-`
-
-const TypoLink = styled(Link)`
-  ${TypoCss}
 `

@@ -1,91 +1,92 @@
 import { createGlobalStyle } from 'styled-components'
 /** reset css */
 const GlobalStyle = createGlobalStyle`
-  
+  .pass {
+    color: ${({ theme }) => theme.passColor};
+  }
+  .error {
+    color: ${({ theme }) => theme.errorColor};
+  }
+  .gray {
+    color: ${({ theme }) => theme.grayColor};
+  }
+  .main {
+    color: ${({ theme }) => theme.mainColor};
+  }
+  .light {
+    font-weight: 300;
+  }
+  .medium {
+    font-weight: 400;
+  }
+  .semi-bold {
+    font-weight: 500;
+  }
+  .bold {
+    font-weight: 600;
+  }
+  .extra-bold {
+    font-weight: 700;
+  }
   h1 {
     font-size: 2rem;
-    font-weight: ${({ weight }) => (weight ? weight : '700')};
+    font-weight: 700;
     margin: 1rem 0rem;
-    &.pass {
-      color: ${({ theme }) => theme.passColor};
-    }
-    &.error {
-      color: ${({ theme }) => theme.errorColor};
-    }
-    &.gray {
-      color: ${({ theme }) => theme.grayColor};
-    }
-    &.main {
-      color: ${({ theme }) => theme.mainColor};
-    }
   }
   h2 {
     font-size: 1.5rem;
-    font-weight: ${({ weight }) => (weight ? weight : '600')};
+    font-weight: 600;
     margin: 0.7rem 0rem;
-    &.pass {
-      color: ${({ theme }) => theme.passColor};
-    }
-    &.error {
-      color: ${({ theme }) => theme.errorColor};
-    }
-    &.gray {
-      color: ${({ theme }) => theme.grayColor};
-    }
-    &.main {
-      color: ${({ theme }) => theme.mainColor};
-    }
   }
   h3 {
     font-size: 1.2rem;
-    font-weight: ${({ weight }) => (weight ? weight : '500')};
+    font-weight: 500;
     margin: 0.6rem 0rem;
-    &.pass {
-      color: ${({ theme }) => theme.passColor};
-    }
-    &.error {
-      color: ${({ theme }) => theme.errorColor};
-    }
-    &.gray {
-      color: ${({ theme }) => theme.grayColor};
-    }
-    &.main {
-      color: ${({ theme }) => theme.mainColor};
-    }
   }
   p {
     font-size: 1rem;
-    font-weight: ${({ weight }) => (weight ? weight : '400')};
+    font-weight: 400;
     &.h1 {
       font-size: 2rem;
-      font-weight: ${({ weight }) => (weight ? weight : '700')};
+      font-weight: 700;
       margin: 1rem 0rem;
     }
     &.h2 {
       font-size: 1.5rem;
-      font-weight: ${({ weight }) => (weight ? weight : '600')};
+      font-weight: 600;
       margin: 0.7rem 0rem;
     }
     &.h3 {
       font-size: 1.2rem;
-      font-weight: ${({ weight }) => (weight ? weight : '500')};
+      font-weight: 500;
       margin: 0.6rem 0rem;
     }
     &.c {
       font-size: 0.8rem;
-      font-weight: ${({ weight }) => (weight ? weight : '300')};
+      font-weight: 300;
     }
-    &.pass {
-      color: ${({ theme }) => theme.passColor};
+  }
+  a {
+    font-size: 1rem;
+    font-weight: 400;
+    &.h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 1rem 0rem;
     }
-    &.error {
-      color: ${({ theme }) => theme.errorColor};
+    &.h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0.7rem 0rem;
     }
-    &.gray {
-      color: ${({ theme }) => theme.grayColor};
+    &.h3 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin: 0.6rem 0rem;
     }
-    &.main {
-      color: ${({ theme }) => theme.mainColor};
+    &.c {
+      font-size: 0.8rem;
+      font-weight: 300;
     }
   }
 

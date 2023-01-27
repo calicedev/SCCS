@@ -1,20 +1,20 @@
 import './App.css'
 
 import { Routes, Route } from 'react-router-dom'
-import AuthPage from './pages/auth/AuthPage'
+import AuthPage from './pages/auth/AuthPageLayout'
 import MainPage from './pages/study/MainPage'
-import LoginForm from './pages/auth/LoginForm'
-import SignupForm from './pages/auth/SignupForm'
-import FindIdForm from './pages/auth/FindIdForm'
-import ResetPasswordForm from './pages/auth/ResetPasswordForm'
+import LoginForm from './pages/auth/LoginPage'
+import SignupForm from './pages/auth/SignupPage'
+import FindIdForm from './pages/auth/FindIdPage'
+import ResetPasswordForm from './pages/auth/ResetPwdPage'
 
-import MyPage from './pages/mypage/MyPage'
-import Profile from './pages/mypage/Profile'
-import ProfileEdit from './pages/mypage/ProfileEdit'
-import PasswordEdit from './pages/mypage/PasswordEdit'
-import ProblemList from './pages/mypage/ProblemList'
-import StudyCalendar from './pages/mypage/StudyCalendar'
-import SolveProblem from 'pages/mypage/SolveProblem'
+import MyPage from './pages/mypage/MyPageLayout'
+import ProfilePage from './pages/mypage/ProfilePage'
+import EditProfilePage from './pages/mypage/EditProfilePage'
+import EditPwdPage from './pages/mypage/EditPwdPage'
+import SolvedPage from './pages/mypage/SolvedPage'
+import CalendarPage from './pages/mypage/CalendarPage'
+import SolveProblem from 'components/study/SolveProblem'
 
 function App() {
   return (
@@ -27,11 +27,11 @@ function App() {
         <Route path="resetpassword" element={<ResetPasswordForm />} />
       </Route>
       <Route path="/mypage" element={<MyPage />}>
-        <Route path="profile" element={<Profile />}></Route>
-        <Route path="profile/edit" element={<ProfileEdit />}></Route>
-        <Route path="profile/editpassword" element={<PasswordEdit />}></Route>
-        <Route path="calendar" element={<StudyCalendar />}></Route>
-        <Route path="solved" element={<ProblemList />}></Route>
+        <Route path="profile" element={<ProfilePage />}></Route>
+        <Route path="profile/edit" element={<EditProfilePage />}></Route>
+        <Route path="profile/editpassword" element={<EditPwdPage />}></Route>
+        <Route path="calendar" element={<CalendarPage />}></Route>
+        <Route path="solved" element={<SolvedPage />}></Route>
       </Route>
       <Route path="/solveproblem" element={<SolveProblem />}></Route>
     </Routes>

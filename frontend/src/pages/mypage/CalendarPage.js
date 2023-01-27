@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { addMonths, subMonths } from 'date-fns'
-import Calendar from 'components/molecules/Calendar'
-import DateSelector from 'components/molecules/DateSelector'
+import Calendar from 'components/mypage/Calendar'
+import MonthSelector from 'components/mypage/MonthSelector'
 import styled from 'styled-components'
 import { format } from 'date-fns'
-import Study from 'components/atoms/StudyItem'
+import Study from 'components/mypage/StudyItem'
 import axios from 'libs/axios'
 import api from 'apis/api'
 import { useSelector } from 'react-redux'
@@ -105,7 +105,7 @@ export default function StudyCalendar() {
         {modalDay}
         {modalContent}
       </Modal>
-      <DateSelector
+      <MonthSelector
         currentDate={currentDate}
         onChange={(e) => setCurrentDate(new Date(e.target.value))}
         onClickPrevious={previousMonth}

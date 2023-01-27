@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import Typo, { TypoCss } from 'styles/Typo'
 
 const typeObj = {
   name: {
@@ -61,9 +60,9 @@ export default function ProfileInput({
         onChange={onChange}
         disabled={disabled}
       />
-      <Typo className={`c ${message.isValid ? 'pass' : 'error'}`}>
+      <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
         {message.text}
-      </Typo>
+      </p>
     </Wrapper>
   )
 }

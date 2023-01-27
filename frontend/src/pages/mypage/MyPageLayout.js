@@ -1,8 +1,8 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import MyPageLayout from 'layouts/MyPageLayout'
-import SideNavbar from 'pages/mypage/SideNavbar'
-import Navbar from 'components/molecules/Navbar'
+import SideNavbar from 'components/mypage/SideNavbar'
+import Navbar from 'components/common/Navbar'
 
 export default function MyPage() {
   return (

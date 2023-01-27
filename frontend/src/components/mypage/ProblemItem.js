@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import Typo from 'styles/Typo'
 
 export default function ProblemItem({
   problemName,
@@ -13,12 +12,12 @@ export default function ProblemItem({
   return (
     <ProblemContainer onClick={onClick}>
       <FirstLine>
-        <Typo className="p">{problemName}</Typo>
-        <Typo className="c">마지막 제출일: {submitDatetime}</Typo>
+        <p>{problemName}</p>
+        <p className="c">마지막 제출일: {submitDatetime}</p>
       </FirstLine>
       <SecondLine>
-        <Typo className="c gray">정답률: {answerRate}</Typo>
-        <Typo className="c">{difficulty}</Typo>
+        <p className="c gray">정답률: {answerRate}</p>
+        <p className="c">{difficulty}</p>
       </SecondLine>
     </ProblemContainer>
   )
