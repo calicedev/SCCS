@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { addMonths, subMonths } from 'date-fns'
 import Calendar from 'components/mypage/Calendar'
 import MonthSelector from 'components/mypage/MonthSelector'
@@ -39,6 +39,7 @@ export default function StudyCalendar() {
       .catch((err) => {
         alert('스터디 내역을 불러오지 못했습니다.')
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate])
 
   // useMemo로 studies가 바뀌면 실행. 가능할지 모르겠음
@@ -61,6 +62,8 @@ export default function StudyCalendar() {
     )
   }, [studies])
 
+  //us
+
   const previousMonth = () => {
     setCurrentDate(subMonths(currentDate, 1))
   }
@@ -69,13 +72,14 @@ export default function StudyCalendar() {
     setCurrentDate(addMonths(currentDate, 1))
   }
 
-  const changeMonth = (id) => {
+  // React.memo(Calendar)가 활성화 되도록 props로 내려주는 함수 useCallback 적용
+  const changeMonth = useCallback((id) => {
     const element = document.getElementById(id)
     if (element.classList.contains('abled')) return
-    setCurrentDate(id)
-  }
+    setCurrentDate(new Date(id))
+  }, [])
 
-  const showModal = (id) => {
+  const showModal = useCallback((id) => {
     const element = document.getElementById(id)
     if (element.classList.contains('disabled')) {
       return
@@ -90,7 +94,8 @@ export default function StudyCalendar() {
     setModalDay(date.slice(-2))
     setModalContent(dateToStudies[element.id])
     setIsHovered(true)
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Container>
@@ -128,20 +133,29 @@ const Container = styled.div`
 `
 
 const Modal = styled.div`
-  overflow: hidden;
-  position: absolute;
-  z-index: 1;
-  border: 1px solid red;
-  border-radius: 5px;
-  background-color: white;
+  visibility: ${({ isHovered }) => (isHovered ? 'visible' : 'hidden')};
+
   overflow-x: hidden;
   overflow-y: auto;
-  white-space: nowrap;
+
+  position: absolute;
   left: ${({ modalLeft }) => modalLeft}px;
   top: ${({ modalTop }) => modalTop}px;
-  visibility: ${({ isHovered }) => (isHovered ? 'visible' : 'hidden')};
+  z-index: 1;
+
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
+
+  border: 1px solid gray;
+  border-radius: 5px;
+
+  background-color: white;
+
+  white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
 
   &:hover {
     animation: 0.5s ease-in-out forwards showModal;

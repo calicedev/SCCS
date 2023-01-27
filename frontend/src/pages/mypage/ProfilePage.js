@@ -24,12 +24,24 @@ export default function Profile() {
         가입일: {joinDate}
       </ProfileContainer>
       <InputContainer>
-        <ProfileInput type="id" value={user.id}></ProfileInput>
+        <ProfileInput type="id" value={user.id} disabled={true}></ProfileInput>
         <Flexbox>
-          <ProfileInput type="name" value={user.name}></ProfileInput>
-          <ProfileInput type="nickname" value={user.nickname}></ProfileInput>
+          <ProfileInput
+            type="name"
+            value={user.name}
+            disabled={true}
+          ></ProfileInput>
+          <ProfileInput
+            type="nickname"
+            value={user.nickname}
+            disabled={true}
+          ></ProfileInput>
         </Flexbox>
-        <ProfileInput type="email" value={user.email}></ProfileInput>
+        <ProfileInput
+          type="email"
+          value={user.email}
+          disabled={true}
+        ></ProfileInput>
       </InputContainer>
       <Button
         value="Edit"

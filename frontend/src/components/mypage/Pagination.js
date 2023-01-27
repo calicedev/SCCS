@@ -22,6 +22,7 @@ export default function Pagination({
 }) {
   const buttons = useMemo(() => {
     return [...Array(numBtns).keys()].map((key) => key + startPagination)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startPagination])
 
   return (

@@ -1,6 +1,11 @@
 import { createGlobalStyle } from 'styled-components'
+import cursiveFont from 'assets/font/DancingScript-Regular.ttf'
 /** reset css */
 const GlobalStyle = createGlobalStyle`
+  @font-face { 
+    font-family: 'cursiveFont'; 
+    src: url(${cursiveFont});
+  }
   .pass {
     color: ${({ theme }) => theme.passColor};
   }
@@ -11,8 +16,9 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.grayColor};
   }
   .main {
-    color: ${({ theme }) => theme.mainColor};
+    color: ${({ theme }) => theme.fontColor};
   }
+
   .light {
     font-weight: 300;
   }
@@ -28,6 +34,7 @@ const GlobalStyle = createGlobalStyle`
   .extra-bold {
     font-weight: 700;
   }
+
   h1 {
     font-size: 2rem;
     font-weight: 700;
@@ -90,6 +97,18 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  *::-webkit-scrollbar {
+    width: 15px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.secondaryColor};
+    border-radius: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background-color: #CCCCCC;
+    border-radius: 10px;
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -109,10 +128,11 @@ const GlobalStyle = createGlobalStyle`
   body {
     width: 100%;
     height: 100%;
-    color: ${({ theme }) => theme.mainColor};
+    color: ${({ theme }) => theme.fontColor};
     font-size: 100%;
     line-height: 1.2;
   }
+
   table {
     border-collapse: collapse;
     border-spacing: 0;

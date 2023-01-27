@@ -6,37 +6,37 @@ const typeObj = {
   name: {
     type: 'text',
     label: 'Name',
-    placeholder: 'user.name',
+    placeholder: '이름을 입력해주세요',
   },
   nickname: {
     type: 'text',
     label: 'Nickname',
-    placeholder: 'user.nickname',
+    placeholder: '닉네임을 입력해주세요',
   },
   id: {
     type: 'text',
     label: 'ID',
-    placeholder: 'user.id',
+    placeholder: '아이디를 입력해주세요',
   },
   email: {
-    type: 'Email',
+    type: 'email',
     label: 'Email',
-    placeholder: 'user.email@email.com',
+    placeholder: '이메일을 입력해주세요',
   },
   password: {
     type: 'password',
     label: 'Password',
-    placeholder: 'user.password',
+    placeholder: '기존 비밀번호를 입력해주세요',
   },
-  newpassword: {
-    type: 'nowpassword',
-    label: 'NewPassword',
-    placeholder: 'user.newpassword',
+  newPassword: {
+    type: 'password',
+    label: 'New Password',
+    placeholder: '새로운 비밀번호를 입력해주세요',
   },
-  confirmpassword: {
-    type: 'confirmpassword',
+  confirmPassword: {
+    type: 'password',
     label: 'Confirm Password',
-    placeholder: 'user.confirmpassowrd',
+    placeholder: '새로운 비밀번호를 재확인해주세요',
   },
 }
 
@@ -49,7 +49,7 @@ export default function ProfileInput({
 }) {
   return (
     <Wrapper>
-      <Label for={type} className="h1">
+      <Label htmlFor={type} className="h1">
         {typeObj[type].label}
       </Label>
       <Input
@@ -74,7 +74,7 @@ ProfileInput.propTypes = {
     'id',
     'email',
     'password',
-    'newpassword',
+    'newPassword',
     'confirmPassword',
   ]),
   value: PropTypes.string,
@@ -98,12 +98,11 @@ const Input = styled.input`
   padding: 0.2rem 0.5rem;
   border: 1px solid;
   border-radius: 5px;
-  background-color: ${({ disabled }) => (disabled ? '#CCCCCC' : 'white')};
+  background-color: ${({ disabled }) => (disabled ? '#EEEEEE' : 'white')};
 `
 
 const Label = styled.label`
   display: block;
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.fontColor};
   margin-top: 1rem;
 `
