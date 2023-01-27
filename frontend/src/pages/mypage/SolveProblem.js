@@ -1,18 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 import CodeInput from 'components/atoms/CodeInput'
-import theme from 'constants/theme'
 
 export default function SolveProblem() {
   return (
-    <Main >
+    <Main>
       <Problem>
-
-        <Img src='https://xe1.xpressengine.com/files/attach/images/122/231/306/019/%EB%AC%B4%EC%84%9C%EC%9A%B4%EC%9D%B4%EC%95%BC%EA%B8%B01.jpg'></Img>
+        <Img src="https://xe1.xpressengine.com/files/attach/images/122/231/306/019/%EB%AC%B4%EC%84%9C%EC%9A%B4%EC%9D%B4%EC%95%BC%EA%B8%B01.jpg"></Img>
       </Problem>
       <FlexColumn>
-
-        <CodingSection>coding
+        <CodingSection>
+          coding
           <Gutter></Gutter>
           <CodeInput></CodeInput>
         </CodingSection>
@@ -20,14 +18,14 @@ export default function SolveProblem() {
         <ResultSection>coding</ResultSection>
       </FlexColumn>
     </Main>
-    )
-  }
-  
-  const Main = styled.div`
-  color : #1C6FBC;
+  )
+}
+
+const Main = styled.div`
+  color: #1c6fbc;
   display: flex;
   width: 100%;
-  height:100%;
+  height: 100%;
   overflow: hidden;
   box-sizing: border-box;
   background-color: #263747;
@@ -53,10 +51,10 @@ const FlexColumn = styled.div`
   flex: 1;
   overflow: auto visible;
 `
-  
+
 const CodingSection = styled.div`
   position: relative;
-  padding-top: 1rem;  
+  padding-top: 1rem;
   height: calc(100% - 54px);
   height: calc(60% - 7px);
   overflow-y: hidden;
@@ -66,7 +64,7 @@ const CodingSection = styled.div`
   border-bottom: 0.0625rem solid #172334;
   word-wrap: break-word;
   word-break: break-all;
- `
+`
 // const Gutter = styled.div`
 //   width: 48px;
 //   word-wrap: break-word;
@@ -99,5 +97,4 @@ const Div = styled.div`
 
 const ResultSection = styled.div`
   display: block;
-  
 `
