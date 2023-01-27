@@ -20,6 +20,7 @@ public class MemberServiceImpl implements MemberService {
     private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
+
     // 생성자 주입
     private final MemberMapper memberMapper;
     private final EncryptService encryptService;
