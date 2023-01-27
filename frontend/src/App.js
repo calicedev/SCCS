@@ -30,8 +30,8 @@ function App() {
         <Route path="profile" element={<Profile />}></Route>
         <Route path="profileedit" element={<ProfileEdit />}></Route>
         <Route path="passwordedit" element={<PasswordEdit />}></Route>
-        <Route path="study" element={<StudyCalendar />}></Route>
-        <Route path="problem" element={<ProblemList />}></Route>
+        <Route path="calendar" element={<StudyCalendar />}></Route>
+        <Route path="solved" element={<ProblemList />}></Route>
       </Route>
       <Route path="/solveproblem" element={<SolveProblem />}></Route>
     </Routes>

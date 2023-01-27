@@ -5,7 +5,7 @@ import AuthInput from 'components/atoms/AuthInput'
 import IconButton from 'components/atoms/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
-import Typography from 'components/atoms/Typography'
+import Typo, { TypoCss } from 'styles/Typo'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
@@ -58,22 +58,21 @@ export default function FindIdForm() {
           navigate('/auth/login')
         }}
       />
-      <Typography type="h1" value="Find ID" />
-      <Typography type="h3" value="Enter your name and email to find your ID" />
-      <AuthInput
-        type="id"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      ></AuthInput>
-      <AuthInput
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      ></AuthInput>
-      <Typography
-        color={message.isValid ? 'pass' : 'error'}
-        value={message.text}
-      />
+      <Typo className="h1">Find ID</Typo>
+      <Typo>Enter your name and email to find your ID</Typo>
+      <Form>
+        <AuthInput
+          type="id"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        ></AuthInput>
+        <AuthInput
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        ></AuthInput>
+        <Typo color={message.isValid ? 'pass' : 'error'} value={message.text} />
+      </Form>
       <Button onClick={findId} value="Find" size="medium"></Button>
     </Flexbox>
   )
@@ -85,4 +84,7 @@ const Flexbox = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 0rem 8rem;
+`
+const Form = styled.div`
+  margin: 3rem 0rem;
 `

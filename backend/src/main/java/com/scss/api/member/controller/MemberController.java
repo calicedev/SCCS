@@ -4,7 +4,9 @@ import com.scss.api.member.dto.MemberDto;
 import com.scss.api.member.dto.UniqueDto;
 import com.scss.api.member.service.JWTService;
 import com.scss.api.member.service.MemberService;
+import com.scss.api.member.util.EmailService;
 import com.scss.api.member.util.EncryptService;
+import com.scss.api.member.util.RedisService;
 import java.lang.reflect.Member;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -17,6 +19,7 @@ import java.util.Objects;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.Claims;
+import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +44,8 @@ public class MemberController {
     private final MemberService memberService;
     private final JWTService jwtService;
     private final EncryptService encryptService;
+    private final EmailService emailService;
+    private final RedisService redisService;
 
     /** 회원 가입 **/
     @PostMapping("/member")
@@ -66,7 +71,7 @@ public class MemberController {
     }
 
     /** 로그인 : 아이디, 비밀번호 일치시 토큰 생성 **/
-    // ToDo : refreshtoken Redis에 저장하기 (key: member_id, value: refreshtoken)
+    // ToDo : refreshtoken Redis에 저장하기 (key: 'refreshToken:사용자 id', value: refreshToken)
     @PostMapping("/member/login")
     public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap)
             throws NoSuchAlgorithmException {
@@ -79,7 +84,7 @@ public class MemberController {
             String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
             logger.debug("[logIn]로그인 시도 비번 : {}", hex);
-            logger.debug("[logIn]기존 비밀번호 : {}", memberDto.getPassword());
+            logger.debug("[logIn]기존   비밀번호 : {}", memberDto.getPassword());
 
             if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
                 String accessToken = jwtService.createToken(paramMap.get("id"), "accesstoken",
@@ -88,6 +93,11 @@ public class MemberController {
                         (10 * 1000 * 60)); // 10분
                 resultmap.put("accesstoken", accessToken);
                 resultmap.put("refreshtoken", refreshToken);
+
+                // Redis에 회원 id 값으로, refreshToken 저장
+                String refreshTokenKey = "refreshToken:"+memberDto.getId();
+                redisService.setRefreshTokenWithRedis(refreshTokenKey, refreshToken);
+                logger.debug("[logIn]Redis에 refreshToken 저장완료 id : {}, token : {}", memberDto.getId(), refreshToken);
 
                 logger.debug("[logIn]로그인 성공");
                 logger.debug("accesstoken : {}", accessToken);
@@ -208,7 +218,7 @@ public class MemberController {
 
     /** 아이디, 이메일, 닉네임 중복 검사 **/
     @GetMapping("/unique/{type}/{param}")
-    public ResponseEntity<?> test(@PathVariable String type, @PathVariable String param) {
+    public ResponseEntity<?> duplicateParam(@PathVariable String type, @PathVariable String param) {
         UniqueDto uniqueDto = new UniqueDto(); // 중복여부를 관리하는 DTO
         uniqueDto.setType(type);
         uniqueDto.setParam(param);
@@ -226,6 +236,20 @@ public class MemberController {
             resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + " 입니다");
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
         }
+    }
+
+    /** 비밀번호 초기화 **/
+    @PostMapping("/member/password")
+    public ResponseEntity<?> initPassword(@RequestBody Map<String, String> paramMap)
+            throws MessagingException {
+
+        logger.debug("paramMap : {}", paramMap);
+        String mail = paramMap.get("email"); // 받는 사람 주소
+        String id = paramMap.get("id"); // 회원 아이디
+
+        emailService.sendEmail(id, mail);
+
+        return new ResponseEntity<String>("응답임", HttpStatus.OK);
     }
 
 }

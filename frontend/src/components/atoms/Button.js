@@ -70,18 +70,18 @@ const BtnWrapper = styled.button`
   &.xs-btn {
     padding: 0.5rem 0.5rem;
     border-radius: 50%;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   &.sm-btn {
     padding: 0.5rem 1rem;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
   &.md-btn {
-    padding: 0.7rem 1.3rem;
-    font-size: 1.8rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1.5rem;
   }
   &.lg-btn {
-    padding: 0.9rem 1.5rem;
+    padding: 0.7rem 1.5rem;
     font-size: 2rem;
   }
 `
