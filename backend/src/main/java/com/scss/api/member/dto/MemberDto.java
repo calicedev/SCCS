@@ -16,7 +16,7 @@ public class MemberDto {
     String name;
     String nickname;
     String email;
-    String profile_image;
+    String profileImage;
     int score;
     Timestamp joinDate;
     String salt;
