@@ -4,11 +4,13 @@ import styled from 'styled-components'
 import WeekDays from 'components/atoms/WeekDays'
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns'
 import { isSameMonth, addDays, format } from 'date-fns'
+import PropTypes from 'prop-types'
 
 const Calendar = ({
   currentDate,
   onClickDateBox,
   onMouseEnterDateBox,
+  onMouseLeaveDateBox,
   contents,
 }) => {
   console.log(1)
@@ -28,6 +30,7 @@ const Calendar = ({
         content={contents[format(date, 'YYYY-MM-DD')]}
         onClick={onClickDateBox}
         onMouseEnter={onMouseEnterDateBox}
+        onMouseLeave={onMouseLeaveDateBox}
       />,
     )
     date = addDays(date, 1)
@@ -39,6 +42,22 @@ const Calendar = ({
       <Container>{dates}</Container>
     </>
   )
+}
+
+Calendar.propTypes = {
+  currentDate: PropTypes.instanceOf(Date),
+  onClickDateBox: undefined,
+  onMouseEnterDateBox: PropTypes.func,
+  onMouseLeaveDateBox: PropTypes.func,
+  contents: PropTypes.object,
+}
+
+Calendar.defaultProps = {
+  currentDate: null,
+  onClickDateBox: undefined,
+  onMouseEnterDateBox: undefined,
+  onMouseLeaveDateBox: undefined,
+  contents: undefined,
 }
 
 const Container = styled.div`

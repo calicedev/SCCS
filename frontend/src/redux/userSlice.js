@@ -1,15 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
+import defaultProfileImg from 'assets/img/default_profile_img.jpg'
 
 const userSlice = createSlice({
   name: 'userSlice',
   initialState: {
-    id: 1,
+    id: 'ssafy01',
     name: '김이박',
     nickname: '별명',
     email: 'afdsdfsd@naver.com',
     score: 100,
-    join_date: '2017-12-31 10:10:00',
-    profile_image: 'url',
+    joinDatetime: '2017-12-31 10:10:00',
+    profileImage: defaultProfileImg,
   },
   reducers: {
     setUserInfo: (state, action) => {

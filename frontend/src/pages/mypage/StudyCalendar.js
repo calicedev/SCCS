@@ -16,7 +16,7 @@ export default function StudyCalendar() {
   // useState
   const [currentDate, setCurrentDate] = useState(new Date())
   // 모달 관련 변수
-  const [studies, setStudies] = useState([])
+  const [studies, setStudies] = useState(ex_studies)
   const [isHovered, setIsHovered] = useState(false)
   const [modalLeft, setModalLeft] = useState(0)
   const [modalTop, setModalTop] = useState(0)
@@ -25,7 +25,7 @@ export default function StudyCalendar() {
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
 
-  // useEffect로 마운트 시에 studies 불러오기
+  // mount 시 혹은 날짜 변경 시 studies 불러오기
   useEffect(() => {
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
@@ -159,23 +159,23 @@ const Modal = styled.div`
   }
 `
 
-// const studies = [
-//   {
-//     id: 1,
-//     title: '커피 내기 SSAFY기 (A301)',
-//     created_datetime: '2023-01-17 17:18:53',
-//     problems: [
-//       { id: 1, title: '미로찾기' },
-//       { id: 2, title: '치즈 녹이기' },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     title: '커피 내기 SSAFY기2 (A301)',
-//     created_datetime: '2023-01-17 21:18:53',
-//     problems: [
-//       { id: 3, title: '미로찾기2' },
-//       { id: 2, title: '치즈 녹이기' },
-//     ],
-//   },
-// ]
+const ex_studies = [
+  {
+    id: 1,
+    title: '커피 내기 SSAFY기 (A301)',
+    created_datetime: '2023-01-17 17:18:53',
+    problems: [
+      { id: 1, title: '미로찾기' },
+      { id: 2, title: '치즈 녹이기' },
+    ],
+  },
+  {
+    id: 2,
+    title: '커피 내기 SSAFY기2 (A301)',
+    created_datetime: '2023-01-17 21:18:53',
+    problems: [
+      { id: 3, title: '미로찾기2' },
+      { id: 2, title: '치즈 녹이기' },
+    ],
+  },
+]

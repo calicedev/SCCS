@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const IconButton = ({ icon, size, text, bgColor, onClick }) => {
+export default function IconButton({ icon, size, text, bgColor, onClick }) {
   const sizeClass = `${size}`
   const bgColorClass = `${bgColor}`
   return (
@@ -38,4 +38,3 @@ const IconWrapper = styled.div`
     font-size: 3rem;
   }
 `
-export default IconButton

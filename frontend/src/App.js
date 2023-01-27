@@ -27,8 +27,8 @@ function App() {
       <Route path="/main" element={<MainPage />} />
       <Route path="/mypage" element={<MyPage />}>
         <Route path="profile" element={<Profile />}></Route>
-        <Route path="profileedit" element={<ProfileEdit />}></Route>
-        <Route path="passwordedit" element={<PasswordEdit />}></Route>
+        <Route path="profile/edit" element={<ProfileEdit />}></Route>
+        <Route path="profile/editpassword" element={<PasswordEdit />}></Route>
         <Route path="calendar" element={<StudyCalendar />}></Route>
         <Route path="solved" element={<ProblemList />}></Route>
       </Route>

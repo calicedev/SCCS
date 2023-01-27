@@ -88,10 +88,10 @@ AuthInput.defaultProps = {
 }
 
 const Wrapper = styled.div`
+  ${TypoCss}
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`
-  ${TypoCss}
   border-bottom: 1px solid gray;
   padding: 0.3rem 0rem;
 `
