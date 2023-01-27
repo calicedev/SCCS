@@ -4,12 +4,6 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
 export default function Navbar() {
-  let activeStyle = {
-    textDecoration: 'underline',
-  }
-
-  let activeClassName = 'underline'
-
   return (
     <Nav>
       <Logo></Logo>

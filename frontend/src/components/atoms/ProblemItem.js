@@ -1,37 +1,68 @@
 import React from 'react'
 import styled from 'styled-components'
-import Typography from './Typography'
+import PropTypes from 'prop-types'
+import Typo from 'styles/Typo'
 
-
-export default function ProblemItem({problem}) {
-  const difficulty = problem.difficulty === 0 ? '쉬움' : problem.difficulty === 1 ? '보통' : '어려움'
+export default function ProblemItem({
+  problemName,
+  answerRate,
+  submitDatetime,
+  difficulty,
+  onClick,
+}) {
   return (
-    <ProblemContainer>
+    <ProblemContainer onClick={onClick}>
       <FirstLine>
-        <Typography type='p' value={problem.problem_name}></Typography>{' '}
-        <Typography type='c' value={`마지막 제출일: ${problem.submit_datetime}`}></Typography>
+        <Typo className="p">{problemName}</Typo>
+        <Typo className="c">마지막 제출일: {submitDatetime}</Typo>
       </FirstLine>
       <SecondLine>
-        <Typography type='c' color='gray' value={`정답률: ${problem.answer_rate}`}></Typography>{' '}
-        <Typography type='c' value={difficulty}></Typography>
+        <Typo className="c gray">정답률: {answerRate}</Typo>
+        <Typo className="c">{difficulty}</Typo>
       </SecondLine>
     </ProblemContainer>
   )
 }
 
+ProblemItem.propTypes = {
+  onClick: PropTypes.func,
+  problemName: PropTypes.string,
+  answerRate: PropTypes.string,
+  sumbmitDatetime: PropTypes.string,
+  difficulty: PropTypes.number,
+}
+
+ProblemItem.defaultProps = {
+  onClick: undefined,
+  problemName: '',
+  answerRate: '',
+  sumbmitDatetime: '',
+  difficulty: 0,
+}
+
 const ProblemContainer = styled.div`
-  display: flex-column;
-  margin: 0rem 3rem;
-  padding: 1rem 0rem;
-  border-bottom: solid 1px black;
+  padding: 0.7rem 0rem;
+  border-bottom: solid 1px gray;
+  border-top: solid 1px gray;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  background-color: ${({ theme }) => theme.bgcolor};
+
+  &:hover {
+    scale: 1.1;
+    background-color: #ffffff80;
+  }
 `
 
 const FirstLine = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 `
 
 const SecondLine = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
 `

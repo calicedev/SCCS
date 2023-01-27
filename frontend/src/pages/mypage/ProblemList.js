@@ -1,809 +1,815 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import ProblemItem from 'components/atoms/ProblemItem'
 import Pagination from 'components/molecules/Pagination'
-import Button from 'components/atoms/Button'
+import axios from 'libs/axios'
+import api from 'apis/api'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io'
-import {
-  FaAngleDoubleLeft,
-  FaAngleDoubleRight,
-  FaAngleLeft,
-  FaAngleRight,
-} from 'react-icons/fa'
+const PROBLEM_PER_PAGE = 7
+const BUTTON_PER_PAGINATION = 5
 
 export default function ProblemList() {
-  // 임시 데이터
+  // 리덕스 읽어오기
+  const id = useSelector((state) => state.user.id)
 
-  const problems = [
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '2페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '3페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '4페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '5페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '6페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '6페이지 10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '7페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '7페이지 10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '8페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '7페이지 10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '9페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '7페이지 10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '10페이지 주사위2',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '주사위1',
-      answer_rate: '78.86%',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 0,
-      language_id: 1,
-    },
-    {
-      problem_name: '미로1',
-      answer_rate: '21.16',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 2,
-      language_id: 1,
-    },
-    {
-      problem_name: '선물 배달1',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-    {
-      problem_name: '7페이지 10번째 문제',
-      answer_rate: '45.23',
-      submit_datetime: '2021-12-06 17:56:03',
-      difficulty: 1,
-      language_id: 1,
-    },
-  ]
+  // useState
+  const [problems, setProblems] = useState(ex_problems)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [startPagination, setStartPagination] = useState(0)
 
-  const [page, setPage] = useState(0)
-  const [page5, setPage5] = useState(0)
-  // 문제의 개수 구하기
-  const problemCount = problems.length
-  // console.log(problemCount)
+  // use
+  const navigate = { useNavigate }
 
-  // 문제의 개수를 토대로 마지막 페이지 번호 구하기 (10으로 나눈 몫 + 1)
-  if (problemCount / 10 === parseInt(problemCount / 10)) {
-    var lastPageNum = parseInt(problemCount / 10)
-  } else {
-    var lastPageNum = parseInt(problemCount / 10) + 1
+  // mount시 axios 요청으로 problem 불러오기
+  useEffect(() => {
+    const [url, method] = api('solvedProblem', { id })
+    const config = { method }
+    axios
+      .request(url, config)
+      .then((res) => {
+        setProblems(res.data)
+      })
+      .catch((err) => {
+        alert('문제 내역을 불러오지 못했습니다.')
+      })
+  }, [])
+
+  // 마지막 페이지 인덱스
+  const lastPage = useMemo(() => {
+    if (problems.length / PROBLEM_PER_PAGE) {
+      return parseInt(problems.length / PROBLEM_PER_PAGE) - 1
+    }
+    return parseInt(problems.length / PROBLEM_PER_PAGE)
+  }, [problems])
+
+  // 다음 페이지네이션
+  const nextPagination = () => {
+    if (startPagination + 2 * BUTTON_PER_PAGINATION - 1 > lastPage) {
+      setCurrentPage(lastPage - BUTTON_PER_PAGINATION + 1)
+      setStartPagination(lastPage - BUTTON_PER_PAGINATION + 1)
+      return
+    }
+    setCurrentPage(startPagination + BUTTON_PER_PAGINATION)
+    setStartPagination(startPagination + BUTTON_PER_PAGINATION)
   }
-
-  // console.log(lastPageNum)
-
-  // page수가 담긴 array 만들기 (파이썬의 range랑 같은 개념)
-  const pageArray = []
-  for (let i = 1; i < lastPageNum + 1; ++i) {
-    pageArray.push(i)
+  // 이전 페이지네이션
+  const previousPagination = () => {
+    if (startPagination - BUTTON_PER_PAGINATION <= 0) {
+      setCurrentPage(0)
+      setStartPagination(0)
+      return
+    }
+    setCurrentPage(startPagination - BUTTON_PER_PAGINATION)
+    setStartPagination(startPagination - BUTTON_PER_PAGINATION)
   }
-
-  // 5페이지 단위가 몇개인지 변수에 저장
-  if (lastPageNum / 5 === parseInt(lastPageNum / 5)) {
-    var pageCount5 = parseInt(lastPageNum / 5)
-  } else {
-    var pageCount5 = parseInt(lastPageNum / 5) + 1
-  }
-
-  // console.log(pageCount5)
-
-  // 5페이지 단위 개수가 담긴 array 만들기
-  const page5Array = []
-  for (let i = 0; i < pageCount5; ++i) {
-    page5Array.push(i)
-  }
-
-  const plusPage5 = () => {
-    if (5 * page5 + 5 >= lastPageNum) return
-    setPage5(page5 + 1)
-  }
-  const minusPage5 = () => {
-    if (page5 === 0) return
-    setPage5(page5 - 1)
-  }
-
-  console.log('page', page)
-  console.log('page5', page5)
 
   return (
     <div>
-      <h1>내가 푼 문제 목록</h1>
-      {problems.slice(page * 10, page * 10 + 10).map((p, i) => {
-        return <ProblemItem problem={p} key={i} />
-      })}
-      <PageContainer>
-        <FaAngleDoubleLeft
-          onClick={() => {
-            setPage(0)
-            setPage5(0)
-          }}
-        />
-        <FaAngleLeft onClick={minusPage5} />
-        {pageArray.slice(page5 * 5, page5 * 5 + 5).map((page, idx) => {
-          return (
-            <Pagination
-              page={page}
-              setPage={setPage}
-              key={idx}
-              idx={page5 * 5 + idx}
-            />
+      <ProblemsContainer>
+        {problems
+          .slice(
+            currentPage * PROBLEM_PER_PAGE,
+            currentPage * PROBLEM_PER_PAGE + PROBLEM_PER_PAGE,
           )
-        })}
-        <FaAngleRight onClick={plusPage5} />
-        <FaAngleDoubleRight
-          onClick={() => {
-            setPage(lastPageNum - 1)
-            setPage5(pageCount5 - 1)
-          }}
-        />
-      </PageContainer>
+          .map((problem, i) => {
+            return (
+              <ProblemItem
+                problemName={problem.problem_name}
+                answerRate={problem.answer_rate}
+                submitDatetime={problem.submit_datetime}
+                difficulty={problem.difficulty}
+                onclick={() => navigate(`/problem/${problem.id}`)}
+                key={i}
+              />
+            )
+          })}
+      </ProblemsContainer>
+      <Pagination
+        currentPage={currentPage}
+        startPagination={startPagination}
+        onClick={setCurrentPage}
+        numBtns={BUTTON_PER_PAGINATION}
+        onClickLeft={previousPagination}
+        onClickRight={nextPagination}
+        onClickDoubleLeft={() => {
+          setCurrentPage(0)
+          setStartPagination(0)
+        }}
+        onClickDoubleRight={() => {
+          setCurrentPage(lastPage - BUTTON_PER_PAGINATION + 1)
+          setStartPagination(lastPage - BUTTON_PER_PAGINATION + 1)
+        }}
+      />
     </div>
   )
 }
 
-const PageContainer = styled.div`
-  text-align: center;
-  font-size: 3rem;
+const ProblemsContainer = styled.div`
+  margin: 2rem 0rem;
 `
+
+const ex_problems = [
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '2페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '3페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '4페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '5페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '6페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '6페이지 10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '7페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '7페이지 10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '8페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '7페이지 10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '9페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '7페이지 10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '10페이지 주사위2',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '주사위1',
+    answer_rate: '78.86%',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 0,
+    language_id: 1,
+  },
+  {
+    problem_name: '미로1',
+    answer_rate: '21.16',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 2,
+    language_id: 1,
+  },
+  {
+    problem_name: '선물 배달1',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+  {
+    problem_name: '7페이지 10번째 문제',
+    answer_rate: '45.23',
+    submit_datetime: '2021-12-06 17:56:03',
+    difficulty: 1,
+    language_id: 1,
+  },
+]

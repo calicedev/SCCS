@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const Button = ({ size, type, onClick, value }) => {
+export default function Button({ size, type, onClick, value }) {
   const sizeClass =
     size === 'tiny'
       ? 'xs-btn'
@@ -38,8 +38,6 @@ const BtnWrapper = styled.button`
   display: inline-flex;
   justify-content: center;
 
-  margin: 0 auto;
-
   border-radius: 10px;
 
   text-align: center;
@@ -68,7 +66,9 @@ const BtnWrapper = styled.button`
     background-color: ${({ theme }) => theme.warningColor};
   }
   &.xs-btn {
-    padding: 0.5rem 0.5rem;
+    align-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 50%;
     font-size: 1rem;
   }
@@ -85,4 +85,3 @@ const BtnWrapper = styled.button`
     font-size: 2rem;
   }
 `
-export default Button

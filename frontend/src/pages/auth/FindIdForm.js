@@ -5,7 +5,7 @@ import AuthInput from 'components/atoms/AuthInput'
 import IconButton from 'components/atoms/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
-import Typo, { TypoCss } from 'styles/Typo'
+import Typo from 'styles/Typo'
 import axios from 'libs/axios'
 import api from 'apis/api'
 

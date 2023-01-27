@@ -2,88 +2,112 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import ProfileInput from 'components/atoms/ProfileInput'
 import Button from 'components/atoms/Button'
-import ProfileImg from 'components/atoms/ProfileImg'
+import ProfileImgInput from 'components/atoms/ProfileImgInput'
 import { useNavigate } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
+import { useSelector } from 'react-redux'
 
 export default function ProfileEdit() {
-
-  const [nickname, setNickname] = useAuthInput('nickname', '')
-  const [email, setEmail] = useAuthInput('email', '')
-
-
+  // 리덕스
+  const user = useSelector((state) => state.user)
+  // 리액트 훅
   const navigate = useNavigate()
-  return(
-    
-    <ProfileContent>
-      <Header>Edit Profile</Header>
-      <EditBtn>
-        <Button value='기본정보' ></Button>
-        <Button value='비밀번호' onClick={() => {
-            navigate('/mypage/PasswordEdit')
-          }}></Button>
-      </EditBtn>
-      <Saad>
-        <ProfileImg></ProfileImg>
-      </Saad>
-      <ProfileInput
-          type="name"
 
-      ></ProfileInput>
-
-      <Container>
-        <ProfileInput
-            type="id"
-
-        ></ProfileInput >
-        <ProfileInput
-          type="nickname"
-          value={nickname}
-          disabled = {false}
-          onChange={(e) => setNickname(e.target.value)}
-        ></ProfileInput>
-      </Container>
-
-      <ProfileInput
-        type="email"
-        value={email}
-        disabled = {false}
-        onChange={(e) => setEmail(e.target.value)}
-      ></ProfileInput>
-      <Button value="Edit" onClick={() => {
-            navigate('/mypage/Profile')
-          }}></Button>
-    </ProfileContent>
-
+  const [nickname, setNickname, nicknameMsg] = useAuthInput(
+    'nickname',
+    user.nickname,
+    true,
+    true,
   )
-  
+  const [email, setEmail, emailMsg] = useAuthInput(
+    'email',
+    user.email,
+    true,
+    false,
+  )
+  const [img, setImg] = useState(user.profileImage)
+
+  return (
+    <ProfileContent>
+      <h1>Edit Profile</h1>
+
+      <EditBtns>
+        <Button value="기본정보" type="primary"></Button>
+        <Button
+          value="비밀번호"
+          type="secondary"
+          onClick={() => {
+            navigate('/mypage/profile/editpassword')
+          }}
+        ></Button>
+      </EditBtns>
+
+      <ProfileContainer>
+        <ProfileImgInput
+          imgUrl={img}
+          onChange={(e) => setImg(e.target.files)}
+          onDelete={() => setImg([])}
+        ></ProfileImgInput>
+      </ProfileContainer>
+
+      <InputContainer>
+        <ProfileInput type="id" value={user.id} disabled={true}></ProfileInput>
+        <Flexbox>
+          <ProfileInput
+            type="name"
+            value={user.name}
+            disabled={true}
+          ></ProfileInput>
+          <ProfileInput
+            type="nickname"
+            message={nicknameMsg}
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          ></ProfileInput>
+        </Flexbox>
+        <ProfileInput
+          type="email"
+          value={email}
+          message={emailMsg}
+          onChange={(e) => setEmail(e.target.value)}
+        ></ProfileInput>
+      </InputContainer>
+
+      <Button
+        value="Cancel"
+        onClick={() => {
+          navigate('/mypage/Profile')
+        }}
+      ></Button>
+    </ProfileContent>
+  )
 }
 
-const Header = styled.h1`
-  font-size: 5rem;
-`
-
 const ProfileContent = styled.div`
+  position: relative;
+
   display: flex;
-  position: absolute;
-  border-radius: 10px;
   flex-direction: column;
-  min-height: 100%;
-  width: 70%;
-`
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 55%;
+  width: 100%;
 `
 
-const Saad = styled.div`
-  display: flex;
-  positipn: fixed;
-  justify-content: right;
+const ProfileContainer = styled.div`
+  position: absolute;
+  top: 2rem;
+  right: 0rem;
 `
 
-const EditBtn = styled.div`
+const InputContainer = styled.div`
   display: flex;
-  max-width: 10rem;
+  flex-direction: column;
+  margin: 2rem 0rem;
+`
+
+const Flexbox = styled.div`
+  display: flex;
+`
+
+const EditBtns = styled.div`
+  display: flex;
+  justify-content: start;
 `

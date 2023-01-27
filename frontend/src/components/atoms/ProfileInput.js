@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import Typography from './Typography'
+import Typo, { TypoCss } from 'styles/Typo'
 
 const typeObj = {
   name: {
@@ -41,29 +41,32 @@ const typeObj = {
   },
 }
 
-const ProfileInput = ({ type, value, onChange, disabled, message }) => {
+export default function ProfileInput({
+  type,
+  value,
+  onChange,
+  disabled,
+  message,
+}) {
   return (
-    <InputBox>
-      <Label>{typeObj[type].label}</Label>
+    <Wrapper>
+      <Label for={type} className="h1">
+        {typeObj[type].label}
+      </Label>
       <Input
+        id={type}
         type={typeObj[type].type}
         placeholder={typeObj[type].placeholder}
         value={value}
         onChange={onChange}
         disabled={disabled}
       />
-      <Typography
-        color={message.isValid ? 'pass' : 'error'}
-        vlaue={message.text}
-      ></Typography>
-    </InputBox>
+      <Typo className={`c ${message.isValid ? 'pass' : 'error'}`}>
+        {message.text}
+      </Typo>
+    </Wrapper>
   )
 }
-
-const InputBox = styled.div`
-  
-  border: 1px;
-`
 
 ProfileInput.propTypes = {
   type: PropTypes.oneOf([
@@ -89,21 +92,19 @@ ProfileInput.defaultProps = {
   disabled: false,
 }
 
+const Wrapper = styled.div``
+
 const Input = styled.input`
-  font-size: 1.5rem;
-  padding: 0.2rem 0.1rem;
-  height: 3rem;
+  font-size: 1.3rem;
+  padding: 0.2rem 0.5rem;
   border: 1px solid;
-  border-radius: 10px;
-  background-color: ${({disabled}) => disabled ? '#CCCCCC' : 'white'}
+  border-radius: 5px;
+  background-color: ${({ disabled }) => (disabled ? '#CCCCCC' : 'white')};
 `
 
-const Label = styled.div`
-  font-size: 1.4rem;
-  color: ${({theme}) => theme.fontColor};
+const Label = styled.label`
+  display: block;
+  font-size: 1.2rem;
+  color: ${({ theme }) => theme.fontColor};
   margin-top: 1rem;
 `
-
-
-export default ProfileInput
-

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import Typography from 'components/atoms/Typography'
+import Typo from 'styles/Typo'
+import PropTypes from 'prop-types'
 
 export default function DateBox({
   date,
@@ -13,17 +14,35 @@ export default function DateBox({
   const disabledClass = disabled ? 'disabled' : 'abled'
 
   return (
-    <FlexBox
+    <DateContainer
       id={date}
       className={disabledClass}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
+      onMouseEnter={() => (onMouseEnter ? onMouseEnter(date) : null)}
+      onMouseLeave={() => (onMouseLeave ? onMouseLeave(date) : null)}
+      onClick={() => (onClick ? onClick(date) : null)}
     >
-      <Typography type="p" value={date.slice(-2)} />
-      {content}
-    </FlexBox>
+      <FlexBox>
+        <Typo type="p">{date.slice(-2)}</Typo>
+        {content}
+      </FlexBox>
+    </DateContainer>
   )
+}
+
+DateBox.propTypes = {
+  date: PropTypes.string,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+}
+
+DateBox.defaultProps = {
+  date: '',
+  disabled: false,
+  onClick: undefined,
+  onMouseEnter: undefined,
+  onMouseLeave: undefined,
 }
 
 const FlexBox = styled.div`
@@ -31,11 +50,25 @@ const FlexBox = styled.div`
   flex-direction: column;
 
   overflow: hidden;
+  white-space: nowrap;
+  position: absolute;
 
-  border: 1px solid gray;
+  width: 100%;
+  height: 100%;
+`
+
+const DateContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.grayColor};
   border-radius: 5px;
 
-  white-space: nowrap;
+  width: 100%;
+  position: relative;
+
+  &::after {
+    display: block;
+    content: '';
+    padding-bottom: 100%;
+  }
 
   &.disabled {
     background-color: ${({ theme }) => theme.grayColor};

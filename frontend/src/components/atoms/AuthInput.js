@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { BiUser } from 'react-icons/bi'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdOutlineEmail } from 'react-icons/md'
-import Typography from 'components/atoms/Typography'
 import Typo, { TypoCss } from 'styles/Typo'
 
 const typeObj = {
@@ -89,10 +88,10 @@ AuthInput.defaultProps = {
 }
 
 const Wrapper = styled.div`
+  ${TypoCss}
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`
-  ${TypoCss}
   border-bottom: 1px solid gray;
   padding: 0.3rem 0rem;
 `

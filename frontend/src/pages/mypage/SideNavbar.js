@@ -53,12 +53,11 @@ const SideNav = styled.div`
   justify-content: space-between;
 
   margin: 1.5rem 0rem;
-  padding: 0rem 2rem;
 `
 
 const NavStyle = styled(NavLink)`
   color: ${({ theme }) => theme.secondaryColor};
-  padding: 1rem;
+  padding: 1rem 0rem 1rem 3rem;
   font-size: 1.2rem;
   font-weight: 400;
 
