@@ -43,13 +43,13 @@ const ProblemContainer = styled.div`
   padding: 0.7rem 0rem;
   border-bottom: solid 1px gray;
   border-top: solid 1px gray;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.bgcolor};
+  background-color: ${({ theme }) => theme.bgColor};
 
   &:hover {
-    scale: 1.1;
-    background-color: #ffffff80;
+    scale: 1.05;
+    background-color: ${({ theme }) => theme.bgColor};
   }
 `
 

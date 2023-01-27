@@ -35,6 +35,7 @@ export default function ProblemList() {
       .catch((err) => {
         alert('문제 내역을 불러오지 못했습니다.')
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 마지막 페이지 인덱스

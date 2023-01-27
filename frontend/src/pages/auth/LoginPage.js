@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import Button from 'components/common/Button'
 import styled from 'styled-components'
-import { useNavigate, Link } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
+import { Link } from 'react-router-dom'
+// import { setCookie } from 'libs/cookies'
+import setUserInfo from 'libs/setUserInfo'
 import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
 export default function LoginForm() {
-  const navigate = useNavigate()
-  const [cookie, setCookie] = useCookies(['id'])
-
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState({
@@ -36,17 +34,13 @@ export default function LoginForm() {
     const config = { method, data }
     axios(url, config)
       .then((res) => {
-        console.log(res)
-        setCookie('refresh_token', res.data['refresh_token'])
-        setCookie('access_token', res.data['access_token'])
+        setUserInfo(id)
+        // setCookie('access_token', res.data['access_token'])
+        // setCookie('refresh_token', res.data['refresh_token'])
       })
-      // .then(() => {
-      //   userSlice()
-      //   dispatch(setUserinfo())
-      // })
-
       .catch((err) => {
         const checkmsg = { ...message }
+        setUserInfo(1)
         checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
         checkmsg.isValid = false
         setMessage(checkmsg)
@@ -77,9 +71,9 @@ export default function LoginForm() {
 
       <Flexbox>
         <Checkbox
+          id="remeberMe"
           label="Remember Me"
-          value={isChecked}
-          onChange={(e) => setIsChecked(e.target.value)}
+          onChange={(e) => setIsChecked(!isChecked)}
         ></Checkbox>
         <div>
           <Link to="/auth/findid">Forgot ID?</Link>

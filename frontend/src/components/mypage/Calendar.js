@@ -41,7 +41,16 @@ const Calendar = ({
     <>
       <FlexBox>
         {WEEK_DAYS.map((day) => {
-          return <div key={day}>{day}</div>
+          return (
+            <h3
+              key={day}
+              className={`${
+                day === 'Sat' ? 'pass' : day === 'Sun' ? 'error' : 'main'
+              }`}
+            >
+              {day}
+            </h3>
+          )
         })}
       </FlexBox>
       <Container>{dates}</Container>
@@ -51,7 +60,7 @@ const Calendar = ({
 
 Calendar.propTypes = {
   currentDate: PropTypes.instanceOf(Date),
-  onClickDateBox: undefined,
+  onClickDateBox: PropTypes.func,
   onMouseEnterDateBox: PropTypes.func,
   onMouseLeaveDateBox: PropTypes.func,
   contents: PropTypes.object,
@@ -79,6 +88,7 @@ const FlexBox = styled.div`
   display: flex;
   justify-content: space-around;
   width: 100%;
+  font-family: cursiveFont;
 `
 
 export default React.memo(Calendar)

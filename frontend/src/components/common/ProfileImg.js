@@ -5,7 +5,6 @@ import defaultProfileImg from 'assets/img/default_profile_img.jpg'
 
 export default function ProfileImg({ imgUrl, type }) {
   const size = type === 'profile' ? '6rem' : '2rem'
-  console.log(imgUrl)
   return <ImgContainer size={size} imgUrl={imgUrl} />
 }
 

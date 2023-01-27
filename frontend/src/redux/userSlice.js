@@ -14,11 +14,13 @@ const userSlice = createSlice({
   },
   reducers: {
     setUserInfo: (state, action) => {
-      state = action.payload
+      // 한 번에 업데이트
+      localStorage.setItem('userInfo', JSON.stringify(action.payload))
+      return action.payload
     },
   },
 })
 
 export default userSlice
 
-export const { setUserinfo } = userSlice.actions
+export const { setUserInfo } = userSlice.actions

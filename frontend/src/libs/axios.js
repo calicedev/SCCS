@@ -10,6 +10,7 @@ apiRequest.interceptors.request.use(
   (config) => {
     return {
       ...config,
+      withCredentials: true,
       // headers: { Authorization: null },
     }
   },

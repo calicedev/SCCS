@@ -12,7 +12,7 @@ export default function Navbar() {
         <NavStyle to="/mypage/calendar">Calender</NavStyle>
         <NavStyle to="/mypage/solved">Solved</NavStyle>
         <NavStyle to="/mypage/profile">Profile</NavStyle>
-        <NavStyle to="logout">Logout</NavStyle>
+        <NavStyle to="/auth/login">Logout</NavStyle>
       </NavContent>
     </Nav>
   )

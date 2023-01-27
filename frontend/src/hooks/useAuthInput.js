@@ -78,7 +78,13 @@ export function useAuthInput(
       })
       .catch((err) => {
         console.log(err)
+        const newMsg = { ...message }
+        newMsg.text = '서버의 정보를 받아오지 못했습니다.'
+        newMsg.isValid = false
+        setMessage(newMsg)
+        return
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue])
 
   return [inputValue, setInputValue, message]

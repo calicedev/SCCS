@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import styled from 'styled-components'
 import ProfileInput from 'components/mypage/ProfileInput'
 import Button from 'components/common/Button'
+import OutlineButton from 'components/common/OutlineButton'
 import ProfileImgInput from 'components/mypage/ProfileImgInput'
 import { useNavigate } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
@@ -27,6 +28,16 @@ export default function ProfileEdit() {
   )
   const [img, setImg] = useState(user.profileImage)
 
+  const imgUrl = useMemo(() => {
+    if (typeof img === 'string') {
+      return img
+    }
+    return URL.createObjectURL(img[0])
+  }, [img])
+
+  const save = () => {}
+  const withdrawl = () => {}
+
   return (
     <ProfileContent>
       <h1>Edit Profile</h1>
@@ -44,9 +55,9 @@ export default function ProfileEdit() {
 
       <ProfileContainer>
         <ProfileImgInput
-          imgUrl={img}
+          imgUrl={imgUrl}
           onChange={(e) => setImg(e.target.files)}
-          onDelete={() => setImg([])}
+          onDelete={() => setImg('')}
         ></ProfileImgInput>
       </ProfileContainer>
 
@@ -73,12 +84,18 @@ export default function ProfileEdit() {
         ></ProfileInput>
       </InputContainer>
 
-      <Button
-        value="Cancel"
-        onClick={() => {
-          navigate('/mypage/Profile')
-        }}
-      ></Button>
+      <Buttons>
+        <Button value="회원탈퇴" type="danger" onClick={withdrawl}></Button>
+        <div>
+          <OutlineButton
+            value="Cancel"
+            onClick={() => {
+              navigate('/mypage/profile')
+            }}
+          ></OutlineButton>
+          <Button value="Save" onClick={save}></Button>
+        </div>
+      </Buttons>
     </ProfileContent>
   )
 }
@@ -110,4 +127,9 @@ const Flexbox = styled.div`
 const EditBtns = styled.div`
   display: flex;
   justify-content: start;
+`
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: space-between;
 `

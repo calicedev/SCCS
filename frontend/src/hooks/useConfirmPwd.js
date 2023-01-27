@@ -20,6 +20,7 @@ export function useConfirmPwd(initialValue, password) {
     newMsg.isValid = true
     setMessage(newMsg)
     return
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue])
 
   return [inputValue, setInputValue, message]

@@ -47,7 +47,7 @@ const typeObj = {
 export default function AuthInput({ type, value, onChange, message }) {
   return (
     <Wrapper>
-      <Label for={type}>{typeObj[type].label}</Label>
+      <Label htmlFor={type}>{typeObj[type].label}</Label>
       <FlexBox>
         {typeObj[type].logo}
         <Input

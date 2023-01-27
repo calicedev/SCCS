@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-export default function Button({ size, type, onClick, value }) {
+export default function OutlineButton({ size, type, onClick, value }) {
   const sizeClass =
     size === 'tiny'
       ? 'xs-btn'
@@ -20,14 +20,14 @@ export default function Button({ size, type, onClick, value }) {
   )
 }
 
-Button.propTypes = {
+OutlineButton.propTypes = {
   size: PropTypes.oneOf(['tiny', 'small', 'medium', 'large']), // 버튼 크기
   type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'danger']), // 버튼 커스터마이징 (글자색, 배경색, border-radius)
   onClick: PropTypes.func,
   value: PropTypes.string,
 }
 
-Button.defaultProps = {
+OutlineButton.defaultProps = {
   size: 'small',
   type: 'primary',
   onClick: undefined,
@@ -40,41 +40,52 @@ const BtnWrapper = styled.button`
 
   border-radius: 10px;
 
+  background-color: #ffffff;
+
   text-align: center;
   font-weight: 600;
-  color: white;
   white-space: nowrap;
 
   transition: background-color ease 0.1s;
 
   &.primary-btn {
-    background-color: ${({ theme }) => theme.primaryColor};
+    border: 3px solid ${({ theme }) => theme.primaryColor};
+    color: ${({ theme }) => theme.primaryColor};
     &:hover {
-      background-color: ${({ theme }) => theme.deepPrimaryColor};
+      background-color: ${({ theme }) => theme.primaryColor};
+      color: #ffffff;
     }
   }
   &.secondary-btn {
-    background-color: ${({ theme }) => theme.secondaryColor};
+    border: 3px solid ${({ theme }) => theme.secondaryColor};
+    color: ${({ theme }) => theme.secondaryColor};
     &:hover {
-      background-color: ${({ theme }) => theme.deepSecondaryColor};
+      background-color: ${({ theme }) => theme.secondaryColor};
+      color: #ffffff;
     }
   }
   &.tertiary-btn {
-    background-color: ${({ theme }) => theme.tertiaryColor};
+    border: 3px solid ${({ theme }) => theme.tertiaryColor};
+    color: ${({ theme }) => theme.tertiaryColor};
     &:hover {
-      background-color: ${({ theme }) => theme.deepTertiaryColor};
+      background-color: ${({ theme }) => theme.tertiaryColor};
+      color: #ffffff;
     }
   }
   &.gray-btn {
-    background-color: ${({ theme }) => theme.grayColor};
+    border: 3px solid ${({ theme }) => theme.grayColor};
+    color: ${({ theme }) => theme.grayColor};
     &:hover {
-      background-color: ${({ theme }) => theme.deepGrayColor};
+      background-color: ${({ theme }) => theme.grayColor};
+      color: #ffffff;
     }
   }
   &.danger-btn {
-    background-color: ${({ theme }) => theme.dangerColor};
+    border: 3px solid ${({ theme }) => theme.dangerColor};
+    color: ${({ theme }) => theme.dangerColor};
     &:hover {
-      background-color: ${({ theme }) => theme.deepDangerColor};
+      background-color: ${({ theme }) => theme.dangerColor};
+      color: #ffffff;
     }
   }
   &.xs-btn {
