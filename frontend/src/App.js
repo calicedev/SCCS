@@ -19,13 +19,13 @@ import SolveProblem from 'pages/mypage/SolveProblem'
 function App() {
   return (
     <Routes>
+      <Route path="/main" element={<MainPage />} />
       <Route path="/auth" element={<AuthPage />}>
         <Route path="login" element={<LoginForm />} />
         <Route path="signup" element={<SignupForm />} />
         <Route path="findid" element={<FindIdForm />} />
         <Route path="resetpassword" element={<ResetPasswordForm />} />
       </Route>
-      <Route path="/main" element={<MainPage />} />
       <Route path="/mypage" element={<MyPage />}>
         <Route path="profile" element={<Profile />}></Route>
         <Route path="profile/edit" element={<ProfileEdit />}></Route>

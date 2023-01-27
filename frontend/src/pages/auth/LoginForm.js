@@ -1,21 +1,14 @@
 import React, { useState } from 'react'
+import Button from 'components/atoms/Button'
 import styled from 'styled-components'
 import { useNavigate, Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import AuthInput from 'components/atoms/AuthInput'
-
-import Check from 'components/atoms/Checkbox'
-import { useNavigate } from 'react-router-dom'
-
+import Checkbox from 'components/atoms/Checkbox'
+import Typo, { TypoCss } from 'styles/Typo'
 import axios from 'libs/axios'
 import api from 'apis/api'
-import Typography from 'components/atoms/Typography'
-import { useAuthInput } from 'hooks/useAuthInput'
-import { useCookies } from 'react-cookie';
-import { useSelector, useDispatch } from 'react-redux'
-import { setUserinfo } from 'redux/userSlice'
-
 
 export default function LoginForm() {
   const navigate = useNavigate()
@@ -28,9 +21,6 @@ export default function LoginForm() {
     isValid: '',
   })
   const [isChecked, setIsChecked] = useState(false)
-
-  const userSlice = useSelector((state) => state )
-  const dispatch = useDispatch()
 
   const login = () => {
     if (!id || !password) {
@@ -51,13 +41,11 @@ export default function LoginForm() {
         console.log(res)
         setCookie('refresh_token', res.data['refresh_token'])
         setCookie('access_token', res.data['access_token'])
-        
       })
       // .then(() => {
       //   userSlice()
       //   dispatch(setUserinfo())
       // })
-
 
       .catch((err) => {
         const checkmsg = { ...message }
@@ -68,52 +56,38 @@ export default function LoginForm() {
   }
 
   return (
-    <Login>
-      <Typography type='h1' value='Login'></Typography>
+    <Container>
+      <h1>Login</h1>
 
+      <p>If you don't have an account register</p>
+      <TypoLink to="/auth/signup" className="pass" weight="500">
+        Register Here!
+      </TypoLink>
 
-      <Description>
-        If you don't have an account register
-        <br /> You can{' '}
-        <span
-          onClick={() => {
-            navigate('/auth/signup')
-          }}
-        >
-          Register here!
-        </span>
-      </Description>
+      <Form>
+        <AuthInput
+          type="id"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        ></AuthInput>
+        <AuthInput
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        ></AuthInput>
+      </Form>
 
-      <AuthInput
-        type="id"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-      ></AuthInput>
-      <AuthInput
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      ></AuthInput>
-
-      <Container>
-        <Check label='Remember Me' value={isChecked} onChange={(e) => setIsChecked(e.target.value)}></Check>
+      <Flexbox>
+        <Checkbox
+          label="Remember Me"
+          value={isChecked}
+          onChange={(e) => setIsChecked(e.target.value)}
+        ></Checkbox>
         <div>
-          <ForgotSpan
-            onClick={() => {
-              navigate(`/auth/findid`)
-            }}
-          >
-            Forgot ID?
-          </ForgotSpan>
-          <ForgotSpan
-            onClick={() => {
-              navigate(`/auth/resetpassword`)
-            }}
-          >
-            Forgot Password?
-          </ForgotSpan>
+          <TypoLink to="/auth/findid">Forgot ID?</TypoLink>
+          <TypoLink to="/auth/resetpassword">Forgot Password?</TypoLink>
         </div>
-      </Container>
+      </Flexbox>
 
       <Button onClick={login} value="Login" size="medium"></Button>
     </Container>
