@@ -3,7 +3,25 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function StudyItem({ studies }) {
+/*
+CalendarPage에서 날짜박스에 안에 넣을 StudyList 컴포넌트
+스터디 타이틀만 표시되다가, 호버 시에 스터디에서 푼 문제 타이틀도 함께 표시
+
+
+다음과 같은 구조를 받는다.
+studies: [ 
+  {
+    id: 1,
+    title: '스터디 타이틀',
+    problems: [
+      id: 1,
+      title: '문제타이틀'
+    ]
+  }
+]
+*/
+
+export default function StudyList({ studies }) {
   const [showOptions, setShowOptions] = useState(false)
   const navigate = useNavigate()
 
@@ -31,11 +49,11 @@ export default function StudyItem({ studies }) {
   )
 }
 
-StudyItem.propTypes = {
+StudyList.propTypes = {
   studies: PropTypes.array,
 }
 
-StudyItem.defaultProps = {
+StudyList.defaultProps = {
   studies: [],
 }
 
@@ -48,8 +66,7 @@ const Study = styled.div`
   margin-bottom: 0.5rem;
 `
 
-/* @keyframes duration | easing-function | delay |
-iteration-count | direction | fill-mode | play-state | name */
+// 호버 시 위에서 아래로 내려오는 듯한 애니메이션
 const Option = styled.div`
   animation: 0.5s ease-in-out forwards dropdown;
 
@@ -64,3 +81,5 @@ const Option = styled.div`
     }
   }
 `
+/* @keyframes duration | easing-function | delay |
+iteration-count | direction | fill-mode | play-state | name */

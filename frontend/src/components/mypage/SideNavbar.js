@@ -1,8 +1,11 @@
 import styled from 'styled-components'
-import { FaRegBookmark, FaRegUser } from 'react-icons/fa'
+import { FaRegBookmark, FaRegUser, FaListUl } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
-import { GrNotes } from 'react-icons/gr'
+import sideNavBlueBg from 'assets/img/side_nav_blue_bg.png'
 
+/*
+마이페이지에서 사용할 사이드 네비게이션 바
+*/
 const SideNavbar = () => {
   return (
     <SideNav>
@@ -11,7 +14,7 @@ const SideNavbar = () => {
         스터디 기록
       </NavStyle>
       <NavStyle to="/mypage/solved">
-        <GrNotes />
+        <FaListUl />
         내가 푼 문제
       </NavStyle>
       <NavStyle to="/mypage/profile">
@@ -33,17 +36,30 @@ const SideNav = styled.div`
 `
 
 const NavStyle = styled(NavLink)`
-  color: ${({ theme }) => theme.secondaryColor};
   padding: 1rem 0rem 1rem 3rem;
+
+  background-image: url(${sideNavBlueBg});
+  background-repeat: no-repeat;
+  background-position: 350% 0%;
+
+  color: ${({ theme }) => theme.secondaryColor};
   font-size: 1.2rem;
   font-weight: 400;
 
-  & > svg {
-    margin-right: 1rem;
+  transition: background-position 0.3s ease-in-out;
+
+  &:hover {
+    color: ${({ theme }) => theme.primaryColor};
+    font-weight: 600;
   }
 
   &.active {
     color: white;
     font-weight: 600;
-    background-color:${({ theme }) => theme.primaryColor};
+    background-position: 0% 0%;
+  }
+
+  & > svg {
+    margin-right: 1rem;
+  }
 `

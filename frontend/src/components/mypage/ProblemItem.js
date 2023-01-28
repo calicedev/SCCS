@@ -2,6 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
+/*
+내가 푼 문제 목록페이지에서 표시할 문제 아이템 컴포넌트
+
+problemName: 문제이름
+answerRate: 정답률
+submitDatetime: 마지막으로 문제를 푼 날
+difficulty: 문제 난이도
+onClick: 문제 클릭 시 동작할 함수
+*/
+
 export default function ProblemItem({
   problemName,
   answerRate,
@@ -40,16 +50,19 @@ ProblemItem.defaultProps = {
 }
 
 const ProblemContainer = styled.div`
-  padding: 0.7rem 0rem;
+  padding: 0.7rem 0.5rem;
+
   border-bottom: solid 1px gray;
   border-top: solid 1px gray;
+
+  background-color: ${({ theme }) => theme.bgColor};
+
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.bgColor};
 
   &:hover {
     scale: 1.05;
-    background-color: ${({ theme }) => theme.bgColor};
+    background-color: #00000012;
   }
 `
 

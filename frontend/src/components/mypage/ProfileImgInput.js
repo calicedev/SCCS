@@ -3,20 +3,17 @@ import styled from 'styled-components'
 import ProfileImg from 'components/common/ProfileImg'
 import IconButton from 'components/common/IconButton'
 import { FaTrash } from 'react-icons/fa'
+import PropTypes from 'prop-types'
+
+/*
+프로필 이미지 수정 컴포넌트
+
+imgUrl: 현재 화면에 표시할 이미지 url
+onChange: 사진 선택 시 동작할 함수
+onDelete: 쓰레기통 아이콘 버튼 클릭 시 동작할 함수
+*/
 
 export default function ProfileImgInput({ imgUrl, onChange, onDelete }) {
-  //파일 미리볼 url을 저장해줄 state
-  // const [fileImage, setFileImage] = useState('')
-
-  // // 파일 저장
-  // const saveFileImage = (e) => {
-  //   setFileImage(URL.createObjectURL(e.target.files[0]))
-  // }
-
-  // // 파일 삭제
-  // const deleteFileImage = () => {
-  //   URL.revokeObjectURL(fileImage)
-  //   setFileImage('')
   return (
     <>
       <ProfileImg imgUrl={imgUrl}></ProfileImg>
@@ -31,6 +28,18 @@ export default function ProfileImgInput({ imgUrl, onChange, onDelete }) {
       </Flexbox>
     </>
   )
+}
+
+ProfileImgInput.propTypes = {
+  imgUrl: PropTypes.string,
+  onChange: PropTypes.func,
+  onDelete: PropTypes.func,
+}
+
+ProfileImgInput.derfaultProps = {
+  imgUrl: '',
+  onChange: undefined,
+  onDelete: undefined,
 }
 
 const Flexbox = styled.div`

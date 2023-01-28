@@ -1,4 +1,16 @@
-const regExp = function (type, string) {
+/*
+AuthInput 커스텀 훅에서 사용하는 정규식 검사 라이브러리
+
+INPUT
+type: 검사할 정규식 타입
+string: 검사할 값
+
+OUTPUT
+result: 통과 여부 (Boolean)
+errMsg: 정규식 상세설명
+*/
+
+export default function regExp(type, string) {
   const regObj = {
     id: {
       reg: /^[a-z]+[a-z0-9]{5,19}$/,
@@ -23,9 +35,8 @@ const regExp = function (type, string) {
   }
 
   const reg = regObj[type].reg
-  const msg = regObj[type].msg
+  const result = reg.test(string)
+  const errMsg = regObj[type].msg
 
-  return [reg.test(string), msg]
+  return [result, errMsg]
 }
-
-export default regExp

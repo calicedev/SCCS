@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import defaultProfileImg from 'assets/img/default_profile_img.jpg'
 
+// 유저 정보를 저장하는 Slice
 const userSlice = createSlice({
   name: 'userSlice',
   initialState: {
@@ -13,9 +14,8 @@ const userSlice = createSlice({
     profileImage: defaultProfileImg,
   },
   reducers: {
+    // 유저 정보 업데이트
     setUserInfo: (state, action) => {
-      // 한 번에 업데이트
-      localStorage.setItem('userInfo', JSON.stringify(action.payload))
       return action.payload
     },
   },

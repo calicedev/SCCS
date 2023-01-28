@@ -2,6 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
+/*
+달력(Calendar) 컴포넌트에서 사용하는 날짜 박스
+
+date: 날짜, YYYY-MM-DD
+disabled: 날짜박스의 활성화 여부, className="disabled or abled" 할당
+onClick: 클릭 시에 동작할 함수
+onMouseEnter: 마우스 Enter시에 동작할 함수
+onMouseLeave: 마우스 Leave시에 동작할 함수
+*/
 export default function DateBox({
   date,
   disabled,
@@ -10,6 +19,7 @@ export default function DateBox({
   onMouseEnter,
   onMouseLeave,
 }) {
+  // disabled 여부에 따라 className 할당
   const disabledClass = disabled ? 'disabled' : 'abled'
 
   return (
@@ -56,20 +66,26 @@ const FlexBox = styled.div`
   height: 100%;
 `
 
+// ::after는 날짜 박스를 정사각형으로 유지하기 위해서 사용
 const DateContainer = styled.div`
+  position: relative;
+
+  width: 100%;
+
   border: 1px solid ${({ theme }) => theme.grayColor};
   border-radius: 5px;
 
-  width: 100%;
-  position: relative;
+  background-color: #ffffff;
+
+  color: #000000;
 
   &::after {
     display: block;
     content: '';
-    padding-bottom: 100%;
+    padding-bottom: 80%;
   }
 
   &.disabled {
-    background-color: ${({ theme }) => theme.grayColor};
+    background-color: #dddddd;
   }
 `

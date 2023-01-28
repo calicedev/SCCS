@@ -2,15 +2,17 @@ import styled from 'styled-components'
 import Button from 'components/common/Button'
 import AuthInput from 'components/auth/AuthInput'
 import { useNavigate, Link } from 'react-router-dom'
+import setUserInfo from 'libs/setUserInfo'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
 export default function SignupForm() {
+  // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
 
-  // useAuthInput(타입, 초깃값, 정규식검사, 서버검사)
+  // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [id, setId, idMsg] = useAuthInput('id', '', true, true)
   const [name, setName, nameMsg] = useAuthInput('name', '', true, false)
   const [nickname, setNickname, nicknameMsg] = useAuthInput(
@@ -26,6 +28,7 @@ export default function SignupForm() {
     true,
     false,
   )
+  // 커스텀 훅 useConrimPwd(초깃값, 비교할 비밀번호 값)
   const [confirmPwd, setConfirmPwd, confirmPwdMsg] = useConfirmPwd('', password)
 
   // 회원가입 서버 요청
@@ -53,6 +56,7 @@ export default function SignupForm() {
     axios(url, config)
       .then((res) => {
         navigate('/main')
+        setUserInfo(id)
       })
       .catch((err) => {
         console.log(err)
@@ -104,19 +108,28 @@ export default function SignupForm() {
           message={confirmPwdMsg}
         ></AuthInput>
       </Form>
-      <Button size="medium" onClick={signup} value="회원가입"></Button>
+
+      <ButtonContainer>
+        <Button size="medium" onClick={signup} value="회원가입"></Button>
+      </ButtonContainer>
     </Flexbox>
   )
 }
 
 const Flexbox = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  height: 100%;
   padding: 0rem 8rem;
 `
 
 const Form = styled.div`
   margin: 3em 0rem;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `

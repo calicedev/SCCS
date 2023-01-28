@@ -1,5 +1,9 @@
 import { Cookies } from 'react-cookie'
 
+/*
+쿠키 관리를 위한 라이브러리
+*/
+
 const cookies = new Cookies()
 
 export const setCookie = (name, value, options) => {

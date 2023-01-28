@@ -1,13 +1,13 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import AuthPageLayout from 'layouts/AuthPageLayout'
+import Layout from 'layouts/AuthPageLayout'
 import AuthImage from 'components/auth/AuthImage'
 
-export default function AuthPage() {
+export default function AuthPageLayout() {
   return (
-    <AuthPageLayout>
+    <Layout>
       <Outlet />
       <AuthImage />
-    </AuthPageLayout>
+    </Layout>
   )
 }

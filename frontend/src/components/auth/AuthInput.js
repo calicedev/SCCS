@@ -5,6 +5,15 @@ import { BiUser } from 'react-icons/bi'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdOutlineEmail } from 'react-icons/md'
 
+/*
+인증화면에서 사용할 입력 컴포넌트
+
+type: 타입에 따라서 input의 type, label 텍스트, logo, placeholder 할당
+value: input 태그에 할당할 state
+onChange: input 태그에 입력 시 실행할 함수
+message: message가 있을 시, isValid 여부에 따라 적절한 색깔로 문구를 보여줌
+*/
+
 const typeObj = {
   id: {
     type: 'text',
@@ -90,14 +99,17 @@ const Wrapper = styled.div`
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`
-  border-bottom: 1px solid gray;
   padding: 0.3rem 0rem;
+
+  border-bottom: 1px solid gray;
 `
 const Label = styled.label`
-  font-size: 1rem;
-  color: ${({ theme }) => theme.fontColor};
   margin-top: 1rem;
+
+  color: ${({ theme }) => theme.fontColor};
+  font-size: 1rem;
 `
 const Input = styled.input`
   padding-left: 0.5rem;
+  background-color: #00000000;
 `
