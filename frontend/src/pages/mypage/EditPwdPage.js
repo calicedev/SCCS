@@ -10,22 +10,27 @@ import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import { useSelector } from 'react-redux'
 
 export default function PasswordEdit() {
-  // 리덕스
+  // 리액트 훅관련 함수 정의
+  const navigate = useNavigate()
+
+  // 리덕스 -> 사용자 정보 읽어오기
   const user = useSelector((state) => state.user)
 
+  // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [password, setPassword] = useAuthInput('password', '')
   const [newPassword, setNewPassword, newPwdMsg] = useAuthInput('password', '')
+  // 커스텀 훅 useConrimPwd(초깃값, 비교할 비밀번호 값)
   const [confirmPassword, setConfirmPassword, confirmPwdMsg] = useConfirmPwd(
     '',
     newPassword,
   )
 
+  // 가입 일자 YYYY-MM-DD
   const joinDate = useMemo(() => {
     return user.joinDatetime.slice(0, 10)
   }, [user])
 
-  const navigate = useNavigate()
-
+  // 수정 정보 저장
   const save = () => {}
 
   return (
@@ -45,7 +50,7 @@ export default function PasswordEdit() {
 
       <ProfileContainer>
         <ProfileImg />
-        가입일: {joinDate}
+        <p className="semi-bold">Joined at: {joinDate}</p>
       </ProfileContainer>
 
       <InputContainer>
@@ -68,37 +73,47 @@ export default function PasswordEdit() {
         ></ProfileInput>
       </InputContainer>
 
-      <Buttons>
+      <ButtonContainer>
         <OutlineButton
           value="Cancel"
+          type="secondary"
           onClick={() => {
             navigate('/mypage/profile')
           }}
         ></OutlineButton>
         <Button value="Save" onClick={save}></Button>
-      </Buttons>
+      </ButtonContainer>
     </ProfileContent>
   )
 }
 
+const ProfileContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+
+  margin: 5rem 5rem;
+  max-width: 700px;
+
+  width: 100%;
+`
+
 const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+
   position: absolute;
   top: 2rem;
   right: 0rem;
 `
+
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 2rem 0rem;
-`
 
-const ProfileContent = styled.div`
-  display: flex;
-  position: absolute;
-  border-radius: 10px;
-  flex-direction: column;
-  min-height: 100%;
-  width: 70%;
+  margin: 2rem 0rem;
 `
 
 const EditBtns = styled.div`
@@ -106,6 +121,7 @@ const EditBtns = styled.div`
   justify-content: start;
 `
 
-const Buttons = styled.div`
-  align-self: start;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: end;
 `

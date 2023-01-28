@@ -9,11 +9,13 @@ import { useAuthInput } from 'hooks/useAuthInput'
 import { useSelector } from 'react-redux'
 
 export default function ProfileEdit() {
-  // 리덕스
-  const user = useSelector((state) => state.user)
-  // 리액트 훅
+  // 리액트 훅관련 함수 정의
   const navigate = useNavigate()
 
+  // 리덕스 -> 사용자 정보 읽어오기
+  const user = useSelector((state) => state.user)
+
+  // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [nickname, setNickname, nicknameMsg] = useAuthInput(
     'nickname',
     user.nickname,
@@ -26,8 +28,11 @@ export default function ProfileEdit() {
     true,
     false,
   )
+  // useState
   const [img, setImg] = useState(user.profileImage)
 
+  // useMemo
+  // // 서버에서 받은 정보는 img url이 string값 그대로지만, edit시에는 파일이 업로드 됨으로 url 주소를 추출
   const imgUrl = useMemo(() => {
     if (typeof img === 'string') {
       return img
@@ -35,7 +40,10 @@ export default function ProfileEdit() {
     return URL.createObjectURL(img[0])
   }, [img])
 
+  // 수정 정보 저장 서버요청
   const save = () => {}
+
+  // 회원탈퇴 서버요청
   const withdrawl = () => {}
 
   return (
@@ -85,10 +93,15 @@ export default function ProfileEdit() {
       </InputContainer>
 
       <Buttons>
-        <Button value="회원탈퇴" type="danger" onClick={withdrawl}></Button>
+        <OutlineButton
+          value="회원탈퇴"
+          type="danger"
+          onClick={withdrawl}
+        ></OutlineButton>
         <div>
           <OutlineButton
             value="Cancel"
+            type="secondary"
             onClick={() => {
               navigate('/mypage/profile')
             }}
@@ -101,14 +114,22 @@ export default function ProfileEdit() {
 }
 
 const ProfileContent = styled.div`
-  position: relative;
-
   display: flex;
   flex-direction: column;
+
+  position: relative;
+
+  margin: 5rem 5rem;
+  max-width: 700px;
+
   width: 100%;
 `
 
 const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+
   position: absolute;
   top: 2rem;
   right: 0rem;
@@ -117,6 +138,7 @@ const ProfileContainer = styled.div`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
+
   margin: 2rem 0rem;
 `
 

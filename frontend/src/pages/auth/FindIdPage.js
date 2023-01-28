@@ -9,7 +9,10 @@ import axios from 'libs/axios'
 import api from 'apis/api'
 
 export default function FindIdForm() {
+  // 리액트 훅 기반 함수 정의
   const navigate = useNavigate()
+
+  // useState
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState({
@@ -17,6 +20,7 @@ export default function FindIdForm() {
     isValid: false,
   })
 
+  // 아아디 찾기 서버 요청
   const findId = () => {
     if (!name || !email) {
       const newMsg = { ...message }
@@ -72,18 +76,26 @@ export default function FindIdForm() {
         ></AuthInput>
         <p color={message.isValid ? 'pass' : 'error'} value={message.text} />
       </Form>
-      <Button onClick={findId} value="Find" size="medium"></Button>
+
+      <ButtonContainer>
+        <Button onClick={findId} value="Find" size="medium"></Button>
+      </ButtonContainer>
     </Flexbox>
   )
 }
 
 const Flexbox = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  height: 100%;
   padding: 0rem 8rem;
 `
 const Form = styled.div`
   margin: 3rem 0rem;
+`
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `

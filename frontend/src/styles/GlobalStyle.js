@@ -36,17 +36,17 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     margin: 1rem 0rem;
   }
   h2 {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 600;
     margin: 0.7rem 0rem;
   }
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 500;
     margin: 0.6rem 0rem;
   }
@@ -54,17 +54,17 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1rem;
     font-weight: 400;
     &.h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       font-weight: 700;
       margin: 1rem 0rem;
     }
     &.h2 {
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: 600;
       margin: 0.7rem 0rem;
     }
     &.h3 {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       font-weight: 500;
       margin: 0.6rem 0rem;
     }
@@ -74,6 +74,7 @@ const GlobalStyle = createGlobalStyle`
     }
   }
   a {
+    text-decoration: none;
     font-size: 1rem;
     font-weight: 400;
     &.h1 {
@@ -129,6 +130,7 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
     color: ${({ theme }) => theme.fontColor};
+    background-color: ${({ theme }) => theme.baseBgColor};
     font-size: 100%;
     line-height: 1.2;
   }
@@ -140,10 +142,6 @@ const GlobalStyle = createGlobalStyle`
   button {
     cursor: pointer;
     background-color: transparent;
-  }
-  
-  a {
-    text-decoration: none;
   }
   #app {
     width: 100%;

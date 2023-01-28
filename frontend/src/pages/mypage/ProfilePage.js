@@ -7,11 +7,13 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 export default function Profile() {
-  // 리덕스
+  // 리덕스 -> 사용자 정보 읽어오기
   const user = useSelector((state) => state.user)
-  // 리액트 훅
+
+  // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
 
+  // 가입 일자 YYYY-MM-DD
   const joinDate = useMemo(() => {
     return user.joinDatetime.slice(0, 10)
   }, [user])
@@ -21,7 +23,7 @@ export default function Profile() {
       <h1>Profile</h1>
       <ProfileContainer>
         <ProfileImg />
-        가입일: {joinDate}
+        <p className="semi-bold">Joined at: {joinDate}</p>
       </ProfileContainer>
       <InputContainer>
         <ProfileInput type="id" value={user.id} disabled={true}></ProfileInput>
@@ -43,25 +45,35 @@ export default function Profile() {
           disabled={true}
         ></ProfileInput>
       </InputContainer>
-      <Button
-        value="Edit"
-        onClick={() => {
-          navigate('/mypage/profile/edit')
-        }}
-      ></Button>
+      <ButtonContainer>
+        <Button
+          value="Edit"
+          onClick={() => {
+            navigate('/mypage/profile/edit')
+          }}
+        ></Button>
+      </ButtonContainer>
     </ProfileContent>
   )
 }
 
 const ProfileContent = styled.div`
-  position: relative;
-
   display: flex;
   flex-direction: column;
+
+  position: relative;
+
+  margin: 5rem 5rem;
+  max-width: 700px;
+
   width: 100%;
 `
 
 const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+
   position: absolute;
   top: 2rem;
   right: 0rem;
@@ -70,10 +82,15 @@ const ProfileContainer = styled.div`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
+
   margin: 2rem 0rem;
 `
 
 const Flexbox = styled.div`
   display: flex;
   justify-content: space-between;
+`
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: end;
 `

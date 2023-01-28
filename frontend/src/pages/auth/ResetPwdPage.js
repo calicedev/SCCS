@@ -9,7 +9,10 @@ import axios from 'libs/axios'
 import api from 'apis/api'
 
 export default function ResetPasswordForm() {
+  // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
+
+  // useState
   const [id, setId] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState({
@@ -17,10 +20,8 @@ export default function ResetPasswordForm() {
     isValid: false,
   })
 
+  // 비밀번호 초기화 서버 요청
   const resetPassword = () => {
-    // console.log(data[0].id, data[0].email)
-    // console.log({ id }, { email })
-
     if (!id || !email) {
       const newMsg = { ...message }
       newMsg.text = '아이디와 이메일을 모두 입력해주세요'
@@ -48,6 +49,7 @@ export default function ResetPasswordForm() {
         setMessage(newMsg)
       })
   }
+
   return (
     <Flexbox>
       <IconButton
@@ -81,18 +83,27 @@ export default function ResetPasswordForm() {
         ></AuthInput>
         <p color={message.isValid ? 'pass' : 'error'} value={message.text} />
       </Form>
-      <Button onClick={resetPassword} value="Submit" size="medium"></Button>
+
+      <ButtonContainer>
+        <Button onClick={resetPassword} value="Submit" size="medium"></Button>
+      </ButtonContainer>
     </Flexbox>
   )
 }
 
 const Flexbox = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  height: 100%;
   padding: 0rem 8rem;
 `
 const Form = styled.div`
   margin: 3rem 0rem;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `

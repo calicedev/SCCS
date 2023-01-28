@@ -8,11 +8,14 @@ import api from 'apis/api'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-const PROBLEM_PER_PAGE = 7
-const BUTTON_PER_PAGINATION = 5
+const PROBLEM_PER_PAGE = 7 // 페이지 당 문제 수
+const BUTTON_PER_PAGINATION = 5 // 페이네이션에 표시할 버튼 수
 
 export default function ProblemList() {
-  // 리덕스 읽어오기
+  // 리액트 훅 관련 함수 정의
+  const navigate = { useNavigate }
+
+  // 리덕스 -> 유저의 id 읽어오기
   const id = useSelector((state) => state.user.id)
 
   // useState
@@ -20,10 +23,8 @@ export default function ProblemList() {
   const [currentPage, setCurrentPage] = useState(0)
   const [startPagination, setStartPagination] = useState(0)
 
-  // use
-  const navigate = { useNavigate }
-
-  // mount시 axios 요청으로 problem 불러오기
+  // useEffect
+  // mount시 problems 데이터 서버 요청
   useEffect(() => {
     const [url, method] = api('solvedProblem', { id })
     const config = { method }
@@ -38,7 +39,8 @@ export default function ProblemList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 마지막 페이지 인덱스
+  // uesMemo
+  // problems의 길이에 따라 마지막 페이지의 인덱스 저장
   const lastPage = useMemo(() => {
     if (problems.length / PROBLEM_PER_PAGE) {
       return parseInt(problems.length / PROBLEM_PER_PAGE) - 1
@@ -56,6 +58,7 @@ export default function ProblemList() {
     setCurrentPage(startPagination + BUTTON_PER_PAGINATION)
     setStartPagination(startPagination + BUTTON_PER_PAGINATION)
   }
+
   // 이전 페이지네이션
   const previousPagination = () => {
     if (startPagination - BUTTON_PER_PAGINATION <= 0) {
@@ -68,7 +71,7 @@ export default function ProblemList() {
   }
 
   return (
-    <div>
+    <Container>
       <ProblemsContainer>
         {problems
           .slice(
@@ -104,10 +107,19 @@ export default function ProblemList() {
           setStartPagination(lastPage - BUTTON_PER_PAGINATION + 1)
         }}
       />
-    </div>
+    </Container>
   )
 }
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  width: 80%;
+
+  margin-top: 2rem;
+`
 const ProblemsContainer = styled.div`
   margin: 2rem 0rem;
 `

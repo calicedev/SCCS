@@ -4,26 +4,24 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
 import { Provider } from 'react-redux'
-import GlobalStyle from './styles/GlobalStyle'
 import store from './redux/store'
-import theme from './styles/theme'
-import { CookiesProvider } from 'react-cookie'
+
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
+
+let persistor = persistStore(store)
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <CookiesProvider>
-      <Provider store={store}>
-        <ThemeProvider theme={theme.light}>
-          <GlobalStyle />
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ThemeProvider>
-      </Provider>
-    </CookiesProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
   </React.StrictMode>,
 )
 
