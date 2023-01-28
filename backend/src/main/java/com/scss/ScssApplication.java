@@ -19,7 +19,7 @@ public class ScssApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://front-server.com");
+                registry.addMapping("/**").allowedOrigins("*");
             }
         };
     }
