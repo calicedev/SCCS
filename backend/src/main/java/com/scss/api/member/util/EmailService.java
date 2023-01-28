@@ -27,7 +27,7 @@ public class EmailService {
     private final MemberService memberService;
 
     // Todo : 비밀번호 랜덤 생성 로직 만들기, 함수를 기능 1개 단위로 분리하기
-    public void sendEmail(String id, String email) throws MessagingException {
+    public boolean sendEmail(String id, String email) throws MessagingException {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
         try {
@@ -46,8 +46,10 @@ public class EmailService {
             simpleMailMessage.setText(contents); // 내용
             mailSender.send(simpleMailMessage);
             logger.debug("메일 전송 완료");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

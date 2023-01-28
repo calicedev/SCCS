@@ -1,10 +1,8 @@
 package com.scss.api.member.service;
 
 import com.scss.api.member.mapper.MemberMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+
 import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,19 +29,16 @@ public class JWTServiceImpl implements JWTService{
     /** 토큰 생성 **/
     @Override
     public String createToken(String id, String subject, long expTime) {
-        logger.debug("토큰 생성 시작");
-        logger.debug("secret key : {}", SECRET_KEY);
+        logger.debug("{} 토큰 생성 시작", subject);
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signinKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
-        Date now = new Date();
-
 
         logger.debug("{} 토큰 만료 시간 !!!!!!!! : {}", subject, new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis() + expTime));
 
         return Jwts.builder()
                 .setSubject(subject) // access or refresh
-                .claim("member_id", id)
+                .claim("id", id)
                 .signWith(signinKey, signatureAlgorithm)
                 .setExpiration(new Date(System.currentTimeMillis() + expTime))
                 .compact();
@@ -66,7 +61,21 @@ public class JWTServiceImpl implements JWTService{
             logger.debug("토큰 검증 에러");
             return null;
         }
+    }
 
+    @Override
+    public boolean checkToken(String jwt) {
+        try {
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+                    .build()
+                    .parseClaimsJws(jwt);
+            logger.debug("claims : {}", claims);
+            return true;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return false;
+        }
     }
 
 }
