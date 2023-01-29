@@ -1,24 +1,57 @@
 import React from 'react'
 import styled from 'styled-components'
 import CodeInput from 'components/atoms/CodeInput'
-import theme from 'constants/theme'
+import { Resizable } from 're-resizable'
 
-export default function SolveProblem() {
+function SolveProblem() {
+
   return (
+    
     <Main >
-      <Problem>
+      <Problem> 
 
         <Img src='https://xe1.xpressengine.com/files/attach/images/122/231/306/019/%EB%AC%B4%EC%84%9C%EC%9A%B4%EC%9D%B4%EC%95%BC%EA%B8%B01.jpg'></Img>
       </Problem>
-      <FlexColumn>
-
-        <CodingSection>coding
-          <Gutter></Gutter>
-          <CodeInput></CodeInput>
-        </CodingSection>
-        <Div>크기 조절</Div>
-        <ResultSection>coding</ResultSection>
-      </FlexColumn>
+      <Resizable
+          defaultSize={{ width: '50%', height: '100%' }}
+          minWidth={'20%'}
+          maxWidth={'80%'}
+          enable={{
+            top: false,
+            right: true,
+            bottom: false,
+            left: true,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}
+          
+        >
+        <FlexColumn>
+          <CodingSection>coding
+            <Gutter></Gutter>
+            
+            <CodeInput></CodeInput>
+          <Resizable
+          defaultSize={{ width: '100%', height: '50%' }}
+          minWidth={'20%'}
+          maxWidth={'80%'}
+          enable={{
+            top: true,
+            right: false,
+            bottom: false,
+            left: false,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}></Resizable>  
+          </CodingSection>
+          <Div  >크기 조절</Div>
+          <ResultSection>coding</ResultSection>
+        </FlexColumn>
+      </Resizable>
     </Main>
     )
   }
@@ -38,7 +71,7 @@ const Problem = styled.div`
   width: calc(40% - 12px);
   overflow-y: auto;
   overflow-x: hidden;
-  display: block;
+  flex:1;
 `
 
 const Img = styled.img`
@@ -66,7 +99,7 @@ const CodingSection = styled.div`
   border-bottom: 0.0625rem solid #172334;
   word-wrap: break-word;
   word-break: break-all;
- `
+`
 // const Gutter = styled.div`
 //   width: 48px;
 //   word-wrap: break-word;
@@ -101,3 +134,8 @@ const ResultSection = styled.div`
   display: block;
   
 `
+
+
+
+
+export default SolveProblem;
