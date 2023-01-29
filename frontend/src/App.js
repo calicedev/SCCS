@@ -21,29 +21,36 @@ import { ThemeProvider } from 'styled-components'
 import { light, dark } from './styles/theme'
 import { useSelector } from 'react-redux'
 
+import { QueryClient, QueryClientProvider } from "react-query";
+
+
 function App() {
+  const queryClient = new QueryClient();
   const theme = useSelector((state) => state.theme)
 
   return (
     <ThemeProvider theme={theme === 'light' ? light : dark}>
-      <GlobalStyle />
-      <Routes>
-        <Route path="/main" element={<MainPage />} />
-        <Route path="/auth" element={<AuthPage />}>
-          <Route path="login" element={<LoginForm />} />
-          <Route path="signup" element={<SignupForm />} />
-          <Route path="findid" element={<FindIdForm />} />
-          <Route path="resetpassword" element={<ResetPasswordForm />} />
-        </Route>
-        <Route path="/mypage" element={<MyPage />}>
-          <Route path="profile" element={<ProfilePage />}></Route>
-          <Route path="profile/edit" element={<EditProfilePage />}></Route>
-          <Route path="profile/editpassword" element={<EditPwdPage />}></Route>
-          <Route path="calendar" element={<CalendarPage />}></Route>
-          <Route path="solved" element={<SolvedPage />}></Route>
-        </Route>
-        <Route path="/solveproblem" element={<SolveProblem />}></Route>
-      </Routes>
+      <QueryClientProvider client={queryClient}>
+
+        <GlobalStyle />
+        <Routes>
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/auth" element={<AuthPage />}>
+            <Route path="login" element={<LoginForm />} />
+            <Route path="signup" element={<SignupForm />} />
+            <Route path="findid" element={<FindIdForm />} />
+            <Route path="resetpassword" element={<ResetPasswordForm />} />
+          </Route>
+          <Route path="/mypage" element={<MyPage />}>
+            <Route path="profile" element={<ProfilePage />}></Route>
+            <Route path="profile/edit" element={<EditProfilePage />}></Route>
+            <Route path="profile/editpassword" element={<EditPwdPage />}></Route>
+            <Route path="calendar" element={<CalendarPage />}></Route>
+            <Route path="solved" element={<SolvedPage />}></Route>
+          </Route>
+          <Route path="/solveproblem" element={<SolveProblem />}></Route>
+        </Routes>
+      </QueryClientProvider>
     </ThemeProvider>
   )
 }
