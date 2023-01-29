@@ -14,6 +14,7 @@ import EditProfilePage from './pages/mypage/EditProfilePage'
 import EditPwdPage from './pages/mypage/EditPwdPage'
 import SolvedPage from './pages/mypage/SolvedPage'
 import CalendarPage from './pages/mypage/CalendarPage'
+import StudyDetailPage from 'pages/mypage/StudyDetailPage'
 import SolveProblem from 'components/study/SolveProblem'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="profile/edit" element={<EditProfilePage />}></Route>
         <Route path="profile/editpassword" element={<EditPwdPage />}></Route>
         <Route path="calendar" element={<CalendarPage />}></Route>
+        <Route path="studydetail" element={<StudyDetailPage />}></Route>
         <Route path="solved" element={<SolvedPage />}></Route>
       </Route>
       <Route path="/solveproblem" element={<SolveProblem />}></Route>
