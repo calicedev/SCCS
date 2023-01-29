@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.scss.api.mypage.mapper.MypageMapper">
+  <resultMap type="com.scss.api.mypage.dto.SubmissionDto" id="submissionMap">
+    <id property="id" column="id"></id>
+    <id property="code" column="code"></id>
+    <id property="runtime" column="runtime"></id>
+    <id property="memory" column="memory"></id>
+    <id property="result" column="result"></id>
+    <id property="submitDatetime" column="submitDatetime"></id>
+    <id property="problemId" column="problemId"></id>
+    <id property="memberId" column="memberId"></id>
+    <id property="languageId" column="languageId"></id>
+    <id property="studyroomId" column="studyroomId"></id>
+  </resultMap>
+
+  <resultMap type="com.scss.api.member.dto.MemberDto" id="memberMap">
+    <id property="id" column="id"></id>
+    <id property="password" column="password"></id>
+    <id property="name" column="name"></id>
+    <id property="nickname" column="nickname"></id>
+    <id property="email" column="email"></id>
+    <id property="profileImage" column="profileImage"></id>
+    <id property="score" column="score"></id>
+    <id property="joinDate" column="joinDate"></id>
+    <id property="salt" column="salt"></id>
+  </resultMap>
+
+  <resultMap type="com.scss.api.studyroom.dto.ProblemDto" id="problemMap">
+    <id property="name" column="name"></id>
+    <id property="difficulty" column="difficulty"></id>
+    <id property="problemFolder" column="problemFolder"></id>
+    <id property="memoryLimit" column="memoryLimit"></id>
+    <id property="timeLimit" column="timeLimit"></id>
+    <id property="submissionNumber" column="submissionNumber"></id>
+    <id property="acceptedNumber" column="acceptedNumber"></id>
+    <id property="algoId" column="algoId"></id>
+  </resultMap>
+
+  <resultMap type="com.scss.api.studyroom.dto.StudyroomDto" id="studyroomMap">
+    <id property="id" column="id"></id>
+    <id property="title" column="title"></id>
+    <id property="createDatetime" column="createDatetime"></id>
+    <id property="destroyDatetime" column="destroyDatetime"></id>
+    <id property="isActive" column="isActive"></id>
+    <id property="type" column="type"></id>
+    <id property="languageIds" column="languageIds"></id>
+    <id property="algoIds" column="algoIds"></id>
+    <id property="languageId" column="languageId"></id>
+    <id property="algoId" column="algoId"></id>
+    <id property="memberId" column="memberId"></id>
+  </resultMap>
+
+  <resultMap type="com.scss.api.mypage.dto.MypageDto" id="MypageMap">
+    <collection property="studyroom" resultMap="studyroomMap"></collection>
+    <collection property="member" resultMap="memberMap"></collection>
+    <collection property="problem" resultMap="problemMap"></collection>
+    <collection property="submission" resultMap="submissionMap"></collection>
+  </resultMap>
+
+  <select id="getHistory" resultMap="MypageMap">
+    select sr.title, sr.create_datetime, p.name from studyroom sr, member m, problem p where
+    DATE(sr.create_datetime) between m.joinDate and
+    DATE_FORMAT(concat(#{year},'-',#{month}),'%Y-%M') and m.id = #{memberId}
+  </select>
+
+  <select id="getHistoryDetail" resultMap="MypageMap">
+    sr.title , p.name s.code , s.runtime, s.memory, s.result, s.submit_datetime, s.problem_id,
+    s.member_id, s.language_id
+    from studyroom sr, problem p, submission s
+    where sr.id = #{studyId}
+    order by s.member_id;
+  </select>
+
+  <select id="getProblems" resultMap="MypageMap">
+    p.name , round(p.accepted_number / p.submission_number * 100),
+    s.submit_datetime, p.difficulty, s.language_id
+    from problem p, submission s
+    where s.member_id=#{memberId};
+  </select>
+
+
+</mapper>
