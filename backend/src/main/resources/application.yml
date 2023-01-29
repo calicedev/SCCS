@@ -20,3 +20,6 @@ mybatis:
 logging:
   level:
     root: debug
+
+file:
+    dir: C:/S08P12A301/backend/src/main/resources/file/

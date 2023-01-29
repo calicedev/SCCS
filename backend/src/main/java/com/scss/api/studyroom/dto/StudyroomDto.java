@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class StudyroomDto {
-    int id;
-    String title;
-    String password;
-    Timestamp createDateTime;
-    Timestamp destroyDatetime;
-    Boolean isActive;
-    Boolean type;
-    List<Integer> languageIds;
-    List<Integer> algoIds;
-    List<Integer> memberIds;
-    Boolean isPrivate;
-    int languageId;
-    int algoId;
-    String memberId;
+    private int id;
+    private String title;
+    private String password;
+    private Timestamp createDateTime;
+    private Timestamp destroyDatetime;
+    private Boolean isActive;
+    private Boolean type;
+    private List<Integer> languageIds;
+    private List<Integer> algoIds;
+    private List<String> memberIds;
+    private Boolean isPrivate;
+    private int languageId;
+    private int algoId;
+    private String memberId;
 }

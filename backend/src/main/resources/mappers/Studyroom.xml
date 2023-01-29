@@ -6,6 +6,27 @@
 
 <mapper namespace="com.scss.api.studyroom.mapper.StudyroomMapper">
 
+  <resultMap id="studyList" type="StudyroomDto">
+    <id column="id" property="id"/>
+    <result column="title" property="title"/>
+    <result column="is_private" property="isPrivate"/>
+    <result column="type" property="type"/>
+    <collection property="algoIds" ofType="Integer">
+      <result column="algo_id"/>
+    </collection>
+    <collection property="languageIds" ofType="Integer">
+      <result column="language_id"/>
+    </collection>
+  </resultMap>
+
+  <resultMap id="studyList2" type="StudyroomDto">
+    <id column="id" property="id"/>
+    <result column="title" property="title"/>
+    <collection property="algoIds" ofType="Integer">
+      <result column="algo_id"/>
+    </collection>
+  </resultMap>
+
   <insert id="createStudyroom" parameterType="StudyroomDto" useGeneratedKeys="true" keyProperty="id">
     insert into studyroom(
     title,
@@ -70,20 +91,14 @@
     )
   </insert>
 
-    <resultMap id="studyList" type="StudyroomDto">
-    <id column="id" property="id"/>
-    <result column="title" property="title"/>
-    <result column="is_private" property="isPrivate"/>
-    <result column="type" property="type"/>
-    <collection property="algoIds" ofType="Integer">
-      <result column="algo_id"/>
-    </collection>
-    <collection property="languageIds" ofType="Integer">
-      <result column="language_id"/>
-    </collection>
-  </resultMap>
 
-  <select id="searchStudyroom" parameterType="StudyroomDto" resultMap="studyList">
+  <select id="selectAllStudyroom" resultMap="studyList">
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.type as type, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    where is_active=1
+    order by create_datetime desc;
+  </select>
+
+  <select id="selectStudyroom" parameterType="StudyroomDto" resultMap="studyList">
     SELECT s.id as id, s.title as title, s.is_private as is_private, s.type as type, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
     where is_active=1
     <if test="id != 0">
@@ -109,5 +124,39 @@
   <select id="checkStudyroomPassword" parameterType="StudyroomDto" resultType="int">
     select count(*) from studyroom where id = #{id} and password = #{password}
   </select>
+
+  <insert id="insertMemberIds" parameterType="StudyroomDto">
+    insert into studyroom_member(
+    member_id,
+    studyroom_id
+    )
+    values
+    <foreach collection="memberIds" item="item" open=""  separator=" , " >
+      (#{item},  #{id})
+    </foreach>
+  </insert>
+
+  <select id="selectStudyroomById" parameterType="int" resultMap="studyList2">
+    SELECT s.id as id, s.title as title, sa.algo_id as algo_id FROM studyroom s
+    LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id where s.id=#{id};
+  </select>
+
+  <select id="selectProblemByStudyroomId" parameterType="int" resultType="ProblemDto">
+    SELECT p.name, p.problem_folder FROM problem p
+    LEFT JOIN studyroom_problem sp ON p.id=sp.problem_id where sp.studyroom_id=#{id};
+  </select>
+
+
+  <insert id="submitProblem" parameterType="SubmissionDto">
+    insert into submission(
+    member_id,
+    problem_id,
+    language_id,
+    studyroom_id,
+    send_file_name,
+    store_file_name
+    )
+    values (#{memberId}, #{problemId}, #{languageId}, #{studyroomId}, #{sendFileName}, #{storeFileName})
+  </insert>
 
 </mapper>

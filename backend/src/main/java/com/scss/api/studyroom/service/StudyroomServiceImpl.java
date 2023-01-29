@@ -4,7 +4,6 @@ import com.scss.api.studyroom.dto.*;
 import com.scss.api.studyroom.mapper.StudyroomMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -126,60 +125,46 @@ public class StudyroomServiceImpl implements StudyroomService{
         }
     }
 
+
     @Override
     public List<Map<String, Object>> selectAllStudyroom() {
-        // 담을 곳
-        List<Map<String, Object>> studyroomDtoTemp = new ArrayList<>();
+        List<StudyroomDto> s = studyroomMapper.selectAllStudyroom();
+        List<Map<String, Object>> studyrooms = new ArrayList<>();
+        int size = s.size();
 
-        // 날린 쿼리 받아오는 곳
-        List<StudyroomDto> studyroomDto =  studyroomMapper.selectAllStudyroom();
-
-        int size = studyroomDto.size();
-
-        // 변수 초기화
-        int id = studyroomDto.get(0).getId();
-        int head =0;
-
-        // set 초기화
-        HashSet<Integer> setLan = new HashSet<>();
-        HashSet<Integer> setAlgo = new HashSet<>();
-
-        // 이제 하나식 List 에서 꺼내본다.
-        for(int i=0; i<size;i++){
-
-            // 만약 헤드 아이디와 다음의 아이디가 같다면
-            if(studyroomDto.get(i).getId()==id){
-                setLan.add(studyroomDto.get(i).getLanguageId());
-                setAlgo.add(studyroomDto.get(i).getAlgoId());
-            }
-
-            // 만약 다르면 그 전 까지는 저장해주고
-            else{
-                List<Integer> list = new ArrayList<>(setLan);
-                List<Integer> list2 = new ArrayList<>(setAlgo);
-
-
-                studyroomDto.get(head).setLanguageIds(list);
-                studyroomDto.get(head).setAlgoIds(list2);
-
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("id", studyroomDto.get(head).getId());
-                resultMap.put("title", studyroomDto.get(head).getTitle());
-                resultMap.put("type", studyroomDto.get(head).getType());
-                resultMap.put( "language_ids", list );
-                resultMap.put( "algo_ids", list2 );
-                resultMap.put("is_private", studyroomDto.get(head).getIsPrivate());
-
-                studyroomDtoTemp.add(resultMap);
-                id = studyroomDto.get(i).getId();
-                head = i;
-                setLan = new HashSet<>();
-                setAlgo = new HashSet<>();
-                setLan.add(studyroomDto.get(i).getLanguageId());
-                setAlgo.add(studyroomDto.get(i).getAlgoId());
-            }
+        for(int i=0; i<size; i++){
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put( "language_ids", s.get(i).getLanguageIds() );
+            resultMap.put( "algo_ids", s.get(i).getAlgoIds() );
+            resultMap.put("is_private", s.get(i).getIsPrivate());
+            resultMap.put("type", s.get(i).getType());
+            resultMap.put("title", s.get(i).getTitle());
+            resultMap.put("id", s.get(i).getId());
+            studyrooms.add(resultMap);
         }
-        return studyroomDtoTemp;
+        return studyrooms;
+
+    }
+
+
+    @Override
+    public List<Map<String, Object>> selectStudyroom(StudyroomDto studyroomDto) {
+        List<StudyroomDto> s = studyroomMapper.selectStudyroom(studyroomDto);
+        List<Map<String, Object>> studyrooms = new ArrayList<>();
+        int size = s.size();
+
+        for(int i=0; i<size; i++){
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put( "language_ids", s.get(i).getLanguageIds() );
+            resultMap.put( "algo_ids", s.get(i).getAlgoIds() );
+            resultMap.put("is_private", s.get(i).getIsPrivate());
+            resultMap.put("type", s.get(i).getType());
+            resultMap.put("title", s.get(i).getTitle());
+            resultMap.put("id", s.get(i).getId());
+            studyrooms.add(resultMap);
+        }
+            return studyrooms;
+
     }
 
     @Override
@@ -197,13 +182,33 @@ public class StudyroomServiceImpl implements StudyroomService{
     }
 
     @Override
-    public List<StudyroomDto> searchStudyroom(StudyroomDto studyroomDto) {
-        System.out.println(studyroomDto);
-            List<StudyroomDto> s = studyroomMapper.searchStudyroom(studyroomDto);
-        System.out.println(studyroomDto.getAlgoIds().size());
-            return s;
+    public Map<String, Object> startCodingTest(StudyroomDto studyroomDto) {
+
+        Map<String, Object> resultMap = new HashMap<>();
+        // type을 진행 중으로 바꾼다.
+
+
+        // 스터디 시작하는 애들 아이디 넣어준다.
+        studyroomMapper.insertMemberIds(studyroomDto);
+        System.out.println("여기 까지 진행 됨");
+        // 스터디룸 정보를 담은 걸 resultmap에 담는다.
+        StudyroomDto s = studyroomMapper.selectStudyroomById(studyroomDto.getId());
+        resultMap.put( "algo_ids", s.getAlgoIds());
+        resultMap.put("title", s.getTitle());
+        resultMap.put("id", s.getId());
+
+        // 스터디룸에 맞는 문제를 resultmap에 담는다.
+        List<ProblemDto> p = studyroomMapper.selectProblemByStudyroomId(studyroomDto.getId());
+        resultMap.put( "problems", p);
+        return resultMap;
 
     }
+
+    @Override
+    public void submitProblem(SubmissionDto submissionDto) {
+        studyroomMapper.submitProblem(submissionDto);
+    }
+
 
     private static boolean checkout(int n[], int index) {
         for (int i = 0; i < n.length; i++) {

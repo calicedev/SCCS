@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class StudyroomMemberDto {
-    int id;
-    int studyroomId;
-    String MemberId;
+    private int id;
+    private int studyroomId;
+    private String MemberId;
 }
 
