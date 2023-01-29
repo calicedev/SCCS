@@ -11,7 +11,7 @@ export default function StudyDetailCodeItem({ code, idx }) {
       }}
     >
       <span>
-        {idx + 1} {code.member_id} :
+        {idx + 1}. {code.member_id} :
       </span>
       <span> {code.runtime} </span>
       <span> {code.memory} </span>

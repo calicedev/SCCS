@@ -1,16 +1,14 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import axios from 'libs/axios'
 import api from 'apis/api'
 
 import StudyDetailTopNavbar from 'components/mypage/StudyDetailTopNavbar'
 import StudyDetailCodeList from 'components/mypage/StudyDetailCodeList'
-// import StudyDetailTopNavbar from './../../components/mypage/StudyDetailTopNavbar';
-
-// const [url, method] = api('studyHistoryDetail', { id })
 
 export default function StudyDetailPage() {
+  // dummy data
   const data = {
     id: 1, // 스터디 id
     title: '커피 내기 SSAFY8기 (A301)',
@@ -25,7 +23,7 @@ export default function StudyDetailPage() {
         codes: [
           {
             solved_problem_id: 1, // 내가 제출한 코드 자체의 pk값
-            code: '자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드',
+            code: '자바코드자바코드자바코드자바코드자바코드자바코드',
             runtime: '232ms',
             memory: '246KB',
             result: 'PASS',
@@ -36,7 +34,7 @@ export default function StudyDetailPage() {
           },
           {
             solved_problem_id: 2, // 내가 제출한 코드 자체의 pk값
-            code: '파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드', // 문제 img url이 들어갈 곳
+            code: '파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드',
             runtime: '232ms',
             memory: '246KB',
             result: 'PASS',
@@ -55,7 +53,7 @@ export default function StudyDetailPage() {
         codes: [
           {
             solved_problem_id: 1,
-            code: '파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드파이썬코드',
+            code: 'print()print()print()print()print()print()',
             runtime: '232ms',
             memory: '246KB',
             result: 'PASS',
@@ -66,7 +64,7 @@ export default function StudyDetailPage() {
           },
           {
             solved_problem_id: 2,
-            code: '자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드자바코드',
+            code: 'console.log()console.log()console.log()',
             runtime: '232ms',
             memory: '246KB',
             result: 'FAIL',
@@ -81,11 +79,34 @@ export default function StudyDetailPage() {
     members: [{ id: 'protein monster' }, { id: 'python king' }],
   }
 
+  // useState
+  // studyId 안다고 가정
+  const [studyId, setStudyId] = useState(0)
+  // const [data, setData] = useState('') 샘플 데이터 들어오면 다시 주석 풀어줄거임
   const [problemId, setProblemId] = useState(0)
+
+  // mount시 axios 요청으로 해당 study data 불러오기
+  useEffect(() => {
+    const [url, method] = api('studyHistoryDetail', { studyId })
+    const config = { method }
+    axios
+      .request(url, config)
+      .then((res) => {
+        // setData(res.data)
+      })
+      .catch((err) => {
+        alert('스터디 내역을 불러오지 못했습니다.')
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
-      <StudyDetailTopNavbar data={data} />
+      <StudyDetailTopNavbar
+        data={data}
+        problemId={problemId}
+        setProblemId={setProblemId}
+      />
       <Container>
         <img src={data.problems[problemId].content} alt="문제 사진임" />
         <StudyDetailCodeList
@@ -100,4 +121,5 @@ export default function StudyDetailPage() {
 
 const Container = styled.div`
   display: flex;
+  flex: 1;
 `
