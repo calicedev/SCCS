@@ -15,7 +15,7 @@ import EditPwdPage from './pages/mypage/EditPwdPage'
 import SolvedPage from './pages/mypage/SolvedPage'
 import CalendarPage from './pages/mypage/CalendarPage'
 import StudyDetailPage from 'pages/mypage/StudyDetailPage'
-import SolveProblem from 'components/study/SolveProblem'
+import SolveProblem from 'pages/study/SolveProblem'
 
 import GlobalStyle from './styles/GlobalStyle'
 import { ThemeProvider } from 'styled-components'
