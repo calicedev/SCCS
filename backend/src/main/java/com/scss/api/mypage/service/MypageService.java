@@ -1,6 +1,8 @@
 package com.scss.api.mypage.service;
 
 import com.scss.api.mypage.dto.MypageDto;
+import java.util.HashMap;
+import java.util.List;
 
 public interface MypageService {
 
@@ -8,5 +10,7 @@ public interface MypageService {
 
   public MypageDto getHistroyDeatil(int studyId);
 
-  public MypageDto getProblems(String memberId);
+  public List<HashMap<String, Object>> getProblems(String memberId);
+
+
 }

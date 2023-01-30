@@ -2,6 +2,8 @@ package com.scss.api.mypage.controller;
 
 import com.scss.api.mypage.service.MypageService;
 import com.scss.api.studyroom.controller.StudyroomController;
+import java.util.HashMap;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +46,11 @@ public class MypageController {
 
   @GetMapping("/problem/{memberId}")
   public ResponseEntity<?> getProblems(@PathVariable String memberId) {
-    if (mypageService.getProblems(memberId).equals(SUCCESS)) {
-      return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    List<HashMap<String, Object>> targets = mypageService.getProblems(memberId);
+    if (targets != null) {
+      return ResponseEntity.ok(targets);
     } else {
-      return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+      return ResponseEntity.noContent().build();
     }
   }
 
