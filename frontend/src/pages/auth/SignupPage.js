@@ -3,6 +3,7 @@ import Button from 'components/common/Button'
 import AuthInput from 'components/auth/AuthInput'
 import { useNavigate, Link } from 'react-router-dom'
 import setUserInfo from 'libs/setUserInfo'
+import { setTokens } from 'redux/tokenSlice'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
@@ -52,10 +53,14 @@ export default function SignupForm() {
       password,
     }
     const [url, method] = api('signup')
-    const config = { method, data }
-    axios(url, config)
+    const config = { url, method, data }
+    axios(config)
       .then((res) => {
+        const tokens = res.data
+        setTokens(tokens)
         navigate('/main')
+      })
+      .then(() => {
         setUserInfo(id)
       })
       .catch((err) => {

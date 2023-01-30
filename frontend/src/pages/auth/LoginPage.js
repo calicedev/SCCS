@@ -3,6 +3,7 @@ import Button from 'components/common/Button'
 import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import setUserInfo from 'libs/setUserInfo'
+import { setTokens } from 'redux/tokenSlice'
 import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
@@ -35,13 +36,18 @@ export default function LoginForm() {
       password,
     }
     const [url, method] = api('login')
-    const config = { method, data }
-    axios(url, config)
+    const config = { url, method, data }
+    axios(config)
       .then((res) => {
+        const tokens = res.dat
+        setTokens(tokens)
         navigate('/main')
+      })
+      .then(() => {
         setUserInfo(id)
       })
       .catch((err) => {
+        console.log(err)
         const checkmsg = { ...message }
         checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
         checkmsg.isValid = false
@@ -68,6 +74,9 @@ export default function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></AuthInput>
+        <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
+          {message.text}
+        </p>
       </Form>
 
       <Flexbox>
