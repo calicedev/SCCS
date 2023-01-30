@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { algorithm } from 'constants/pk'
+import { algorithmPk } from 'constants/pk'
 import { FaLock, FaPython, FaJava } from 'react-icons/fa'
 import IconButton from 'components/common/IconButton'
 
@@ -15,61 +15,48 @@ export default function Room({
 }) {
   let algorithms = ''
   algoIds.forEach((pk) => {
-    algorithms += `#${algorithm[pk]}`
+    algorithms += `#${algorithmPk[pk]}`
   })
 
   let languages = []
   languageIds.forEach((pk) => {
     languages.push(
-      <IconButton key={pk} icon={pk === 1 ? <FaPython /> : <FaJava />} />,
+      <IconButton
+        key={pk}
+        type={isSolving ? 'tertiary' : 'secondary'}
+        disabled={true}
+        icon={pk === 1 ? <FaPython /> : <FaJava />}
+      />,
     )
   })
 
   return (
-    <RoomContainer>
+    <RoomContainer isSolving={isSolving}>
       <Flexbox>
-        <OutlineBox>{id}</OutlineBox>
-        <OutlineBox>{algorithms}</OutlineBox>
-        <p>{isSolving ? 'SOLVING' : 'WAITING'}</p>
+        <Id isSolving={isSolving}>{id}</Id>
+        <Algo isSolving={isSolving}>{algorithms}</Algo>
+        <MarginBox
+          className={`extra-bold ${isSolving ? 'tertiary' : 'secondary'}`}
+        >
+          {isSolving ? 'SOLVING' : 'WAITING'}
+        </MarginBox>
       </Flexbox>
       <Flexbox>
-        {languages}
-        <OutlineBox>
-          {isPrivate && <IconButton icon={<FaLock />} />}
+        <MarginBox>{languages}</MarginBox>
+        <Title isSolving={isSolving}>
+          {isPrivate && (
+            <IconButton
+              icon={<FaLock />}
+              disabled={true}
+              type={isSolving ? 'tertiary' : 'solving'}
+            />
+          )}
           {title}
-        </OutlineBox>
+        </Title>
       </Flexbox>
     </RoomContainer>
   )
 }
-
-const RoomContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  width: 200px;
-  border: 5px solid
-    ${({ isSolving, theme }) =>
-      isSolving ? theme.tertiaryColor : theme.secondaryColor};
-  border-radius: 1rem;
-
-  background-color: ${({ isSolving, theme }) =>
-    isSolving ? theme.lightTertiaryColor : theme.lightSecondaryColor};
-`
-
-const Flexbox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const OutlineBox = styled.div`
-  background-color: #ffffff;
-  border: 3px solid
-    ${({ isSolving, theme }) =>
-      isSolving ? theme.tertiaryColor : theme.secondaryColor};
-  border-radius: 1rem;
-`
 
 Room.propTypes = {
   id: PropTypes.number.isRequired,
@@ -79,3 +66,73 @@ Room.propTypes = {
   algoIds: PropTypes.array.isRequired,
   languageIds: PropTypes.array.isRequired,
 }
+
+const RoomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 0rem 1rem;
+
+  height: 130px;
+  width: 350px;
+  border: 5px solid
+    ${({ isSolving, theme }) =>
+      isSolving ? theme.deepTertiaryColor : theme.deepSecondaryColor};
+  border-radius: 2rem;
+
+  background-color: ${({ isSolving, theme }) =>
+    isSolving ? theme.lightTertiaryColor : theme.lightSecondaryColor};
+
+  font-weight: bold;
+  color: ${({ isSolving, theme }) =>
+    isSolving ? theme.deepTertiaryColor : theme.deepSecondaryColor};
+  cursor: pointer;
+
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    scale: 1.05;
+    background-color: ${({ isSolving, theme }) =>
+      isSolving ? theme.tertiaryColor : theme.secondaryColor};
+  }
+`
+
+const Flexbox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const MarginBox = styled.div`
+  margin: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const OutlineBox = styled(MarginBox)`
+  height: 2.2rem;
+
+  margin: 0.5rem;
+
+  background-color: #ffffff;
+  border: 3px solid
+    ${({ isSolving, theme }) =>
+      isSolving ? theme.deepTertiaryColor : theme.deepSecondaryColor};
+  border-radius: 1rem;
+`
+const Id = styled(OutlineBox)`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+`
+
+const Algo = styled(OutlineBox)`
+  flex: 6;
+`
+
+const Title = styled(OutlineBox)`
+  flex: 1;
+  display: flex;
+  justify-content: start;
+`

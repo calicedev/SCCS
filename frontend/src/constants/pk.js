@@ -1,14 +1,14 @@
-export const algorithm = {
-  1: '기초',
-  2: '탐색',
-  3: '이분탐색',
-  4: '자료구조',
-  5: '완전탐색',
-  6: 'DFS/BFS',
-  7: 'DP',
+export const algorithmPk = {
+  기초: 1,
+  탐색: 2,
+  이분탐색: 3,
+  자료구조: 4,
+  완전탐색: 5,
+  DFS: 6,
+  DP: 7,
 }
 
-export const language = {
-  1: 'python',
-  2: 'java',
+export const languagePk = {
+  Python: 1,
+  Java: 2,
 }
