@@ -2,6 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
+/*
+기본 버튼 컴포넌트
+
+size: 버튼 사이즈
+type: 버튼 색깔
+onClick: 클릭 시 동작
+value: 버튼 안 글자
+*/
+
 export default function Button({ size, type, onClick, value }) {
   const sizeClass =
     size === 'tiny'
@@ -37,12 +46,13 @@ Button.defaultProps = {
 const BtnWrapper = styled.button`
   display: inline-flex;
   justify-content: center;
+  align-items: center;
 
   border-radius: 10px;
 
+  color: white;
   text-align: center;
   font-weight: 600;
-  color: white;
   white-space: nowrap;
 
   transition: background-color ease 0.1s;
@@ -79,8 +89,8 @@ const BtnWrapper = styled.button`
   }
   &.xs-btn {
     align-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.7rem;
+    height: 1.7rem;
     border-radius: 50%;
     font-size: 1rem;
   }

@@ -45,7 +45,7 @@
 
   <update id="modify" parameterType="memberDto">
     update member
-    set nickname = #{nickname}, email = #{email}, profile_image = #{profile_image}
+    set nickname = #{nickname}, email = #{email}, profile_image = #{profileImage}
     where id = #{id}
   </update>
 

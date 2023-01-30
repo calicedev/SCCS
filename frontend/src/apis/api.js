@@ -1,13 +1,13 @@
 const api = function (type, options = {}) {
   const apiObject = {
-    signup: ['/api/memeber', 'post'],
+    signup: ['/api/member', 'post'],
     getUserInfo: [`/api/member/${options.id}`, 'get'],
     updateUserInfo: ['/api/member', 'patch'],
     withdrawl: ['/api/member', 'delete'],
-    login: ['api/memeber/login', 'post'],
+    login: ['api/member/login', 'post'],
     resetPassword: ['api/member/password', 'post'],
-    updatePassword: ['api/memeber/password', 'patch'],
-    logout: ['api/memeber/logout', 'get'],
+    updatePassword: ['api/member/password', 'patch'],
+    logout: ['api/member/logout', 'get'],
     findId: ['/api/member/id', 'post'],
     check_id: [`/api/unique/id/${options.id}`, 'get'],
     check_nickname: [`/api/unique/nickname/${options.nickname}`, 'get'],

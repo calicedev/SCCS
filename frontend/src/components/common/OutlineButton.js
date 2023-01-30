@@ -2,6 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
+/*
+아웃라인 버튼 컴포넌트
+
+size: 버튼 사이즈
+type: 버튼 색깔
+onClick: 클릭 시 동작
+value: 버튼 안 글자
+*/
+
 export default function OutlineButton({ size, type, onClick, value }) {
   const sizeClass =
     size === 'tiny'

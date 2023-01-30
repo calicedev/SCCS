@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* 배경 이미지 적용을 위해 추가 */
+#root {
+  height: 100%;
+}
