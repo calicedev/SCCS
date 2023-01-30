@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
-import jQuery from 'jquery';
+// import jQuery from 'jquery';
 
 export default function SolveProblem() {
   return (
