@@ -18,6 +18,15 @@ const GlobalStyle = createGlobalStyle`
   .main {
     color: ${({ theme }) => theme.fontColor};
   }
+  .primary {
+    color: ${({ theme }) => theme.primaryColor};
+  }
+  .secondary {
+    color: ${({ theme }) => theme.secondaryColor};
+  }
+  .tertiary {
+    color: ${({ theme }) => theme.tertiaryColor};
+  }
 
   .light {
     font-weight: 300;

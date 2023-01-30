@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 
 import StudyDetailTopNavbar from 'components/mypage/StudyDetailTopNavbar'
 import StudyDetailCodeList from 'components/mypage/StudyDetailCodeList'
@@ -120,8 +120,8 @@ export default function StudyDetailPage() {
 }
 
 const Flexbox = styled.div`
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `
 const Container = styled.div`
   display: flex;

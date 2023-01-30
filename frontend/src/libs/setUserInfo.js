@@ -1,7 +1,7 @@
 import store from 'redux/store'
 import { setUserInfo } from 'redux/userSlice'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 
 /*
 서버로부터 유저 정보를 받아와서 리덕스에 저장하는 라이브러리

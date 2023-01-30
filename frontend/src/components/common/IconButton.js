@@ -25,7 +25,7 @@ export default function IconButton({ icon, type, size, text, onClick }) {
 
 IconButton.propTypes = {
   icon: PropTypes.element,
-  type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray']),
+  type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'white']),
   size: PropTypes.oneOf(['small', 'middle', 'large']),
   onClick: PropTypes.func,
 }
@@ -62,6 +62,12 @@ const IconWrapper = styled.div`
     color: ${({ theme }) => theme.grayColor};
     :hover {
       color: ${({ theme }) => theme.deepGrayColor};
+    }
+  }
+  &.white-icbtn {
+    color: #ffffff;
+    :hover {
+      color: #ffffff;
     }
   }
   &.small-icbtn {

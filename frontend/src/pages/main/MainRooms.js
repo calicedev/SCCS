@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Button from 'components/common/Button'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
+import Room from 'components/main/Room'
 
 export default function MainRooms() {
-  const [rooms, setRooms] = useState([{ id: 1 }])
+  const [rooms, setRooms] = useState([
+    {
+      id: '1',
+      title: '커피내기',
+      isSolving: true,
+      isPrivate: true,
+      algoIds: [1],
+      languageIds: [1, 2],
+    },
+  ])
 
   // 전체 방 조회
   useEffect(() => {
@@ -53,8 +63,16 @@ export default function MainRooms() {
     <div>
       <Button onClick={searchRoom} value="상세조회"></Button>
       <div>
-        {rooms.map((ele, idx) => (
-          <div>{ele.id}</div>
+        {rooms.map((room) => (
+          <Room
+            key={room.id}
+            id={room.id}
+            title={room.title}
+            isSolving={room.isSolving}
+            isPrivate={room.isPrivate}
+            algoIds={room.algoIds}
+            languageIds={room.languageIds}
+          />
         ))}
       </div>
     </div>

@@ -7,7 +7,7 @@ import { setTokens } from 'redux/tokenSlice'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 import { useDispatch } from 'react-redux'
 
 export default function SignupForm() {

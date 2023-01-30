@@ -5,10 +5,10 @@ import defaultProfileImg from 'assets/img/default_profile_img.jpg'
 const userSlice = createSlice({
   name: 'userSlice',
   initialState: {
-    id: 'ssafy01',
-    name: '김이박',
-    nickname: '별명',
-    email: 'afdsdfsd@naver.com',
+    id: 'ssafy',
+    name: 'defaultName',
+    nickname: 'defaultNickname',
+    email: 'default@email.com',
     score: 100,
     joinDatetime: '2017-12-31 10:10:00',
     profileImage: defaultProfileImg,
@@ -16,6 +16,8 @@ const userSlice = createSlice({
   reducers: {
     // 유저 정보 업데이트
     setUserInfo: (state, action) => {
+      const userInfo = action.payload
+      if (!userInfo.profileImage) userInfo.profileImage = defaultProfileImg
       return action.payload
     },
   },

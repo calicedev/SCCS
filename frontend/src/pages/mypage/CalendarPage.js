@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { format } from 'date-fns'
 import StudyList from 'components/mypage/StudyList'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 import { useSelector } from 'react-redux'
 
 export default function StudyCalendar() {
@@ -50,8 +50,8 @@ export default function StudyCalendar() {
   // useEffect
   // // currentDate에 따라 studies 데이터 서버 요청
   useEffect(() => {
-    const year = currentDate.getFullYear()
-    const month = currentDate.getMonth()
+    const year = format(currentDate, 'YYYY')
+    const month = format(currentDate, 'MM')
     const [url, method] = api('studyHistory', { id, year, month })
     const config = { method }
     axios

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import IconButton from 'components/common/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 
 export default function ResetPasswordForm() {
   // 리액트 훅 관련 함수 정의

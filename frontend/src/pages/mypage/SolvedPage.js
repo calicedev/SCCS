@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react'
 import ProblemItem from 'components/mypage/ProblemItem'
 import Pagination from 'components/mypage/Pagination'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
