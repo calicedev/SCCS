@@ -1,6 +1,6 @@
 package com.scss.api.mypage.dto;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @Data
 public class SubmissionDto {
 
-    int id;
-    String code;
-    int runtime;
-    int memory;
-    boolean result;
-    Timestamp submitDatetime;
-    int problemId;
-    String memberId;
-    int languageId;
-    int studyroomId;
+  int id;
+  String code;
+  int runtime;
+  int memory;
+  boolean result;
+  LocalDateTime submitDatetime;
+  int problemId;
+  String memberId;
+  int languageId;
+  int studyroomId;
 
 }

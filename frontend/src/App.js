@@ -41,7 +41,7 @@ function App() {
           <Route path="profile/edit" element={<EditProfilePage />}></Route>
           <Route path="profile/editpassword" element={<EditPwdPage />}></Route>
           <Route path="calendar" element={<CalendarPage />}></Route>
-          <Route path="studydetail" element={<StudyDetailPage />}></Route>
+          <Route path="studydetail/:id" element={<StudyDetailPage />}></Route>
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
         <Route path="/solveproblem" element={<SolveProblem />}></Route>

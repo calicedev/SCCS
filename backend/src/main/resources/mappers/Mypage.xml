@@ -16,31 +16,54 @@
   </resultMap>
 
   <resultMap id="studyroomWithProblem" type="hashmap">
-    <result column="studyroom_title" property="studyroomTitle"></result>
-    <result column="studyroom_create_datetime" property="studyroomCreateDatetime"></result>
-    <result column="problem_title" property="problemTitle"></result>
+    <id column="sid" property="id"/>
+    <result column="title" property="studyroomTitle"></result>
+    <result column="createDateTime" property="studyroomCreateDatetime"></result>
+    <collection property="problems" javaType="List" resultMap="test">
+    </collection>
   </resultMap>
 
-  <select id="getHistory">
-    select sr.title, sr.create_datetime, p.name from studyroom sr, problem p, studyroom_member sm,
-    member m, studyroom_problem sp where
-    DATE(sr.create_datetime) between m.joinDate and
-    DATE_FORMAT(concat(#{year},'-',#{month}),'%Y-%M') and sm.member_id = #{memberId} sm.studyroom_id
-    = sr.id and m.id = sm.member_id and sp.problem_id = p.id and sp.studyroom_id =
-    sr.id;
+  <resultMap id="test" type="hashmap">
+    <result column="pname" property="problemName"></result>
+    <result column="pid" property="problemId"></result>
+  </resultMap>
+
+  <resultMap id="studyroomWithProblemAboutSubmission" type="hashmap">
+    <result column="studyroom_title" property="studyroomTitle"></result>
+    <result column="problem_name" property="problemName"></result>
+    <result column="problem_folder" property="problemFolder"></result>
+    <result column="submission_memberId" property="submissionMemberId"></result>
+    <result column="submission_languageId" property="submissionLanguageId"></result>
+    <result column="submission_runtime" property="submissionRuntime"></result>
+    <result column="submission_memory" property="submissionMemory"></result>
+  </resultMap>
+
+  <select id="getHistory" parameterType="hashmap" resultMap="studyroomWithProblem">
+    select sr.id AS sid, sr.title as title, DATE_FORMAT(sr.create_datetime,'%Y-%m-%d') as
+    'createDateTime',p.id as pid, p.name as pname from
+    studyroom sr, problem
+    p, studyroom_member sm,
+    member m, studyroom_problem sp where DATE(sr.create_datetime) between
+    concat(#{year},'-',#{month}) and m.join_date and sm.member_id =
+    #{memberId} and sm.studyroom_id = sr.id and m.id = sm.member_id and
+    sp.problem_id = p.id and sp.studyroom_id = sr.id
+
   </select>
 
-  <select id="getHistoryDetail">
-    sr.title , p.name s.code , s.runtime, s.memory, s.result, s.submit_datetime, s.problem_id,
-    s.member_id, s.language_id
-    from studyroom sr, problem p, submission s
-    where sr.id = #{studyId}
-    order by s.member_id;
+  <select id="getHistoryDetail" resultMap="studyroomWithProblemAboutSubmission">
+    Select sr.title, ANY_VALUE(name) as 'problemName', ANY_VALUE(problem_folder) as 'problemFolder',
+    s.member_id ,
+    ANY_VALUE(language_id) as 'languageId',ANY_VALUE(runtime) as 'runtime', ANY_VALUE(memory) as
+    'memory'
+    from studyroom sr, submission s, problem p,studyroom_problem sp
+    where sr.id = #{studyId} and sr.id = s.studyroom_id and sr.id = s.studyroom_id and
+    sp.problem_id = p.id and sp.studyroom_id=sr.id and s.problem_id = p.id group by s.member_id
+    order by s.submit_datetime;
   </select>
 
   <select id="getProblems" parameterType="hashmap" resultMap="submissionWithProblemAboutUser">
-    SELECT p.name ,p.accepted_number/p.submission_number*100 as 'hello'
-    ,s.submit_datetime,p.difficulty,s.language_id
+    SELECT p.id, p.name ,format(p.accepted_number/p.submission_number*100,2) as 'answerRate'
+    ,DATE_FORMAT(submit_datetime,'%y-%m-%d') as 'date',p.difficulty,s.language_id
     FROM problem p, submission s
     WHERE p.id = s.problem_id AND s.member_id = #{memberId};
   </select>

@@ -16,7 +16,7 @@ export default function StudyCalendar() {
   // useState
   const [currentDate, setCurrentDate] = useState(new Date())
   // // 모달 관련 useState
-  const [studies, setStudies] = useState(ex_studies)
+  const [studies, setStudies] = useState([])
   const [isHovered, setIsHovered] = useState(false)
   const [modalLeft, setModalLeft] = useState(0)
   const [modalTop, setModalTop] = useState(0)
@@ -31,7 +31,7 @@ export default function StudyCalendar() {
   const dateToStudies = useMemo(() => {
     const hashedStudies = {}
     studies.forEach((study) => {
-      const date = new Date(study.created_datetime)
+      const date = new Date(study.studyroomCreateDatetime)
       const key = format(date, 'YYYY-MM-DD')
       if (!hashedStudies[key]) {
         hashedStudies[key] = [study]
@@ -39,6 +39,7 @@ export default function StudyCalendar() {
       }
       hashedStudies[key].push(study)
     })
+    console.log('hashedStudes', hashedStudies)
     return Object.fromEntries(
       Object.entries(hashedStudies).map(([key, studies]) => [
         key,
@@ -50,16 +51,18 @@ export default function StudyCalendar() {
   // useEffect
   // // currentDate에 따라 studies 데이터 서버 요청
   useEffect(() => {
-    const year = currentDate.getFullYear()
-    const month = currentDate.getMonth()
+    const year = format(currentDate, 'YYYY')
+    const month = format(currentDate, 'MM')
     const [url, method] = api('studyHistory', { id, year, month })
     const config = { method }
     axios
       .request(url, config)
       .then((res) => {
+        console.log(res)
         setStudies(res.data)
       })
       .catch((err) => {
+        console.log(err)
         alert('스터디 내역을 불러오지 못했습니다.')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,6 +83,9 @@ export default function StudyCalendar() {
     if (element.classList.contains('disabled')) {
       return
     }
+    console.log('dateToStudies', dateToStudies)
+    console.log('element.id', element.id)
+    console.log('content', dateToStudies[element.id])
     const date = element.id
     const scrollX = window.scrollX
     const scrollY = window.scrollY
@@ -147,7 +153,7 @@ const Container = styled.div`
 // 모달 창의 위치를 호버된 Datebox로 이동시킨 뒤 visible
 // 모달 창이 Datebox의 1.5배로 커지도록 설정
 const Modal = styled.div`
-  visibility: ${({ isHovered }) => (isHovered ? 'visible' : 'hidden')};
+  visibility: ${({ isHovered }) => (isHovered ? 'hidden' : 'hidden')};
 
   overflow-x: hidden;
   overflow-y: auto;
