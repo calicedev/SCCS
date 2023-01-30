@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
-import jQuery from 'jquery';
+// import jQuery from 'jquery';
 
 export default function SolveProblem() {
   return (
@@ -10,47 +10,44 @@ export default function SolveProblem() {
         <Img src="https://ncache.ilbe.com/files/attach/new/20150224/14357299/2334320564/5366146341/59f715829f6e1ec432f420df9a9a9792.jpeg"></Img>
       </Problem>
       <Resizable
-          defaultSize={{ width: '50%', height: '100%' }}
-          minWidth={'20%'}
-          maxWidth={'80%'}
-          enable={{ 
-            top: false,
-            right: true,
-            bottom: false,
-            left: true,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false,
-          }}
-          
-        >
-          
-      <FlexColumn>
-        <Gutter>언어 선택</Gutter>
-        <CodingSection>
-          코딩창
-          <Textarea ></Textarea>
-          
-        </CodingSection>
-      <Resizable
-          defaultSize={{ width: '100%', height: '50%' }}
-          minHeight={'20%'}
-          maxHeight={'80%'}
-          enable={{ 
-            top: true,
-            right: false,
-            bottom: false,
-            left: false,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false,
-          }}
-        >
-        {/* <Div>크기 조절</Div> */}
-          <ResultSection>결과창</ResultSection>
-        </Resizable>
+        defaultSize={{ width: '50%', height: '100%' }}
+        minWidth={'20%'}
+        maxWidth={'80%'}
+        enable={{
+          top: false,
+          right: true,
+          bottom: false,
+          left: true,
+          topRight: false,
+          bottomRight: false,
+          bottomLeft: false,
+          topLeft: false,
+        }}
+      >
+        <FlexColumn>
+          <Gutter>언어 선택</Gutter>
+          <CodingSection>
+            코딩창
+            <Textarea></Textarea>
+          </CodingSection>
+          <Resizable
+            defaultSize={{ width: '100%', height: '50%' }}
+            minHeight={'20%'}
+            maxHeight={'80%'}
+            enable={{
+              top: true,
+              right: false,
+              bottom: false,
+              left: false,
+              topRight: false,
+              bottomRight: false,
+              bottomLeft: false,
+              topLeft: false,
+            }}
+          >
+            {/* <Div>크기 조절</Div> */}
+            <ResultSection>결과창</ResultSection>
+          </Resizable>
         </FlexColumn>
       </Resizable>
     </Main>
@@ -87,7 +84,6 @@ const FlexColumn = styled.div`
   flex-direction: column;
   flex: 1;
   overflow: auto visible;
-
 `
 
 const CodingSection = styled.div`
@@ -134,9 +130,7 @@ const Textarea = styled.textarea`
   width: 100%;
   height: 100%;
   resize: none;
-  background:#34495E; 
-  color:#fff;
-  font-size:20px;
+  background: #34495e;
+  color: #fff;
+  font-size: 20px;
 `
-
-
