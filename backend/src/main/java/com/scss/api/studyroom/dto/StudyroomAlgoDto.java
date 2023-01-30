@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class StudyroomAlgoDto {
 
-    int id;
-    int algoId;
-    int studyroomId;
+    private int id;
+    private int algoId;
+    private int studyroomId;
 }

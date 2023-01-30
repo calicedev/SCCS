@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class ProblemDto {
-    String name;
-    int difficulty;
-    String problemFolder;
-    int memoryLimit ;
-    int timeLimit;
-    int submissionNumber;
-    int acceptedNumber;
-    int algoId;
+    private String name;
+    private int difficulty;
+    private String problemFolder;
+    private int memoryLimit ;
+    private int timeLimit;
+    private int submissionNumber;
+    private int acceptedNumber;
+    private int algoId;
 }
