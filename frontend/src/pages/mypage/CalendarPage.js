@@ -50,16 +50,18 @@ export default function StudyCalendar() {
   // useEffect
   // // currentDate에 따라 studies 데이터 서버 요청
   useEffect(() => {
-    const year = currentDate.getFullYear()
-    const month = currentDate.getMonth()
+    const year = format(currentDate, 'YYYY')
+    const month = format(currentDate, 'MM')
     const [url, method] = api('studyHistory', { id, year, month })
     const config = { method }
     axios
       .request(url, config)
       .then((res) => {
+        console.log(res)
         setStudies(res.data)
       })
       .catch((err) => {
+        console.log(err)
         alert('스터디 내역을 불러오지 못했습니다.')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
