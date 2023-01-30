@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import IconButton from '@material-ui/core/IconButton' // 내가 이걸 IconButton에서 Button으로 수정함
+import IconButton from '@material-ui/core/Button' // 내가 이걸 IconButton에서 Button으로 수정함
 import Fab from '@material-ui/core/Fab'
 import HighlightOff from '@material-ui/icons/HighlightOff'
 import Send from '@material-ui/icons/Send'
