@@ -32,4 +32,8 @@ public interface StudyroomMapper {
     public List<ProblemDto> selectProblemByStudyroomId(int id);
 
     public void submitProblem(SubmissionDto submissionDto);
+
+    public void changeStudyroomSolvingStatus(StudyroomDto studyroomDto);
+
+    public int endStudyroomByOwner(StudyroomDto studyroomDto);
 }

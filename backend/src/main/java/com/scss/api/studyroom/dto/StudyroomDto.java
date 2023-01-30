@@ -16,7 +16,7 @@ public class StudyroomDto {
     private Timestamp createDateTime;
     private Timestamp destroyDatetime;
     private Boolean isActive;
-    private Boolean type;
+    private Boolean isSolving;
     private List<Integer> languageIds;
     private List<Integer> algoIds;
     private List<String> memberIds;

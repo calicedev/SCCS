@@ -1,5 +1,6 @@
 package com.scss.api.studyroom.controller;
 
+import com.scss.api.member.dto.MemberDto;
 import com.scss.api.studyroom.dto.SendFileDto;
 import com.scss.api.studyroom.dto.StudyroomDto;
 import com.scss.api.studyroom.dto.SubmissionDto;
@@ -85,6 +86,12 @@ public class StudyroomController {
         s.setStoreFileName(sendFileDto.getStoreFileName());
         studyroomService.submitProblem(s);
         return "redirect:/items/{itemId}";
+    }
+
+    @PatchMapping("/codingtest")
+    public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){
+        //코딩 테스트 시작하기
+        return new ResponseEntity<>(studyroomService.endStudyroomByOwner(studyroomDto), HttpStatus.OK);
     }
 
 

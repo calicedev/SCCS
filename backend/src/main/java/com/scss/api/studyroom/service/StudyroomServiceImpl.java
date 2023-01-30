@@ -134,10 +134,10 @@ public class StudyroomServiceImpl implements StudyroomService{
 
         for(int i=0; i<size; i++){
             Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put( "language_ids", s.get(i).getLanguageIds() );
-            resultMap.put( "algo_ids", s.get(i).getAlgoIds() );
-            resultMap.put("is_private", s.get(i).getIsPrivate());
-            resultMap.put("type", s.get(i).getType());
+            resultMap.put( "languageIds", s.get(i).getLanguageIds() );
+            resultMap.put( "algoIds", s.get(i).getAlgoIds() );
+            resultMap.put("isPrivate", s.get(i).getIsPrivate());
+            resultMap.put("type", s.get(i).getIsSolving());
             resultMap.put("title", s.get(i).getTitle());
             resultMap.put("id", s.get(i).getId());
             studyrooms.add(resultMap);
@@ -155,10 +155,10 @@ public class StudyroomServiceImpl implements StudyroomService{
 
         for(int i=0; i<size; i++){
             Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put( "language_ids", s.get(i).getLanguageIds() );
-            resultMap.put( "algo_ids", s.get(i).getAlgoIds() );
-            resultMap.put("is_private", s.get(i).getIsPrivate());
-            resultMap.put("type", s.get(i).getType());
+            resultMap.put( "languageIds", s.get(i).getLanguageIds() );
+            resultMap.put( "algoIds", s.get(i).getAlgoIds() );
+            resultMap.put("isPrivate", s.get(i).getIsPrivate());
+            resultMap.put("isSolving", s.get(i).getIsSolving());
             resultMap.put("title", s.get(i).getTitle());
             resultMap.put("id", s.get(i).getId());
             studyrooms.add(resultMap);
@@ -186,7 +186,7 @@ public class StudyroomServiceImpl implements StudyroomService{
 
         Map<String, Object> resultMap = new HashMap<>();
         // type을 진행 중으로 바꾼다.
-
+        studyroomMapper.changeStudyroomSolvingStatus(studyroomDto);
 
         // 스터디 시작하는 애들 아이디 넣어준다.
         studyroomMapper.insertMemberIds(studyroomDto);
@@ -207,6 +207,22 @@ public class StudyroomServiceImpl implements StudyroomService{
     @Override
     public void submitProblem(SubmissionDto submissionDto) {
         studyroomMapper.submitProblem(submissionDto);
+    }
+
+    @Override
+    public String endStudyroomByOwner(StudyroomDto studyroomDto) {
+        try {
+            if(studyroomMapper.endStudyroomByOwner(studyroomDto)==1){
+                return SUCCESS;
+            }else{
+                return FAIL;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return FAIL;
+        }
+
+
     }
 
 

@@ -15,4 +15,6 @@ public interface StudyroomService {
     public Map<String, Object> startCodingTest(StudyroomDto studyroomDto);
 
     public void submitProblem(SubmissionDto submissionDto);
+
+    public String endStudyroomByOwner(StudyroomDto studyroomDto);
 }
