@@ -65,6 +65,7 @@ public class JWTServiceImpl implements JWTService{
 
     @Override
     public boolean checkToken(String jwt) {
+        logger.debug("토큰 체크 시작 !!!!");
         try {
             Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
@@ -72,10 +73,12 @@ public class JWTServiceImpl implements JWTService{
                     .parseClaimsJws(jwt);
             logger.debug("claims : {}", claims);
             return true;
+        } catch (ExpiredJwtException e) {
+            logger.info("토큰 유효기간 만료");
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return false;
+            logger.info("토큰 검증 에러");
         }
+        return false;
     }
 
 }

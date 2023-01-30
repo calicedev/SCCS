@@ -24,6 +24,7 @@ import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,7 +78,7 @@ public class MemberController {
 
     /** 로그인 : 아이디, 비밀번호 일치시 토큰 생성 **/
     @PostMapping("/member/login")
-    public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap, HttpServletResponse response) {
+    public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap) {
         Map<String, String> resultmap = new HashMap<>(); // 결과를 담는 자료구조
 
         try {
@@ -99,8 +100,8 @@ public class MemberController {
                 resultmap.put("accessToken", accessToken);
                 resultmap.put("refreshToken", refreshToken);
 
-                Cookie accessTokenCookie  = cookieService.createCookie("accessToken", accessToken);
-                Cookie refreshTokenCookie = cookieService.createCookie("refreshToken", refreshToken);
+//                Cookie accessTokenCookie  = cookieService.createCookie("accessToken", accessToken);
+//                Cookie refreshTokenCookie = cookieService.createCookie("refreshToken", refreshToken);
 
                 // Redis에 저장 (key: refreshtoken값, value: 회원 아이디)
                 try {
@@ -113,8 +114,8 @@ public class MemberController {
                 logger.debug("accessToken : {}", accessToken);
                 logger.debug("refreshToken : {}", refreshToken);
 
-                response.addCookie(accessTokenCookie);
-                response.addCookie(refreshTokenCookie);
+//                response.addCookie(accessTokenCookie);
+//                response.addCookie(refreshTokenCookie);
 
                 return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
             } else {
@@ -129,18 +130,13 @@ public class MemberController {
         }
     }
 
-    /** 회원 정보 **/
+    /** 회원 정보 **/ /** Auth **/
     @GetMapping("/member/{id}")
-    public ResponseEntity<?> memberInfo(@PathVariable("id") String id, @CookieValue String refreshtokenC, @CookieValue String accesstokenC, @RequestHeader("accessToken") String accessToken) {
+    public ResponseEntity<?> memberInfo(@PathVariable("id") String id) {
         Map<String, Object> resultMap = new HashMap<>();
 
-        logger.debug("accessToken : {}", accessToken);
-        MemberDto memberDto = null;
-
-        Claims claims = jwtService.getToken(accessToken);
-        if ((claims.get("id")).equals(id)) {
-            memberDto = memberService.memberInfo(id); // id값과 일치하는 회원정보 조회
-        }
+        logger.debug("회원정보 조회!!!!");
+        MemberDto memberDto = memberService.memberInfo(id);
 
         if (memberDto != null) {
             resultMap.put("data", memberDto);
@@ -162,7 +158,7 @@ public class MemberController {
         }
     }
 
-    /** 회원 정보 수정 **/
+    /** 회원 정보 수정 **/ /** Auth **/
     @PatchMapping("/member")
     public ResponseEntity<?> modify(@RequestBody HashMap<String, String> param, @CookieValue String accessToken, @CookieValue String refreshToken) {
         Map<String, String> resultMap = new HashMap<>();
@@ -187,7 +183,7 @@ public class MemberController {
         }
     }
 
-    /** 비밀번호 수정 **/
+    /** 비밀번호 수정 **/ /** Auth **/
     @PatchMapping("/member/password")
     public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> param, @CookieValue String accessToken, @CookieValue String refreshToken) {
         String newPassword = param.get("new_password"); // 클라이언트에서 넘어온 변경하고자 하는 비밀번호
