@@ -3,6 +3,8 @@ package com.scss.api.mypage.service;
 import com.scss.api.mypage.dto.MypageDto;
 import com.scss.api.mypage.mapper.MypageMapper;
 import com.scss.api.studyroom.service.StudyroomServiceImpl;
+import java.util.HashMap;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,7 @@ public class MypageServiceImpl implements MypageService {
   }
 
   @Override
-  public MypageDto getProblems(String memberId) {
+  public List<HashMap<String, Object>> getProblems(String memberId) {
     return mypageMapper.getProblems(memberId);
   }
 }
