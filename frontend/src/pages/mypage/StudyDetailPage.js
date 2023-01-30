@@ -101,7 +101,7 @@ export default function StudyDetailPage() {
   }, [])
 
   return (
-    <>
+    <Flexbox>
       <StudyDetailTopNavbar
         data={data}
         problemId={problemId}
@@ -115,10 +115,14 @@ export default function StudyDetailPage() {
           setProblemId={setProblemId}
         />
       </Container>
-    </>
+    </Flexbox>
   )
 }
 
+const Flexbox = styled.div`
+display: flex;
+flex-direction: column;
+`
 const Container = styled.div`
   display: flex;
   flex: 1;

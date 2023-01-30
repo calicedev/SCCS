@@ -1,22 +1,58 @@
 import React from 'react'
 import styled from 'styled-components'
-import CodeInput from 'components/study/CodeInput'
+import { Resizable } from 're-resizable'
+import jQuery from 'jquery';
 
 export default function SolveProblem() {
   return (
     <Main>
       <Problem>
-        <Img src="https://xe1.xpressengine.com/files/attach/images/122/231/306/019/%EB%AC%B4%EC%84%9C%EC%9A%B4%EC%9D%B4%EC%95%BC%EA%B8%B01.jpg"></Img>
+        <Img src="https://ncache.ilbe.com/files/attach/new/20150224/14357299/2334320564/5366146341/59f715829f6e1ec432f420df9a9a9792.jpeg"></Img>
       </Problem>
+      <Resizable
+          defaultSize={{ width: '50%', height: '100%' }}
+          minWidth={'20%'}
+          maxWidth={'80%'}
+          enable={{ 
+            top: false,
+            right: true,
+            bottom: false,
+            left: true,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}
+          
+        >
+          
       <FlexColumn>
+        <Gutter>언어 선택</Gutter>
         <CodingSection>
-          coding
-          <Gutter></Gutter>
-          <CodeInput></CodeInput>
+          코딩창
+          <Textarea ></Textarea>
+          
         </CodingSection>
-        <Div>크기 조절</Div>
-        <ResultSection>coding</ResultSection>
-      </FlexColumn>
+      <Resizable
+          defaultSize={{ width: '100%', height: '50%' }}
+          minHeight={'20%'}
+          maxHeight={'80%'}
+          enable={{ 
+            top: true,
+            right: false,
+            bottom: false,
+            left: false,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}
+        >
+        {/* <Div>크기 조절</Div> */}
+          <ResultSection>결과창</ResultSection>
+        </Resizable>
+        </FlexColumn>
+      </Resizable>
     </Main>
   )
 }
@@ -32,11 +68,11 @@ const Main = styled.div`
 `
 
 const Problem = styled.div`
-  height: 100vh;
+  height: 100%;
   width: calc(40% - 12px);
   overflow-y: auto;
   overflow-x: hidden;
-  display: block;
+  flex: 1;
 `
 
 const Img = styled.img`
@@ -47,15 +83,16 @@ const Img = styled.img`
 
 const FlexColumn = styled.div`
   display: flex;
+  height: 100vh;
   flex-direction: column;
   flex: 1;
   overflow: auto visible;
+
 `
 
 const CodingSection = styled.div`
   position: relative;
   padding-top: 1rem;
-  height: calc(100% - 54px);
   height: calc(60% - 7px);
   overflow-y: hidden;
   background-color: #263747;
@@ -64,6 +101,7 @@ const CodingSection = styled.div`
   border-bottom: 0.0625rem solid #172334;
   word-wrap: break-word;
   word-break: break-all;
+  height: 100vh;
 `
 // const Gutter = styled.div`
 //   width: 48px;
@@ -88,13 +126,17 @@ const Gutter = styled.div`
   display: block;
 `
 
-const Div = styled.div`
-  display: flex;
-  padding: 0 1rem 1rem 1rem;
-  justify-content: space-between;
-  border-bottom: 0.0625rem solid #172334;
-`
-
 const ResultSection = styled.div`
   display: block;
 `
+
+const Textarea = styled.textarea`
+  width: 100%;
+  height: 100%;
+  resize: none;
+  background:#34495E; 
+  color:#fff;
+  font-size:20px;
+`
+
+

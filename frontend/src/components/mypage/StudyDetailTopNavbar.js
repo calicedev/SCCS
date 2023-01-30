@@ -11,7 +11,7 @@ export default function StudyDetailTopNavbar({
   problemId,
   setProblemId,
 }) {
-  const navigate = { useNavigate }
+  const navigate = useNavigate()
   return (
     <Container>
       <div>
