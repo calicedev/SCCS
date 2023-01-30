@@ -15,13 +15,12 @@ const apiRequest = axios.create({
 apiRequest.interceptors.request.use(
   (config) => {
     const state = store.getState()
-    const accessToken = state.accessToken
-    console.log('access', accessToken)
+    const accessToken = state.token.accessToken
     if (!accessToken) return config
     // token이 있을 경우 헤더에 추가
     return {
       ...config,
-      headers: { Authorization: accessToken },
+      headers: { Authorization: `Bearer ${accessToken}` },
     }
   },
   (error) => {
