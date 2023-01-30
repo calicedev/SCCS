@@ -12,6 +12,7 @@ export default function MainRooms() {
     const config = { url, method }
     axios(config)
       .then((res) => {
+        console.log(res)
         setRooms(res.data)
       })
       .catch((err) => {
@@ -21,28 +22,29 @@ export default function MainRooms() {
 
   // 방 세부 조회
   const searchRoom = () => {
-    const data = {
-      algoIds: [1, 2, 3, 4, 5, 6, 7],
-      languageIds: [1, 2],
-      title: '코테',
-      id: 0,
-    }
     // const data = {
-    //   algoIds: [1, 2, 3, 4, 5, 6, 7],
+    //   algoIds: [1, 2],
     //   languageIds: [1, 2],
-    //   title: '',
-    //   id: 2,
-    // }
-    // const data = {
-    //   algoIds: [1, 2, 3],
-    //   languageIds: [1],
-    //   title: '',
+    //   title: '싸피탈출',
     //   id: 0,
     // }
+    // const data = {
+    //   algoIds: [1, 2],
+    //   languageIds: [1, 2],
+    //   title: '',
+    //   id: 30,
+    // }
+    const data = {
+      algoIds: [1, 2],
+      languageIds: [1],
+      title: '',
+      id: 0,
+    }
     const [url, method] = api('searchRoomDetail')
     const config = { url, method, data }
     axios(config)
       .then((res) => {
+        console.log(res)
         setRooms(res.data)
       })
       .catch((err) => {
@@ -54,7 +56,7 @@ export default function MainRooms() {
       <Button onClick={searchRoom} value="상세조회"></Button>
       <div>
         {rooms.map((ele, idx) => (
-          <div>{ele.id}</div>
+          <div key={ele.id}>{ele.id}</div>
         ))}
       </div>
     </div>

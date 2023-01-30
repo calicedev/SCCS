@@ -137,7 +137,7 @@ public class StudyroomServiceImpl implements StudyroomService{
             resultMap.put( "languageIds", s.get(i).getLanguageIds() );
             resultMap.put( "algoIds", s.get(i).getAlgoIds() );
             resultMap.put("isPrivate", s.get(i).getIsPrivate());
-            resultMap.put("type", s.get(i).getIsSolving());
+            resultMap.put("isSolving", s.get(i).getIsSolving());
             resultMap.put("title", s.get(i).getTitle());
             resultMap.put("id", s.get(i).getId());
             studyrooms.add(resultMap);
