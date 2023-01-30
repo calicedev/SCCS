@@ -42,4 +42,6 @@ const LogoContainer = styled.div`
   background-image: url(${LogoImg});
   background-size: contain;
   background-repeat: no-repeat;
+
+  cursor: pointer;
 `

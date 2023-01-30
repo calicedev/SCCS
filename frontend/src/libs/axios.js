@@ -16,8 +16,9 @@ apiRequest.interceptors.request.use(
   (config) => {
     const state = store.getState()
     const accessToken = state.token.accessToken
+    // token이 없을 경우 그대로 반환
     if (!accessToken) return config
-    // token이 있을 경우 헤더에 추가
+    // token이 있을 경우 Authorization 헤더에 추가
     return {
       ...config,
       headers: { Authorization: `Bearer ${accessToken}` },

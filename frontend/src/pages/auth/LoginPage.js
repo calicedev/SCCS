@@ -8,10 +8,12 @@ import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
 import api from 'apis/api'
+import { useDispatch } from 'react-redux'
 
 export default function LoginForm() {
   // 라액트 훅 관련 함수 정의
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // useState
   const [id, setId] = useState('')
@@ -39,8 +41,8 @@ export default function LoginForm() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        const tokens = res.dat
-        setTokens(tokens)
+        const tokens = res.data
+        dispatch(setTokens(tokens))
         navigate('/main')
       })
       .then(() => {

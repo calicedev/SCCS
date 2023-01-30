@@ -2,7 +2,7 @@ import './App.css'
 
 import { Routes, Route } from 'react-router-dom'
 import AuthPage from './pages/auth/AuthPageLayout'
-import MainPage from './pages/study/MainPage'
+import MainPage from './pages/main/MainPage'
 import LoginForm from './pages/auth/LoginPage'
 import SignupForm from './pages/auth/SignupPage'
 import FindIdForm from './pages/auth/FindIdPage'
