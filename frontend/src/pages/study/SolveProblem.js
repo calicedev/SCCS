@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
-// import jQuery from 'jquery';
+import Textarea from 'components/study/Textarea'
 
 export default function SolveProblem() {
   return (
@@ -126,11 +126,3 @@ const ResultSection = styled.div`
   display: block;
 `
 
-const Textarea = styled.textarea`
-  width: 100%;
-  height: 100%;
-  resize: none;
-  background: #34495e;
-  color: #fff;
-  font-size: 20px;
-`
