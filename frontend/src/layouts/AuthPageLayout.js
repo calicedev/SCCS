@@ -21,8 +21,8 @@ const Pane = styled.div`
 
 const LogoPane = styled.div`
   position: absolute;
-  top: 5em;
-  left: 3rem;
+  top: 3em;
+  left: 2rem;
 `
 
 export default function AuthPageLayout({ children }) {

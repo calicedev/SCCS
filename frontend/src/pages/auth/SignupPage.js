@@ -8,10 +8,12 @@ import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
 import api from 'apis/api'
+import { useDispatch } from 'react-redux'
 
 export default function SignupForm() {
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [id, setId, idMsg] = useAuthInput('id', '', true, true)
@@ -57,7 +59,7 @@ export default function SignupForm() {
     axios(config)
       .then((res) => {
         const tokens = res.data
-        setTokens(tokens)
+        dispatch(setTokens(tokens))
         navigate('/main')
       })
       .then(() => {
