@@ -2,9 +2,9 @@
 
 import React, {useState} from 'react';
 import Editor from 'react-simple-code-editor';
-import { highlight, languages } from './../../../node_modules/prismjs/components/prism-core';
-import './../../../node_modules/prismjs/components/prism-python'; // import 언어 모듈가서 확인 뒤 바꿔주기
-import './../../../node_modules/prismjs/themes/prism.css'; //Example style, you can use another
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-python'; // import 언어 모듈가서 확인 뒤 바꿔주기
+import 'prismjs/themes/prism.css'; //Example style, you can use another
 import styled from 'styled-components'
 
 const hightlightWithLineNumbers = (input, language) =>
