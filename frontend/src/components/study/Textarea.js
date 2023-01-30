@@ -1,5 +1,3 @@
-
-
 import React, {useState} from 'react';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -43,6 +41,7 @@ const StyledEditor = styled(Editor)`
 &.editor #codeArea {
   outline: none;
   padding-left: 60px !important;
+  height: 100vh;
 }
 
 &.editor pre {

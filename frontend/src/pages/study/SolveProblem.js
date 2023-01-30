@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
 import Textarea from 'components/study/Textarea'
-
+import Footer from 'components/study/Footer'
 
 export default function SolveProblem() {
   return (
@@ -52,8 +52,10 @@ export default function SolveProblem() {
         {/* <Div>크기 조절</Div> */}
           <ResultSection>결과창</ResultSection>
         </Resizable>
+        <Footer></Footer>
         </FlexColumn>
       </Resizable>
+        
     </Main>
   )
 }
@@ -69,17 +71,14 @@ const Main = styled.div`
 `
 
 const Problem = styled.div`
-  height: 100%;
+  height: 100vh;
   width: calc(40% - 12px);
   overflow-y: auto;
-  overflow-x: hidden;
   flex: 1;
 `
 
 const Img = styled.img`
   width: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
 `
 
 const FlexColumn = styled.div`
