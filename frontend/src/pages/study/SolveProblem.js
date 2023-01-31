@@ -28,14 +28,14 @@ export default function SolveProblem() {
         >
           
       <FlexColumn>
-        <Gutter>언어 선택</Gutter>
+        <Changer>언어 선택</Changer>
         <CodingSection>
           코딩창
           <Textarea></Textarea>
           
         </CodingSection>
       <Resizable
-          defaultSize={{ width: '100%', height: '50%' }}
+          defaultSize={{ width: '100%', height: '37%' }}
           minHeight={'20%'}
           maxHeight={'80%'}
           enable={{ 
@@ -52,6 +52,7 @@ export default function SolveProblem() {
         {/* <Div>크기 조절</Div> */}
           <ResultSection>결과창</ResultSection>
         </Resizable>
+        <ColoredLine color="#4B91F1" />
         <Footer></Footer>
         </FlexColumn>
       </Resizable>
@@ -83,11 +84,11 @@ const Img = styled.img`
 
 const FlexColumn = styled.div`
   display: flex;
-  height: 100vh;
+  height: 99vh;
   flex-direction: column;
   flex: 1;
   overflow: auto visible;
-
+  
 `
 
 const CodingSection = styled.div`
@@ -114,16 +115,8 @@ const CodingSection = styled.div`
 //   vertical-align: top;
 //   margin-bottom: -50px;
 // `
-const Gutter = styled.div`
-  height: 520px;
-  left: 0px;
-  word-wrap: break-word;
-  word-break: break-all;
-  box-sizing: content-box;
-  position: absolute;
-  min-height: 100%;
-  z-index: 3;
-  display: block;
+const Changer = styled.div`
+  dispaly: flex;
 `
 
 const ResultSection = styled.div`
@@ -132,4 +125,14 @@ const ResultSection = styled.div`
 
 
 
+
+const ColoredLine = ({ color }) => (
+  <hr
+      style={{
+          color: color,
+          backgroundColor: color,
+          height: 5
+      }}
+  />
+);
 
