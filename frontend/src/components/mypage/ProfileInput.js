@@ -111,6 +111,7 @@ const Input = styled.input`
 
   background-color: ${({ disabled }) => (disabled ? '#EEEEEE' : 'white')};
 
+  color: #000000;
   font-size: 1.5rem;
 `
 

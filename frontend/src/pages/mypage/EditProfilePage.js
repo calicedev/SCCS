@@ -26,7 +26,7 @@ export default function ProfileEdit() {
     'email',
     user.email,
     true,
-    false,
+    true,
   )
   // useState
   const [img, setImg] = useState(user.profileImage)

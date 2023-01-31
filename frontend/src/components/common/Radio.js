@@ -12,22 +12,23 @@ label: label 태그의 문구
 onChange: 클릭 시 동작
 */
 
-export default function Checkbox({ id, name, value, label, onChange }) {
+export default function Radio({ id, name, value, label, onChange, checked }) {
   return (
-    <InputBox>
+    <div>
       <InputCheck
-        type="checkbox"
+        type="radio"
         id={id}
         name={name}
         value={value}
         onChange={onChange}
+        checked={checked}
       />
       <label htmlFor={id}>{label}</label>
-    </InputBox>
+    </div>
   )
 }
 
-Checkbox.propTypes = {
+Radio.propTypes = {
   id: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string,
@@ -35,17 +36,13 @@ Checkbox.propTypes = {
   onChange: PropTypes.func,
 }
 
-Checkbox.defaultProps = {
+Radio.defaultProps = {
   id: '',
   label: '',
   name: '',
   value: '',
   onChange: undefined,
 }
-
-const InputBox = styled.div`
-  margin-bottom: 0.5rem;
-`
 
 const InputCheck = styled.input`
   margin-right: 0.5rem;

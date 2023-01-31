@@ -6,7 +6,7 @@ import IconButton from 'components/common/IconButton'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 
 export default function FindIdForm() {
   // 리액트 훅 기반 함수 정의

@@ -32,6 +32,10 @@ export default function regExp(type, string) {
       reg: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/,
       msg: '이메일 형식으로 입력해주세요',
     },
+    roomPassword: {
+      reg: /^[0-9]{4}$/,
+      msg: '4자리 숫자로 입력해주세요',
+    },
   }
 
   const reg = regObj[type].reg

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { format } from 'date-fns'
 import StudyList from 'components/mypage/StudyList'
 import axios from 'libs/axios'
-import api from 'apis/api'
+import api from 'constants/api'
 import { useSelector } from 'react-redux'
 
 export default function StudyCalendar() {
