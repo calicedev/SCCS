@@ -93,7 +93,6 @@ const ProfileContent = styled.div`
 
   position: relative;
 
-  margin: 5rem 5rem;
   max-width: 700px;
 
   width: 100%;

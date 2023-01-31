@@ -7,6 +7,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 
+  min-height: 100vh;
   height: 100%;
 
   background-image: url(${mypageBgImg});
@@ -25,7 +26,7 @@ const UpperPane = styled.div`
 
 const LeftPane = styled.div`
   z-index: 1;
-  width: 300px;
+  min-width: 300px;
 `
 
 const LeftPaneBg = styled.div`
@@ -34,8 +35,7 @@ const LeftPaneBg = styled.div`
   width: 300px;
   height: 100%;
 
-  background-color: ${({ theme }) => theme.secondaryColor};
-  opacity: 0.2;
+  background-color: ${({ theme }) => theme.lightSecondaryColor};
 `
 
 const RightPane = styled.div`
@@ -46,6 +46,7 @@ const RightPane = styled.div`
   height: 90%;
 
   margin: 0rem 3rem;
+  padding: 2rem 3rem;
 
   border-radius: 1rem;
   box-shadow: 5px 5px 10px #00000050;
