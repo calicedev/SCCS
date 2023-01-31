@@ -54,9 +54,9 @@ export default function StudyCalendar() {
     const year = format(currentDate, 'YYYY')
     const month = format(currentDate, 'MM')
     const [url, method] = api('studyHistory', { id, year, month })
-    const config = { method }
+    const config = { url, method }
     axios
-      .request(url, config)
+      .request(config)
       .then((res) => {
         console.log(res)
         setStudies(res.data)
@@ -94,7 +94,7 @@ export default function StudyCalendar() {
     setWidth(element.clientWidth)
     setHeight(element.clientHeight)
     setModalDay(date.slice(-2))
-    setModalContent(dateToStudies[element.id])
+    setModalContent(dateToStudies[id])
     setIsHovered(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -153,7 +153,7 @@ const Container = styled.div`
 // 모달 창의 위치를 호버된 Datebox로 이동시킨 뒤 visible
 // 모달 창이 Datebox의 1.5배로 커지도록 설정
 const Modal = styled.div`
-  visibility: ${({ isHovered }) => (isHovered ? 'hidden' : 'hidden')};
+  visibility: ${({ isHovered }) => (isHovered ? 'block' : 'hidden')};
 
   overflow-x: hidden;
   overflow-y: auto;
@@ -197,8 +197,8 @@ const Modal = styled.div`
 const ex_studies = [
   {
     id: 1,
-    title: '커피 내기 SSAFY기 (A301)',
-    created_datetime: '2023-01-17 17:18:53',
+    studyroomtitle: '커피 내기 SSAFY기 (A301)',
+    studyroomCreateDatetime: '2023-01-17 17:18:53',
     problems: [
       { id: 1, title: '미로찾기' },
       { id: 2, title: '치즈 녹이기' },
@@ -206,8 +206,8 @@ const ex_studies = [
   },
   {
     id: 2,
-    title: '커피 내기 SSAFY기2 (A301)',
-    created_datetime: '2023-01-17 21:18:53',
+    studyroomTitle: '커피 내기 SSAFY기2 (A301)',
+    studyroomCreateDatetime: '2023-01-17 21:18:53',
     problems: [
       { id: 3, title: '미로찾기2' },
       { id: 2, title: '치즈 녹이기' },
