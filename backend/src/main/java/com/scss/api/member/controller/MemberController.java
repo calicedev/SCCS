@@ -94,7 +94,7 @@ public class MemberController {
             if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
                 logger.debug("[logIn]로그인 성공");
                 String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-                        (HOUR)); // 1시간
+                        (MINUTE)); // 1시간
                 String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
                         (WEEK)); // 1주일
                 resultmap.put("accessToken", accessToken);
