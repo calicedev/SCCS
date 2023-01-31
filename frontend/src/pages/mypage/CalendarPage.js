@@ -138,15 +138,11 @@ export default function StudyCalendar() {
 }
 
 const Container = styled.div`
-  overflow-y: auto;
-
   display: flex;
   flex-direction: column;
   align-items: center;
 
   width: 100%;
-
-  padding: 3rem 3rem;
 `
 
 // 평소에 모달 창은 hidden
