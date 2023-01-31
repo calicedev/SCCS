@@ -84,11 +84,10 @@ export default function ProblemList() {
             return (
               <ProblemItem
                 problemName={problem.name}
-                answerRate={problem.answerRate
-                }
+                answerRate={problem.answerRate}
                 submitDatetime={problem.date}
                 difficulty={problem.difficulty}
-                onclick={() => navigate(`/problem/${problem.id}`)}
+                onClick={() => navigate(`/problem/${problem.id}`)}
                 key={i}
               />
             )

@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class LanguageDto {
-    int python;
-    int java;
-    int c;
+    private int python;
+    private int java;
+    private int c;
 
 }

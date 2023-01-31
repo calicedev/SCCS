@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ProblemDto {
 
+  int id;
   String name;
   int difficulty;
   String problemFolder;
@@ -17,5 +18,4 @@ public class ProblemDto {
   int submissionNumber;
   int acceptedNumber;
   int algoId;
-  int id;
 }

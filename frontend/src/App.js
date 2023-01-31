@@ -1,8 +1,8 @@
 import './App.css'
 
-import { Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import AuthPage from './pages/auth/AuthPageLayout'
-import MainPage from './pages/study/MainPage'
+import MainPage from './pages/main/MainPage'
 import LoginForm from './pages/auth/LoginPage'
 import SignupForm from './pages/auth/SignupPage'
 import FindIdForm from './pages/auth/FindIdPage'
@@ -22,12 +22,14 @@ import { ThemeProvider } from 'styled-components'
 import { light, dark } from './styles/theme'
 import { useSelector } from 'react-redux'
 
+import VideoRoomComponent from './components/VideoRoomComponent'
 function App() {
   const theme = useSelector((state) => state.theme)
 
   return (
     <ThemeProvider theme={theme === 'light' ? light : dark}>
       <GlobalStyle />
+<<<<<<< HEAD
       <Routes>
         <Route path="/main" element={<MainPage />} />
         <Route path="/auth" element={<AuthPage />}>
@@ -46,6 +48,32 @@ function App() {
         </Route>
         <Route path="/solveproblem" element={<SolveProblem />}></Route>
       </Routes>
+=======
+      <Router>
+        <Routes>
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/auth" element={<AuthPage />}>
+            <Route path="login" element={<LoginForm />} />
+            <Route path="signup" element={<SignupForm />} />
+            <Route path="findid" element={<FindIdForm />} />
+            <Route path="resetpassword" element={<ResetPasswordForm />} />
+          </Route>
+          <Route path="/mypage" element={<MyPage />}>
+            <Route path="profile" element={<ProfilePage />}></Route>
+            <Route path="profile/edit" element={<EditProfilePage />}></Route>
+            <Route
+              path="profile/editpassword"
+              element={<EditPwdPage />}
+            ></Route>
+            <Route path="calendar" element={<CalendarPage />}></Route>
+            <Route path="studydetail" element={<StudyDetailPage />}></Route>
+            <Route path="solved" element={<SolvedPage />}></Route>
+          </Route>
+          <Route path="/solveproblem" element={<SolveProblem />}></Route>
+          <Route path="/openvidu" element={<VideoRoomComponent />}></Route>
+        </Routes>
+      </Router>
+>>>>>>> 03cdfaea4b876523dd136ee7e616cd1d74f92987
     </ThemeProvider>
   )
 }
