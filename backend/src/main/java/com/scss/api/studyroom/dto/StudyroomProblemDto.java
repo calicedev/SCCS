@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class StudyroomProblemDto {
-    int id;
-    int problemId;
-    int studyroomId;
+    private int id;
+    private int problemId;
+    private int studyroomId;
 }

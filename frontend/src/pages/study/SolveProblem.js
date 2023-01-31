@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
-// import jQuery from 'jquery';
+import Textarea from 'components/study/Textarea'
+import Footer from 'components/study/Footer'
 
 export default function SolveProblem() {
   return (
@@ -10,52 +11,58 @@ export default function SolveProblem() {
         <Img src="https://ncache.ilbe.com/files/attach/new/20150224/14357299/2334320564/5366146341/59f715829f6e1ec432f420df9a9a9792.jpeg"></Img>
       </Problem>
       <Resizable
-        defaultSize={{ width: '50%', height: '100%' }}
-        minWidth={'20%'}
-        maxWidth={'80%'}
-        enable={{
-          top: false,
-          right: true,
-          bottom: false,
-          left: true,
-          topRight: false,
-          bottomRight: false,
-          bottomLeft: false,
-          topLeft: false,
-        }}
-      >
-        <FlexColumn>
-          <Gutter>언어 선택</Gutter>
-          <CodingSection>
-            코딩창
-            <Textarea></Textarea>
-          </CodingSection>
-          <Resizable
-            defaultSize={{ width: '100%', height: '50%' }}
-            minHeight={'20%'}
-            maxHeight={'80%'}
-            enable={{
-              top: true,
-              right: false,
-              bottom: false,
-              left: false,
-              topRight: false,
-              bottomRight: false,
-              bottomLeft: false,
-              topLeft: false,
-            }}
-          >
-            {/* <Div>크기 조절</Div> */}
-            <ResultSection>결과창</ResultSection>
-          </Resizable>
+          defaultSize={{ width: '50%', height: '100%' }}
+          minWidth={'20%'}
+          maxWidth={'80%'}
+          enable={{ 
+            top: false,
+            right: true,
+            bottom: false,
+            left: true,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}
+          
+        >
+          
+      <FlexColumn>
+        <Changer>언어 선택</Changer>
+        <CodingSection>
+          코딩창
+          <Textarea></Textarea>
+          
+        </CodingSection>
+      <Resizable
+          defaultSize={{ width: '100%', height: '37%' }}
+          minHeight={'20%'}
+          maxHeight={'80%'}
+          enable={{ 
+            top: true,
+            right: false,
+            bottom: false,
+            left: false,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}
+        >
+        {/* <Div>크기 조절</Div> */}
+          <ResultSection>결과창</ResultSection>
+        </Resizable>
+        <ColoredLine color="#4B91F1" />
+        <Footer></Footer>
         </FlexColumn>
       </Resizable>
+        
     </Main>
   )
 }
 
 const Main = styled.div`
-  color: #1c6fbc;
+  color: #ffffff;
   display: flex;
   width: 100%;
   height: 100%;
@@ -65,25 +72,23 @@ const Main = styled.div`
 `
 
 const Problem = styled.div`
-  height: 100%;
+  height: 100vh;
   width: calc(40% - 12px);
   overflow-y: auto;
-  overflow-x: hidden;
   flex: 1;
 `
 
 const Img = styled.img`
   width: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
 `
 
 const FlexColumn = styled.div`
   display: flex;
-  height: 100vh;
+  height: 99vh;
   flex-direction: column;
   flex: 1;
   overflow: auto visible;
+  
 `
 
 const CodingSection = styled.div`
@@ -110,27 +115,24 @@ const CodingSection = styled.div`
 //   vertical-align: top;
 //   margin-bottom: -50px;
 // `
-const Gutter = styled.div`
-  height: 520px;
-  left: 0px;
-  word-wrap: break-word;
-  word-break: break-all;
-  box-sizing: content-box;
-  position: absolute;
-  min-height: 100%;
-  z-index: 3;
-  display: block;
+const Changer = styled.div`
+  dispaly: flex;
 `
 
 const ResultSection = styled.div`
   display: block;
 `
 
-const Textarea = styled.textarea`
-  width: 100%;
-  height: 100%;
-  resize: none;
-  background: #34495e;
-  color: #fff;
-  font-size: 20px;
-`
+
+
+
+const ColoredLine = ({ color }) => (
+  <hr
+      style={{
+          color: color,
+          backgroundColor: color,
+          height: 5
+      }}
+  />
+);
+

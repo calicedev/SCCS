@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,20 +26,22 @@ public class MypageController {
   @GetMapping("/history/{memberId}/{year}/{month}")
   public ResponseEntity<?> getHistory(@PathVariable String memberId, @PathVariable String year,
       @PathVariable String month) {
+    List<HashMap<String, Object>> targets = mypageService.getHistory(memberId, year, month);
 
-    if (mypageService.getHistory(memberId, year, month).equals(SUCCESS)) {
-      return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    if (targets != null) {
+      return ResponseEntity.ok(targets);
     } else {
-      return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+      return ResponseEntity.noContent().build();
     }
   }
 
   @GetMapping("/history/detail/{studyId}")
   public ResponseEntity<?> getHistoryDetail(@PathVariable int studyId) {
-    if (mypageService.getHistroyDeatil(studyId).equals(SUCCESS)) {
-      return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    HashMap<String, Object> targets = mypageService.getHistoryDetail(studyId);
+    if (targets != null) {
+      return ResponseEntity.ok(targets);
     } else {
-      return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+      return ResponseEntity.noContent().build();
     }
   }
 

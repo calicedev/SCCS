@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import {useParams} from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'libs/axios'
 import api from 'constants/api'
@@ -81,13 +82,14 @@ export default function StudyDetailPage() {
 
   // useState
   // studyId 안다고 가정
-  const [studyId, setStudyId] = useState(0)
+  // const [studyId, setStudyId] = useState(0)
+  const {id} = useParams()
   // const [data, setData] = useState('') 샘플 데이터 들어오면 다시 주석 풀어줄거임
   const [problemId, setProblemId] = useState(0)
 
   // mount시 axios 요청으로 해당 study data 불러오기
   useEffect(() => {
-    const [url, method] = api('studyHistoryDetail', { studyId })
+    const [url, method] = api('studyHistoryDetail', { id })
     const config = { method }
     axios
       .request(url, config)

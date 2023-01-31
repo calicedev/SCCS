@@ -20,8 +20,20 @@ public interface StudyroomMapper {
     public int selectProblemId(String path);
 
     public void insertMemberId(StudyroomMemberDto studyroomMemberDto);
-
     public List<StudyroomDto> selectAllStudyroom();
+    public List<StudyroomDto> selectStudyroom(StudyroomDto studyroomDto);
 
     public int checkStudyroomPassword(StudyroomDto studyroomDto);
+
+    public void insertMemberIds(StudyroomDto studyroomDto);
+
+    public StudyroomDto selectStudyroomById(int id);
+
+    public List<ProblemDto> selectProblemByStudyroomId(int id);
+
+    public void submitProblem(SubmissionDto submissionDto);
+
+    public void changeStudyroomSolvingStatus(StudyroomDto studyroomDto);
+
+    public int endStudyroomByOwner(StudyroomDto studyroomDto);
 }

@@ -48,6 +48,7 @@ export default function MainRooms() {
     const config = { url, method }
     axios(config)
       .then((res) => {
+        console.log(res)
         setRooms(res.data)
       })
       .catch((err) => {
