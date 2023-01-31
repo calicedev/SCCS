@@ -22,6 +22,8 @@ studies: [
 */
 
 export default function StudyList({ studies }) {
+  console.log(studies)
+
   const [showOptions, setShowOptions] = useState(false)
   const navigate = useNavigate()
 
@@ -36,11 +38,12 @@ export default function StudyList({ studies }) {
   return (
     <Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {studies.map((study) => (
-        <Study key={study.id} onClick={() => navigate('/mypage/study')}>
-          <p>{study.title}</p>
+
+        <Study key={study.id} onClick={() => navigate(`/mypage/studydetail/${study.id}`)}>
+          <p>{study.studyroomTitle}</p> 
           {study.problems?.map((problem) => (
-            <Option key={problem.id} hidden={!showOptions}>
-              <p className="c">{problem.title}</p>
+            <Option key={problem.problemId} hidden={!showOptions}>
+              <p className="c">{problem.problemName}</p>
             </Option>
           ))}
         </Study>
@@ -64,6 +67,7 @@ const Wrapper = styled.div`
 
 const Study = styled.div`
   margin-bottom: 0.5rem;
+  cursor: pointer;
 `
 
 // 호버 시 위에서 아래로 내려오는 듯한 애니메이션
