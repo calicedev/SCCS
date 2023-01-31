@@ -24,7 +24,7 @@ export default function SignupForm() {
     true,
     true,
   )
-  const [email, setEmail, emailMsg] = useAuthInput('email', '', true, false)
+  const [email, setEmail, emailMsg] = useAuthInput('email', '', true, true)
   const [password, setPassword, passwordMsg] = useAuthInput(
     'password',
     '',

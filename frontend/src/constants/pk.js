@@ -1,14 +1,14 @@
 export const algorithmPk = {
-  기초: 1,
-  탐색: 2,
-  이분탐색: 3,
-  자료구조: 4,
-  완전탐색: 5,
-  DFS: 6,
-  DP: 7,
+  1: '기초',
+  2: '탐색',
+  3: '이분탐색',
+  4: '자료구조',
+  5: '완전탐색',
+  6: 'BFS/DFS',
+  7: 'DP',
 }
 
 export const languagePk = {
-  Python: 1,
-  Java: 2,
+  1: 'Python',
+  2: 'Java',
 }

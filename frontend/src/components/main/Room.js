@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { algorithmPk } from 'constants/pk'
 import { FaLock, FaPython, FaJava } from 'react-icons/fa'
 import IconButton from 'components/common/IconButton'
+import Modal from 'components/common/Modal'
+import PwdModalContent from 'components/main/PwdModalContent'
 
 export default function Room({
   id,
@@ -13,6 +15,8 @@ export default function Room({
   algoIds,
   languageIds,
 }) {
+  const [showModal, setShowModal] = useState(false)
+
   let algorithms = ''
   algoIds.forEach((pk) => {
     algorithms += `#${algorithmPk[pk]}`
@@ -30,31 +34,46 @@ export default function Room({
     )
   })
 
+  const enterRoom = () => {
+    if (isPrivate) {
+      setShowModal(true)
+      return
+    }
+  }
+
   return (
-    <RoomContainer isSolving={isSolving}>
-      <Flexbox>
-        <Id isSolving={isSolving}>{id}</Id>
-        <Algo isSolving={isSolving}>{algorithms}</Algo>
-        <MarginBox
-          className={`extra-bold ${isSolving ? 'tertiary' : 'secondary'}`}
-        >
-          {isSolving ? 'SOLVING' : 'WAITING'}
-        </MarginBox>
-      </Flexbox>
-      <Flexbox>
-        <MarginBox>{languages}</MarginBox>
-        <Title isSolving={isSolving}>
-          {isPrivate && (
-            <IconButton
-              icon={<FaLock />}
-              disabled={true}
-              type={isSolving ? 'tertiary' : 'solving'}
-            />
-          )}
-          {title}
-        </Title>
-      </Flexbox>
-    </RoomContainer>
+    <>
+      {showModal && (
+        <Modal
+          close={() => setShowModal(false)}
+          content={<PwdModalContent />}
+        ></Modal>
+      )}
+      <RoomContainer isSolving={isSolving} onClick={enterRoom}>
+        <Flexbox>
+          <Id isSolving={isSolving}>{id}</Id>
+          <Algo isSolving={isSolving}>{algorithms}</Algo>
+          <MarginBox
+            className={`extra-bold ${isSolving ? 'tertiary' : 'secondary'}`}
+          >
+            {isSolving ? 'SOLVING' : 'WAITING'}
+          </MarginBox>
+        </Flexbox>
+        <Flexbox>
+          <MarginBox>{languages}</MarginBox>
+          <Title isSolving={isSolving}>
+            {isPrivate && (
+              <IconButton
+                icon={<FaLock />}
+                disabled={true}
+                type={isSolving ? 'tertiary' : 'solving'}
+              />
+            )}
+            {title}
+          </Title>
+        </Flexbox>
+      </RoomContainer>
+    </>
   )
 }
 

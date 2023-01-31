@@ -3,9 +3,12 @@ import Button from 'components/common/Button'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import Room from 'components/main/Room'
-import Dropdown from 'components/common/Dropdown'
+import CheckDropdown from 'components/common/CheckDropdown'
+import RadioDropdown from 'components/common/RadioDropdown'
 import { algorithmPk, languagePk } from 'constants/pk'
 import styled from 'styled-components'
+import Modal from 'components/common/Modal'
+import CreateModalContent from 'components/main/CreateModalContent'
 
 const ex_rooms = [
   {
@@ -26,17 +29,18 @@ const ex_rooms = [
   },
 ]
 
-const queryOptions = {
-  '제목으로 검색': true,
-  '번호로 검색': false,
+const searchOptions = {
+  title: '방 이름',
+  id: '방 번호',
 }
 
 export default function MainRooms() {
   const [rooms, setRooms] = useState(ex_rooms)
   const [algoIds, setAlgoIds] = useState([])
   const [languageIds, setLanguageIds] = useState([])
-  const [isTitle, setIsTitle] = useState(true)
+  const [selectedOption, setSelectedOption] = useState('title')
   const [query, setQuery] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   // 전체 방 조회
   useEffect(() => {
@@ -75,19 +79,20 @@ export default function MainRooms() {
   // 검색버튼
   const searchRoom = () => {
     let data = {}
-    if (isTitle) {
+    if (selectedOption === 'title') {
       data = {
         algoIds,
         languageIds,
         title: query,
         id: 0,
       }
-    } else {
+    }
+    if (selectedOption === 'id') {
       data = {
         algoIds,
         languageIds,
         title: '',
-        id: query,
+        id: parseInt(query),
       }
     }
     const [url, method] = api('searchRoomDetail')
@@ -104,54 +109,67 @@ export default function MainRooms() {
   }
 
   // changeHandler
-  const changeAlgoIds = (e) => {
-    console.log(e.target.checked)
-    const id = e.target.id
+  const changeLanguageIds = (e) => {
+    const id = parseInt(e.target.id.slice(0, 1))
     if (e.target.checked) {
-      setAlgoIds(...algoIds, id)
+      setLanguageIds([...languageIds, id])
       return
     }
-    setAlgoIds(algoIds.filter((id) => id !== id))
+    setLanguageIds(languageIds.filter((ele) => ele !== id))
   }
 
-  const changeLanguageIds = (e) => {
-    console.log(e.target.checked)
-    const id = e.target.id
+  const changeAlgoIds = (e) => {
+    const id = parseInt(e.target.id.slice(0, 1))
+    console.log(id)
     if (e.target.checked) {
-      setLanguageIds(...languageIds, id)
+      setAlgoIds([...algoIds, id])
       return
     }
-    setLanguageIds(languageIds.filter((id) => id !== id))
+    setAlgoIds(algoIds.filter((ele) => ele !== id))
   }
 
   return (
-    <div>
+    <>
+      {showModal && (
+        <Modal
+          close={() => setShowModal(false)}
+          content={<CreateModalContent />}
+        ></Modal>
+      )}
       <FlexBox>
-        <Dropdown
-          title="언어선택"
-          options={languagePk}
-          onChange={changeLanguageIds}
-        />
-        <Dropdown
-          title="알고리즘선택"
-          options={algorithmPk}
-          onChange={changeAlgoIds}
-        />
-        <Dropdown
-          title="검색옵션"
-          options={queryOptions}
-          onChange={(e) => setIsTitle(e.target.id)}
-        />
+        <SearchContainer>
+          <CheckDropdown
+            title="언어선택"
+            options={languagePk}
+            onChange={changeLanguageIds}
+          />
+          <CheckDropdown
+            title="알고리즘선택"
+            options={algorithmPk}
+            onChange={changeAlgoIds}
+          />
+          <InputBox>
+            <RadioDropdown
+              selectedId={selectedOption}
+              name="검색옵션"
+              options={searchOptions}
+              onChange={(e) => setSelectedOption(e.target.id)}
+            />
+            <Input
+              type={selectedOption === 'title' ? 'text' : 'number'}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            ></Input>
+          </InputBox>
+          <Button onClick={searchRoom} value="검색"></Button>
+        </SearchContainer>
+        <Button
+          type="secondary"
+          onClick={() => setShowModal(!showModal)}
+          value="방 만들기"
+        ></Button>
       </FlexBox>
-      <FlexBox>
-        <input
-          type={isTitle ? 'text' : 'number'}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        ></input>
-        <Button onClick={searchRoom} value="상세조회"></Button>
-      </FlexBox>
-      <div>
+      <GridBox>
         {rooms.map((room) => (
           <Room
             key={room.id}
@@ -163,15 +181,42 @@ export default function MainRooms() {
             languageIds={room.languageIds}
           />
         ))}
-      </div>
-    </div>
+      </GridBox>
+    </>
   )
 }
 
 const FlexBox = styled.div`
   display: flex;
+  justify-content: space-between;
+`
+const SearchContainer = styled.div`
+  display: flex;
+`
+const InputBox = styled.div`
+  display: flex;
+  align-items: center;
+
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 7px #000000a0;
+
+  background-color: white;
 `
 
+const Input = styled.input`
+  border: none;
+  border-radius: 0.5rem;
+  color: black;
+`
+
+const GridBox = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 1rem;
+
+  margin: 2rem 2rem;
+`
 // const data = {
 //   algoIds: [1, 2, 3, 4, 5, 6, 7],
 //   languageIds: [1, 2],
