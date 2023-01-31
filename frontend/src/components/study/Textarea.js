@@ -41,7 +41,6 @@ const StyledEditor = styled(Editor)`
 &.editor #codeArea {
   outline: none;
   padding-left: 60px !important;
-  height: 100vh;
 }
 
 &.editor pre {

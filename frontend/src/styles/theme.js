@@ -16,7 +16,6 @@ const color = {
 
 export const light = {
   baseBgColor: '#FFFFFF',
-
   bgColor: '#FFFFFF',
   fontColor: '#000000',
   ...color,
@@ -24,7 +23,6 @@ export const light = {
 
 export const dark = {
   baseBgColor: '#34424E',
-
   bgColor: '#46535F',
   fontColor: '#FFFFFF',
   ...color,
