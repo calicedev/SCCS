@@ -1,6 +1,6 @@
 import './App.css'
 
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import AuthPage from './pages/auth/AuthPageLayout'
 import MainPage from './pages/main/MainPage'
 import LoginForm from './pages/auth/LoginPage'
@@ -29,7 +29,6 @@ function App() {
   return (
     <ThemeProvider theme={theme === 'light' ? light : dark}>
       <GlobalStyle />
-<<<<<<< HEAD
       <Routes>
         <Route path="/main" element={<MainPage />} />
         <Route path="/auth" element={<AuthPage />}>
@@ -47,33 +46,8 @@ function App() {
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
         <Route path="/solveproblem" element={<SolveProblem />}></Route>
+        <Route path="/openvidu" element={<VideoRoomComponent />}></Route>
       </Routes>
-=======
-      <Router>
-        <Routes>
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/auth" element={<AuthPage />}>
-            <Route path="login" element={<LoginForm />} />
-            <Route path="signup" element={<SignupForm />} />
-            <Route path="findid" element={<FindIdForm />} />
-            <Route path="resetpassword" element={<ResetPasswordForm />} />
-          </Route>
-          <Route path="/mypage" element={<MyPage />}>
-            <Route path="profile" element={<ProfilePage />}></Route>
-            <Route path="profile/edit" element={<EditProfilePage />}></Route>
-            <Route
-              path="profile/editpassword"
-              element={<EditPwdPage />}
-            ></Route>
-            <Route path="calendar" element={<CalendarPage />}></Route>
-            <Route path="studydetail" element={<StudyDetailPage />}></Route>
-            <Route path="solved" element={<SolvedPage />}></Route>
-          </Route>
-          <Route path="/solveproblem" element={<SolveProblem />}></Route>
-          <Route path="/openvidu" element={<VideoRoomComponent />}></Route>
-        </Routes>
-      </Router>
->>>>>>> 03cdfaea4b876523dd136ee7e616cd1d74f92987
     </ThemeProvider>
   )
 }
