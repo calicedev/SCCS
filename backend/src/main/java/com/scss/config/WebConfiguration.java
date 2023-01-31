@@ -24,7 +24,8 @@ public class WebConfiguration implements WebMvcConfigurer {
     private final JwtInterceptor jwtInterceptor;
     private String[] INTERCEPTOR_BLACK_LIST = {
             "/api/member/password",
-            "/api/member" // 회원가입(POST), 회원정보 수정, 회원탈퇴
+            "/api/member", // 회원가입(POST), 회원정보 수정, 회원탈퇴
+            "/api/member/**"
     };
     private String[] INTERCEPTOR_WHITE_LIST = {
             "/api/unique/**", // 중복 검사
