@@ -24,7 +24,7 @@ public class MypageServiceImpl implements MypageService {
   }
 
   @Override
-  public List<HashMap<String, Object>> getHistoryDetail(int studyId) {
+  public HashMap<String, Object> getHistoryDetail(int studyId) {
     return mypageMapper.getHistoryDetail(studyId);
   }
 

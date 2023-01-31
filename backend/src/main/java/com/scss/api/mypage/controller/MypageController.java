@@ -37,7 +37,7 @@ public class MypageController {
 
   @GetMapping("/history/detail/{studyId}")
   public ResponseEntity<?> getHistoryDetail(@PathVariable int studyId) {
-    List<HashMap<String, Object>> targets = mypageService.getHistoryDetail(studyId);
+    HashMap<String, Object> targets = mypageService.getHistoryDetail(studyId);
     if (targets != null) {
       return ResponseEntity.ok(targets);
     } else {

@@ -7,7 +7,7 @@ public interface MypageService {
 
   public List<HashMap<String, Object>> getHistory(String memberId, String year, String month);
 
-  public List<HashMap<String, Object>> getHistoryDetail(int studyId);
+  public HashMap<String, Object> getHistoryDetail(int studyId);
 
   public List<HashMap<String, Object>> getProblems(String memberId);
 

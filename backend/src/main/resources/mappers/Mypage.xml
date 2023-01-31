@@ -7,35 +7,17 @@
 <mapper namespace="com.scss.api.mypage.mapper.MypageMapper">
 
 
-  <resultMap id="submissionWithProblemAboutUser" type="hashmap">
-    <result column="problem_title" property="problemTitle"></result>
-    <result column="problem_answerRate" property="problemAnswerRate"></result>
-    <result column="submit_datetime" property="submitDatetime"></result>
-    <result column="difficulty" property="difficulty"></result>
-    <result column="language_id" property="languageId"></result>
-  </resultMap>
-
   <resultMap id="studyroomWithProblem" type="hashmap">
     <id column="sid" property="id"/>
     <result column="title" property="studyroomTitle"></result>
     <result column="createDateTime" property="studyroomCreateDatetime"></result>
-    <collection property="problems" javaType="List" resultMap="test">
+    <collection property="problems" javaType="List" resultMap="problems">
     </collection>
   </resultMap>
 
-  <resultMap id="test" type="hashmap">
-    <result column="pname" property="problemName"></result>
+  <resultMap id="problems" type="hashmap">
     <result column="pid" property="problemId"></result>
-  </resultMap>
-
-  <resultMap id="studyroomWithProblemAboutSubmission" type="hashmap">
-    <result column="studyroom_title" property="studyroomTitle"></result>
-    <result column="problem_name" property="problemName"></result>
-    <result column="problem_folder" property="problemFolder"></result>
-    <result column="submission_memberId" property="submissionMemberId"></result>
-    <result column="submission_languageId" property="submissionLanguageId"></result>
-    <result column="submission_runtime" property="submissionRuntime"></result>
-    <result column="submission_memory" property="submissionMemory"></result>
+    <result column="pname" property="problemName"></result>
   </resultMap>
 
   <select id="getHistory" parameterType="hashmap" resultMap="studyroomWithProblem">
@@ -47,20 +29,63 @@
     concat(#{year},'-',#{month}) and m.join_date and sm.member_id =
     #{memberId} and sm.studyroom_id = sr.id and m.id = sm.member_id and
     sp.problem_id = p.id and sp.studyroom_id = sr.id
-
   </select>
 
-  <select id="getHistoryDetail" resultMap="studyroomWithProblemAboutSubmission">
-    Select sr.title, ANY_VALUE(name) as 'problemName', ANY_VALUE(problem_folder) as 'problemFolder',
-    s.member_id ,
-    ANY_VALUE(language_id) as 'languageId',ANY_VALUE(runtime) as 'runtime', ANY_VALUE(memory) as
-    'memory'
+
+  <resultMap id="studyroomWithProblemsWithParticipantWithCode" type="hashmap">
+    <result column="studyroom_id" property="studyroomId"></result>
+    <result column="studyroom_title" property="studyroomTitle"></result>
+    <result column="studyroom_create_datetime" property="studyroom_createDatetime"></result>
+    <collection property="studyroomWithProblems" javaType="List" resultMap="studyroomWithProblems">
+    </collection>
+  </resultMap>
+
+  <resultMap id="studyroomWithProblems" type="HashMap">
+    <result column="problem_name" property="problemName"></result>
+    <result column="problem_folder" property="problemFolder"></result>
+    <collection property="ParticipantWithCode" javaType="List"
+      resultMap="ParticipantWithCode"></collection>
+  </resultMap>
+
+  <resultMap id="ParticipantWithCode" type="HashMap">
+    <result column="submission_id" property="submissionId"></result>
+    <result column="submission_storeFileName" property="sumbmissionStoreFileName"></result>
+    <result column="submission_runtime" property="submissionRuntime"></result>
+    <result column="submission_memory" property="submissionMemory"></result>
+    <result column="submission_result" property="submissionResult"></result>
+    <result column="submission_submitDatetime" property="submissionSumitDateTime"></result>
+    <result column="problem_id" property="problemId"></result>
+    <result column="submission_memberId" property="submissionMemberId"></result>
+    <result column="submission_languageId" property="submissionLanguageId"></result>
+  </resultMap>
+
+  <select id="getHistoryDetail" resultMap="studyroomWithProblemsWithParticipantWithCode">
+    Select ANY_VALUE(sr.id) as 'studyroom_id' , sr.title as 'studyroom_title',
+    DATE_FORMAT(ANY_VALUE(sr.create_Datetime) ,'%Y-%m-%d %H:%i:%S') as
+    'studyroom_create_datetime',ANY_VALUE(p.name) as
+    'problem_name',
+    ANY_VALUE(p.problem_folder) as
+    'problem_folder', ANY_VALUE(s.id) as 'submission_id', ANY_VALUE(s.store_file_name) as
+    'submission_storeFileName',ANY_VALUE(s.runtime) as 'submission_runtime', ANY_VALUE(s.memory) as
+    'submission_memory', ANY_VALUE(s.result) as 'submission_result',
+    DATE_FORMAT(ANY_VALUE(s.submit_datetime) ,'%Y-%m-%d %H:%i:%S') as
+    'submission_submitDatetime',ANY_VALUE(p.id) as 'problem_id',
+    s.member_id as 'submission_memberId' ,
+    ANY_VALUE(language_id) as 'submission_languageId'
     from studyroom sr, submission s, problem p,studyroom_problem sp
     where sr.id = #{studyId} and sr.id = s.studyroom_id and sr.id = s.studyroom_id and
     sp.problem_id = p.id and sp.studyroom_id=sr.id and s.problem_id = p.id group by s.member_id
     order by s.submit_datetime;
   </select>
 
+
+  <resultMap id="submissionWithProblemAboutUser" type="hashmap">
+    <result column="problem_title" property="problemTitle"></result>
+    <result column="problem_answerRate" property="problemAnswerRate"></result>
+    <result column="submit_datetime" property="submitDatetime"></result>
+    <result column="difficulty" property="difficulty"></result>
+    <result column="language_id" property="languageId"></result>
+  </resultMap>
   <select id="getProblems" parameterType="hashmap" resultMap="submissionWithProblemAboutUser">
     SELECT p.id, p.name ,format(p.accepted_number/p.submission_number*100,2) as 'answerRate'
     ,DATE_FORMAT(submit_datetime,'%y-%m-%d') as 'date',p.difficulty,s.language_id
