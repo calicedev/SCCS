@@ -8,12 +8,14 @@ export default function StudyDetailTopNavbarBtn({
 }) {
   return (
     <span>
-      <Button
-        onClick={() => {
-          setProblemId(value - 1)
-        }}
-        value={value}
-      />
+      {value && (
+        <Button
+          onClick={() => {
+            setProblemId(value - 1)
+          }}
+          value={value}
+        />
+      )}
     </span>
   )
 }
