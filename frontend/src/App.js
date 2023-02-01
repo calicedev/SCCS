@@ -23,6 +23,8 @@ import { light, dark } from './styles/theme'
 import { useSelector } from 'react-redux'
 
 import VideoRoomComponent from './components/VideoRoomComponent'
+import WebSocket from 'websocket/WebSocket'
+
 function App() {
   const theme = useSelector((state) => state.theme)
 
@@ -47,6 +49,7 @@ function App() {
         </Route>
         <Route path="/solveproblem" element={<SolveProblem />}></Route>
         <Route path="/openvidu" element={<VideoRoomComponent />}></Route>
+        <Route path="/websocket" element={<WebSocket />}></Route>
       </Routes>
     </ThemeProvider>
   )
