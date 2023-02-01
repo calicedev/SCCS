@@ -24,7 +24,6 @@ const api = function (type, options = {}) {
     studyHistoryDetail: [`/api/mypage/history/detail/${options.id}`, 'get'],
     submitProblem: ['/api/mypage/problem', 'post'],
     solvedProblem: [`/api/mypage/problem/${options.id}`, 'get'],
-    solvedProblem: [`54.180.164.128/api/mypage/problem/${options.id}`, 'get'],
   }
 
   return apiObject[type]
