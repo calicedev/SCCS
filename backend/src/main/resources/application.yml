@@ -1,9 +1,7 @@
 spring:
   datasource:
-    #driver-class-name: com.mysql.cj.jdbc.Driver
-    #url: jdbc:mysql://localhost:3306/sccs?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://localhost:3306/sccs?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:log4jdbc:mysql://54.180.164.128:3306/sccs?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: ssafy
     password: ssafy
   redis:
@@ -38,11 +36,12 @@ mybatis:
 jwt:
   secret: oekcERFVSD3nvc9vdSGci3dzke3f09cDFiv9we3uihcdskj3vcnhzvredxzvuheanwaDDSFf3fuhvcxzGVFsgjvhnbdas8ghrf4whfgdsafvcijhsdiufgh
 
-
-
 logging:
   level:
     root: debug
 
 file:
     dir: C:/S08P12A301/backend/src/main/resources/file/
+
+server:
+  port: 8200
