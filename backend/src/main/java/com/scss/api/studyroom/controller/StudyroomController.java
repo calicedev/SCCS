@@ -1,23 +1,28 @@
 package com.scss.api.studyroom.controller;
 
-import com.scss.api.member.dto.MemberDto;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.scss.api.studyroom.dto.SendFileDto;
 import com.scss.api.studyroom.dto.StudyroomDto;
 import com.scss.api.studyroom.dto.SubmissionDto;
 import com.scss.api.studyroom.file.FileStore;
 import com.scss.api.studyroom.service.StudyroomService;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -31,8 +36,20 @@ public class StudyroomController {
     private final StudyroomService studyroomService;
     private final FileStore fileStore;
 
+    private static final RestTemplate REST_TEMPLATE;
+
+
+    static {
+        // RestTemplate 기본 설정을 위한 Factory 생성
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(3000);
+        factory.setReadTimeout(3000);
+        factory.setBufferRequestBody(false); // 파일 전송은 이 설정을 꼭 해주자.
+        REST_TEMPLATE = new RestTemplate(factory);
+    }
+
     @PostMapping("/studyroom")
-    public ResponseEntity<?> createStudyroom(@RequestBody StudyroomDto studyroomDto) {
+    public ResponseEntity<?> createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
 
         logger.debug("studyroomDto", studyroomDto);
 
@@ -73,9 +90,16 @@ public class StudyroomController {
     }
 
     @PostMapping("/problem")
-    public String submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+    public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+
+        //찬희님한테 보내기 워밍업
+        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        JsonNode response;
+        HttpStatus httpStatus = HttpStatus.CREATED;
+
         //코딩 테스트 시작하기
-        SendFileDto sendFileDto = fileStore.storeFile(submissionDto.getFormFile());
+        SendFileDto sendFileDto = fileStore.storeFile(submissionDto.getFormFile(), submissionDto.getLanguageId());
+
         //데이터베이스에 저장
         SubmissionDto s = new SubmissionDto();
         s.setMemberId(submissionDto.getMemberId());
@@ -84,9 +108,32 @@ public class StudyroomController {
         s.setStudyroomId(submissionDto.getStudyroomId());
         s.setSendFileName(sendFileDto.getSendFileName());
         s.setStoreFileName(sendFileDto.getStoreFileName());
+
+        // py로 변환
+        UrlResource resource = new UrlResource("file:" +
+                fileStore.getFullPath(sendFileDto.getStoreFileName()));
+        map.add("mfile",resource);
+
+        //여기서 찬희님한테 파일 전달
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        String url = null;
+        if(submissionDto.getLanguageId()==1){
+            url="http://70.12.246.161:9999/api/solve/testPython";
+        }else if(submissionDto.getLanguageId()==2){
+            url="http://70.12.246.161:9999/api/solve/testJava";
+        }
+
+        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+        response = REST_TEMPLATE.postForObject(url, requestEntity, JsonNode.class);
+
         studyroomService.submitProblem(s);
-        return "redirect:/items/{itemId}";
+        return new ResponseEntity<>(response, httpStatus);
+
     }
+
+
 
     @PatchMapping("/codingtest")
     public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){

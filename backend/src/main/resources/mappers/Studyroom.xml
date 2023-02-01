@@ -105,7 +105,7 @@
       AND s.id= #{id}
     </if>
     <if test="title!=null and title!=''">
-      AND s.title = #{title}
+      AND s.title LIKE CONCAT('%', #{title}, '%')
     </if>
     <if test="algoIds.size!=0">
       <foreach collection="algoIds" item="item" open="AND (sa.algo_id=" close=")" separator="OR sa.algo_id=">
