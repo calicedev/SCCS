@@ -30,7 +30,7 @@ function App() {
     <ThemeProvider theme={theme === 'light' ? light : dark}>
       <GlobalStyle />
       <Routes>
-        <Route path="/main" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/auth" element={<AuthPage />}>
           <Route path="login" element={<LoginForm />} />
           <Route path="signup" element={<SignupForm />} />
