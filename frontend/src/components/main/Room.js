@@ -46,7 +46,7 @@ export default function Room({
       {showModal && (
         <Modal
           close={() => setShowModal(false)}
-          content={<PwdModalContent />}
+          content={<PwdModalContent id={id} />}
         ></Modal>
       )}
       <RoomContainer isSolving={isSolving} onClick={enterRoom}>
