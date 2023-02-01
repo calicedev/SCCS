@@ -5,7 +5,7 @@ import defaultProfileImg from 'assets/img/default_profile_img.jpg'
 const userSlice = createSlice({
   name: 'userSlice',
   initialState: {
-    id: 'ssafy',
+    id: 'ssafy01',
     name: 'defaultName',
     nickname: 'defaultNickname',
     email: 'default@email.com',
