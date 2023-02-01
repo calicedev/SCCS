@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @ToString
 public class InterceptorExceptionEntity {
-    private String errorCode;
-    private String errorMessage;
+    private final String errorCode;
+    private final String errorMessage;
 
     @Builder
     public InterceptorExceptionEntity(HttpStatus status, String errorCode, String errorMessage) {

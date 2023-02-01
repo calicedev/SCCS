@@ -22,12 +22,12 @@ public class WebConfiguration implements WebMvcConfigurer {
     public static final Logger logger = LoggerFactory.getLogger(WebConfiguration.class);
     private final JWTService jwtService;
     private final JwtInterceptor jwtInterceptor;
-    private String[] INTERCEPTOR_BLACK_LIST = {
+    private final String[] INTERCEPTOR_BLACK_LIST = {
             "/api/member/password",
             "/api/member", // 회원가입(POST), 회원정보 수정, 회원탈퇴
             "/api/member/**"
     };
-    private String[] INTERCEPTOR_WHITE_LIST = {
+    private final String[] INTERCEPTOR_WHITE_LIST = {
             "/api/unique/**", // 중복 검사
             "/api/member", // 회원가입,         회원정보 수정, 회원탈퇴
             "/api/member/login", // 로그인
@@ -38,7 +38,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                //.allowedOrigins("*")
+//                .allowedOrigins("*")
                 .allowedOriginPatterns("*")
 //                .allowedHeaders("*")
 //		.allowedOrigins("http://localhost:8080", "http://localhost:3000")
@@ -48,7 +48,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
                 .allowCredentials(true)
                 .maxAge(1800);
-
     }
 
     @Override
@@ -57,10 +56,9 @@ public class WebConfiguration implements WebMvcConfigurer {
         reg.addInterceptor(jwtInterceptor)
                 .order(1)
 //                .addPathPatterns("/**") // 모든 경우 인증작업 적용
-                .addPathPatterns(INTERCEPTOR_BLACK_LIST);
-//                .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
+                .addPathPatterns(INTERCEPTOR_BLACK_LIST) // 인터셉터 적용 리스트
+                .excludePathPatterns(INTERCEPTOR_WHITE_LIST); // 인터셉터 제외 리스트
     }
-
 
     //	Swagger UI 실행시 404처리
 //	Swagger2 일경우

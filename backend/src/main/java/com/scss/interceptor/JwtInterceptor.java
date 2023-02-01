@@ -1,10 +1,8 @@
 package com.scss.interceptor;
 
 import com.scss.api.member.service.JWTService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.scss.exception.InterceptorException;
 import com.scss.exception.InterceptorExceptionEnum;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -37,37 +35,13 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
 
         final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
-        logger.debug("인터셉터 토큰 : {}", token);
+        logger.debug("헤더 토큰 파싱 : {}", token);
 
-
-        if (token != null) {
-            try {
-                if(jwtService.checkToken(token)){
-                    logger.info("토큰 사용 가능 : {}", token);
-                    return true;
-                }
-                throw new InterceptorException(InterceptorExceptionEnum.EXPIREDTOKEN);
-                //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-            } catch (MalformedJwtException e) {
-                throw new InterceptorException(InterceptorExceptionEnum.COUNTERFEIT);
-            } catch (ExpiredJwtException e) {
-                throw new InterceptorException(InterceptorExceptionEnum.EXPIREDTOKEN);
-            }
-        } else { // 토큰이 없음
-            throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+        if (jwtService.checkToken(token)) {
+            logger.info("토큰 사용 가능 : {}", token);
+            return true;
         }
-
-//        if(jwtService.checkToken(token)){
-//            logger.info("토큰 사용 가능 : {}", token);
-//            return true;
-//        }else{
-//            logger.error("토큰 사용 불가능 : {}", token);
-//            throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-//
-//            //            return false;
-//        }
-
+        logger.debug("토큰 사용 불가능");
+        throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
     }
-
-
 }

@@ -45,6 +45,7 @@ public class MemberController {
     private static final int        HOUR    = MINUTE * 60; // 1시간
     private static final int        DAY     = HOUR * 24; // 24시간
     private static final int        WEEK    = DAY * 7; // 1주일
+    private static final String HEADER_AUTH = "authorization";
 
     private final MemberService     memberService;
     private final JWTService        jwtService;
@@ -132,8 +133,15 @@ public class MemberController {
 
     /** 회원 정보 **/ /** Auth **/
     @GetMapping("/member/{id}")
-    public ResponseEntity<?> memberInfo(@PathVariable("id") String id) {
+    public ResponseEntity<?> memberInfo(@PathVariable("id") String pathId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
+
+        final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
+        System.out.println(jwtService.getToken(token).getId());
+        System.out.println(jwtService.getToken(token));
+        System.out.println(jwtService.getToken(token).get("id"));
+
+        String id = (String) jwtService.getToken(token).get("id");
 
         logger.debug("회원정보 조회!!!!");
         MemberDto memberDto = memberService.memberInfo(id);
@@ -247,7 +255,7 @@ public class MemberController {
 
     /** access-token 재발급 **/
     // Todo : access , refresh 모두 받아서 refresh 토큰 값으로 id 값을 value 로 redis에 저장
-    @GetMapping("/member/accesstoken")
+    @GetMapping("/member/refreshToken")
     public ResponseEntity<?> refreshToken(@CookieValue String accessToken, @CookieValue String refreshToken) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
