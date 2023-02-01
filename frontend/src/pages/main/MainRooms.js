@@ -58,11 +58,22 @@ export default function MainRooms() {
 
   // 옵션변화로 인한 방 세부 조회
   useEffect(() => {
-    const data = {
-      algoIds,
-      languageIds,
-      title: '',
-      id: 0,
+    let data = {}
+    if (selectedOption === 'title') {
+      data = {
+        algoIds,
+        languageIds,
+        title: query,
+        id: 0,
+      }
+    }
+    if (selectedOption === 'id') {
+      data = {
+        algoIds,
+        languageIds,
+        title: '',
+        id: parseInt(query),
+      }
     }
     const [url, method] = api('searchRoomDetail')
     const config = { url, method, data }
@@ -190,9 +201,11 @@ export default function MainRooms() {
 const FlexBox = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: stretch;
 `
 const SearchContainer = styled.div`
   display: flex;
+  align-items: stretch;
 `
 const InputBox = styled.div`
   display: flex;
@@ -218,21 +231,3 @@ const GridBox = styled.div`
 
   margin: 2rem 2rem;
 `
-// const data = {
-//   algoIds: [1, 2, 3, 4, 5, 6, 7],
-//   languageIds: [1, 2],
-//   title: '코테',
-//   id: 0,
-// }
-// const data = {
-//   algoIds: [1, 2, 3, 4, 5, 6, 7],
-//   languageIds: [1, 2],
-//   title: '',
-//   id: 2,
-// }
-// const data = {
-//   algoIds: [1, 2, 3],
-//   languageIds: [1],
-//   title: '',
-//   id: 0,
-// }

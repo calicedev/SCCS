@@ -33,8 +33,7 @@ const Container = styled.div`
 `
 
 const Title = styled.div`
-  display: flex;
-  align-items: center;
+  height: 100%;
 
   padding: 0rem 0.5rem;
 
