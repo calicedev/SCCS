@@ -1,6 +1,8 @@
 package com.scss.api.member.service;
 
 import com.scss.api.member.mapper.MemberMapper;
+import com.scss.exception.InterceptorException;
+import com.scss.exception.InterceptorExceptionEnum;
 import io.jsonwebtoken.*;
 
 import java.security.Key;
@@ -48,12 +50,11 @@ public class JWTServiceImpl implements JWTService{
     @Override
     public Claims getToken(String token) {
         try {
-            Claims claims = Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            return claims;
         } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
             logger.debug("토큰 만료");
             return null;
@@ -73,12 +74,18 @@ public class JWTServiceImpl implements JWTService{
                     .parseClaimsJws(jwt);
             logger.debug("claims : {}", claims);
             return true;
-        } catch (ExpiredJwtException e) {
-            logger.info("토큰 유효기간 만료");
         } catch (Exception e) {
-            logger.info("토큰 검증 에러");
+            logger.error(e.getMessage());
+            return false;
         }
-        return false;
+//        } catch (ExpiredJwtException e) {
+//            logger.info("토큰 유효기간 만료");
+//            throw new InterceptorException(InterceptorExceptionEnum.EXPIREDTOKEN);
+//        } catch (Exception e) {
+//            logger.info("토큰 검증 에러");
+//            throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+//        }
+        //return false;
     }
 
 }

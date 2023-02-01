@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class InterceptorException extends RuntimeException{
-    private InterceptorExceptionEnum error;
+    private final InterceptorExceptionEnum error;
 
     public InterceptorException(InterceptorExceptionEnum e) {
         super(e.getMessage());

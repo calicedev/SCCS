@@ -38,7 +38,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
 
     // Redis
@@ -49,7 +48,14 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
     implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.7'
 
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    //websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    compileOnly group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
+    //웹소켓 확인용으로 설치한 타임리프
+    implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
 }
 tasks.named('test') {
     useJUnitPlatform()

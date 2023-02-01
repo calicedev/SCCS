@@ -189,24 +189,3 @@ const Modal = styled.div`
     }
   }
 `
-
-const ex_studies = [
-  {
-    id: 1,
-    studyroomtitle: '커피 내기 SSAFY기 (A301)',
-    studyroomCreateDatetime: '2023-01-17 17:18:53',
-    problems: [
-      { id: 1, title: '미로찾기' },
-      { id: 2, title: '치즈 녹이기' },
-    ],
-  },
-  {
-    id: 2,
-    studyroomTitle: '커피 내기 SSAFY기2 (A301)',
-    studyroomCreateDatetime: '2023-01-17 21:18:53',
-    problems: [
-      { id: 3, title: '미로찾기2' },
-      { id: 2, title: '치즈 녹이기' },
-    ],
-  },
-]
