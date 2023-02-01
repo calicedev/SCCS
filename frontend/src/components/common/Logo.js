@@ -17,7 +17,7 @@ export default function Logo({ width, height }) {
   return (
     <LogoContainer
       onClick={() => {
-        navigate('/main')
+        navigate('/')
       }}
       width={width}
       height={height}
