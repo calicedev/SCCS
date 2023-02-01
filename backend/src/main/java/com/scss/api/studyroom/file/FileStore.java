@@ -1,7 +1,6 @@
 package com.scss.api.studyroom.file;
 
 import com.scss.api.studyroom.dto.SendFileDto;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,24 +17,18 @@ public class FileStore {
     public String getFullPath(String filename) {
         return fileDir + filename;
     }
-    public SendFileDto storeFile(MultipartFile multipartFile, int languageId) throws IOException
+    public SendFileDto storeFile(MultipartFile multipartFile) throws IOException
     {
-        String end = null;
         if (multipartFile.isEmpty()) {
             return null;
         }
-        if(languageId==1){
-            end = "py";
-        }else if(languageId==2){
-            end = "java";
-        }
         String originalFilename = multipartFile.getOriginalFilename();
-        String storeFileName = createStoreFileName(end);
+        String storeFileName = createStoreFileName();
         multipartFile.transferTo(new File(getFullPath(storeFileName)));
         return new SendFileDto(originalFilename, storeFileName);
     }
-    private String createStoreFileName(String end) {
+    private String createStoreFileName() {
         String uuid = UUID.randomUUID().toString();
-        return uuid + "." + end;
+        return uuid + "." + "py";
     }
 }
