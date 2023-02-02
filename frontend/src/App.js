@@ -24,7 +24,8 @@ import { ThemeProvider } from 'styled-components'
 import { light, dark } from './styles/theme'
 import { useSelector } from 'react-redux'
 
-import VideoRoomComponent from './components/VideoRoomComponent'
+// import VideoRoomComponent from './components/VideoRoomComponent'
+import WaitingPage from './pages/study/WaitingPage'
 import WebSocket from 'websocket/WebSocket'
 
 function App() {
@@ -50,8 +51,8 @@ function App() {
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
         <Route path="/solveproblem" element={<SolveProblem />}></Route>
+        <Route path="/openvidu" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
-        <Route path="/openvidu" element={<VideoRoomComponent />}></Route>
         <Route path="/websocket" element={<WebSocket />}></Route>
       </Routes>
     </ThemeProvider>
