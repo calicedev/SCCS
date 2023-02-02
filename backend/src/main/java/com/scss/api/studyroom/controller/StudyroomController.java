@@ -8,6 +8,7 @@ import com.scss.api.studyroom.file.FileStore;
 import com.scss.api.studyroom.service.StudyroomService;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -94,7 +95,6 @@ public class StudyroomController {
 
         //찬희님한테 보내기 워밍업
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        JsonNode response;
         HttpStatus httpStatus = HttpStatus.CREATED;
 
         //코딩 테스트 시작하기
@@ -112,21 +112,27 @@ public class StudyroomController {
         // py로 변환
         UrlResource resource = new UrlResource("file:" +
                 fileStore.getFullPath(sendFileDto.getStoreFileName()));
-        map.add("mfile",resource);
+
 
         //여기서 찬희님한테 파일 전달
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
+        logger.error(submissionDto.getLanguageId()+"");
         String url = null;
         if(submissionDto.getLanguageId()==1){
-            url="http://70.12.246.161:9999/api/solve/testPython";
+            url="http://70.12.246.161:9999/api/solve/python";
         }else if(submissionDto.getLanguageId()==2){
-            url="http://70.12.246.161:9999/api/solve/testJava";
+            url="http://70.12.246.161:9999/api/solve/java";
         }
+        map.add("mfile",resource);
+        map.add("runtime",2);
+        map.add("type","1");
+        map.add("no","2");
+        map.add("memory",2);
 
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        response = REST_TEMPLATE.postForObject(url, requestEntity, JsonNode.class);
+        String response = REST_TEMPLATE.postForObject(url, requestEntity, String.class);
 
         studyroomService.submitProblem(s);
         return new ResponseEntity<>(response, httpStatus);
@@ -134,6 +140,41 @@ public class StudyroomController {
     }
 
 
+    @PostMapping("/problem2")
+    public  ResponseEntity<?> submitProblem2(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+        logger.info("1111111111111111111");
+        //찬희님한테 보내기 워밍업
+        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        Map<String, Object> map2 = new HashMap<>();
+
+        HttpStatus httpStatus = HttpStatus.CREATED;
+        //코딩 테스트 시작하기
+        SendFileDto sendFileDto = fileStore.storeFile(submissionDto.getFormFile(), submissionDto.getLanguageId());
+        //데이터베이스에 저장
+        // py로 변환
+        UrlResource resource = new UrlResource("file:" +
+                fileStore.getFullPath(sendFileDto.getStoreFileName()));
+        map2.put("runtime","2");
+        map2.put("language","2");
+
+        map.add("mfile",resource);
+        map.add("data",map2);
+
+        //여기서 찬희님한테 파일 전달
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        String url = null;
+        if(submissionDto.getLanguageId()==1){
+            url="http://70.12.246.161:9999/api/solve/python";
+        }else{
+            url="http://70.12.246.161:9999/api/solve/java";
+        }
+        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+        String response = REST_TEMPLATE.postForObject("http://70.12.246.161:9999/api/solve/java", requestEntity, String.class);
+
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
 
     @PatchMapping("/codingtest")
     public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){

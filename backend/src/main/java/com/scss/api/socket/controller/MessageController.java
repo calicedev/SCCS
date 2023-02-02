@@ -16,18 +16,20 @@ public class MessageController {
     private final SimpMessagingTemplate template;
 
 
-    @MessageMapping(value = "/study/enter")
-    public void enter(SocketDto socketDto){
-
-        System.out.println(socketDto.getNickname());
-        socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
-        template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+    @MessageMapping(value = "/studyroom")
+    public void socketConnect(SocketDto socketDto){
+        if(socketDto.getStatus().equals("enter")){
+            socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
+            template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+        }else if(socketDto.getStatus().equals("ready")){
+            socketDto.setMessage(socketDto.getNickname() + "님이 코딩 테스트 할 준비가 되었습니다.");
+            template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+        }else{
+            socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다");
+            template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+        }
     }
 
-    @MessageMapping(value = "/study/ready")
-    public void message(SocketDto socketDto){
-        template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
-    }
 }
 
 
