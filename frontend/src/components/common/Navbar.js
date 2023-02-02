@@ -30,7 +30,7 @@ export default function Navbar() {
         />
       </Flexbox>
       <NavContent>
-        <NavStyle to="/main">Home</NavStyle>
+        <NavStyle to="/">Home</NavStyle>
         <NavStyle to="/mypage/calendar">Calender</NavStyle>
         <NavStyle to="/mypage/solved">Solved</NavStyle>
         <NavStyle to="/mypage/profile">Profile</NavStyle>

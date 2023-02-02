@@ -9,12 +9,11 @@ import StudyDetailTopNavbar from 'components/mypage/StudyDetailTopNavbar'
 import StudyDetailCodeList from 'components/mypage/StudyDetailCodeList'
 
 export default function StudyDetailPage() {
-  // useState
-  // studyId 안다고 가정
-  // const [studyId, setStudyId] = useState(0)
+  // 스터디의 id (duseParams로 자동으로 가져와줌)
   const { id } = useParams()
-  // const [data, setData] = useState({}) 샘플 데이터 들어오면 다시 주석 풀어줄거임
+  // 버튼 클릭시 해당 문제로 이동하기 위해 problemId 사용
   const [problemId, setProblemId] = useState(0)
+  // 해당 스터디에 대한 정보를 back에서 가져와서 저장하기 위해 사용
   const [study, setStudy] = useState({})
   // mount시 axios 요청으로 해당 study data 불러오기
 
@@ -46,12 +45,19 @@ export default function StudyDetailPage() {
       )}
 
       <Container>
-        {/* <img src={study.problems[problemId].content} alt="문제 사진임" /> */}
-        {/* <StudyDetailCodeList
+        {/* 객체는 항상 참이므로 studyroomId가 들어왔을 때 img를 보여줌 (안 그러면 undefined 뜸) */}
+        {study.studyroomId && (
+          <img
+            src={study.studyroomWithProblems[problemId].problemFolder}
+            alt="문제 사진임"
+          />
+        )}
+
+        <StudyDetailCodeList
           study={study}
           problemId={problemId}
           setProblemId={setProblemId}
-        /> */}
+        />
       </Container>
     </Flexbox>
   )
