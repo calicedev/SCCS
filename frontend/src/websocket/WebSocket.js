@@ -13,7 +13,7 @@ export default function WebSocket() {
 
   useEffect(() => {
     console.log('useEffect 일단 들어왔다~~~')
-    var sock = new sockjs('http://70.12.246.176:8080/sccs') // 수정필요해보임
+    var sock = new sockjs('http://70.12.246.176:8200/sccs') // 수정필요해보임
     let stompClient = stompjs.over(sock)
 
     stompClient.connect({}, () => {
@@ -23,7 +23,7 @@ export default function WebSocket() {
         {},
         JSON.stringify({
           studyroomId: studyroomId,
-          nickname: 'REACT KING',
+          nickname: 'Spring KING',
         }),
       )
 

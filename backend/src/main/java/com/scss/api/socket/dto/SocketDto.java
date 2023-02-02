@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocketDto {
-    private int StudyroomId;
+    private int studyroomId;
     private String nickname;
     private String message;
     private boolean status;
