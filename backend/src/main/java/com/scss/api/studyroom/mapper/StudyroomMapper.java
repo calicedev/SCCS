@@ -36,4 +36,6 @@ public interface StudyroomMapper {
     public void changeStudyroomSolvingStatus(StudyroomDto studyroomDto);
 
     public int endStudyroomByOwner(StudyroomDto studyroomDto);
+
+    public ProblemDto getProblemInfo(int problemId);
 }

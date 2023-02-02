@@ -1,6 +1,7 @@
 package com.scss.api.studyroom.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.scss.api.studyroom.dto.ProblemDto;
 import com.scss.api.studyroom.dto.SendFileDto;
 import com.scss.api.studyroom.dto.StudyroomDto;
 import com.scss.api.studyroom.dto.SubmissionDto;
@@ -92,88 +93,47 @@ public class StudyroomController {
 
     @PostMapping("/problem")
     public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+        ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
 
-        //찬희님한테 보내기 워밍업
+        //파일을 원하는 경로에 실제로 저장한다.
+        String fileName = fileStore.storeFile(submissionDto, problemDto.getProblemFolder());
+
+        // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
+        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(problemDto.getProblemFolder(), fileName));
+
+        String tempNo = problemDto.getProblemFolder().substring(problemDto.getProblemFolder().lastIndexOf("/")+1);
+        tempNo = tempNo.substring(0, tempNo.length() - 1);
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         HttpStatus httpStatus = HttpStatus.CREATED;
-
-        //코딩 테스트 시작하기
-        SendFileDto sendFileDto = fileStore.storeFile(submissionDto.getFormFile(), submissionDto.getLanguageId());
-
-        //데이터베이스에 저장
-        SubmissionDto s = new SubmissionDto();
-        s.setMemberId(submissionDto.getMemberId());
-        s.setLanguageId(submissionDto.getLanguageId());
-        s.setProblemId(submissionDto.getProblemId());
-        s.setStudyroomId(submissionDto.getStudyroomId());
-        s.setSendFileName(sendFileDto.getSendFileName());
-        s.setStoreFileName(sendFileDto.getStoreFileName());
-
-        // py로 변환
-        UrlResource resource = new UrlResource("file:" +
-                fileStore.getFullPath(sendFileDto.getStoreFileName()));
-
+        map.add("mfile",resource);
+        map.add("runtime",problemDto.getTimeLimit());
+        map.add("type",problemDto.getAlgoId());
+        map.add("no",tempNo);
+        map.add("memory",problemDto.getMemoryLimit());
 
         //여기서 찬희님한테 파일 전달
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        logger.error(submissionDto.getLanguageId()+"");
-        String url = null;
+        String url ="http://70.12.246.161:9999";
         if(submissionDto.getLanguageId()==1){
-            url="http://70.12.246.161:9999/api/solve/python";
+            url+="/api/solve/python";
         }else if(submissionDto.getLanguageId()==2){
-            url="http://70.12.246.161:9999/api/solve/java";
+            url+="/api/solve/java";
         }
-        map.add("mfile",resource);
-        map.add("runtime",2);
-        map.add("type","1");
-        map.add("no","2");
-        map.add("memory",2);
 
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        String response = REST_TEMPLATE.postForObject(url, requestEntity, String.class);
+        SubmissionDto s = REST_TEMPLATE.postForObject(url, requestEntity, SubmissionDto.class);
 
-        studyroomService.submitProblem(s);
-        return new ResponseEntity<>(response, httpStatus);
+        //문제 제출 정보를 실제 디비에 저장한다.
+        submissionDto.setFileName(fileName);
+        submissionDto.setResult(s.isResult());
+        submissionDto.setMemory(s.getMemory());
+        submissionDto.setRuntime(s.getRuntime());
+        studyroomService.submitProblem(submissionDto);
 
-    }
+        return new ResponseEntity<>(SUCCESS, httpStatus);
 
-
-    @PostMapping("/problem2")
-    public  ResponseEntity<?> submitProblem2(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
-        logger.info("1111111111111111111");
-        //찬희님한테 보내기 워밍업
-        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        Map<String, Object> map2 = new HashMap<>();
-
-        HttpStatus httpStatus = HttpStatus.CREATED;
-        //코딩 테스트 시작하기
-        SendFileDto sendFileDto = fileStore.storeFile(submissionDto.getFormFile(), submissionDto.getLanguageId());
-        //데이터베이스에 저장
-        // py로 변환
-        UrlResource resource = new UrlResource("file:" +
-                fileStore.getFullPath(sendFileDto.getStoreFileName()));
-        map2.put("runtime","2");
-        map2.put("language","2");
-
-        map.add("mfile",resource);
-        map.add("data",map2);
-
-        //여기서 찬희님한테 파일 전달
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        String url = null;
-        if(submissionDto.getLanguageId()==1){
-            url="http://70.12.246.161:9999/api/solve/python";
-        }else{
-            url="http://70.12.246.161:9999/api/solve/java";
-        }
-        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        String response = REST_TEMPLATE.postForObject("http://70.12.246.161:9999/api/solve/java", requestEntity, String.class);
-
-
-        return new ResponseEntity<>(response, httpStatus);
     }
 
     @PatchMapping("/codingtest")

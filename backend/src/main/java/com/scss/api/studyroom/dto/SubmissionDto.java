@@ -23,8 +23,6 @@ public class SubmissionDto {
     private int languageId;
     private int studyroomId;
     private MultipartFile formFile;
-    private SendFileDto file;
-    private String sendFileName;
-    private String storeFileName;
+    private String fileName;
 
 }

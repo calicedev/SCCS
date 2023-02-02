@@ -78,7 +78,6 @@
     order by s.submit_datetime;
   </select>
 
-
   <resultMap id="submissionWithProblemAboutUser" type="hashmap">
     <result column="problem_title" property="problemTitle"></result>
     <result column="problem_answerRate" property="problemAnswerRate"></result>
@@ -86,6 +85,7 @@
     <result column="difficulty" property="difficulty"></result>
     <result column="language_id" property="languageId"></result>
   </resultMap>
+
   <select id="getProblems" parameterType="hashmap" resultMap="submissionWithProblemAboutUser">
     SELECT p.id, p.name ,format(p.accepted_number/p.submission_number*100,2) as 'answerRate'
     ,DATE_FORMAT(submit_datetime,'%y-%m-%d') as 'date',p.difficulty,s.language_id
