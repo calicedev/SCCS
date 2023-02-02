@@ -22,7 +22,7 @@ studies: [
 */
 
 export default function StudyList({ studies }) {
-  console.log(studies)
+  // console.log(studies)
 
   const [showOptions, setShowOptions] = useState(false)
   const navigate = useNavigate()
@@ -38,9 +38,11 @@ export default function StudyList({ studies }) {
   return (
     <Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {studies.map((study) => (
-
-        <Study key={study.id} onClick={() => navigate(`/mypage/studydetail/${study.id}`)}>
-          <p>{study.studyroomTitle}</p> 
+        <Study
+          key={study.id}
+          onClick={() => navigate(`/mypage/studydetail/${study.id}`)}
+        >
+          <p>{study.studyroomTitle}</p>
           {study.problems?.map((problem) => (
             <Option key={problem.problemId} hidden={!showOptions}>
               <p className="c">{problem.problemName}</p>
