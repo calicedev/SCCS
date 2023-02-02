@@ -31,12 +31,14 @@ export default function WebSocket() {
       )
 
       // ************************ 여기서부터는 sub입니다******************************
+
       // 입장 (sub)
       stompClient.subscribe(
         '/sub/studyroom/' + studyroomId,
         function (chatDto) {
           // console.log(chatDto.body)
           var content = JSON.parse(chatDto.body)
+
           // console.log('입장 sub 데이터!!!', content)
           setEnterMsg(content)
         },
