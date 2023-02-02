@@ -15,14 +15,17 @@ import EditPwdPage from './pages/mypage/EditPwdPage'
 import SolvedPage from './pages/mypage/SolvedPage'
 import CalendarPage from './pages/mypage/CalendarPage'
 import StudyDetailPage from 'pages/mypage/StudyDetailPage'
+
 import SolveProblem from 'pages/study/SolveProblem'
+import Study from 'pages/study/Study'
 
 import GlobalStyle from './styles/GlobalStyle'
 import { ThemeProvider } from 'styled-components'
 import { light, dark } from './styles/theme'
 import { useSelector } from 'react-redux'
 
-import VideoRoomComponent from './components/VideoRoomComponent'
+// import VideoRoomComponent from './components/VideoRoomComponent'
+import WaitingPage from './pages/study/WaitingPage'
 import WebSocket from 'websocket/WebSocket'
 
 function App() {
@@ -48,7 +51,8 @@ function App() {
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
         <Route path="/solveproblem" element={<SolveProblem />}></Route>
-        <Route path="/openvidu" element={<VideoRoomComponent />}></Route>
+        <Route path="/openvidu" element={<WaitingPage />}></Route>
+        <Route path="/study" element={<Study />}></Route>
         <Route path="/websocket" element={<WebSocket />}></Route>
       </Routes>
     </ThemeProvider>

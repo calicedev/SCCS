@@ -5,6 +5,7 @@ import com.scss.interceptor.JwtInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
@@ -13,9 +14,19 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.UiConfiguration;
+import springfox.documentation.swagger.web.UiConfigurationBuilder;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableWebMvc
+@EnableSwagger2
 @RequiredArgsConstructor
 public class WebConfiguration implements WebMvcConfigurer {
 
@@ -60,13 +71,39 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns(INTERCEPTOR_WHITE_LIST); // 인터셉터 제외 리스트
     }
 
-    //	Swagger UI 실행시 404처리
+
 //	Swagger2 일경우
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-//        registry.addResourceHandler("/swagger-ui.html**").addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
-//        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-//    }
+    @Bean
+    public Docket restAPI() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.scss"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("SCCS Spring Boot REST API")
+                .version("1.0")
+                .description("실전 코테 체험 스터디 플랫폼")
+                .build();
+    }
+
+    @Bean
+    public UiConfiguration uiConfig() {
+        return UiConfigurationBuilder.builder()
+                .displayRequestDuration(true)
+                .validatorUrl("")
+                .build();
+    }
 
 }

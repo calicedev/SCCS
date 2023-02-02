@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Editor from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs/components/prism-core'
 import 'prismjs/components/prism-python' // import 언어 모듈가서 확인 뒤 바꿔주기
+// import 'prismjs/components/prism-java' 
 import 'prismjs/themes/prism.css' //Example style, you can use another
 import styled from 'styled-components'
 
@@ -18,7 +19,8 @@ export default function Textarea() {
     <StyledEditor
       value={codeValue}
       onValueChange={(code) => setCodeValue(code)}
-      highlight={(code) => hightlightWithLineNumbers(code, languages.js)} //languages 확장자 바꾸면 해당 언어로 바뀜
+      highlight={(code) => hightlightWithLineNumbers(code, languages.py)} //languages 확장자 바꾸면 해당 언어로 바뀜
+      // highlight={(code) => hightlightWithLineNumbers(code, languages.java)} //languages 확장자 바꾸면 해당 언어로 바뀜
       padding={10}
       textareaId="codeArea"
       className="editor"

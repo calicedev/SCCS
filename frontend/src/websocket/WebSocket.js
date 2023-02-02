@@ -12,7 +12,7 @@ export default function WebSocket() {
   const [readyMsg, setReadyMsg] = useState({})
   const [exitMsg, setExitMsg] = useState({})
 
-  const nickname = '괴물 박균탁'
+  const nickname = '프로틴 러버 박균탁'
 
   var sock = new sockjs('http://70.12.246.176:8200/sccs')
   let stompClient = stompjs.over(sock)
@@ -67,7 +67,7 @@ export default function WebSocket() {
       {},
       JSON.stringify({
         studyroomId: studyroomId,
-        nickname: '프로틴 괴물 박균탁',
+        nickname: nickname,
         status: 'exit',
       }),
     )
@@ -80,7 +80,7 @@ export default function WebSocket() {
       {},
       JSON.stringify({
         studyroomId: studyroomId,
-        nickname: '프로틴 괴물 박균탁',
+        nickname: nickname,
         status: 'ready',
       }),
     )
