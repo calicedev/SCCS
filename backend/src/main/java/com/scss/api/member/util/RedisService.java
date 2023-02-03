@@ -24,14 +24,12 @@ public class RedisService {
         return stringValueOperations.get(key); // value return
     }
 
-
-
     /** Redis에 토큰 저장 **/
     public void setRefreshTokenWithRedis(String key, String value) {
         ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
         stringValueOperations.set(key, value);
-        int EXP_TIME = 5; // 분 단위
-        stringRedisTemplate.expire(key, EXP_TIME * 60, TimeUnit.SECONDS); // 유효기간 5분
+        int EXP_TIME = 30; // 분 단위
+        stringRedisTemplate.expire(key, EXP_TIME * 60, TimeUnit.SECONDS); // 유효기간 30분 (1주일로 변경 예정)
         logger.debug("[setRefreshTokenWithRedis] key : {}, value : {}, 유효시간 : {}분", key, value, EXP_TIME);
     }
 

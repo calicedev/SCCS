@@ -17,9 +17,9 @@ public class RedisSampleController {
     @Autowired
     private RedisService redisService;
 
-    // 토큰 저장하기
+    // 토큰 저장하기 테스트 컨트롤러 (실제 서비스랑 관련 없음)
     @PostMapping("/redis/token")
-    public ResponseEntity<?> getToken(@RequestBody Map<String, String> paramMap) {
+    public ResponseEntity<?> testSetTokenWithRedis(@RequestBody Map<String, String> paramMap) {
         String id = paramMap.get("id");
         String refreshToken = paramMap.get("refreshToken");
 
@@ -27,9 +27,9 @@ public class RedisSampleController {
         return new ResponseEntity<String>("토큰 저장 통신 성공", HttpStatus.OK);
     }
 
-    // 토큰 가져오기
+    // 토큰 가져오기 테스트 컨트롤러 (실제 서비스랑 관련 없음)
     @GetMapping("/redis/token")
-    public ResponseEntity<?> testRedis(@RequestParam String memberId){
+    public ResponseEntity<?> testGetTokenWithRedis(@RequestParam String memberId){
         String refreshTokenKey = "refreshToken:" + memberId;
         redisService.getRefreshTokenWithRedis(refreshTokenKey);
         return new ResponseEntity<String>("토큰 가져오기 통신 성공", HttpStatus.OK);
