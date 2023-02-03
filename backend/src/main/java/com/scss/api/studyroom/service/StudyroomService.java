@@ -11,7 +11,7 @@ public interface StudyroomService {
 
 
 
-    public String createStudyroom(StudyroomDto studyroomDto);
+    public int createStudyroom(StudyroomDto studyroomDto);
     public List<Map<String, Object>> selectAllStudyroom();
     public List<Map<String, Object>> selectStudyroom(StudyroomDto studyroomDto);
     public String checkStudyroomPassword(StudyroomDto studyroomDto);

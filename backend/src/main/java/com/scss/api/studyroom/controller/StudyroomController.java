@@ -54,9 +54,9 @@ public class StudyroomController {
     public ResponseEntity<?> createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
 
         logger.debug("studyroomDto", studyroomDto);
-
-        if (studyroomService.createStudyroom(studyroomDto).equals(SUCCESS)) {
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        int pk = studyroomService.createStudyroom(studyroomDto);
+        if (pk!=0) {
+            return new ResponseEntity<String>(String.valueOf(pk), HttpStatus.OK);
         } else {
             return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
         }
@@ -102,10 +102,11 @@ public class StudyroomController {
         UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(problemDto.getProblemFolder(), fileName));
 
         String tempNo = problemDto.getProblemFolder().substring(problemDto.getProblemFolder().lastIndexOf("/")+1);
-        tempNo = tempNo.substring(0, tempNo.length() - 1);
+
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         HttpStatus httpStatus = HttpStatus.CREATED;
         map.add("mfile",resource);
+        System.out.println(problemDto.getTimeLimit());
         map.add("runtime",problemDto.getTimeLimit());
         map.add("type",problemDto.getAlgoId());
         map.add("no",tempNo);
@@ -115,6 +116,7 @@ public class StudyroomController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
+        //채점 서버 url
         String url ="http://70.12.246.161:9999";
         if(submissionDto.getLanguageId()==1){
             url+="/api/solve/python";
@@ -124,10 +126,9 @@ public class StudyroomController {
 
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
         SubmissionDto s = REST_TEMPLATE.postForObject(url, requestEntity, SubmissionDto.class);
-
         //문제 제출 정보를 실제 디비에 저장한다.
         submissionDto.setFileName(fileName);
-        submissionDto.setResult(s.isResult());
+        submissionDto.setResult(s.getResult());
         submissionDto.setMemory(s.getMemory());
         submissionDto.setRuntime(s.getRuntime());
         studyroomService.submitProblem(submissionDto);
