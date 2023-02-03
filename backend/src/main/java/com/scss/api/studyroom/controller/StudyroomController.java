@@ -51,14 +51,14 @@ public class StudyroomController {
     }
 
     @PostMapping("/studyroom")
-    public ResponseEntity<?> createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
+    public int createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
 
         logger.debug("studyroomDto", studyroomDto);
         int pk = studyroomService.createStudyroom(studyroomDto);
         if (pk!=0) {
-            return new ResponseEntity<String>(String.valueOf(pk), HttpStatus.OK);
+            return pk;
         } else {
-            return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+            return 0;
         }
 
     }

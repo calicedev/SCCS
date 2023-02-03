@@ -17,7 +17,7 @@ public class FileStore {
     @Value("${file.dir}")
     private String fileDir;
     public String getFullPath(String path, String filename) {
-        return fileDir + path + filename;
+        return fileDir + path + "/" + filename;
     }
     public String storeFile(SubmissionDto submissionDto, String problemFolder) throws IOException
     {
