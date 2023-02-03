@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux'
 export default function Profile() {
   // 리덕스 -> 사용자 정보 읽어오기
   const user = useSelector((state) => state.user)
-  console.log(user)
 
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()

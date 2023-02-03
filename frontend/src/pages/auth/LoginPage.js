@@ -42,6 +42,7 @@ export default function LoginForm() {
     axios(config)
       .then((res) => {
         const tokens = res.data
+        console.log(res)
         dispatch(setTokens(tokens))
         navigate('/')
       })

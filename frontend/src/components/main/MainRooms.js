@@ -77,7 +77,6 @@ export default function MainRooms() {
     }
     const [url, method] = api('searchRoomDetail')
     const config = { url, method, data }
-    console.log(data)
     axios(config)
       .then((res) => {
         console.log(res)
@@ -109,7 +108,6 @@ export default function MainRooms() {
     }
     const [url, method] = api('searchRoomDetail')
     const config = { url, method, data }
-    console.log(data)
     axios(config)
       .then((res) => {
         console.log(res)
