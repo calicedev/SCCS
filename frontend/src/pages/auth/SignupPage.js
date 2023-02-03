@@ -58,12 +58,8 @@ export default function SignupForm() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        const tokens = res.data
-        dispatch(setTokens(tokens))
-        navigate('/main')
-      })
-      .then(() => {
-        setUserInfo(id)
+        console.log(res)
+        navigate('/auth/login')
       })
       .catch((err) => {
         console.log(err)
