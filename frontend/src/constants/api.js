@@ -1,4 +1,4 @@
-const api = function (type, options) {
+const api = function (type, options = {}) {
   const apiObject = {
     signup: ['/api/member', 'post'],
     getUserInfo: [`/api/member/${options.id}`, 'get'],
