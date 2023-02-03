@@ -40,26 +40,26 @@ apiRequest.interceptors.response.use(
   },
   // accesstoken 재발급 로직
   (error) => {
-    const { originalConfig, response } = error
-    if (response.errCode === 403) {
-      // accessToken 재발급 요청
-      const [url, method] = api('refreshToken')
-      const config = { url, method }
-      axios(config)
-        // accessToken 재발급 성공
-        .then((res) => {
-          const newAccessToken = res.data.accessToken
-          store.dispatch(setUserInfo(res.data))
-          originalConfig.headers.Authorization = `Bearer ${newAccessToken}`
-          // 기존 요청을 새로운 accessToken으로 재요청
-          return apiRequest(originalConfig)
-        })
-        // accessToken 재발급 실패
-        .catch(() => {
-          alert('다시 로그인 해주세요')
-          return redirect('/auth/login')
-        })
-    }
+    // const { originalConfig, response } = error
+    // if (response.errCode === 403) {
+    //   // accessToken 재발급 요청
+    //   const [url, method] = api('refreshToken')
+    //   const config = { url, method }
+    //   axios(config)
+    //     // accessToken 재발급 성공
+    //     .then((res) => {
+    //       const newAccessToken = res.data.accessToken
+    //       store.dispatch(setUserInfo(res.data))
+    //       originalConfig.headers.Authorization = `Bearer ${newAccessToken}`
+    //       // 기존 요청을 새로운 accessToken으로 재요청
+    //       return apiRequest(originalConfig)
+    //     })
+    //     // accessToken 재발급 실패
+    //     .catch(() => {
+    //       alert('다시 로그인 해주세요')
+    //       return redirect('/auth/login')
+    //     })
+    // }
     return Promise.reject(error)
   },
 )
