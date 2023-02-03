@@ -13,5 +13,5 @@ public class SocketDto {
     private int studyroomId;
     private String nickname;
     private String message;
-    private boolean status;
+    private String status;
 }

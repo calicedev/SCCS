@@ -16,15 +16,13 @@ public class SubmissionDto {
     private int id;
     private int runtime;
     private int memory;
-    private boolean result;
+    private String result;
     private Timestamp submitDatetime;
     private int problemId;
     private String memberId;
     private int languageId;
     private int studyroomId;
     private MultipartFile formFile;
-    private SendFileDto file;
-    private String sendFileName;
-    private String storeFileName;
+    private String fileName;
 
 }

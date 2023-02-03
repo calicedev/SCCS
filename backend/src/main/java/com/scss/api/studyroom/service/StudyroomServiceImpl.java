@@ -23,7 +23,7 @@ public class StudyroomServiceImpl implements StudyroomService{
 
     // 방 생성
     @Override
-    public String createStudyroom(StudyroomDto studyroomDto) {
+    public int createStudyroom(StudyroomDto studyroomDto) {
         try {
 
             // 스터디 룸 생성
@@ -118,10 +118,10 @@ public class StudyroomServiceImpl implements StudyroomService{
             studyroomMemberDto.setMemberId(studyroomDto.getMemberId());
             studyroomMemberDto.setStudyroomId(id);
             studyroomMapper.insertMemberId(studyroomMemberDto);
-            return SUCCESS;
+            return id;
         } catch (Exception e) {
             e.printStackTrace();
-            return FAIL;
+            return 0;
         }
     }
 
@@ -221,10 +221,12 @@ public class StudyroomServiceImpl implements StudyroomService{
             e.printStackTrace();
             return FAIL;
         }
-
-
     }
 
+    public ProblemDto getProblemInfo(int problemId) {
+        ProblemDto p = studyroomMapper.getProblemInfo(problemId);
+        return p;
+    }
 
     private static boolean checkout(int n[], int index) {
         for (int i = 0; i < n.length; i++) {

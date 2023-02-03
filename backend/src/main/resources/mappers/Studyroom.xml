@@ -154,15 +154,14 @@
 
   <insert id="submitProblem" parameterType="SubmissionDto">
     insert into submission(
-    member_id,
-    problem_id,
-    language_id,
-    studyroom_id,
-    send_file_name,
-    store_file_name
+    id, file_name, runtime, memory, result, problem_id, member_id, language_id, studyroom_id
     )
-    values (#{memberId}, #{problemId}, #{languageId}, #{studyroomId}, #{sendFileName}, #{storeFileName})
+    values (#{id}, #{fileName}, #{runtime}, #{memory}, #{result}, #{problemId}, #{memberId}, #{languageId}, #{studyroomId})
   </insert>
+
+  <select id="getProblemInfo" parameterType="int" resultType="ProblemDto">
+    SELECT * from problem where id=#{problemId}
+  </select>
 
 
   <update id="endStudyroomByOwner" parameterType="StudyroomDto">

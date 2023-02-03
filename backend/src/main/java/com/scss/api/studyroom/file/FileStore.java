@@ -1,6 +1,7 @@
 package com.scss.api.studyroom.file;
 
 import com.scss.api.studyroom.dto.SendFileDto;
+import com.scss.api.studyroom.dto.SubmissionDto;
 import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,13 +16,16 @@ import java.util.UUID;
 public class FileStore {
     @Value("${file.dir}")
     private String fileDir;
-    public String getFullPath(String filename) {
-        return fileDir + filename;
+    public String getFullPath(String path, String filename) {
+        return fileDir + path + "/" + filename;
     }
-    public SendFileDto storeFile(MultipartFile multipartFile, int languageId) throws IOException
+    public String storeFile(SubmissionDto submissionDto, String problemFolder) throws IOException
     {
+        MultipartFile file = submissionDto.getFormFile();
+        int languageId = submissionDto.getLanguageId();
+        String path = problemFolder;
         String end = null;
-        if (multipartFile.isEmpty()) {
+        if (file.isEmpty()) {
             return null;
         }
         if(languageId==1){
@@ -29,10 +33,9 @@ public class FileStore {
         }else if(languageId==2){
             end = "java";
         }
-        String originalFilename = multipartFile.getOriginalFilename();
-        String storeFileName = createStoreFileName(end);
-        multipartFile.transferTo(new File(getFullPath(storeFileName)));
-        return new SendFileDto(originalFilename, storeFileName);
+        String fileName = createStoreFileName(end);
+        file.transferTo(new File(getFullPath(path, fileName)));
+        return fileName;
     }
     private String createStoreFileName(String end) {
         String uuid = UUID.randomUUID().toString();

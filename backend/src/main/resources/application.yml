@@ -41,7 +41,7 @@ logging:
     root: debug
 
 file:
-    dir: C:/S08P12A301/backend/src/main/resources/file/
+    dir: C:/S08P12A301/backend/src/main/resources/algo/
 
 server:
   port: 8200

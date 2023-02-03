@@ -1,6 +1,7 @@
 package com.scss.api.studyroom.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.scss.api.studyroom.dto.ProblemDto;
 import com.scss.api.studyroom.dto.SendFileDto;
 import com.scss.api.studyroom.dto.StudyroomDto;
 import com.scss.api.studyroom.dto.SubmissionDto;
@@ -8,6 +9,7 @@ import com.scss.api.studyroom.file.FileStore;
 import com.scss.api.studyroom.service.StudyroomService;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -49,14 +51,14 @@ public class StudyroomController {
     }
 
     @PostMapping("/studyroom")
-    public ResponseEntity<?> createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
+    public int createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
 
         logger.debug("studyroomDto", studyroomDto);
-
-        if (studyroomService.createStudyroom(studyroomDto).equals(SUCCESS)) {
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        int pk = studyroomService.createStudyroom(studyroomDto);
+        if (pk!=0) {
+            return pk;
         } else {
-            return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+            return 0;
         }
 
     }
@@ -91,49 +93,49 @@ public class StudyroomController {
 
     @PostMapping("/problem")
     public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+        ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
 
-        //찬희님한테 보내기 워밍업
+        //파일을 원하는 경로에 실제로 저장한다.
+        String fileName = fileStore.storeFile(submissionDto, problemDto.getProblemFolder());
+
+        // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
+        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(problemDto.getProblemFolder(), fileName));
+
+        String tempNo = problemDto.getProblemFolder().substring(problemDto.getProblemFolder().lastIndexOf("/")+1);
+
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        JsonNode response;
         HttpStatus httpStatus = HttpStatus.CREATED;
-
-        //코딩 테스트 시작하기
-        SendFileDto sendFileDto = fileStore.storeFile(submissionDto.getFormFile(), submissionDto.getLanguageId());
-
-        //데이터베이스에 저장
-        SubmissionDto s = new SubmissionDto();
-        s.setMemberId(submissionDto.getMemberId());
-        s.setLanguageId(submissionDto.getLanguageId());
-        s.setProblemId(submissionDto.getProblemId());
-        s.setStudyroomId(submissionDto.getStudyroomId());
-        s.setSendFileName(sendFileDto.getSendFileName());
-        s.setStoreFileName(sendFileDto.getStoreFileName());
-
-        // py로 변환
-        UrlResource resource = new UrlResource("file:" +
-                fileStore.getFullPath(sendFileDto.getStoreFileName()));
         map.add("mfile",resource);
+        System.out.println(problemDto.getTimeLimit());
+        map.add("runtime",problemDto.getTimeLimit());
+        map.add("type",problemDto.getAlgoId());
+        map.add("no",tempNo);
+        map.add("memory",problemDto.getMemoryLimit());
 
         //여기서 찬희님한테 파일 전달
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        String url = null;
+        //채점 서버 url
+        String url ="http://70.12.246.161:9999";
         if(submissionDto.getLanguageId()==1){
-            url="http://70.12.246.161:9999/api/solve/testPython";
+            url+="/api/solve/python";
         }else if(submissionDto.getLanguageId()==2){
-            url="http://70.12.246.161:9999/api/solve/testJava";
+            url+="/api/solve/java";
         }
 
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        response = REST_TEMPLATE.postForObject(url, requestEntity, JsonNode.class);
+        SubmissionDto s = REST_TEMPLATE.postForObject(url, requestEntity, SubmissionDto.class);
+        //문제 제출 정보를 실제 디비에 저장한다.
+        submissionDto.setFileName(fileName);
+        submissionDto.setResult(s.getResult());
+        submissionDto.setMemory(s.getMemory());
+        submissionDto.setRuntime(s.getRuntime());
+        studyroomService.submitProblem(submissionDto);
 
-        studyroomService.submitProblem(s);
-        return new ResponseEntity<>(response, httpStatus);
+        return new ResponseEntity<>(SUCCESS, httpStatus);
 
     }
-
-
 
     @PatchMapping("/codingtest")
     public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){
