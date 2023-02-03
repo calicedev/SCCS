@@ -1,10 +1,23 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import Button from 'components/common/Button'
 
 export default function Footer() {
   const navigate = useNavigate()
+
+  const convertCode = useCallback(() => {
+    let fileName = '파일이름.txt';
+    let output = "string 타입의 데이터";
+    const element = document.createElement('a');
+    const file = new Blob([output], {
+      type: 'text/plain',
+    });
+    element.href = URL.createObjectURL(file);
+    element.download = fileName;
+    document.body.appendChild(element); // FireFox
+    element.click();
+  },[])
 
   return (
     <Foot>
@@ -14,7 +27,7 @@ export default function Footer() {
           type='danger'
           size="small"
           onClick={() => {
-            navigate('')
+            convertCode('')
           }}
         ></Button>
       </EndBtn>

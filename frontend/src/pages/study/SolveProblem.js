@@ -8,7 +8,7 @@ export default function SolveProblem() {
   return (
     <Main>
       <Problem>
-        <Img src="https://ncache.ilbe.com/files/attach/new/20150224/14357299/2334320564/5366146341/59f715829f6e1ec432f420df9a9a9792.jpeg"></Img>
+        <Img src="https://img3.cyberskyshop.com:8443/web/upload/prm/20200331161339247021/20200401084535615044.png"></Img>
       </Problem>
       <Resizable
           defaultSize={{ width: '50%', height: '100%' }}
@@ -61,8 +61,9 @@ export default function SolveProblem() {
   )
 }
 
+
 const Main = styled.div`
-  color: #ffffff;
+  color:  #ffffff; // 폰트 색 바꾸려면 이거 바꿔야함
   display: flex;
   width: 100%;
   height: 100%;
@@ -96,13 +97,14 @@ const CodingSection = styled.div`
   padding-top: 1rem;
   height: calc(60% - 7px);
   overflow-y: hidden;
-  background-color: #263747;
+  background-color: #263747; // 코드 입력창 배경화면
   display: flex;
   flex-direction: column;
   border-bottom: 0.0625rem solid #172334;
   word-wrap: break-word;
   word-break: break-all;
   height: 100vh;
+  
 `
 // const Gutter = styled.div`
 //   width: 48px;
