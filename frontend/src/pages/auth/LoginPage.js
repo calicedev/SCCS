@@ -43,7 +43,7 @@ export default function LoginForm() {
       .then((res) => {
         const tokens = res.data
         dispatch(setTokens(tokens))
-        navigate('/main')
+        navigate('/')
       })
       .then(() => {
         setUserInfo(id)

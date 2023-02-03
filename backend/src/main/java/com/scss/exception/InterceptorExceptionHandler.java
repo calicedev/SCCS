@@ -16,8 +16,8 @@ public class InterceptorExceptionHandler {
                 .status(InterceptorExceptionEnum.EXPIREDTOKEN.getStatus())
                 .body(InterceptorExceptionEntity.builder()
 //                        .errorCode(InterceptorExceptionEnum.EXPIREDTOKEN.getCode())
-                        .errorCode("403")
-                        .errorMessage(e.toString())
+                        .errorCode("에러")
+                        .errorMessage(e.getMessage())
                         .build());
     }
 

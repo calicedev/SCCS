@@ -95,7 +95,7 @@ public class MemberController {
             if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
                 logger.debug("[logIn]로그인 성공");
                 String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-                        (MINUTE)); // 1시간
+                        (MINUTE * 30)); // 30분
                 String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
                         (WEEK)); // 1주일
                 resultmap.put("accessToken", accessToken);
@@ -281,12 +281,14 @@ public class MemberController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+    /** 레디스 전체 키 개수 조회 **/
     @GetMapping("/redisKeys")
     public ResponseEntity<?> showRedisKeys() {
         int result = redisService.showAllKeys();
         return new ResponseEntity<String>("모든 키 조회 성공: " + result + "개",HttpStatus.OK);
     }
 
+    /** 레디스 전체 키-밸류 삭제 **/
     @DeleteMapping("/redisKeys")
     public ResponseEntity<?> deleteKeys() {
         redisService.deleteAllKeys();

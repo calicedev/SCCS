@@ -4,12 +4,8 @@ import styled from 'styled-components'
 
 import sockjs from 'sockjs-client'
 import stompjs from 'stompjs'
-import { useSelector } from 'react-redux'
 
 export default function WebSocket() {
-  // 리덕스 -> 유저 id 읽기
-  const user = useSelector((state) => state.user.nick)
-
   const studyroomId = 888
   const [stomp, setStomp] = useState(false)
   const [connected, setConnected] = useState(false)
@@ -23,7 +19,7 @@ export default function WebSocket() {
   const [chatList, setChatList] = useState([])
   const [chatNickname, setChatNickname] = useState([])
 
-  const nickname = '제발 되게 해주세요 제발'
+  const nickname = '와와왕'
 
   const connect = function () {
     var sock = new sockjs('http://70.12.246.176:8200/sccs')
@@ -264,11 +260,6 @@ const MySubmit = styled.input`
   width: 5rem;
   height: 3rem;
   background-color: pink;
-`
-
-const H = styled.hr`
-  background: indigo;
-  height: 1px;
 `
 
 const H = styled.hr`

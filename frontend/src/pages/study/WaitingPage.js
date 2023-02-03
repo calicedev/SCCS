@@ -7,7 +7,7 @@ import Button from 'components/common/Button'
 import ProfileInput from 'components/mypage/ProfileInput'
 
 const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/'
+  process.env.NODE_ENV === 'production' ? '' : 'http://172.30.1.26:5000/'
 
 export default function WaitingPage() {
   const [mySessionId, setMySessionId] = useState('Room1')
