@@ -90,6 +90,12 @@ public class StudyroomController {
         }
     }
 
+    /** 특정 스터디 방으로 입장 : 대기방으로 입장 **/
+    @GetMapping("/studyroom/waitingroom/{studyroomId}")
+    public ResponseEntity<?> enterStudyroom(@PathVariable("studyroomId") int id) {
+        return new ResponseEntity<>(studyroomService.selectAllStudyroom(), HttpStatus.OK);
+    }
+
     /** 코딩 테스트 시작하기 **/
     @PostMapping("/studyroom/codingtest")
     public ResponseEntity<?> startCodingTest(@RequestBody StudyroomDto studyroomDto){
