@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import axios from 'libs/axios'
@@ -13,6 +13,7 @@ import stompjs from 'stompjs'
 export default function WaitingRoom() {
   // 해당 페이지에 들어오자마자 axios 요청 보내서 방 정보를 얻어와서 화면에 뿌려주기
   const { studyroomId } = useParams()
+  const navigate = useNavigate()
   const [roomInfo, setRoomInfo] = useState({})
 
   const nickname = useSelector((state) => state.user.nickname)
@@ -23,6 +24,7 @@ export default function WaitingRoom() {
   const [isReady, setIsReady] = useState(false)
   const [readyMsg, setReadyMsg] = useState({})
   const [exitMsg, setExitMsg] = useState({})
+  const [personnel, setPersonnel] = useState(0)
 
   // 채팅 기능 관련 state
   const [chat, setChat] = useState('')
@@ -51,6 +53,7 @@ export default function WaitingRoom() {
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
       setConnected(true)
+      setPersonnel(personnel + 1)
       stompClient.send(
         '/pub/studyroom',
         {},
@@ -58,6 +61,7 @@ export default function WaitingRoom() {
           studyroomId: studyroomId,
           nickname: nickname,
           status: 'enter',
+          personnel: personnel,
         }),
       )
 
@@ -75,7 +79,8 @@ export default function WaitingRoom() {
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
-            console.log(exitMsg.message)
+
+            // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
           }
           if (content.status === 'ready') {
@@ -97,6 +102,17 @@ export default function WaitingRoom() {
 
   const disconnect = function () {
     if (stomp) {
+      setPersonnel(personnel - 1)
+      stomp.send(
+        '/pub/studyroom',
+        {},
+        JSON.stringify({
+          studyroomId: studyroomId,
+          nickname: nickname,
+          status: 'exit',
+          personnel: personnel,
+        }),
+      )
       stomp.disconnect()
       setConnected(false)
     }
@@ -110,19 +126,6 @@ export default function WaitingRoom() {
       disconnect()
     }
   }, [])
-
-  const exit = () => {
-    stomp.disconnect()
-    stomp.send(
-      '/pub/studyroom',
-      {},
-      JSON.stringify({
-        studyroomId: studyroomId,
-        nickname: nickname,
-        status: 'exit',
-      }),
-    )
-  }
 
   const ready = () => {
     stomp.send(
@@ -151,7 +154,7 @@ export default function WaitingRoom() {
     setChat('')
   }
 
-  // input에
+  // input에 담을 메시지
   const changeMsg = (e) => {
     setChat(e.target.value)
     // console.log(chat)
@@ -167,6 +170,7 @@ export default function WaitingRoom() {
       <h1>{studyroomId}번 대기방</h1>
       <h3>방제목 : {roomInfo.title}</h3>
       <h3>방장 : {roomInfo.hostId}</h3>
+      <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3>
       <h3>로그인된 유저 : {nickname}</h3>
       {connected && (
         <>
@@ -175,15 +179,14 @@ export default function WaitingRoom() {
           <Btn
             onClick={function () {
               disconnect(stomp)
+              navigate('/')
             }}
           >
-            Disconnect
+            EXIT
           </Btn>
+          <div>{exitMsg.message}</div>
 
           <div>{enterMsg.message}</div>
-
-          <Btn onClick={exit}>EXIT</Btn>
-          <div>{exitMsg.message}</div>
 
           <Btn onClick={ready}>READY</Btn>
           <div>{isReady}</div>
