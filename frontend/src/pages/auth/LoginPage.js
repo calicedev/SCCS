@@ -9,6 +9,7 @@ import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import { useDispatch } from 'react-redux'
+import { setUserId } from 'redux/userSlice'
 
 export default function LoginForm() {
   // 라액트 훅 관련 함수 정의
@@ -48,6 +49,7 @@ export default function LoginForm() {
       })
       .then(() => {
         setUserInfo(id)
+        dispatch(setUserId(id))
       })
       .catch((err) => {
         console.log(err)
