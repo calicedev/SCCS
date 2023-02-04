@@ -28,7 +28,6 @@ public class StudyroomServiceImpl implements StudyroomService{
 
             // 스터디 룸 생성
             studyroomMapper.createStudyroom(studyroomDto);
-            System.out.println("during");
             // studuroom_language 에 언어 유형 입력
             int id = studyroomDto.getId();
             List<Integer> language_ids =  studyroomDto.getLanguageIds();
@@ -49,7 +48,7 @@ public class StudyroomServiceImpl implements StudyroomService{
                 int min = 1;
                 int max = 2;
 
-                for(int i=0; i<2; i++){
+                for(int i=0; i<7; i++){
                     // 알고리즘 유형 2개 랜덤하게 고르기
                     int randomAlgo = (int)(Math.random() * (max - min + 1)) + min;
                     // 알고리즘 유형 2개 저장.
@@ -165,6 +164,19 @@ public class StudyroomServiceImpl implements StudyroomService{
         }
             return studyrooms;
 
+    }
+
+    @Override
+    public Map<String, Object> enterStudyroom(int id) {
+        StudyroomDto s = studyroomMapper.enterStudyroom(id);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put( "languageIds", s.getLanguageIds() );
+        resultMap.put( "algoIds", s.getAlgoIds() );
+        resultMap.put("isPrivate", s.getIsPrivate());
+        resultMap.put("isSolving", s.getIsSolving());
+        resultMap.put("title", s.getTitle());
+        resultMap.put("id", s.getId());
+        return resultMap;
     }
 
     @Override

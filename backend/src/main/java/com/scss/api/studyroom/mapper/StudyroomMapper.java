@@ -4,6 +4,7 @@ import com.scss.api.studyroom.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StudyroomMapper {
@@ -20,7 +21,9 @@ public interface StudyroomMapper {
     public int selectProblemId(String path);
 
     public void insertMemberId(StudyroomMemberDto studyroomMemberDto);
+
     public List<StudyroomDto> selectAllStudyroom();
+
     public List<StudyroomDto> selectStudyroom(StudyroomDto studyroomDto);
 
     public int checkStudyroomPassword(StudyroomDto studyroomDto);
@@ -38,4 +41,6 @@ public interface StudyroomMapper {
     public int endStudyroomByOwner(StudyroomDto studyroomDto);
 
     public ProblemDto getProblemInfo(int problemId);
+
+    public StudyroomDto enterStudyroom(int id);
 }
