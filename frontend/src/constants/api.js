@@ -15,6 +15,8 @@ const api = function (type, options = {}) {
     accessToken: [`/api/member/accesstoken`, 'get'],
     createRoom: ['/api/studyroom', 'post'],
     searchRoom: ['/api/studyroom', 'get'],
+    // 방 입장 (2.4 민혁 추가)
+    enterRoom: [`/api/studyroom/waitingroom/${options.studyroomId}`, 'get'],
     searchRoomDetail: ['/api/studyroom/detail', 'post'],
     checkRoomPassword: ['/api/studyroom/password', 'post'],
     studyHistory: [
