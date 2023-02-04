@@ -61,7 +61,7 @@ export default function CreateModalContent() {
       languageIds,
       algoIds,
       // memberId에서 host로 변경 (2.4 민혁 - 방장임을 표시해주기 위해)
-      host: id,
+      hostId: id,
     }
     const [url, method] = api('createRoom')
     const config = { url, method, data }
