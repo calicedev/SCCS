@@ -270,8 +270,3 @@ const H = styled.hr`
   background: indigo;
   height: 1px;
 `
-
-const H = styled.hr`
-  background: indigo;
-  height: 1px;
-`
