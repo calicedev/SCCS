@@ -160,7 +160,7 @@ public class StudyroomServiceImpl implements StudyroomService{
             resultMap.put("isSolving", s.get(i).getIsSolving());
             resultMap.put("title", s.get(i).getTitle());
             resultMap.put("id", s.get(i).getId());
-            resultMap.put("host", s.get(i).getHostId());
+            resultMap.put("hostId", s.get(i).getHostId());
             studyrooms.add(resultMap);
         }
             return studyrooms;
@@ -177,7 +177,7 @@ public class StudyroomServiceImpl implements StudyroomService{
         resultMap.put("isSolving", s.getIsSolving());
         resultMap.put("title", s.getTitle());
         resultMap.put("id", s.getId());
-        resultMap.put("host", s.getHostId());
+        resultMap.put("hostId", s.getHostId());
         return resultMap;
     }
 
