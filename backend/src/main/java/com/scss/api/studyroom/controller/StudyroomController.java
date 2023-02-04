@@ -57,7 +57,6 @@ public class StudyroomController {
         Map<String, Object> resultMap = new HashMap<>();
         int studyroomId = studyroomService.createStudyroom(studyroomDto);
         resultMap.put("studyroomId",studyroomId);
-
         if (studyroomId!=0) {
             resultMap.put("message", "방 생성 성공");
             return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
