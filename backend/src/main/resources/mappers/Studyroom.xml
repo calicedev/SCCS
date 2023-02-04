@@ -101,7 +101,7 @@
   </select>
 
   <select id="selectStudyroom" parameterType="StudyroomDto" resultMap="studyList">
-    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host as host sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
     where is_active=1
     <if test="id != 0">
       AND s.id= #{id}
@@ -138,6 +138,11 @@
     </foreach>
   </insert>
 
+  <select id="enterStudyroom" parameterType="int" resultMap="studyList">
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host as host, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    where is_active=1 AND s.id= #{id}
+  </select>
+
   <update id="changeStudyroomSolvingStatus" parameterType="StudyroomDto">
     UPDATE studyroom
     SET is_solving =TRUE
@@ -171,5 +176,6 @@
     SET is_active=FALSE
     WHERE id = #{id}
   </update>
+
 
 </mapper>

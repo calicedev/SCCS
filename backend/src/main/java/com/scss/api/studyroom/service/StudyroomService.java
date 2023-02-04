@@ -14,6 +14,7 @@ public interface StudyroomService {
     public int createStudyroom(StudyroomDto studyroomDto);
     public List<Map<String, Object>> selectAllStudyroom();
     public List<Map<String, Object>> selectStudyroom(StudyroomDto studyroomDto);
+    public Map<String, Object> enterStudyroom(int id);
     public String checkStudyroomPassword(StudyroomDto studyroomDto);
     public Map<String, Object> startCodingTest(StudyroomDto studyroomDto);
     public void submitProblem(SubmissionDto submissionDto);
