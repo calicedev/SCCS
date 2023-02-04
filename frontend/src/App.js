@@ -56,6 +56,7 @@ function App() {
         <Route path="/solveproblem" element={<SolveProblem />}></Route>
         <Route path="/openvidu" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
+        {/* 대기방 2.4 민혁 생성 */}
         <Route path="/room/:id/waiting" element={<WaitingRoom />}></Route>
         <Route path="/websocket" element={<WebSocket />}></Route>
         <Route path="/websocket2" element={<WebSocket2 />}></Route>

@@ -67,11 +67,10 @@ export default function CreateModalContent() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res)
+        console.log(res.data)
         // back으로부터 받은 방 pk값을 path variable로 사용해서 해당 방으로 이동
-        // const studyroomId = res.data
-        navigate('/mypage')
-        // navigate(`/room/${studyroomId}/waiting`)
+        const studyroomId = res.data.studyroomId
+        navigate(`/room/${studyroomId}/waiting`)
       })
       .catch((err) => {
         console.log(err)
