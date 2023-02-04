@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 
 export default function WebSocket() {
   // 리덕스 -> 유저 id 읽기
-  const user = useSelector((state) => state.user.nick)
+  const user = useSelector((state) => state.user.nickname)
 
   const studyroomId = 888
   const [stomp, setStomp] = useState(false)
