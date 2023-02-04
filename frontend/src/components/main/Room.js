@@ -6,6 +6,7 @@ import { FaLock, FaPython, FaJava } from 'react-icons/fa'
 import IconButton from 'components/common/IconButton'
 import Modal from 'components/common/Modal'
 import PwdModalContent from 'components/main/PwdModalContent'
+import { useNavigate } from 'react-router-dom'
 
 export default function Room({
   id,
@@ -15,6 +16,7 @@ export default function Room({
   algoIds,
   languageIds,
 }) {
+  const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false)
 
   let algorithms = ''
@@ -38,6 +40,9 @@ export default function Room({
     if (isPrivate) {
       setShowModal(true)
       return
+    } else {
+      // console.log(`${id}번 방으로 입장한다!!!!!`)
+      navigate(`/room/${id}/waiting`)
     }
   }
 

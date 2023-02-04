@@ -60,14 +60,17 @@ export default function CreateModalContent() {
       password,
       languageIds,
       algoIds,
-      memberId: id,
+      // memberId에서 host로 변경 (2.4 민혁 - 방장임을 표시해주기 위해)
+      host: id,
     }
     const [url, method] = api('createRoom')
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res)
-        navigate('/main')
+        console.log(res.data)
+        // back으로부터 받은 방 pk값을 path variable로 사용해서 해당 방으로 이동
+        const studyroomId = res.data.studyroomId
+        navigate(`/room/${studyroomId}/waiting`)
       })
       .catch((err) => {
         console.log(err)
