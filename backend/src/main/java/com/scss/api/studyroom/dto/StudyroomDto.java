@@ -23,5 +23,5 @@ public class StudyroomDto {
     private Boolean isPrivate;
     private int languageId;
     private int algoId;
-    private String host;
+    private String hostId;
 }

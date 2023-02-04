@@ -114,7 +114,7 @@ public class StudyroomServiceImpl implements StudyroomService{
 
             // 방장을 알고리즘 스터디_멤버에 삽입
             StudyroomMemberDto studyroomMemberDto = new StudyroomMemberDto();
-            studyroomMemberDto.setMemberId(studyroomDto.getHost());
+            studyroomMemberDto.setMemberId(studyroomDto.getHostId());
             studyroomMemberDto.setStudyroomId(id);
             studyroomMapper.insertMemberId(studyroomMemberDto);
             return id;
@@ -160,7 +160,7 @@ public class StudyroomServiceImpl implements StudyroomService{
             resultMap.put("isSolving", s.get(i).getIsSolving());
             resultMap.put("title", s.get(i).getTitle());
             resultMap.put("id", s.get(i).getId());
-            resultMap.put("host", s.get(i).getHost());
+            resultMap.put("host", s.get(i).getHostId());
             studyrooms.add(resultMap);
         }
             return studyrooms;
@@ -177,7 +177,7 @@ public class StudyroomServiceImpl implements StudyroomService{
         resultMap.put("isSolving", s.getIsSolving());
         resultMap.put("title", s.getTitle());
         resultMap.put("id", s.getId());
-        resultMap.put("host", s.getHost());
+        resultMap.put("host", s.getHostId());
         return resultMap;
     }
 
