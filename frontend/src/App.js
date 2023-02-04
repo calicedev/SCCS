@@ -26,6 +26,7 @@ import { useSelector } from 'react-redux'
 
 // import VideoRoomComponent from './components/VideoRoomComponent'
 import WaitingPage from './pages/study/WaitingPage'
+import WaitingRoom from './pages/study/WaitingRoom'
 import WebSocket from 'websocket/WebSocket'
 import WebSocket3 from 'websocket/WebSocket3'
 import WebSocket2 from 'websocket2/WebSocket2'
@@ -55,6 +56,7 @@ function App() {
         <Route path="/solveproblem" element={<SolveProblem />}></Route>
         <Route path="/openvidu" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
+        <Route path="/room/:id/waiting" element={<WaitingRoom />}></Route>
         <Route path="/websocket" element={<WebSocket />}></Route>
         <Route path="/websocket2" element={<WebSocket2 />}></Route>
         <Route path="/websocket3" element={<WebSocket3 />}></Route>
