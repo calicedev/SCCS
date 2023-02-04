@@ -189,6 +189,7 @@ export default function MainRooms() {
             isPrivate={room.isPrivate}
             algoIds={room.algoIds}
             languageIds={room.languageIds}
+            // 방 클릭시 해당 대기방으로 이동 (2.4 민혁 추가)
           />
         ))}
       </GridBox>
