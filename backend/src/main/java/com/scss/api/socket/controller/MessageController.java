@@ -22,6 +22,7 @@ public class MessageController {
         System.out.println(headerAccessor.getSessionId());
 
         if(socketDto.getStatus().equals("enter")){
+            System.out.println(socketDto.getStudyroomId());
             socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }else if(socketDto.getStatus().equals("ready")){
