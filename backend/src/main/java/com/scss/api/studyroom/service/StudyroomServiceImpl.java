@@ -115,7 +115,7 @@ public class StudyroomServiceImpl implements StudyroomService{
 
             // 방장을 알고리즘 스터디_멤버에 삽입
             StudyroomMemberDto studyroomMemberDto = new StudyroomMemberDto();
-            studyroomMemberDto.setMemberId(studyroomDto.getMemberId());
+            studyroomMemberDto.setMemberId(studyroomDto.getHost());
             studyroomMemberDto.setStudyroomId(id);
             studyroomMapper.insertMemberId(studyroomMemberDto);
             return id;

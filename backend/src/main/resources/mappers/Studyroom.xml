@@ -31,12 +31,14 @@
     insert into studyroom(
     title,
     password,
-    is_private
+    is_private,
+    host
     )
     values(
     #{title},
     #{password},
-    #{isPrivate}
+    #{isPrivate},
+    #{host}
     )
   </insert>
   <insert id="insertLanguageId" parameterType="StudyroomLanguageDto">
