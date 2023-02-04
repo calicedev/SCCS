@@ -50,31 +50,36 @@ public class StudyroomController {
         REST_TEMPLATE = new RestTemplate(factory);
     }
 
+    /** 방 생성 **/
     @PostMapping("/studyroom")
-    public int createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
-
+    public ResponseEntity<?> createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
         logger.debug("studyroomDto", studyroomDto);
-        int pk = studyroomService.createStudyroom(studyroomDto);
-        if (pk!=0) {
-            return pk;
+        Map<String, Object> resultMap = new HashMap<>();
+        int studyroomId = studyroomService.createStudyroom(studyroomDto);
+        resultMap.put("studyroomId",studyroomId);
+
+        if (studyroomId!=0) {
+            resultMap.put("message", "방 생성 성공");
+            return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
         } else {
-            return 0;
+            resultMap.put("message", "방 생성 실패");
+            return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 401
         }
 
     }
-
+    /** 메인 페이지에서 전체 방 조회 **/
     @GetMapping("/studyroom")
     public ResponseEntity<List<Map<String, Object>>> selectAllStudyroom() {
         return new ResponseEntity<>(studyroomService.selectAllStudyroom(), HttpStatus.OK);
     }
 
-
+    /** 메인 페이지에서 전체 조건별 조회 **/
     @PostMapping("/studyroom/detail")
     public ResponseEntity<List<Map<String, Object>>> selectStudyroom(@RequestBody StudyroomDto studyroomDto){
         return new ResponseEntity<>(studyroomService.selectStudyroom(studyroomDto), HttpStatus.OK);
 
     }
-
+    /** 방 입장시 비밀번호 체크 **/
     @PostMapping("/studyroom/password")
     public ResponseEntity<?> checkStudyroomPassword(@RequestBody StudyroomDto studyroomDto){
 
@@ -85,12 +90,13 @@ public class StudyroomController {
         }
     }
 
-    @PostMapping("/codingtest")
+    /** 코딩 테스트 시작하기 **/
+    @PostMapping("/studyroom/codingtest")
     public ResponseEntity<?> startCodingTest(@RequestBody StudyroomDto studyroomDto){
-        //코딩 테스트 시작하기
         return new ResponseEntity<>(studyroomService.startCodingTest(studyroomDto), HttpStatus.OK);
     }
 
+    /** 코딩 테스트 문제 제출 **/
     @PostMapping("/problem")
     public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
         ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
@@ -136,10 +142,10 @@ public class StudyroomController {
         return new ResponseEntity<>(SUCCESS, httpStatus);
 
     }
-
-    @PatchMapping("/codingtest")
+    /** 코딩 테스트 방장에 의해 끝내기 **/
+    @PatchMapping("/studyroom/codingtest")
     public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){
-        //코딩 테스트 시작하기
+        //코딩 테스트 끝내기
         return new ResponseEntity<>(studyroomService.endStudyroomByOwner(studyroomDto), HttpStatus.OK);
     }
 
