@@ -24,4 +24,5 @@ public class StudyroomDto {
     private int languageId;
     private int algoId;
     private String hostId;
+    private int personnel;
 }

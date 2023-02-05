@@ -18,17 +18,17 @@ public class StudyroomServiceImpl implements StudyroomService{
     private static final Logger logger = LoggerFactory.getLogger(StudyroomServiceImpl.class);
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-    // 생성자 주입
     private final StudyroomMapper studyroomMapper;
 
-    // 방 생성
+    /** 방 생성 **/
     @Override
     public int createStudyroom(StudyroomDto studyroomDto) {
         try {
 
-            // 스터디 룸 생성
+            // 1. studyroom DB에 스터디 룸 생성
             studyroomMapper.createStudyroom(studyroomDto);
-            // studuroom_language 에 언어 유형 입력
+
+            // 2. studYroom_language DB에 언어 유형 입력
             int id = studyroomDto.getId();
             List<Integer> language_ids =  studyroomDto.getLanguageIds();
 
@@ -40,6 +40,7 @@ public class StudyroomServiceImpl implements StudyroomService{
                 studyroomMapper.insertLanguageId(studyroomLanguageDto);
             }
 
+            // 3. 받은 알고리즘 유형에 따라 문제 선택해서 보내주기.
             List<Integer> algo_ids = studyroomDto.getAlgoIds();
             StudyroomAlgoDto studyroomAlgoDto = new StudyroomAlgoDto();
             studyroomAlgoDto.setStudyroomId(id);
@@ -72,7 +73,6 @@ public class StudyroomServiceImpl implements StudyroomService{
                 studyroomAlgoDto.setAlgoId(algo_ids.get(0));
                 studyroomMapper.insertAlgoId(studyroomAlgoDto);
                 // 저장한 1개 알고리즘 유형 중에서 문제 랜덤으로 2개 선택하기
-
                 int algoCount = studyroomMapper.selectProblemCount(studyroomAlgoDto.getAlgoId());
                 int n[] = new int[2];
                 int randomProblem = 0;
@@ -124,7 +124,7 @@ public class StudyroomServiceImpl implements StudyroomService{
         }
     }
 
-
+    /** 메인 페이지에서 전체 방 조회 **/
     @Override
     public List<Map<String, Object>> selectAllStudyroom() {
         List<StudyroomDto> s = studyroomMapper.selectAllStudyroom();
@@ -139,13 +139,13 @@ public class StudyroomServiceImpl implements StudyroomService{
             resultMap.put("isSolving", s.get(i).getIsSolving());
             resultMap.put("title", s.get(i).getTitle());
             resultMap.put("id", s.get(i).getId());
+            resultMap.put("personnel", s.get(i).getPersonnel());
             studyrooms.add(resultMap);
         }
         return studyrooms;
-
     }
 
-
+    /** 메인 페이지에서 전체 조건별 조회 **/
     @Override
     public List<Map<String, Object>> selectStudyroom(StudyroomDto studyroomDto) {
         List<StudyroomDto> s = studyroomMapper.selectStudyroom(studyroomDto);
@@ -161,26 +161,13 @@ public class StudyroomServiceImpl implements StudyroomService{
             resultMap.put("title", s.get(i).getTitle());
             resultMap.put("id", s.get(i).getId());
             resultMap.put("hostId", s.get(i).getHostId());
+            resultMap.put("personnel", s.get(i).getPersonnel());
             studyrooms.add(resultMap);
         }
             return studyrooms;
-
     }
 
-    @Override
-    public Map<String, Object> enterStudyroom(int id) {
-        StudyroomDto s = studyroomMapper.enterStudyroom(id);
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put( "languageIds", s.getLanguageIds() );
-        resultMap.put( "algoIds", s.getAlgoIds() );
-        resultMap.put("isPrivate", s.getIsPrivate());
-        resultMap.put("isSolving", s.getIsSolving());
-        resultMap.put("title", s.getTitle());
-        resultMap.put("id", s.getId());
-        resultMap.put("hostId", s.getHostId());
-        return resultMap;
-    }
-
+    /** 방 입장시 비밀번호 체크 **/
     @Override
     public String checkStudyroomPassword(StudyroomDto studyroomDto) {
         try {
@@ -195,34 +182,59 @@ public class StudyroomServiceImpl implements StudyroomService{
         }
     }
 
+    /** 특정 스터디 방으로 입장 : 대기방으로 입장 **/
+    @Override
+    public Map<String, Object> enterStudyroom(int id) {
+        StudyroomDto s = studyroomMapper.enterStudyroom(id);
+        Map<String, Object> resultMap = null;
+        if(s.getPersonnel()<6){
+            resultMap = new HashMap<>();
+            resultMap.put( "languageIds", s.getLanguageIds() );
+            resultMap.put( "algoIds", s.getAlgoIds() );
+            resultMap.put("isPrivate", s.getIsPrivate());
+            resultMap.put("isSolving", s.getIsSolving());
+            resultMap.put("title", s.getTitle());
+            resultMap.put("id", s.getId());
+            resultMap.put("hostId", s.getHostId());
+            resultMap.put("personnel", s.getPersonnel());
+        }else if(s.getPersonnel()==6){
+            resultMap.put("result","full");
+        }else{
+            resultMap.put("result","notexist");
+        }
+        return resultMap;
+    }
+
+    /** 코딩 테스트 시작하기 **/
     @Override
     public Map<String, Object> startCodingTest(StudyroomDto studyroomDto) {
-
         Map<String, Object> resultMap = new HashMap<>();
-        // type을 진행 중으로 바꾼다.
+
+        // 1. isSolving 상태를 진행 중(1)으로 바꾼다.
         studyroomMapper.changeStudyroomSolvingStatus(studyroomDto);
 
-        // 스터디 시작하는 애들 아이디 넣어준다.
+        // 2. 스터디 시작하는 애들 아이디 넣어준다.
         studyroomMapper.insertMemberIds(studyroomDto);
         System.out.println("여기 까지 진행 됨");
-        // 스터디룸 정보를 담은 걸 resultmap에 담는다.
+
+        // 3. 스터디룸 정보를 담은 걸 resultmap에 담는다.
         StudyroomDto s = studyroomMapper.selectStudyroomById(studyroomDto.getId());
         resultMap.put( "algo_ids", s.getAlgoIds());
         resultMap.put("title", s.getTitle());
         resultMap.put("id", s.getId());
 
-        // 스터디룸에 맞는 문제를 resultmap에 담는다.
         List<ProblemDto> p = studyroomMapper.selectProblemByStudyroomId(studyroomDto.getId());
         resultMap.put( "problems", p);
         return resultMap;
-
     }
 
+    /** 코딩 테스트 문제 제출 **/
     @Override
     public void submitProblem(SubmissionDto submissionDto) {
         studyroomMapper.submitProblem(submissionDto);
     }
 
+    /** 코딩 테스트 방장에 의해 끝내기 **/
     @Override
     public String endStudyroomByOwner(StudyroomDto studyroomDto) {
         try {
@@ -240,6 +252,12 @@ public class StudyroomServiceImpl implements StudyroomService{
     public ProblemDto getProblemInfo(int problemId) {
         ProblemDto p = studyroomMapper.getProblemInfo(problemId);
         return p;
+    }
+
+    @Override
+    public void changeStudyroomPersonnel(int studyroomId) {
+        studyroomMapper.changeStudyroomPersonnel(studyroomId);
+        return;
     }
 
     private static boolean checkout(int n[], int index) {

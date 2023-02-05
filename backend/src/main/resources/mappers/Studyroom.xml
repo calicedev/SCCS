@@ -12,6 +12,7 @@
     <result column="is_private" property="isPrivate"/>
     <result column="is_solving" property="isSolving"/>
     <result column="host_id" property="hostId"/>
+    <result column="personnel" property="personnel"/>
     <collection property="algoIds" ofType="Integer">
       <result column="algo_id"/>
     </collection>
@@ -97,13 +98,13 @@
 
 
   <select id="selectAllStudyroom" resultMap="studyList">
-    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving,  s.personnel  as personnel, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
     where is_active=1
     order by create_datetime desc;
   </select>
 
   <select id="selectStudyroom" parameterType="StudyroomDto" resultMap="studyList">
-    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host_id as host_id, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host_id as host_id, s.personnel  as personnel, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
     where is_active=1
     <if test="id != 0">
       AND s.id= #{id}
@@ -141,15 +142,16 @@
   </insert>
 
   <select id="enterStudyroom" parameterType="int" resultMap="studyList">
-    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host_id as host_id, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host_id as host_id, s.personnel as personnel, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
     where is_active=1 AND s.id= #{id}
   </select>
 
-  <update id="changeStudyroomSolvingStatus" parameterType="StudyroomDto">
+  <update id="changeStudyroomPersonnel" parameterType="int">
     UPDATE studyroom
-    SET is_solving =TRUE
-    WHERE id = #{id}
+    SET personnel =#{personnel}
+    WHERE id = #{studyroomId}
   </update>
+
   <select id="selectStudyroomById" parameterType="int" resultMap="studyList2">
     SELECT s.id as id, s.title as title, s.host_id as host_id, sa.algo_id as algo_id FROM studyroom s
     LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id where s.id=#{id};

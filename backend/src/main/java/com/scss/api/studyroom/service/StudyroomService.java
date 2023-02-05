@@ -20,4 +20,6 @@ public interface StudyroomService {
     public void submitProblem(SubmissionDto submissionDto);
     public String endStudyroomByOwner(StudyroomDto studyroomDto);
     public ProblemDto getProblemInfo(int problemId);
+
+    public void changeStudyroomPersonnel(int studyroomId);
 }

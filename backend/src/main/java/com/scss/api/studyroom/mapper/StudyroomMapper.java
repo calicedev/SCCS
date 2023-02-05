@@ -43,4 +43,6 @@ public interface StudyroomMapper {
     public ProblemDto getProblemInfo(int problemId);
 
     public StudyroomDto enterStudyroom(int id);
+
+    public void changeStudyroomPersonnel(int studyroomId);
 }
