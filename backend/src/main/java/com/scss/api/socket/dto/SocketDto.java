@@ -14,4 +14,5 @@ public class SocketDto {
     private String nickname;
     private String message;
     private String status;
+    private int personnel;
 }
