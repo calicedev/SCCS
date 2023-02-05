@@ -130,6 +130,10 @@
     select count(*) from studyroom where id = #{id} and password = #{password}
   </select>
 
+  <select id="isExistStudyroom" parameterType="int" resultType="boolean">
+    select IF(COUNT(*) = 1, 1, 0) from studyroom where id = #{id}
+  </select>
+
   <insert id="insertMemberIds" parameterType="StudyroomDto">
     insert into studyroom_member(
     member_id,

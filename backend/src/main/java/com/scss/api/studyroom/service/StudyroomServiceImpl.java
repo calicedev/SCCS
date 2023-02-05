@@ -198,9 +198,9 @@ public class StudyroomServiceImpl implements StudyroomService{
             resultMap.put("hostId", s.getHostId());
             resultMap.put("personnel", s.getPersonnel());
         }else if(s.getPersonnel()==6){
+            resultMap = new HashMap<>();
+            System.out.println("여기까지는");
             resultMap.put("result","full");
-        }else{
-            resultMap.put("result","notexist");
         }
         return resultMap;
     }
@@ -258,6 +258,12 @@ public class StudyroomServiceImpl implements StudyroomService{
     public void changeStudyroomPersonnel(int studyroomId) {
         studyroomMapper.changeStudyroomPersonnel(studyroomId);
         return;
+    }
+
+    @Override
+    public boolean isExistStudyroom(int id) {
+        boolean isExist = studyroomMapper.isExistStudyroom(id);
+        return isExist;
     }
 
     private static boolean checkout(int n[], int index) {

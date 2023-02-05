@@ -123,17 +123,19 @@ public class StudyroomController {
     @GetMapping("/studyroom/waitingroom/{studyroomId}")
     public ResponseEntity <?> enterStudyroom(@PathVariable("studyroomId") int id) {
         Map<String, Object> resultMap = new HashMap<>();
-        Map<String, Object> s = studyroomService.enterStudyroom(id);
-        if(!s.containsKey("result")){
-            resultMap.put("studyroom", s);
-            resultMap.put("result",SUCCESS);
-            resultMap.put("message", "방 입장 성공, 방 정보 return");
+        if(studyroomService.isExistStudyroom(id)){
+            Map<String, Object> s = studyroomService.enterStudyroom(id);
+            if(!s.containsKey("result")){
+                resultMap.put("studyroom", s);
+                resultMap.put("result",SUCCESS);
+                resultMap.put("message", "방 입장 성공, 방 정보 return");
+            }
+            else if(s.get("result").equals("full")){
+                resultMap.put("result",FAIL);
+                resultMap.put("message", "입장 인원을 초과했기에 입장 불가합니다.");
+            }
         }
-        else if(s.get("result").equals("full")){
-            resultMap.put("result",FAIL);
-            resultMap.put("message", "입장 인원을 초과했기에 입장 불가합니다.");
-        }
-        else if(s.get("result").equals("notexist")){
+        else {
             resultMap.put("result",FAIL);
             resultMap.put("message", "존재하지 않는 방입니다");
         }

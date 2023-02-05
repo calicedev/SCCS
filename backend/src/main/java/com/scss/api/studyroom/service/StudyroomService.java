@@ -22,4 +22,6 @@ public interface StudyroomService {
     public ProblemDto getProblemInfo(int problemId);
 
     public void changeStudyroomPersonnel(int studyroomId);
+
+    public boolean isExistStudyroom(int id);
 }
