@@ -183,11 +183,12 @@ public class StudyroomController {
         return new ResponseEntity<>(SUCCESS, httpStatus);
 
     }
-    
+
     /** 코딩 테스트 방장에 의해 끝내기 **/
     @PatchMapping("/studyroom/codingtest")
     public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){
         //코딩 테스트 끝내기
+        
         return new ResponseEntity<>(studyroomService.endStudyroomByOwner(studyroomDto), HttpStatus.OK);
     }
 
