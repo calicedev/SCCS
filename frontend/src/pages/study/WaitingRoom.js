@@ -24,7 +24,7 @@ export default function WaitingRoom() {
   const [isReady, setIsReady] = useState(false)
   const [readyMsg, setReadyMsg] = useState({})
   const [exitMsg, setExitMsg] = useState({})
-  const [personnel, setPersonnel] = useState(0)
+  const [personnel, setPersonnel] = useState(1)
 
   // 채팅 기능 관련 state
   const [chat, setChat] = useState('')
@@ -53,7 +53,7 @@ export default function WaitingRoom() {
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
       setConnected(true)
-      setPersonnel(personnel + 1)
+
       stompClient.send(
         '/pub/studyroom',
         {},
@@ -64,7 +64,7 @@ export default function WaitingRoom() {
           personnel: personnel,
         }),
       )
-      console.log('입장')
+      console.log('입장 에베베베베베~')
 
       // ************************ 여기서부터는 sub입니다******************************
 
@@ -76,10 +76,15 @@ export default function WaitingRoom() {
           // 입장
           if (content.status === 'enter') {
             setEnterMsg(content)
+            const newCount = personnel + 1
+            console.log(newCount)
           }
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
+            const newCount = personnel - 1
+            setPersonnel(newCount)
+            console.log(personnel)
 
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
@@ -89,7 +94,7 @@ export default function WaitingRoom() {
             setIsReady(true)
           }
           if (content.status === 'chat') {
-            // 채팅 정보가 서버러부터 오면 배열에 저장
+            // 채팅 정보가 서버로부터 오면 배열에 저장
             setChatNickname((chatNickname) => [
               ...chatNickname,
               content.nickname,
@@ -103,7 +108,6 @@ export default function WaitingRoom() {
 
   const disconnect = function () {
     if (stomp) {
-      setPersonnel(personnel - 1)
       stomp.send(
         '/pub/studyroom',
         {},
