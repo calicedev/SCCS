@@ -40,8 +40,8 @@ public class WebConfiguration implements WebMvcConfigurer {
             회원정보 조회     (GET)   "/api/member/{id}"
             비밀번호 수정     (PATCH) "/api/member/password"
              */
-            "/api/member",
-            "/api/member/**",
+//            "/api/member",
+//            "/api/member/**",
     };
     private final String[] INTERCEPTOR_WHITE_LIST = { // 인터셉터 미적용 리스트
             "/api/member/login",        // 로그인
@@ -67,11 +67,11 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry reg){
         logger.debug("인터셉터 적용 !!!!!!!!!!!!!!!!");
-        reg.addInterceptor(jwtInterceptor)
-                .order(1)
+        //reg.addInterceptor(jwtInterceptor)
+                //.order(1);
 //                .addPathPatterns("/**") // 모든 경우 인증작업 적용
-                .addPathPatterns(INTERCEPTOR_BLACK_LIST) // 인터셉터 적용 리스트
-                .excludePathPatterns(INTERCEPTOR_WHITE_LIST); // 인터셉터 제외 리스트
+//                .addPathPatterns(INTERCEPTOR_BLACK_LIST); // 인터셉터 적용 리스트
+//                .excludePathPatterns(INTERCEPTOR_WHITE_LIST); // 인터셉터 제외 리스트
     }
 
 

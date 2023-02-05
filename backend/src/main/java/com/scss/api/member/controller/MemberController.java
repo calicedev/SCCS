@@ -8,15 +8,17 @@ import com.scss.api.member.util.CookieService;
 import com.scss.api.member.util.EmailService;
 import com.scss.api.member.util.EncryptService;
 import com.scss.api.member.util.RedisService;
+
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Member;
 import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.Claims;
@@ -30,9 +32,11 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -139,23 +143,20 @@ public class MemberController {
 
     /** 회원 정보 **/ /** Auth **/
     @GetMapping("/member/{id}")
-    public ResponseEntity<?> memberInfo(@PathVariable("id") String pathId, HttpServletRequest request) {
+    public ResponseEntity<?> memberInfo(HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
 
         final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
-        System.out.println(jwtService.getToken(token).getId());
-        System.out.println(jwtService.getToken(token));
-        System.out.println(jwtService.getToken(token).get("id"));
 
-        String id = (String) jwtService.getToken(token).get("id");
-
-        logger.debug("회원정보 조회!!!!");
+        String id = (String) jwtService.getToken(token).get("id"); // 회원 아이디를 accessToken에서 파싱
+        logger.info("accessToken에서 회원 아이디 파싱 : {}", id);
+        logger.info("회원정보 조회!!!!");
         MemberDto memberDto = memberService.memberInfo(id);
 
-        if (memberDto != null) {
+        if (memberDto != null) { // 회원 정보 반환
             resultMap.put("data", memberDto);
             return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
-        } else {
+        } else { // id가 없는 경우
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // 204
         }
     }
@@ -174,18 +175,46 @@ public class MemberController {
 
     /** 회원 정보 수정 **/ /** Auth **/
     @PatchMapping("/member")
-    public ResponseEntity<?> modify(@RequestBody HashMap<String, String> param, @CookieValue String accessToken, @CookieValue String refreshToken) {
+    public ResponseEntity<?> modify(/**@RequestBody HashMap<String, String> paramMap**/ String email, String nickname, HttpServletRequest request, MultipartFile mfile
+                                    /**@CookieValue String accessToken, @CookieValue String refreshToken **/) throws IOException {
         Map<String, String> resultMap = new HashMap<>();
+
+        logger.info("오리지널 파일이름 : {}", mfile.getOriginalFilename());
+        logger.info("넘어온 값: " + email + " " + nickname);
+
+        // 맥
+        String PROFILE_IMAGE_FOLDER = "/Users/leechanhee/Desktop/SCCS/S08P12A301/backend/src/main/resources/profileImage/";
+        // 윈도우 String PROFILE_IMAGE_FOLDER = "\\";
+
+        final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
+        logger.info("헤더에서 accessToken 파싱 성공 : {}", accessToken);
 
         Claims claims = jwtService.getToken(accessToken);   // accessToken에서 Claims 파싱
         String id = (String) claims.get("id");              // accessToken에서 회원 id 파싱
+        logger.info("accessToken에서 id 파싱 성공 : {}", id);
 
         MemberDto memberDto = memberService.memberInfo(id);
 
+        String imageFileName = memberDto.getProfileImage(); // 기존 이미지 파일 경로
+
+        if (!mfile.isEmpty()) {
+            UUID uuid = UUID.randomUUID();
+            imageFileName = uuid + "_" + mfile.getOriginalFilename(); // 새로운 이미지 파일 경로
+            // 기존 파일 삭제
+            File file = new File(memberDto.getProfileImage());
+            if (file != null) file.delete();
+        }
+        String profileImagePath = PROFILE_IMAGE_FOLDER + imageFileName;
+        logger.info("사용자 프로필 이미지 경로 : {}", profileImagePath);
+        File convFile = new File(profileImagePath);
+        convFile.createNewFile();
+
         logger.debug("[modify]수정 전 : {}", memberDto);
-        if (param.get("nickname") != null) memberDto.setNickname(param.get("nickname")); // null 이 넘어오면 수정 x (기존 값 유지)
-        if (param.get("email") != null) memberDto.setEmail(param.get("email"));
-        if (param.get("profile_image") != null) memberDto.setProfileImage(param.get("profile_image"));
+        if (nickname != null) memberDto.setNickname(nickname);
+        if (email != null) memberDto.setEmail(email);
+//        if (paramMap.get("nickname") != null) memberDto.setNickname(paramMap.get("nickname")); // null 이 넘어오면 수정 x (기존 값 유지)
+//        if (paramMap.get("email") != null) memberDto.setEmail(paramMap.get("email"));
+        if (mfile != null) memberDto.setProfileImage(profileImagePath);
         logger.debug("[modify]수정 후 : {}", memberDto);
 
         if (memberService.modify(memberDto).equals(SUCCESS)) {
@@ -199,11 +228,13 @@ public class MemberController {
 
     /** 비밀번호 수정 **/ /** Auth **/
     @PatchMapping("/member/password")
-    public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> param, @CookieValue String accessToken, @CookieValue String refreshToken) {
+    public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> param, HttpServletRequest request /** @CookieValue String accessToken, @CookieValue String refreshToken **/) {
         String newPassword = param.get("new_password"); // 클라이언트에서 넘어온 변경하고자 하는 비밀번호
         logger.debug("변경하고자 하는 비밀번호 : {}", newPassword);
 
         Map<String, String> resultMap = new HashMap<>(); // 결과를 담을 자료구조
+
+        final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length()); // 헤더 방식
 
         Claims claims = jwtService.getToken(accessToken);
         String id = null;
