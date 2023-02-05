@@ -53,16 +53,13 @@ public class StudyroomController {
     /** 방 생성 **/
     @PostMapping("/studyroom")
     public ResponseEntity<?> createStudyroom(@Validated @RequestBody StudyroomDto studyroomDto) {
-        Map<String, Object> resultMap = new HashMap<>();
         int studyroomId = studyroomService.createStudyroom(studyroomDto);
-        resultMap.put("studyroomId",studyroomId);
-
+        Map<String, Object> resultMap = new HashMap<>();
         if (studyroomId!=0) {
-            resultMap.put("result",SUCCESS);
-            resultMap.put("message", "방 생성 성공");
+            resultMap.put("studyroomId", studyroomId);
             return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
         } else {
-            resultMap.put("result",FAIL);
+
             resultMap.put("message", "방 생성 실패");
             return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST); // 400
         }
@@ -71,19 +68,14 @@ public class StudyroomController {
     /** 메인 페이지에서 전체 방 조회 **/
     @GetMapping("/studyroom")
     public ResponseEntity<?> selectAllStudyroom() {
-        List<Map<String,Object>> studyrooms =studyroomService.selectAllStudyroom();
-
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("studyrooms",studyrooms);
-
-        if(!studyrooms.isEmpty()){
-            resultMap.put("result",SUCCESS);
-            resultMap.put("message", "스터디룸 전체 조회 성공");
-        }else{
-            resultMap.put("result",FAIL);
+        List<Map<String, Object>> studyrooms = studyroomService.selectAllStudyroom();
+        if (!studyrooms.isEmpty()) {
+            return new ResponseEntity<>(studyrooms, HttpStatus.OK);
+        } else {
+            Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("message", "조회 된 스터디룸이 없음");
+            return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     }
 
     /** 메인 페이지에서 전체 조건별 조회 **/
@@ -91,29 +83,23 @@ public class StudyroomController {
     public ResponseEntity<?> selectStudyroom(@RequestBody StudyroomDto studyroomDto){
         List<Map<String,Object>> studyrooms =studyroomService.selectStudyroom(studyroomDto);
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("studyrooms",studyrooms);
-
         if(!studyrooms.isEmpty()){
-            resultMap.put("result",SUCCESS);
-            resultMap.put("message", "스터디룸 세부 조회 성공");
+            return new ResponseEntity<>(studyrooms, HttpStatus.OK);
         }else{
-            resultMap.put("result",FAIL);
+            Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("message", "조회 된 스터디룸이 없음");
+            return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
-
     }
+
     /** 방 입장시 비밀번호 체크 **/
     @PostMapping("/studyroom/password")
     public ResponseEntity<?> checkStudyroomPassword(@RequestBody StudyroomDto studyroomDto){
         Map<String, Object> resultMap = new HashMap<>();
         if (studyroomService.checkStudyroomPassword(studyroomDto).equals(SUCCESS)) {
             resultMap.put("result",SUCCESS);
-            resultMap.put("message", "방 입장 비밀번호가 맞습니다.");
             return new ResponseEntity<>(resultMap, HttpStatus.OK);
         } else {
-            resultMap.put("result",FAIL);
             resultMap.put("message", "방 입장 비밀번호가 일치하지 않습니다.");
             return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
         }
@@ -126,20 +112,18 @@ public class StudyroomController {
         if(studyroomService.isExistStudyroom(id)){
             Map<String, Object> s = studyroomService.enterStudyroom(id);
             if(!s.containsKey("result")){
-                resultMap.put("studyroom", s);
-                resultMap.put("result",SUCCESS);
-                resultMap.put("message", "방 입장 성공, 방 정보 return");
+                return new ResponseEntity<>(s, HttpStatus.OK);
             }
             else if(s.get("result").equals("full")){
-                resultMap.put("result",FAIL);
                 resultMap.put("message", "입장 인원을 초과했기에 입장 불가합니다.");
+                return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST);
             }
         }
         else {
-            resultMap.put("result",FAIL);
             resultMap.put("message", "존재하지 않는 방입니다");
+            return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+        return null;
     }
 
     /** 코딩 테스트 시작하기 **/
