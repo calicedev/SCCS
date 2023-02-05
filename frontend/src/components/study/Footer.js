@@ -7,18 +7,15 @@ export default function Footer() {
   const navigate = useNavigate()
 
   const convertCode = useCallback(() => {
-    let fileName = '파일이름.txt';
-    let output = "string 타입의 데이터";
+    let fileName = 'formFile.txt';
+    const content = document.querySelector("textarea").value;
     const element = document.createElement('a');
-    const file = new Blob([output], {
-      type: 'text/plain',
-    });
+    const file = new Blob([content], { type: 'text/plain', });
     element.href = URL.createObjectURL(file);
     element.download = fileName;
-    document.body.appendChild(element); // FireFox
+    document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   },[])
-
   return (
     <Foot>
       <EndBtn>
