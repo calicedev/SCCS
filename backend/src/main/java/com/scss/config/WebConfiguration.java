@@ -33,17 +33,20 @@ public class WebConfiguration implements WebMvcConfigurer {
     public static final Logger logger = LoggerFactory.getLogger(WebConfiguration.class);
     private final JWTService jwtService;
     private final JwtInterceptor jwtInterceptor;
-    private final String[] INTERCEPTOR_BLACK_LIST = {
-            "/api/member/password",
-            "/api/member", // 회원가입(POST), 회원정보 수정, 회원탈퇴
-            "/api/member/**"
+    private final String[] INTERCEPTOR_BLACK_LIST = { // 인터셉터 적용 리스트
+            /*
+            현재 적용 목록
+            회원정보 수정     (PATCH)  "/api/member"
+            회원정보 조회     (GET)   "/api/member/{id}"
+            비밀번호 수정     (PATCH) "/api/member/password"
+             */
+            "/api/member",
+            "/api/member/**",
     };
-    private final String[] INTERCEPTOR_WHITE_LIST = {
-            "/api/unique/**", // 중복 검사
-            "/api/member", // 회원가입,         회원정보 수정, 회원탈퇴
-            "/api/member/login", // 로그인
-            "/api/member/id", // 아이디 찾기
-            "/api/member/accesstoken" // accesstoken 재발급
+    private final String[] INTERCEPTOR_WHITE_LIST = { // 인터셉터 미적용 리스트
+            "/api/member/login",        // 로그인
+            "/api/member/id",           // 아이디 찾기
+            "/api/member/refreshToken"  // accesstoken 재발급
     };
 
     @Override
