@@ -76,10 +76,12 @@ export default function WaitingRoom() {
           // 입장
           if (content.status === 'enter') {
             setEnterMsg(content)
+            setPersonnel(content.personnel)
           }
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
+            setPersonnel(content.personnel)
 
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
