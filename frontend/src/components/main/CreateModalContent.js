@@ -60,7 +60,7 @@ export default function CreateModalContent() {
       password,
       languageIds,
       algoIds,
-      // memberId에서 host로 변경 (2.4 민혁 - 방장임을 표시해주기 위해)
+      // memberId에서 hostId로 변경 (2.4 민혁 - 방장임을 표시해주기 위해)
       hostId: id,
     }
     const [url, method] = api('createRoom')

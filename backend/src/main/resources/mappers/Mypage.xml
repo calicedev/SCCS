@@ -49,11 +49,11 @@
 
   <resultMap id="ParticipantWithCode" type="HashMap">
     <result column="submission_id" property="submissionId"></result>
-    <result column="submission_storeFileName" property="sumbmissionStoreFileName"></result>
+    <result column="submission_FileName" property="submissionFileName"></result>
     <result column="submission_runtime" property="submissionRuntime"></result>
     <result column="submission_memory" property="submissionMemory"></result>
     <result column="submission_result" property="submissionResult"></result>
-    <result column="submission_submitDatetime" property="submissionSumitDateTime"></result>
+    <result column="submission_submitDatetime" property="submissionSubmitDateTime"></result>
     <result column="problem_id" property="problemId"></result>
     <result column="submission_memberId" property="submissionMemberId"></result>
     <result column="submission_languageId" property="submissionLanguageId"></result>
@@ -65,8 +65,8 @@
     'studyroom_create_datetime',ANY_VALUE(p.name) as
     'problem_name',
     ANY_VALUE(p.problem_folder) as
-    'problem_folder', ANY_VALUE(s.id) as 'submission_id', ANY_VALUE(s.store_file_name) as
-    'submission_storeFileName',ANY_VALUE(s.runtime) as 'submission_runtime', ANY_VALUE(s.memory) as
+    'problem_folder', ANY_VALUE(s.id) as 'submission_id', ANY_VALUE(s.file_name) as
+    'submission_FileName',ANY_VALUE(s.runtime) as 'submission_runtime', ANY_VALUE(s.memory) as
     'submission_memory', ANY_VALUE(s.result) as 'submission_result',
     DATE_FORMAT(ANY_VALUE(s.submit_datetime) ,'%Y-%m-%d %H:%i:%S') as
     'submission_submitDatetime',ANY_VALUE(p.id) as 'problem_id',
