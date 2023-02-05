@@ -39,7 +39,7 @@ export default function WaitingRoom() {
       .request(config)
       .then((res) => {
         // console.log(res.data)
-        setRoomInfo(res.data.studyroom)
+        setRoomInfo(res.data)
       })
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
