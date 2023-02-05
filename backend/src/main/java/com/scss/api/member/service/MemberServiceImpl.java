@@ -87,4 +87,16 @@ public class MemberServiceImpl implements MemberService {
     public String uniqueParam(UniqueDto uniqueDto) {
         return memberMapper.uniqueParam(uniqueDto);
     }
+
+    @Override
+    public String delete(String id) {
+        try {
+            memberMapper.delete(id);
+            return SUCCESS;
+        } catch (Exception e) {
+            logger.info("회원 삭제 실패 !!");
+            logger.error(e.getMessage());
+            return FAIL;
+        }
+    }
 }

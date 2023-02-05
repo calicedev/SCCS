@@ -182,9 +182,13 @@ public class MemberController {
         logger.info("오리지널 파일이름 : {}", mfile.getOriginalFilename());
         logger.info("넘어온 값: " + email + " " + nickname);
 
+        // ToDo : 공통으로 처리하는 경로 처리 필요
         // 맥
         String PROFILE_IMAGE_FOLDER = "/Users/leechanhee/Desktop/SCCS/S08P12A301/backend/src/main/resources/profileImage/";
-        // 윈도우 String PROFILE_IMAGE_FOLDER = "\\";
+        // 윈도우
+        //String PROFILE_IMAGE_FOLDER = "\\";
+
+
 
         final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
         logger.info("헤더에서 accessToken 파싱 성공 : {}", accessToken);
@@ -320,6 +324,23 @@ public class MemberController {
             status = HttpStatus.UNAUTHORIZED;
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @DeleteMapping("/member")
+    public ResponseEntity<?> delete(HttpServletRequest request) {
+        HashMap<String, String> resultMap = new HashMap<>();
+        final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
+        Claims claims = jwtService.getToken(accessToken);
+        String id = (String) claims.get("id");
+        logger.info("id는 : {}",id);
+
+        if (memberService.delete(id) == SUCCESS) {
+            resultMap.put("message", "성공");
+            return new ResponseEntity<>(resultMap, HttpStatus.OK);
+        }
+
+        resultMap.put("message", "실패");
+        return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
     }
 
     /** 레디스 전체 키 개수 조회 **/

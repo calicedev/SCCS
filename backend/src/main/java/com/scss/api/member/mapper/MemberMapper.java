@@ -16,5 +16,5 @@ public interface MemberMapper {
     public void modify(MemberDto memberDto);
     public void modifyPassword(MemberDto memberDto);
     public String uniqueParam(UniqueDto uniqueDto);
-
+    public void delete(String id);
 }

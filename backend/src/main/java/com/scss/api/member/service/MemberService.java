@@ -15,4 +15,5 @@ public interface MemberService {
     public String modify(MemberDto memberDto);
     public String modifyPassword(MemberDto memberDto);
     public String uniqueParam(UniqueDto uniqueDto);
+    public String delete(String id);
 }
