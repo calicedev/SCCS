@@ -1,4 +1,5 @@
 export const algorithmPk = {
+  0: '랜덤',
   1: '기초',
   2: '탐색',
   3: '이분탐색',

@@ -64,6 +64,7 @@ export default function WaitingRoom() {
           personnel: personnel,
         }),
       )
+      console.log('입장')
 
       // ************************ 여기서부터는 sub입니다******************************
 
@@ -113,6 +114,7 @@ export default function WaitingRoom() {
           personnel: personnel,
         }),
       )
+      console.log('퇴장')
       stomp.disconnect()
       setConnected(false)
     }
