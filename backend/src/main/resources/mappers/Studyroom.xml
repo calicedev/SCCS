@@ -24,7 +24,6 @@
   <resultMap id="studyList2" type="StudyroomDto">
     <id column="id" property="id"/>
     <result column="title" property="title"/>
-    <result column="host_id" property="hostId"/>
     <collection property="algoIds" ofType="Integer">
       <result column="algo_id"/>
     </collection>
@@ -150,6 +149,13 @@
     where is_active=1 AND s.id= #{id}
   </select>
 
+
+  <update id="changeStudyroomSolvingStatus" parameterType="StudyroomDto">
+    UPDATE studyroom
+    SET is_solving = true
+    WHERE id = #{id}
+  </update>
+
   <update id="changeStudyroomPersonnel" parameterType="int">
     UPDATE studyroom
     SET personnel =#{personnel}
@@ -157,7 +163,7 @@
   </update>
 
   <select id="selectStudyroomById" parameterType="int" resultMap="studyList2">
-    SELECT s.id as id, s.title as title, s.host_id as host_id, sa.algo_id as algo_id FROM studyroom s
+    SELECT s.id as id, s.title as title, sa.algo_id as algo_id FROM studyroom s
     LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id where s.id=#{id};
   </select>
 

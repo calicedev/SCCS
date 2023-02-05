@@ -199,7 +199,6 @@ public class StudyroomServiceImpl implements StudyroomService{
             resultMap.put("personnel", s.getPersonnel());
         }else if(s.getPersonnel()==6){
             resultMap = new HashMap<>();
-            System.out.println("여기까지는");
             resultMap.put("result","full");
         }
         return resultMap;
@@ -215,7 +214,6 @@ public class StudyroomServiceImpl implements StudyroomService{
 
         // 2. 스터디 시작하는 애들 아이디 넣어준다.
         studyroomMapper.insertMemberIds(studyroomDto);
-        System.out.println("여기 까지 진행 됨");
 
         // 3. 스터디룸 정보를 담은 걸 resultmap에 담는다.
         StudyroomDto s = studyroomMapper.selectStudyroomById(studyroomDto.getId());

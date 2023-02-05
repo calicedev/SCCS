@@ -82,7 +82,6 @@ public class StudyroomController {
     @PostMapping("/studyroom/detail")
     public ResponseEntity<?> selectStudyroom(@RequestBody StudyroomDto studyroomDto){
         List<Map<String,Object>> studyrooms =studyroomService.selectStudyroom(studyroomDto);
-
         if(!studyrooms.isEmpty()){
             return new ResponseEntity<>(studyrooms, HttpStatus.OK);
         }else{
@@ -129,7 +128,13 @@ public class StudyroomController {
     /** 코딩 테스트 시작하기 **/
     @PostMapping("/studyroom/codingtest")
     public ResponseEntity<?> startCodingTest(@RequestBody StudyroomDto studyroomDto){
-        return new ResponseEntity<>(studyroomService.startCodingTest(studyroomDto), HttpStatus.OK);
+        if(studyroomService.isExistStudyroom(studyroomDto.getId())){
+            return new ResponseEntity<>(studyroomService.startCodingTest(studyroomDto), HttpStatus.OK);
+        }else{
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("message", "존재하지 않는 방입니다");
+            return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
+        }
     }
 
     /** 코딩 테스트 문제 제출 **/
@@ -159,7 +164,7 @@ public class StudyroomController {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         //채점 서버 url
-        String url ="http://70.12.246.161:9999";
+        String url ="http://localhost:9999";
         if(submissionDto.getLanguageId()==1){
             url+="/api/solve/python";
         }else if(submissionDto.getLanguageId()==2){
@@ -178,6 +183,7 @@ public class StudyroomController {
         return new ResponseEntity<>(SUCCESS, httpStatus);
 
     }
+    
     /** 코딩 테스트 방장에 의해 끝내기 **/
     @PatchMapping("/studyroom/codingtest")
     public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){
