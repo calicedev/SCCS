@@ -27,9 +27,6 @@ import { useSelector } from 'react-redux'
 // import VideoRoomComponent from './components/VideoRoomComponent'
 import WaitingPage from './pages/study/WaitingPage'
 import WaitingRoom from './pages/study/WaitingRoom'
-import WebSocket from 'websocket/WebSocket'
-import WebSocket3 from 'websocket/WebSocket3'
-import WebSocket2 from 'websocket2/WebSocket2'
 
 function App() {
   const theme = useSelector((state) => state.theme)
@@ -61,9 +58,6 @@ function App() {
           path="/room/:studyroomId/waiting"
           element={<WaitingRoom />}
         ></Route>
-        <Route path="/websocket" element={<WebSocket />}></Route>
-        <Route path="/websocket2" element={<WebSocket2 />}></Route>
-        <Route path="/websocket3" element={<WebSocket3 />}></Route>
       </Routes>
     </ThemeProvider>
   )
