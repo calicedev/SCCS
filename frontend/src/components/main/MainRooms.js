@@ -10,32 +10,13 @@ import styled from 'styled-components'
 import Modal from 'components/common/Modal'
 import CreateModalContent from 'components/main/CreateModalContent'
 
-const ex_rooms = [
-  {
-    id: 1,
-    title: '커피내기',
-    isSolving: true,
-    isPrivate: true,
-    algoIds: [1],
-    languageIds: [1, 2],
-  },
-  {
-    id: 2,
-    title: '커피내기2',
-    isSolving: false,
-    isPrivate: false,
-    algoIds: [1, 3],
-    languageIds: [2],
-  },
-]
-
 const searchOptions = {
   title: '방 이름',
   id: '방 번호',
 }
 
 export default function MainRooms() {
-  const [rooms, setRooms] = useState(ex_rooms)
+  const [rooms, setRooms] = useState([])
   const [algoIds, setAlgoIds] = useState([])
   const [languageIds, setLanguageIds] = useState([])
   const [selectedOption, setSelectedOption] = useState('title')
@@ -52,6 +33,9 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
+        alert(
+          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
+        )
         console.log(err)
       })
   }, [])
@@ -80,9 +64,13 @@ export default function MainRooms() {
     axios(config)
       .then((res) => {
         console.log(res)
+
         setRooms(res.data)
       })
       .catch((err) => {
+        alert(
+          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
+        )
         console.log(err)
       })
   }, [algoIds, languageIds])
@@ -114,6 +102,9 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
+        alert(
+          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
+        )
         console.log(err)
       })
   }
