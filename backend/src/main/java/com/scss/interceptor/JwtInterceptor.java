@@ -30,7 +30,12 @@ public class JwtInterceptor implements HandlerInterceptor {
         logger.debug("요청 URI : {}", uri);
 
         if (uri.equals("/api/member") && method.equals("POST")) { // 회원가입인 경우
-            logger.debug("회원가입임 ! 인터셉터 동작하지 말아야함");
+            logger.debug("회원가입임 ! 인터셉터 동작 안함");
+            return true;
+        }
+
+        if (uri.equals("/api/member/password") && method.equals("POST")) { // 비밀번호 초기화인 경우
+            logger.debug("비밀번호 초기화 ! 인터셉터 동작 안함");
             return true;
         }
 

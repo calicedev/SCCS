@@ -21,6 +21,11 @@ import java.util.Objects;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.Claims;
 import javax.mail.MessagingException;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping( "/api")
+@Api(tags = "회원 컨트롤러 API")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -239,11 +245,13 @@ public class MemberController {
     }
 
     /** 비밀번호 초기화 **/
+    @ApiOperation(value = "비밀번호 초기화 with 구글메일", notes = "이메일과 아이디를 입력한다. 그리고 이메일 전송 성공여부에 따라 '성공' 또는 '실패' 문자열을 반환한다.", response = String.class)
     @PostMapping("/member/password")
-    public ResponseEntity<?> initPassword(@RequestBody Map<String, String> paramMap)
+    public ResponseEntity<?> initPassword(@RequestBody @ApiParam(value = "아이디와 이메일", required = true) Map<String, String> paramMap)
             throws MessagingException {
 
         logger.debug("paramMap : {}", paramMap);
+
         String mail = paramMap.get("email"); // 받는 사람 주소
         String id = paramMap.get("id"); // 회원 아이디
 
@@ -256,9 +264,11 @@ public class MemberController {
     /** access-token 재발급 **/
     // Todo : access , refresh 모두 받아서 refresh 토큰 값으로 id 값을 value 로 redis에 저장
     @GetMapping("/member/refreshToken")
-    public ResponseEntity<?> refreshToken(@CookieValue String accessToken, @CookieValue String refreshToken) {
+    public ResponseEntity<?> refreshToken(/**@CookieValue String accessToken, @CookieValue String refreshToken **/ HttpServletRequest request ) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
+
+        final String refreshToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
 
         if (jwtService.checkToken(refreshToken)) {
             Claims claims = jwtService.getToken(refreshToken);
