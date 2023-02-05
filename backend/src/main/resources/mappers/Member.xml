@@ -72,4 +72,9 @@
     </choose>
   </select>
 
+  <delete id="delete" parameterType="string">
+    delete from member
+    where id = #{id}
+  </delete>
+
 </mapper>
