@@ -15,5 +15,6 @@ public class SocketDto {
     private String message;
     private String status;
     private int personnel;
-    private boolean isReady;
+    private boolean ready;
+
 }
