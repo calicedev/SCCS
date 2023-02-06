@@ -41,9 +41,10 @@ export default function WaitingRoom() {
     axios
       .request(config)
       .then((res) => {
-        console.log('axios 요청에 대하ㅑㄴ 응답', res.data)
-        setRoomInfo(res.data)
+        console.log('axios 요청에 대한 응답', res.data)
         setPersonnel(res.data.personnel)
+        console.log('인원수 업데이트 했다', personnel)
+        setRoomInfo(res.data)
       })
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
@@ -185,7 +186,9 @@ export default function WaitingRoom() {
       <h1>{studyroomId}번 대기방</h1>
       <h3>방제목 : {roomInfo.title}</h3>
       <h3>방장 : {roomInfo.hostId}</h3>
-      <h3>{personnel && <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3>}</h3>
+      <h3>
+        {personnel ? <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3> : null}
+      </h3>
       <h3>로그인된 유저 : {nickname}</h3>
       {connected && (
         <>
