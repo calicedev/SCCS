@@ -33,7 +33,7 @@ export default function WaitingRoom() {
   // ready 관련 state
   const [readyOrNot, setReadyOrNot] = useState(false)
   const [readyMsg, setReadyMsg] = useState({})
-  const [isReadyArray, setIsReadyArray] = useState([])
+  const [readyArray, setReadyArray] = useState([])
 
   const justMounted = useRef(true)
 
@@ -94,27 +94,29 @@ export default function WaitingRoom() {
             // stomp.unsubscribe(chatDto.body.nickname)
           }
           if (content.status === 'ready') {
-            // console.log('ready!!!!!!!!!!!!!!', content)
-            setReadyMsg(content)
-            if (id !== roomInfo.hostId) {
-              return
-            }
-            if (content.ready) {
-              console.log('전', isReadyArray)
-              setIsReadyArray((isReadyArray) => [
-                ...isReadyArray,
-                content.nickname,
-              ])
-              setTimeout(() => {
-                console.log('후', isReadyArray)
-                console.log('길이', isReadyArray.length)
-              }, 1000)
+            // console.log('ready!!!!!!!!!!!!!!', content.message)
+            setReadyMsg(content.message)
+            console.log(id)
+            // 이 로직에서 자신이 방장인데도 방장이 아닌 곳으로 향함
+            // 나중에 방장인 if문으로 향해도 빈배열만 나옴... 대체 왜?
+            // 로컬에서 새로고침해서 인원수가 늘어나면 그제서야 배열에 닉네임이 추가된 걸 볼 수 있음.. 돌겠다 ㄹㅇ
+            if (id === roomInfo.hostId) {
+              if (content.ready) {
+                console.log('변경 전', readyArray)
+
+                setReadyArray((readyArray) => [...readyArray, content.nickname])
+                setTimeout(() => {
+                  console.log('변경 후', readyArray)
+                })
+              } else {
+                const newArray = readyArray.filter((nickname) => {
+                  return nickname !== content.nickname
+                })
+                setReadyArray(newArray)
+                console.log('레디취소 누름', readyArray)
+              }
             } else {
-              const newArray = isReadyArray.filter((nickname) => {
-                return nickname !== content.nickname
-              })
-              setIsReadyArray(newArray)
-              console.log('레디취소 누름', isReadyArray)
+              console.log('난 방장이 아님!!')
             }
           }
           if (content.status === 'chat') {
@@ -239,7 +241,7 @@ export default function WaitingRoom() {
 
           {id === roomInfo.hostId ? (
             <div>
-              {personnel === isReadyArray.length + 1 ? (
+              {personnel === readyArray.length + 1 ? (
                 <Btn onClick={startCodingTest}>Start</Btn>
               ) : (
                 <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
