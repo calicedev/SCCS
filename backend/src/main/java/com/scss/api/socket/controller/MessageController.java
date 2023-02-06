@@ -30,7 +30,6 @@ public class MessageController {
             studyroomDto.setId(socketDto.getStudyroomId());
             int temp = studyroomService.increaseStudyroomPersonnel(studyroomDto);
             int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
-            System.out.println("*****************"+temp2+"*********************");
             socketDto.setPersonnel(temp2);
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
@@ -46,7 +45,6 @@ public class MessageController {
             studyroomDto.setId(socketDto.getStudyroomId());
             int temp = studyroomService.decreaseStudyroomPersonnel(studyroomDto);
             int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
-            System.out.println("*****************"+temp2+"*********************");
             socketDto.setPersonnel(temp2);
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
