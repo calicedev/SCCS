@@ -77,27 +77,28 @@ export default function StudyCalendar() {
     setCurrentDate(new Date(id))
   }, [])
 
+  // TroubleShooting : 함수를 저장한다는 것은 안의 변수 들도 고정!!
   // // DateBox 호버 시 모달창 생성
-  const showModal = useCallback((id) => {
-    const element = document.getElementById(id)
-    if (element.classList.contains('disabled')) {
-      return
-    }
-    console.log('dateToStudies', dateToStudies)
-    console.log('element.id', element.id)
-    console.log('content', dateToStudies[element.id])
-    const date = element.id
-    const scrollX = window.scrollX
-    const scrollY = window.scrollY
-    setModalLeft(scrollX + element.getBoundingClientRect().left)
-    setModalTop(scrollY + element.getBoundingClientRect().top)
-    setWidth(element.clientWidth)
-    setHeight(element.clientHeight)
-    setModalDay(date.slice(-2))
-    setModalContent(dateToStudies[id])
-    setIsHovered(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const showModal = useCallback(
+    (id) => {
+      const element = document.getElementById(id)
+      if (element.classList.contains('disabled')) {
+        return
+      }
+      const date = element.id
+      const scrollX = window.scrollX
+      const scrollY = window.scrollY
+      setModalLeft(scrollX + element.getBoundingClientRect().left)
+      setModalTop(scrollY + element.getBoundingClientRect().top)
+      setWidth(element.clientWidth)
+      setHeight(element.clientHeight)
+      setModalDay(date.slice(-2))
+      setModalContent(dateToStudies[id])
+      setIsHovered(true)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [studies],
+  )
 
   // currentDate 한 달 전으로 변경
   const previousMonth = () => {
