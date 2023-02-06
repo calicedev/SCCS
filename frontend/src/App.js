@@ -16,7 +16,7 @@ import SolvedPage from './pages/mypage/SolvedPage'
 import CalendarPage from './pages/mypage/CalendarPage'
 import StudyDetailPage from 'pages/mypage/StudyDetailPage'
 
-import SolveProblem from 'pages/study/SolveProblem'
+import CodingTest from 'pages/study/CodingTest'
 import Study from 'pages/study/Study'
 
 import GlobalStyle from './styles/GlobalStyle'
@@ -50,9 +50,11 @@ function App() {
           <Route path="studydetail/:id" element={<StudyDetailPage />}></Route>
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
-        <Route path="/solveproblem" element={<SolveProblem />}></Route>
         <Route path="/openvidu" element={<WaitingPage />}></Route>
-        <Route path="/study" element={<Study />}></Route>
+        <Route path="/codingtest" element={<CodingTest />}></Route>
+        <Route path="/study" element={<Study />}>
+
+        </Route>
         {/* 대기방 2.4 민혁 생성 */}
         <Route
           path="/room/:studyroomId/waiting"

@@ -1,21 +1,68 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from 'components/common/Button'
+import { useSelector } from 'react-redux'
+import axios from 'libs/axios'
+import api from 'constants/api'
+
 
 export default function Footer() {
   const navigate = useNavigate()
+  // const id = useSelector((state) => state.user.id)
+
+  // const [memeberId, setMemberId] = useState('')
+  // const [studyroomId, setStudyroomId] = useState('')
+  // const [problemId, setProblemId] = useState('')
+  // const [languageId, setlanguageId] = useState('')
+
+  // const submit = () => {
+  //   const data ={
+  //     memeberId,
+  //     studyroomId,
+  //     problemId,
+  //     languageId,
+  //   }
+  //   const [url, method] = api('submitCode')
+  //   const config = { url, method, data }
+  //   axios(config)
+  //     .then((res) => {
+  //       console.log(res)
+  //       navigate('/')
+  //     })
+  // }
+
+
 
   const convertCode = useCallback(() => {
-    let fileName = 'formFile.txt';
+    // let fileName = 'formFile.txt';
     const content = document.querySelector("textarea").value;
     const element = document.createElement('a');
     const file = new Blob([content], { type: 'text/plain', });
-    element.href = URL.createObjectURL(file);
-    element.download = fileName;
-    document.body.appendChild(element); // Required for this to work in FireFox
+    const data = {
+      memeberId: "mint_angel",
+      studyroomId: 30,
+      problemId: 1,
+      languageId:2,
+      formFile: file,
+    }
+    const [url, method] = api('submitCode')
+    const config = { url, method, data }
+    axios(config)
+      .then((res) => {
+        console.log(res)
+        // navigate('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    // element.href = URL.createObjectURL(file);
+    // // element.download = fileName;
+    // document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   },[])
+
+
   return (
     <Foot>
       <EndBtn>
@@ -25,6 +72,7 @@ export default function Footer() {
           size="small"
           onClick={() => {
             convertCode('')
+            // navigate('/submission')
           }}
         ></Button>
       </EndBtn>
@@ -43,7 +91,7 @@ export default function Footer() {
         value="제출"
         size="small"
         onClick={() => {
-          navigate('/auth/login')
+          navigate('/')
         }}
         ></Button>
       </CompileBtn>

@@ -1,10 +1,12 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
 import Textarea from 'components/study/Textarea'
 import Footer from 'components/study/Footer'
 
+
 export default function SolveProblem() {
+  
   return (
     <Main>
       <Problem>
