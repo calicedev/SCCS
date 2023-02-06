@@ -21,7 +21,7 @@ public interface StudyroomService {
     public String endStudyroomByOwner(StudyroomDto studyroomDto);
     public ProblemDto getProblemInfo(int problemId);
 
-    public void changeStudyroomPersonnel(int studyroomId);
+    public void increaseStudyroomPersonnel(int studyroomId);
 
     public boolean isExistStudyroom(int id);
 }

@@ -24,7 +24,7 @@ public class MessageController {
 
         if(socketDto.getStatus().equals("enter")){
             socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
-            studyroomService.changeStudyroomPersonnel(socketDto.getPersonnel());
+            studyroomService.increaseStudyroomPersonnel(socketDto.getPersonnel());
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
 
@@ -35,7 +35,7 @@ public class MessageController {
 
         else if(socketDto.getStatus().equals("exit")){
             socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다");
-            studyroomService.changeStudyroomPersonnel(socketDto.getPersonnel());
+//            studyroomService.changeStudyroomPersonnel(socketDto.getPersonnel());
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
 

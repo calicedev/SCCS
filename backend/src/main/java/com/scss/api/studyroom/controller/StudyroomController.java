@@ -140,6 +140,7 @@ public class StudyroomController {
     /** 코딩 테스트 문제 제출 **/
     @PostMapping("/studyroom/codingtest/submission")
     public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+        System.out.println("지금 채점 서버 잘 도착합니다!!!!!!!!!!!!!");
         ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
 
         //파일을 원하는 경로에 실제로 저장한다.
@@ -166,9 +167,9 @@ public class StudyroomController {
         //채점 서버 url
         String url ="http://70.12.246.161:9999";
         if(submissionDto.getLanguageId()==1){
-            url+="/api/solve/python";
+            url+="/solve/python";
         }else if(submissionDto.getLanguageId()==2){
-            url+="/api/solve/java";
+            url+="/solve/java";
         }
 
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
