@@ -15,8 +15,10 @@ export default function WaitingRoom() {
   const { studyroomId } = useParams()
   const navigate = useNavigate()
   const [roomInfo, setRoomInfo] = useState({})
+  const [personnel, setPersonnel] = useState(0)
 
   const nickname = useSelector((state) => state.user.nickname)
+  const id = useSelector((state) => state.user.id)
 
   const [stomp, setStomp] = useState(false)
   const [connected, setConnected] = useState(false)
@@ -24,12 +26,13 @@ export default function WaitingRoom() {
   const [isReady, setIsReady] = useState(false)
   const [readyMsg, setReadyMsg] = useState({})
   const [exitMsg, setExitMsg] = useState({})
-  const [personnel, setPersonnel] = useState(1)
 
   // 채팅 기능 관련 state
   const [chat, setChat] = useState('')
   const [chatList, setChatList] = useState([])
   const [chatNickname, setChatNickname] = useState([])
+  //
+  const [isReadyArray, setIsReadyArray] = useState([])
 
   // 채팅방 관련 정보 axios 요청
   useEffect(() => {
@@ -38,8 +41,9 @@ export default function WaitingRoom() {
     axios
       .request(config)
       .then((res) => {
-        // console.log(res.data)
+        console.log('axios 요청에 대하ㅑㄴ 응답', res.data)
         setRoomInfo(res.data)
+        setPersonnel(res.data.personnel)
       })
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
@@ -48,7 +52,7 @@ export default function WaitingRoom() {
 
   // 웹소켓 통신 열기
   const connect = function () {
-    var sock = new sockjs('https://sccs.kr:8200/sccs')
+    var sock = new sockjs('http://sccs.kr:8200/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
@@ -61,7 +65,6 @@ export default function WaitingRoom() {
           studyroomId: studyroomId,
           nickname: nickname,
           status: 'enter',
-          personnel: personnel,
         }),
       )
       console.log('입장 에베베베베베~')
@@ -76,22 +79,27 @@ export default function WaitingRoom() {
           // 입장
           if (content.status === 'enter') {
             setEnterMsg(content)
-            const newCount = personnel + 1
-            console.log(newCount)
+            setPersonnel(content.personnel)
           }
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
-            const newCount = personnel - 1
-            setPersonnel(newCount)
-            console.log(personnel)
-
+            setPersonnel(content.personnel)
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
           }
           if (content.status === 'ready') {
             setReadyMsg(content)
-            setIsReady(true)
+            if (id !== roomInfo.hostId) return
+            if (content.isReady) {
+              const newArray = [...isReadyArray, content.nickname]
+              setIsReadyArray(newArray)
+            } else {
+              const newArray = isReadyArray.filter(
+                (nickname) => nickname !== content.nickname,
+              )
+              setIsReadyArray(newArray)
+            }
           }
           if (content.status === 'chat') {
             // 채팅 정보가 서버로부터 오면 배열에 저장
@@ -115,7 +123,6 @@ export default function WaitingRoom() {
           studyroomId: studyroomId,
           nickname: nickname,
           status: 'exit',
-          personnel: personnel,
         }),
       )
       console.log('퇴장')
@@ -133,13 +140,15 @@ export default function WaitingRoom() {
     }
   }, [])
 
-  const ready = () => {
+  const ready = async () => {
+    await setIsReady(!isReady)
     stomp.send(
       '/pub/studyroom',
       {},
       JSON.stringify({
         studyroomId: studyroomId,
         nickname: nickname,
+        isReady: isReady,
         status: 'ready',
       }),
     )

@@ -15,7 +15,7 @@ export default function Profile() {
 
   // 가입 일자 YYYY-MM-DD
   const joinDate = useMemo(() => {
-    return user.joinDatetime.slice(0, 10)
+    return user.joinDate.slice(0, 10)
   }, [user])
 
   return (
