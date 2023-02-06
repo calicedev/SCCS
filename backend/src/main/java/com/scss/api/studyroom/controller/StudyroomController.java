@@ -165,7 +165,7 @@ public class StudyroomController {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         //채점 서버 url
-        String url ="http://70.12.246.161:9999";
+        String url ="https://sccs.kr";
         if(submissionDto.getLanguageId()==1){
             url+="/solve/python";
         }else if(submissionDto.getLanguageId()==2){
