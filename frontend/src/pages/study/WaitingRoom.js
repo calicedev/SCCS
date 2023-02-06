@@ -202,16 +202,19 @@ export default function WaitingRoom() {
           <div>{exitMsg.message}</div>
 
           <div>{enterMsg.message}</div>
+          {isReady ? (
+            <Btn onClick={ready}>READY 취소</Btn>
+          ) : (
+            <Btn onClick={ready}>READY</Btn>
+          )}
 
-          <Btn onClick={ready}>READY</Btn>
-          <div>{isReady}</div>
           <div>{readyMsg.message}</div>
 
           <div>
             {personnel === isReadyArray.length + 1 ? (
               <Btn>Start</Btn>
             ) : (
-              <div>아직 전부다 레디 안했음. 너넨 그냥 공부하지마라</div>
+              <div>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</div>
             )}
           </div>
 
