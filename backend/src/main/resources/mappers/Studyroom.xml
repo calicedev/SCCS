@@ -156,7 +156,13 @@
     WHERE id = #{id}
   </update>
 
-  <update id="changeStudyroomPersonnel" parameterType="int">
+  <update id="increaseStudyroomPersonnel" parameterType="int">
+    UPDATE studyroom
+    SET personnel =personnel+1
+    WHERE id = #{studyroomId}
+  </update>
+
+  <update id="decreaseStudyroomPersonnel" parameterType="int">
     UPDATE studyroom
     SET personnel =#{personnel}
     WHERE id = #{studyroomId}

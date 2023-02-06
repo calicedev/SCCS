@@ -253,8 +253,8 @@ public class StudyroomServiceImpl implements StudyroomService{
     }
 
     @Override
-    public void changeStudyroomPersonnel(int studyroomId) {
-        studyroomMapper.changeStudyroomPersonnel(studyroomId);
+    public void increaseStudyroomPersonnel(int studyroomId) {
+        studyroomMapper.increaseStudyroomPersonnel(studyroomId);
         return;
     }
 
