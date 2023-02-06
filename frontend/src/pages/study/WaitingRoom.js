@@ -148,7 +148,9 @@ export default function WaitingRoom() {
     setIsReady(!isReady)
   }
 
+  // isReady 변경시에만 실행
   useEffect(() => {
+    // useRef는 재랜더링될 때에도 바뀌지 않음
     if (justMounted.current) {
       justMounted.current = false
       return
