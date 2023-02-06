@@ -41,9 +41,10 @@ export default function WaitingRoom() {
     axios
       .request(config)
       .then((res) => {
-        console.log('axios 요청에 대하ㅑㄴ 응답', res.data)
-        setRoomInfo(res.data)
+        console.log('axios 요청에 대한 응답', res.data)
         setPersonnel(res.data.personnel)
+        console.log('인원수 업데이트 했다', personnel)
+        setRoomInfo(res.data)
       })
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
@@ -52,7 +53,7 @@ export default function WaitingRoom() {
 
   // 웹소켓 통신 열기
   const connect = function () {
-    var sock = new sockjs('http://sccs.kr:8200/sccs')
+    var sock = new sockjs('https://sccs.kr/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
@@ -185,7 +186,9 @@ export default function WaitingRoom() {
       <h1>{studyroomId}번 대기방</h1>
       <h3>방제목 : {roomInfo.title}</h3>
       <h3>방장 : {roomInfo.hostId}</h3>
-      <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3>
+      <h3>
+        {personnel ? <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3> : null}
+      </h3>
       <h3>로그인된 유저 : {nickname}</h3>
       {connected && (
         <>
@@ -202,10 +205,21 @@ export default function WaitingRoom() {
           <div>{exitMsg.message}</div>
 
           <div>{enterMsg.message}</div>
+          {isReady ? (
+            <Btn onClick={ready}>READY 취소</Btn>
+          ) : (
+            <Btn onClick={ready}>READY</Btn>
+          )}
 
-          <Btn onClick={ready}>READY</Btn>
-          <div>{isReady}</div>
           <div>{readyMsg.message}</div>
+
+          <div>
+            {personnel === isReadyArray.length + 1 ? (
+              <Btn>Start</Btn>
+            ) : (
+              <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
+            )}
+          </div>
 
           <H />
 
