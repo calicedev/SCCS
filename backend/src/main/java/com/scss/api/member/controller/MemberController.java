@@ -89,7 +89,7 @@ public class MemberController {
 
     /** 로그인 : 아이디, 비밀번호 일치시 토큰 생성 **/
     @PostMapping("/member/login")
-    public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap) {
+    public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap, HttpServletResponse response) {
         Map<String, String> resultmap = new HashMap<>(); // 결과를 담는 자료구조
 
         try {
@@ -111,8 +111,8 @@ public class MemberController {
                 resultmap.put("accessToken", accessToken);
                 resultmap.put("refreshToken", refreshToken);
 
-//                Cookie accessTokenCookie  = cookieService.createCookie("accessToken", accessToken);
-//                Cookie refreshTokenCookie = cookieService.createCookie("refreshToken", refreshToken);
+                Cookie accessTokenCookie  = cookieService.createCookie("accessToken", accessToken);
+                Cookie refreshTokenCookie = cookieService.createCookie("refreshToken", refreshToken);
 
                 // Redis에 저장 (key: refreshtoken값, value: 회원 아이디)
                 try {
@@ -125,8 +125,8 @@ public class MemberController {
                 logger.debug("accessToken : {}", accessToken);
                 logger.debug("refreshToken : {}", refreshToken);
 
-//                response.addCookie(accessTokenCookie);
-//                response.addCookie(refreshTokenCookie);
+                response.addCookie(accessTokenCookie);
+                response.addCookie(refreshTokenCookie);
 
                 return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
             } else {
