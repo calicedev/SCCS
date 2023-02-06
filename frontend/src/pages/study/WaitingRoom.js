@@ -185,7 +185,7 @@ export default function WaitingRoom() {
       <h1>{studyroomId}번 대기방</h1>
       <h3>방제목 : {roomInfo.title}</h3>
       <h3>방장 : {roomInfo.hostId}</h3>
-      <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3>
+      <h3>{personnel && <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3>}</h3>
       <h3>로그인된 유저 : {nickname}</h3>
       {connected && (
         <>
@@ -214,7 +214,7 @@ export default function WaitingRoom() {
             {personnel === isReadyArray.length + 1 ? (
               <Btn>Start</Btn>
             ) : (
-              <div>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</div>
+              <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
             )}
           </div>
 
