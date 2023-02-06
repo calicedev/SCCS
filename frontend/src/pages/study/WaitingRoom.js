@@ -54,9 +54,9 @@ export default function WaitingRoom() {
       })
   }, [])
 
-  // 웹소켓 통신 열기
+  // 웹소켓 통신 열기 hello
   const connect = function () {
-    var sock = new sockjs('http://localhost:8200/sccs')
+    var sock = new sockjs('https://sccs.kr/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
@@ -88,6 +88,7 @@ export default function WaitingRoom() {
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
+            // console.log('content!!', content)
             setPersonnel(content.personnel)
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
@@ -148,7 +149,9 @@ export default function WaitingRoom() {
     setIsReady(!isReady)
   }
 
+  // isReady 변경시에만 실행
   useEffect(() => {
+    // useRef는 재랜더링될 때에도 바뀌지 않음
     if (justMounted.current) {
       justMounted.current = false
       return
@@ -216,11 +219,6 @@ export default function WaitingRoom() {
           <div>{exitMsg.message}</div>
 
           <div>{enterMsg.message}</div>
-          {isReady ? (
-            <Btn onClick={ready}>READY 취소</Btn>
-          ) : (
-            <Btn onClick={ready}>READY</Btn>
-          )}
 
           <div>{readyMsg.message}</div>
 
@@ -233,7 +231,13 @@ export default function WaitingRoom() {
               )}
             </div>
           ) : (
-            <h3>님은 방장 아님 ㅎㅅㅎ</h3>
+            <h3>
+              {isReady ? (
+                <Btn onClick={ready}>READY 취소</Btn>
+              ) : (
+                <Btn onClick={ready}>READY</Btn>
+              )}
+            </h3>
           )}
 
           <H />
