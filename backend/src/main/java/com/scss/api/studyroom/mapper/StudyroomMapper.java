@@ -44,7 +44,10 @@ public interface StudyroomMapper {
 
     public StudyroomDto enterStudyroom(int id);
 
-    public void increaseStudyroomPersonnel(int studyroomId);
+    public int getStudyroomPersonnel(int id);
+
+    public int increaseStudyroomPersonnel(StudyroomDto studyroomDto);
+    public int decreaseStudyroomPersonnel(StudyroomDto studyroomDto);
 
     public boolean isExistStudyroom(int id);
 }

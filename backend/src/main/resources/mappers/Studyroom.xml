@@ -156,16 +156,22 @@
     WHERE id = #{id}
   </update>
 
-  <update id="increaseStudyroomPersonnel" parameterType="int">
+  <select id="getStudyroomPersonnel" parameterType="int" resultType="int">
+    SELECT personnel
+    From studyroom
+    where id= #{id}
+  </select>
+
+  <update id="increaseStudyroomPersonnel" parameterType="StudyroomDto" useGeneratedKeys="true" keyProperty="personnel" >
     UPDATE studyroom
-    SET personnel =personnel+1
-    WHERE id = #{studyroomId}
+    SET personnel = personnel+1
+    WHERE id = #{id}
   </update>
 
-  <update id="decreaseStudyroomPersonnel" parameterType="int">
+  <update id="decreaseStudyroomPersonnel" parameterType="StudyroomDto"  useGeneratedKeys="true" keyProperty="personnel">
     UPDATE studyroom
-    SET personnel =#{personnel}
-    WHERE id = #{studyroomId}
+    SET personnel = personnel-1
+    WHERE id = #{id}
   </update>
 
   <select id="selectStudyroomById" parameterType="int" resultMap="studyList2">
