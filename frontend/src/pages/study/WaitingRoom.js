@@ -88,6 +88,7 @@ export default function WaitingRoom() {
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
+            // console.log('content!!', content)
             setPersonnel(content.personnel)
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
@@ -218,11 +219,6 @@ export default function WaitingRoom() {
           <div>{exitMsg.message}</div>
 
           <div>{enterMsg.message}</div>
-          {isReady ? (
-            <Btn onClick={ready}>READY 취소</Btn>
-          ) : (
-            <Btn onClick={ready}>READY</Btn>
-          )}
 
           <div>{readyMsg.message}</div>
 
@@ -235,7 +231,13 @@ export default function WaitingRoom() {
               )}
             </div>
           ) : (
-            <h3>님은 방장 아님 ㅎㅅㅎ</h3>
+            <h3>
+              {isReady ? (
+                <Btn onClick={ready}>READY 취소</Btn>
+              ) : (
+                <Btn onClick={ready}>READY</Btn>
+              )}
+            </h3>
           )}
 
           <H />
