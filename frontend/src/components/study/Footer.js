@@ -8,6 +8,7 @@ import api from 'constants/api'
 
 
 export default function Footer() {
+  
   const navigate = useNavigate()
   // const id = useSelector((state) => state.user.id)
 
@@ -34,20 +35,50 @@ export default function Footer() {
 
 
 
-  const convertCode = useCallback(() => {
+  const testCode = useCallback(() => {
     // let fileName = 'formFile.txt';
     const content = document.querySelector("textarea").value;
     const element = document.createElement('a');
     const file = new Blob([content], { type: 'text/plain', });
-    const data = {
-      memeberId: "mint_angel",
-      studyroomId: 30,
-      problemId: 1,
-      languageId:2,
-      formFile: file,
-    }
+    const formData = new FormData();
+    formData.append("formFile", file)
+    formData.append("memberId", "mint_angel")
+    formData.append("studyroomId", 30)
+    formData.append("problemId", 1)
+    formData.append("languageId", 2)
+
+    const headers = { "Content-Type": "multipart/form-data" }
+    const [url, method] = api('testCode')
+    const config = { url, method, data: formData, headers }
+    axios(config)
+      .then((res) => {
+        console.log(res)
+        // navigate('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    // element.href = URL.createObjectURL(file);
+    // // element.download = fileName;
+    // document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  },[])
+
+  const submitCode = useCallback(() => {
+    // let fileName = 'formFile.txt';
+    const content = document.querySelector("textarea").value;
+    const element = document.createElement('a');
+    const file = new Blob([content], { type: 'text/plain', });
+    const formData = new FormData();
+    formData.append("formFile", file)
+    formData.append("memberId", "mint_angel")
+    formData.append("studyroomId", 30)
+    formData.append("problemId", 1)
+    formData.append("languageId", 2)
+
+    const headers = { "Content-Type": "multipart/form-data" }
     const [url, method] = api('submitCode')
-    const config = { url, method, data }
+    const config = { url, method, data: formData, headers }
     axios(config)
       .then((res) => {
         console.log(res)
@@ -71,8 +102,7 @@ export default function Footer() {
           type='danger'
           size="small"
           onClick={() => {
-            convertCode('')
-            // navigate('/submission')
+            navigate('/study')            
           }}
         ></Button>
       </EndBtn>
@@ -83,7 +113,7 @@ export default function Footer() {
           size="small"
           margin-right='5px'
           onClick={() => {
-            navigate('/mypage/profile/edit')            
+            testCode('')
           }}
         ></Button>
         <Space></Space>
@@ -91,7 +121,7 @@ export default function Footer() {
         value="제출"
         size="small"
         onClick={() => {
-          navigate('/')
+          submitCode('')
         }}
         ></Button>
       </CompileBtn>

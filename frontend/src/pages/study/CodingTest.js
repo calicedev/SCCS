@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
 import Textarea from 'components/study/Textarea'
@@ -9,32 +9,36 @@ export default function SolveProblem() {
   
   return (
     <Main>
+      {/* <Head>
+        <RoomInfo>
+          남은 시간
+          현재 인원
+        </RoomInfo>
+
+      </Head> */}
       <Problem>
         <Img src="https://img3.cyberskyshop.com:8443/web/upload/prm/20200331161339247021/20200401084535615044.png"></Img>
       </Problem>
       <Resizable
-          defaultSize={{ width: '50%', height: '100%' }}
-          minWidth={'20%'}
-          maxWidth={'80%'}
-          enable={{ 
-            top: false,
-            right: true,
-            bottom: false,
-            left: true,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false,
-          }}
-          
-        >
+        defaultSize={{ width: '50%', height: '100%' }}
+        minWidth={'20%'}
+        maxWidth={'80%'}
+        enable={{ 
+          top: false,
+          right: true,
+          bottom: false,
+          left: true,
+          topRight: false,
+          bottomRight: false,
+          bottomLeft: false,
+          topLeft: false,
+        }}          
+      >
           
       <FlexColumn>
-        <Changer>언어 선택</Changer>
         <CodingSection>
-          코딩창
-          <Textarea></Textarea>
-          
+          <Changer>언어 선택</Changer>          
+          <Textarea></Textarea>          
         </CodingSection>
       <Resizable
           defaultSize={{ width: '100%', height: '37%' }}
@@ -73,6 +77,14 @@ const Main = styled.div`
   box-sizing: border-box;
   background-color: #263747;
 `
+// const Head = styled.div`
+//   display: flex;
+// `
+// const RoomInfo = styled.div`
+//   display: flex;
+// `
+
+
 
 const Problem = styled.div`
   height: 100vh;
@@ -121,6 +133,7 @@ const CodingSection = styled.div`
 // `
 const Changer = styled.div`
   dispaly: flex;
+
 `
 
 const ResultSection = styled.div`
