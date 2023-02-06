@@ -52,7 +52,7 @@ export default function WaitingRoom() {
 
   // 웹소켓 통신 열기
   const connect = function () {
-    var sock = new sockjs('http://sccs.kr:8200/sccs')
+    var sock = new sockjs('https://sccs.kr/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
@@ -206,6 +206,14 @@ export default function WaitingRoom() {
           <Btn onClick={ready}>READY</Btn>
           <div>{isReady}</div>
           <div>{readyMsg.message}</div>
+
+          <div>
+            {personnel === isReadyArray.length + 1 ? (
+              <Btn>Start</Btn>
+            ) : (
+              <div>아직 전부다 레디 안했음. 너넨 그냥 공부하지마라</div>
+            )}
+          </div>
 
           <H />
 
