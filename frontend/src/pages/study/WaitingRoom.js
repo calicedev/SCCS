@@ -48,7 +48,7 @@ export default function WaitingRoom() {
 
   // 웹소켓 통신 열기
   const connect = function () {
-    var sock = new sockjs('http://sccs.kr:8200/sccs')
+    var sock = new sockjs('https://sccs.kr/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
