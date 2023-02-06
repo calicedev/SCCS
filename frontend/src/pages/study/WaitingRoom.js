@@ -56,7 +56,7 @@ export default function WaitingRoom() {
 
   // 웹소켓 통신 열기 hello
   const connect = function () {
-    var sock = new sockjs('http://70.12.246.176:8200/sccs')
+    var sock = new sockjs('https://sccs.kr/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
@@ -94,17 +94,27 @@ export default function WaitingRoom() {
             // stomp.unsubscribe(chatDto.body.nickname)
           }
           if (content.status === 'ready') {
-            console.log('ready!!!!!!!!!!!!!!', content)
+            // console.log('ready!!!!!!!!!!!!!!', content)
             setReadyMsg(content)
-            if (id !== roomInfo.hostId) return
+            if (id !== roomInfo.hostId) {
+              return
+            }
             if (content.ready) {
-              const newArray = [...isReadyArray, content.nickname]
-              setIsReadyArray(newArray)
+              console.log('전', isReadyArray)
+              setIsReadyArray((isReadyArray) => [
+                ...isReadyArray,
+                content.nickname,
+              ])
+              setTimeout(() => {
+                console.log('후', isReadyArray)
+                console.log('길이', isReadyArray.length)
+              }, 1000)
             } else {
-              const newArray = isReadyArray.filter(
-                (nickname) => nickname !== content.nickname,
-              )
+              const newArray = isReadyArray.filter((nickname) => {
+                return nickname !== content.nickname
+              })
               setIsReadyArray(newArray)
+              console.log('레디취소 누름', isReadyArray)
             }
           }
           if (content.status === 'chat') {
