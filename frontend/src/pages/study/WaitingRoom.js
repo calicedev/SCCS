@@ -31,7 +31,7 @@ export default function WaitingRoom() {
   const [chatList, setChatList] = useState([])
   const [chatNickname, setChatNickname] = useState([])
   // ready 관련 state
-  const [isReady, setIsReady] = useState(false)
+  const [readyOrNot, setReadyOrNot] = useState(false)
   const [readyMsg, setReadyMsg] = useState({})
   const [isReadyArray, setIsReadyArray] = useState([])
 
@@ -88,14 +88,16 @@ export default function WaitingRoom() {
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
+            // console.log('content!!', content)
             setPersonnel(content.personnel)
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
           }
           if (content.status === 'ready') {
+            console.log('ready!!!!!!!!!!!!!!', content)
             setReadyMsg(content)
             if (id !== roomInfo.hostId) return
-            if (content.isReady) {
+            if (content.ready) {
               const newArray = [...isReadyArray, content.nickname]
               setIsReadyArray(newArray)
             } else {
@@ -145,7 +147,7 @@ export default function WaitingRoom() {
   }, [])
 
   const ready = () => {
-    setIsReady(!isReady)
+    setReadyOrNot(!readyOrNot)
   }
 
   // isReady 변경시에만 실행
@@ -155,18 +157,18 @@ export default function WaitingRoom() {
       justMounted.current = false
       return
     }
-    console.log('버튼 누른 직후', isReady)
+    console.log('버튼 누른 직후', readyOrNot)
     stomp.send(
       '/pub/studyroom',
       {},
       JSON.stringify({
         studyroomId: studyroomId,
         nickname: nickname,
-        isReady: isReady,
+        ready: readyOrNot,
         status: 'ready',
       }),
     )
-  }, [isReady])
+  }, [readyOrNot])
 
   // 서버에 메시지 요청 보낼 함수
   const sendMsg = (chat) => {
@@ -194,6 +196,10 @@ export default function WaitingRoom() {
     sendMsg(chat)
   }
 
+  const startCodingTest = () => {
+    navigate('/codingtest')
+  }
+
   return (
     <>
       <h1>{studyroomId}번 대기방</h1>
@@ -218,24 +224,25 @@ export default function WaitingRoom() {
           <div>{exitMsg.message}</div>
 
           <div>{enterMsg.message}</div>
-          {isReady ? (
-            <Btn onClick={ready}>READY 취소</Btn>
-          ) : (
-            <Btn onClick={ready}>READY</Btn>
-          )}
 
           <div>{readyMsg.message}</div>
 
           {id === roomInfo.hostId ? (
             <div>
               {personnel === isReadyArray.length + 1 ? (
-                <Btn>Start</Btn>
+                <Btn onClick={startCodingTest}>Start</Btn>
               ) : (
                 <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
               )}
             </div>
           ) : (
-            <h3>님은 방장 아님 ㅎㅅㅎ</h3>
+            <h3>
+              {readyOrNot ? (
+                <Btn onClick={ready}>READY 취소</Btn>
+              ) : (
+                <Btn onClick={ready}>READY</Btn>
+              )}
+            </h3>
           )}
 
           <H />
