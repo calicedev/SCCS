@@ -49,7 +49,7 @@ export default function LoginForm() {
       })
       .then(() => {
         setUserInfo(id)
-        dispatch(setUserId(id))
+        // dispatch(setUserId(id))
       })
       .catch((err) => {
         console.log(err)

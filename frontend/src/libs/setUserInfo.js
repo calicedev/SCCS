@@ -18,7 +18,8 @@ export default function getSetUserInfo(id) {
   axios(url, config)
     .then((res) => {
       // 리덕스에 사용자 정보 저장
-      store.dispatch(setUserInfo(res.data))
+      console.log(res)
+      store.dispatch(setUserInfo(res.data.data))
     })
     .catch((err) => {
       console.log(err)
