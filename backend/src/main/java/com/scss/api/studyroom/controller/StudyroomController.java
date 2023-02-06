@@ -138,7 +138,7 @@ public class StudyroomController {
     }
 
     /** 코딩 테스트 문제 제출 **/
-    @PostMapping("/problem")
+    @PostMapping("/studyroom/codingtest/submission")
     public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
         ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
 
@@ -164,7 +164,7 @@ public class StudyroomController {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         //채점 서버 url
-        String url ="http://localhost:9999";
+        String url ="http://70.12.246.161:9999";
         if(submissionDto.getLanguageId()==1){
             url+="/api/solve/python";
         }else if(submissionDto.getLanguageId()==2){
@@ -180,7 +180,7 @@ public class StudyroomController {
         submissionDto.setRuntime(s.getRuntime());
         studyroomService.submitProblem(submissionDto);
 
-        return new ResponseEntity<>(SUCCESS, httpStatus);
+        return new ResponseEntity<>(s, httpStatus);
 
     }
 
