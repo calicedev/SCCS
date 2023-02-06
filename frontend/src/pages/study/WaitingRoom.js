@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -23,16 +23,19 @@ export default function WaitingRoom() {
   const [stomp, setStomp] = useState(false)
   const [connected, setConnected] = useState(false)
   const [enterMsg, setEnterMsg] = useState({})
-  const [isReady, setIsReady] = useState(false)
-  const [readyMsg, setReadyMsg] = useState({})
+
   const [exitMsg, setExitMsg] = useState({})
 
   // 채팅 기능 관련 state
   const [chat, setChat] = useState('')
   const [chatList, setChatList] = useState([])
   const [chatNickname, setChatNickname] = useState([])
-  //
+  // ready 관련 state
+  const [isReady, setIsReady] = useState(false)
+  const [readyMsg, setReadyMsg] = useState({})
   const [isReadyArray, setIsReadyArray] = useState([])
+
+  const justMounted = useRef(true)
 
   // 채팅방 관련 정보 axios 요청
   useEffect(() => {
@@ -141,8 +144,16 @@ export default function WaitingRoom() {
     }
   }, [])
 
-  const ready = async () => {
-    await setIsReady(!isReady)
+  const ready = () => {
+    setIsReady(!isReady)
+  }
+
+  useEffect(() => {
+    if (justMounted.current) {
+      justMounted.current = false
+      return
+    }
+    console.log('버튼 누른 직후', isReady)
     stomp.send(
       '/pub/studyroom',
       {},
@@ -153,7 +164,7 @@ export default function WaitingRoom() {
         status: 'ready',
       }),
     )
-  }
+  }, [isReady])
 
   // 서버에 메시지 요청 보낼 함수
   const sendMsg = (chat) => {
@@ -213,13 +224,17 @@ export default function WaitingRoom() {
 
           <div>{readyMsg.message}</div>
 
-          <div>
-            {personnel === isReadyArray.length + 1 ? (
-              <Btn>Start</Btn>
-            ) : (
-              <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
-            )}
-          </div>
+          {id === roomInfo.hostId ? (
+            <div>
+              {personnel === isReadyArray.length + 1 ? (
+                <Btn>Start</Btn>
+              ) : (
+                <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
+              )}
+            </div>
+          ) : (
+            <h3>님은 방장 아님 ㅎㅅㅎ</h3>
+          )}
 
           <H />
 
