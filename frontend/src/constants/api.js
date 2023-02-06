@@ -26,6 +26,7 @@ const api = function (type, options = {}) {
     studyHistoryDetail: [`/api/mypage/history/detail/${options.id}`, 'get'],
     submitProblem: ['/api/mypage/problem', 'post'],
     solvedProblem: [`/api/mypage/problem/${options.id}`, 'get'],
+    submitCode:['/api/studyroom/codingtest/submission', 'post',]
   }
 
   return apiObject[type]
