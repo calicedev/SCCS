@@ -4,6 +4,8 @@ import java.io.File;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.io.UrlResource;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,5 +21,5 @@ public class ProblemDto {
   int submissionNumber;
   int acceptedNumber;
   int algoId;
-  File problemImage;
+  String problemImageUrl;
 }

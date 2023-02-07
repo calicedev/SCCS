@@ -42,6 +42,7 @@ logging:
 
 file:
     dir: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/submission/
-    dir2: C:/S08P12A301/backend/src/main/resources/problem/
+  #  dir: C:/S08P12A301/backend/src/main/resources/submission/
+    dir2: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/problem/
 server:
   port: 8200
