@@ -40,6 +40,18 @@ export default function WaitingRoom() {
 
   const justMounted = useRef(true)
 
+  // 새로고침시에 유저 수 그대로 유지하기
+  window.addEventListener('beforeunload', (event) => {
+    // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
+    event.preventDefault()
+    disconnect(stomp)
+  })
+  window.addEventListener('unload', (event) => {
+    // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
+    event.preventDefault()
+    disconnect(stomp)
+  })
+
   // 채팅방 관련 정보 axios 요청
   useEffect(() => {
     const [url, method] = api('enterRoom', { studyroomId })
@@ -54,9 +66,6 @@ export default function WaitingRoom() {
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
       })
-    return () => {
-      disconnect()
-    }
   }, [])
 
   // 똑똑하게 useEffect 쓰는법
@@ -130,18 +139,18 @@ export default function WaitingRoom() {
             // 로컬에서 새로고침해서 인원수가 늘어나면 그제서야 배열에 닉네임이 추가된 걸 볼 수 있음.. 돌겠다 ㄹㅇ
             if (id === roomInfo.hostId) {
               if (content.ready) {
-                console.log('변경 전', readyArray)
+                // console.log('변경 전', readyArray)
 
                 setReadyArray((readyArray) => [...readyArray, content.nickname])
                 setTimeout(() => {
-                  console.log('변경 후', readyArray)
+                  // console.log('변경 후', readyArray)
                 })
               } else {
                 const newArray = readyArray.filter((nickname) => {
                   return nickname !== content.nickname
                 })
                 setReadyArray(newArray)
-                console.log('레디취소 누름', readyArray)
+                // console.log('레디취소 누름', readyArray)
               }
             } else {
               console.log('난 방장이 아님!!')
