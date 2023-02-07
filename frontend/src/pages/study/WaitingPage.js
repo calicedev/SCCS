@@ -258,6 +258,8 @@ export default function WaitingPage() {
   const face = async () => {
     isFace.current = !isFace.current
     if (!isFace.current) {
+      const video = document.getElementById('publisher-video')
+      video.srcObject = undefined
       const devices = await OV.current.getDevices()
       // videoDevice 배열 추출
       const videoDevices = devices.filter(
@@ -283,9 +285,9 @@ export default function WaitingPage() {
 
     Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-      faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-      faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+      // faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+      // faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+      // faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
     ]).then(startVideo)
 
     function startVideo() {
@@ -310,31 +312,33 @@ export default function WaitingPage() {
       const displaySize = { width: video.width, height: video.height }
       faceapi.matchDimensions(canvas, displaySize)
 
-      // // 이미지 선언
-      // const img = document.createElement('img')
-      // img.style.objectFit = 'contain'
-      // img.width = 30
-      // img.height = 20
+      // 이미지 선언
+      const img = document.createElement('img')
+      img.style.objectFit = 'contain'
+      img.width = 30
+      img.height = 20
 
       setInterval(async () => {
-        const detections = await faceapi
-          // .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-          .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-          .withFaceLandmarks()
-          .withFaceExpressions()
-        const resizedDetections = faceapi.resizeResults(detections, displaySize)
+        const detections = await faceapi.detectSingleFace(
+          video,
+          new faceapi.TinyFaceDetectorOptions(),
+        )
+        // .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        // .withFaceLandmarks()
+        // .withFaceExpressions()
+        // const resizedDetections = faceapi.resizeResults(detections, displaySize)
         const ctx = canvas.getContext('2d')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
-        // if (detections) {
-        //   img.src = presentImg
-        //   ctx.drawImage(img, 0, 0)
-        // } else {
-        //   img.src = absentImg
-        //   ctx.drawImage(img, 0, 0)
-        // }
-        faceapi.draw.drawDetections(canvas, resizedDetections)
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+        if (detections) {
+          img.src = presentImg
+          ctx.drawImage(img, 0, 0)
+        } else {
+          img.src = absentImg
+          ctx.drawImage(img, 0, 0)
+        }
+        // faceapi.draw.drawDetections(canvas, resizedDetections)
+        // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
       }, 100)
     })
   }
