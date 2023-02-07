@@ -3,10 +3,12 @@ package com.scss.api.studyroom.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +26,8 @@ public class SubmissionDto {
     private int studyroomId;
     private MultipartFile formFile;
     private String fileName;
+
+    private List<Map<String,Object>> data;
+    private UrlResource S;
 
 }

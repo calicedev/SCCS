@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,5 +18,5 @@ public class SocketDto {
     private String status;
     private int personnel;
     private boolean ready;
-
+    private List<String> membersNickname;
 }

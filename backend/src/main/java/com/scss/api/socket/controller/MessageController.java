@@ -28,7 +28,7 @@ public class MessageController {
             socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
             StudyroomDto studyroomDto = new StudyroomDto();
             studyroomDto.setId(socketDto.getStudyroomId());
-            int temp = studyroomService.increaseStudyroomPersonnel(studyroomDto);
+            studyroomService.increaseStudyroomPersonnel(studyroomDto);
             int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
             socketDto.setPersonnel(temp2);
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
@@ -38,14 +38,7 @@ public class MessageController {
             socketDto.setMessage(socketDto.getNickname() + "님이 코딩테스트 할 준비가 되었습니다.");
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
-
-        else if(socketDto.getStatus().equals("exit")){
-            socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다");
-            StudyroomDto studyroomDto = new StudyroomDto();
-            studyroomDto.setId(socketDto.getStudyroomId());
-            int temp = studyroomService.decreaseStudyroomPersonnel(studyroomDto);
-            int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
-            socketDto.setPersonnel(temp2);
+        else if(socketDto.getStatus().equals("start")){
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
 
@@ -53,6 +46,18 @@ public class MessageController {
             socketDto.setMessage(socketDto.getMessage());
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
+
+        else if(socketDto.getStatus().equals("exit")){
+            socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다");
+            StudyroomDto studyroomDto = new StudyroomDto();
+            studyroomDto.setId(socketDto.getStudyroomId());
+            studyroomService.decreaseStudyroomPersonnel(studyroomDto);
+            int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+            socketDto.setPersonnel(temp2);
+            template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+        }
+
+
     }
 
 }

@@ -8,22 +8,20 @@ import com.scss.api.studyroom.dto.SubmissionDto;
 import com.scss.api.studyroom.file.FileStore;
 import com.scss.api.studyroom.service.StudyroomService;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -172,39 +170,45 @@ public class StudyroomController {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         //채점 서버 url
-//        String url ="https://sccs.kr";
-        String url ="http://70.12.246.161:8201";
+        String url ="https://sccs.kr";
         if(submissionDto.getLanguageId()==1){
             url+="/solve/python/submission";
         }else if(submissionDto.getLanguageId()==2){
             url+="/solve/java/submission";
         }
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-
-// HTTP POST 요청
-        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
+//        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
+        List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+        System.out.println(s.get(5).get("avgRuntime"));
 
 
         //문제 제출 정보를 실제 디비에 저장한다.
         submissionDto.setFileName(fileName);
 //        submissionDto.setResult(s.getResult());
 //        submissionDto.setMemory(s.getMemory());
-//        submissionDto.setRuntime(s.getRuntiem());
+//        submissionDto.setRuntime();
 //        studyroomService.submitProblem(submissionDto);
-//
-//        s.setProblemId(submissionDto.getProblemId());
-//        s.setStudyroomId(submissionDto.getStudyroomId());
-//        s.setLanguageId(submissionDto.getLanguageId());
-//        s.setMemberId(submissionDto.getMemberId());
+
+
         return new ResponseEntity<>(s, httpStatus);
 
+    }
+
+    /** 스터디 시작하기 **/
+    @PostMapping(value = "/studyroom/study", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> startStudy() throws MalformedURLException {
+        UrlResource resource = new UrlResource("file:" + "C:/S08P12A301/backend/src/main/resources/submission/1/1/0f04d372-0a5b-45c8-a453-b3f56290ce73.java");
+        SubmissionDto s=new SubmissionDto();
+        s.setS(resource);
+        s.setStudyroomId(33);
+        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).cacheControl(CacheControl.noCache())
+                .body(s);
     }
 
     /** 코딩 테스트 방장에 의해 끝내기 **/
     @PatchMapping("/studyroom/codingtest")
     public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto){
         //코딩 테스트 끝내기
-        
         return new ResponseEntity<>(studyroomService.endStudyroomByOwner(studyroomDto), HttpStatus.OK);
     }
 

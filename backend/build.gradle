@@ -54,8 +54,11 @@ dependencies {
     //websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     compileOnly group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
-    //웹소켓 확인용으로 설치한 타임리프
     implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.1'
+
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 스웨거 설정
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
