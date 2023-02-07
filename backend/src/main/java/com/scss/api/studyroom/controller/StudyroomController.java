@@ -181,6 +181,10 @@ public class StudyroomController {
         submissionDto.setRuntime(s.getRuntime());
         studyroomService.submitProblem(submissionDto);
 
+        s.setProblemId(submissionDto.getProblemId());
+        s.setStudyroomId(submissionDto.getStudyroomId());
+        s.setLanguageId(submissionDto.getLanguageId());
+        s.setMemberId(submissionDto.getMemberId());
         return new ResponseEntity<>(s, httpStatus);
 
     }

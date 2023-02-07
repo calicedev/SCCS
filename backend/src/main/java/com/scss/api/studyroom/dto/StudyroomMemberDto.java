@@ -10,5 +10,6 @@ public class StudyroomMemberDto {
     private int id;
     private int studyroomId;
     private String MemberId;
+    private String sessionId;
 }
 
