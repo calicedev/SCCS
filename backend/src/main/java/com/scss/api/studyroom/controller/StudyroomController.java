@@ -11,6 +11,7 @@ import com.scss.api.studyroom.service.StudyroomService;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -46,8 +49,8 @@ public class StudyroomController {
     static {
         // RestTemplate 기본 설정을 위한 Factory 생성
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(3000);
-        factory.setReadTimeout(3000);
+        factory.setConnectTimeout(30000);
+        factory.setReadTimeout(30000);
         factory.setBufferRequestBody(false); // 파일 전송은 이 설정을 꼭 해주자.
         REST_TEMPLATE = new RestTemplate(factory);
     }
@@ -176,11 +179,12 @@ public class StudyroomController {
         }else if(submissionDto.getLanguageId()==2){
             url+="/solve/java/submission";
         }
-
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        //Map<String, Object> s = REST_TEMPLATE.postForObject(url, requestEntity, Map.class);
-        ResponseEntity<String> s  = REST_TEMPLATE.postForObject(url, requestEntity, ResponseEntity.class);
-        System.out.println("s!!!!!!!!!!!!!!!!!!! " + s);
+
+// HTTP POST 요청
+        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
+
+
         //문제 제출 정보를 실제 디비에 저장한다.
         submissionDto.setFileName(fileName);
 //        submissionDto.setResult(s.getResult());
