@@ -50,7 +50,7 @@ function App() {
           <Route path="studydetail/:id" element={<StudyDetailPage />}></Route>
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
-        <Route path="/openvidu" element={<WaitingPage />}></Route>
+        <Route path="/ov" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
         <Route path="/codingtest" element={<CodingTest />}></Route>
 
