@@ -11,28 +11,31 @@ import sockjs from 'sockjs-client'
 import stompjs from 'stompjs'
 
 export default function WaitingRoom() {
-  // 해당 페이지에 들어오자마자 axios 요청 보내서 방 정보를 얻어와서 화면에 뿌려주기
-  const { studyroomId } = useParams()
   const navigate = useNavigate()
-  const [roomInfo, setRoomInfo] = useState({})
+  // 해당 페이지에 들어오자마자 axios 요청 보내서 방 정보를 얻어와서 화면에 뿌려주기
+
+  const { studyroomId } = useParams()
+
+  const [roomInfo, setRoomInfo] = useState(undefined)
   const [personnel, setPersonnel] = useState(0)
 
   const nickname = useSelector((state) => state.user.nickname)
   const id = useSelector((state) => state.user.id)
 
-  const [stomp, setStomp] = useState(false)
+  const [stomp, setStomp] = useState(undefined)
   const [connected, setConnected] = useState(false)
-  const [enterMsg, setEnterMsg] = useState({})
 
-  const [exitMsg, setExitMsg] = useState({})
+  const [enterMsg, setEnterMsg] = useState('')
+  const [exitMsg, setExitMsg] = useState('')
+  const [readyMsg, setReadyMsg] = useState('')
 
   // 채팅 기능 관련 state
   const [chat, setChat] = useState('')
   const [chatList, setChatList] = useState([])
   const [chatNickname, setChatNickname] = useState([])
+
   // ready 관련 state
   const [readyOrNot, setReadyOrNot] = useState(false)
-  const [readyMsg, setReadyMsg] = useState({})
   const [readyArray, setReadyArray] = useState([])
 
   const justMounted = useRef(true)
@@ -46,13 +49,37 @@ export default function WaitingRoom() {
       .then((res) => {
         console.log('axios 요청에 대한 응답', res.data)
         setPersonnel(res.data.personnel)
-        console.log('인원수 업데이트 했다', personnel)
         setRoomInfo(res.data)
       })
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
       })
+    return () => {
+      disconnect()
+    }
   }, [])
+
+  // 똑똑하게 useEffect 쓰는법
+  useEffect(() => {
+    if (!roomInfo) return
+    connect()
+  }, [roomInfo])
+
+  const disconnect = function () {
+    if (stomp) {
+      stomp.send(
+        '/pub/studyroom',
+        {},
+        JSON.stringify({
+          studyroomId: studyroomId,
+          nickname: nickname,
+          status: 'exit',
+        }),
+      )
+      stomp.disconnect()
+      setConnected(false)
+    }
+  }
 
   // 웹소켓 통신 열기 hello
   const connect = function () {
@@ -95,8 +122,9 @@ export default function WaitingRoom() {
           }
           if (content.status === 'ready') {
             // console.log('ready!!!!!!!!!!!!!!', content.message)
-            setReadyMsg(content.message)
             console.log(id)
+            console.log(roomInfo.hostId)
+            setReadyMsg(content.message)
             // 이 로직에서 자신이 방장인데도 방장이 아닌 곳으로 향함
             // 나중에 방장인 if문으로 향해도 빈배열만 나옴... 대체 왜?
             // 로컬에서 새로고침해서 인원수가 늘어나면 그제서야 배열에 닉네임이 추가된 걸 볼 수 있음.. 돌겠다 ㄹㅇ
@@ -131,32 +159,6 @@ export default function WaitingRoom() {
       )
     })
   }
-
-  const disconnect = function () {
-    if (stomp) {
-      stomp.send(
-        '/pub/studyroom',
-        {},
-        JSON.stringify({
-          studyroomId: studyroomId,
-          nickname: nickname,
-          status: 'exit',
-        }),
-      )
-      console.log('퇴장')
-      stomp.disconnect()
-      setConnected(false)
-    }
-  }
-
-  // 똑똑하게 useEffect 쓰는법
-  useEffect(function () {
-    connect()
-
-    return function () {
-      disconnect()
-    }
-  }, [])
 
   const ready = () => {
     setReadyOrNot(!readyOrNot)
@@ -214,15 +216,13 @@ export default function WaitingRoom() {
 
   return (
     <>
-      <h1>{studyroomId}번 대기방</h1>
-      <h3>방제목 : {roomInfo.title}</h3>
-      <h3>방장 : {roomInfo.hostId}</h3>
-      <h3>
-        {personnel ? <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3> : null}
-      </h3>
-      <h3>로그인된 유저 : {nickname}</h3>
       {connected && (
         <>
+          <h1>{studyroomId}번 대기방</h1>
+          <h3>방제목 : {roomInfo.title}</h3>
+          <h3>방장 : {roomInfo.hostId}</h3>
+          {personnel ? <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3> : null}
+          <h3>로그인된 유저 : {nickname}</h3>
           <h1>WebSocket</h1>
           <h1>Connected</h1>
           <Btn
