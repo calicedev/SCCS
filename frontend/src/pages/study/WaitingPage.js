@@ -8,8 +8,7 @@ import * as faceapi from 'face-api.js'
 import presentImg from 'assets/img/webRTC_present_image.png'
 import absentImg from 'assets/img/webRTC_absent_image.png'
 
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://70.12.246.181:5000/'
+const APPLICATION_SERVER_URL = 'https://sccs.kr/'
 
 export default function WaitingPage() {
   const [mySessionId, setMySessionId] = useState('Room1')
@@ -363,7 +362,7 @@ export default function WaitingPage() {
   const createSession = async (sessionId) => {
     // console.log('Join Session', APPLICATION_SERVER_URL)
     const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions',
+      APPLICATION_SERVER_URL + 'openvidu/sessions',
       { customSessionId: sessionId },
       {
         headers: { 'Content-Type': 'application/json' },
@@ -374,7 +373,10 @@ export default function WaitingPage() {
 
   const createToken = async (sessionId) => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections',
+      APPLICATION_SERVER_URL +
+        'openvidu/sessions/' +
+        sessionId +
+        '/connections',
       {},
       {
         headers: { 'Content-Type': 'application/json' },
