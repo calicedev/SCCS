@@ -128,6 +128,7 @@ public class StudyroomController {
     /** 코딩 테스트 시작하기 **/
     @PostMapping("/studyroom/codingtest")
     public ResponseEntity<?> startCodingTest(@RequestBody StudyroomDto studyroomDto){
+        System.out.println("++++++++++++++++++++++++++++");
         if(studyroomService.isExistStudyroom(studyroomDto.getId())){
             return new ResponseEntity<>(studyroomService.startCodingTest(studyroomDto), HttpStatus.OK);
         }else{

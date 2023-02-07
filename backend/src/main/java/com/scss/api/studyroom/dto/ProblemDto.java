@@ -1,5 +1,6 @@
 package com.scss.api.studyroom.dto;
 
+import java.io.File;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,5 @@ public class ProblemDto {
   int submissionNumber;
   int acceptedNumber;
   int algoId;
+  File problemImage;
 }

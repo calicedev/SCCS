@@ -2,12 +2,14 @@ package com.scss.api.studyroom.service;
 
 import com.scss.api.studyroom.dto.*;
 import com.scss.api.studyroom.mapper.StudyroomMapper;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,8 @@ public class StudyroomServiceImpl implements StudyroomService{
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
     private final StudyroomMapper studyroomMapper;
-
+    @Value("${file.dir2}")
+    private String fileDir;
     /** 방 생성 **/
     @Override
     public int createStudyroom(StudyroomDto studyroomDto) {
@@ -222,7 +225,14 @@ public class StudyroomServiceImpl implements StudyroomService{
         resultMap.put("id", s.getId());
 
         List<ProblemDto> p = studyroomMapper.selectProblemByStudyroomId(studyroomDto.getId());
+        for(int i=0; i<2; i++){
+            String path = p.get(i).getProblemFolder();
+            String realPath = fileDir + path + "/" + "problem.img";
+            File file = new File(realPath);
+            p.get(i).setProblemImage(file);
+        }
         resultMap.put( "problems", p);
+
         return resultMap;
     }
 
