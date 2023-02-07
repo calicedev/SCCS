@@ -1,13 +1,13 @@
-import { OpenVidu } from 'openvidu-browser'
+import { OpenVidu, VideoInsertMode } from 'openvidu-browser'
 import axios from 'axios'
 import React, { useState, useEffect, useRef } from 'react'
 import VideoComponent from '../../components/study/VideoComponent'
 import styled from 'styled-components'
 import Button from 'components/common/Button'
-import ProfileInput from 'components/mypage/ProfileInput'
+import * as faceapi from 'face-api.js'
 
 const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://172.30.1.26:5000/'
+  process.env.NODE_ENV === 'production' ? '' : 'http://192.168.219.111:5000/'
 
 export default function WaitingPage() {
   const [mySessionId, setMySessionId] = useState('Room1')
@@ -21,6 +21,10 @@ export default function WaitingPage() {
   const [subscribers, setSubscribers] = useState([])
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
   const OV = useRef(null)
+
+  const isVideo = useRef(true)
+  const isAudio = useRef(true)
+  const isScreen = useRef(false)
 
   // componentDidMount
   useEffect(() => {
@@ -47,11 +51,12 @@ export default function WaitingPage() {
   }
 
   const deleteSubscriber = (streamManager) => {
-    let newSubscribers = [...subscribers]
-    let index = subscribers.indexOf(streamManager, 0)
+    // 진짜 이유는 모르겠는데 newSubscribers = [...subscribers] 로 불러오면 안됨!!! 모두 처리해준 다음에 마지막 대입 전에 전개
+    const newSubscribers = subscribers
+    let index = newSubscribers.indexOf(streamManager, 0)
     if (index > -1) {
       newSubscribers.splice(index, 1)
-      setSubscribers(newSubscribers)
+      setSubscribers([...newSubscribers])
     }
   }
 
@@ -69,30 +74,29 @@ export default function WaitingPage() {
   useEffect(() => {
     if (!session) return
 
-    let mySession = session
-
     // --- 3) Specify the actions when events take place in the session ---
 
     // On every new Stream received...
-    mySession.on('streamCreated', (event) => {
+    session.on('streamCreated', (event) => {
       // Subscribe to the Stream to receive it. Second parameter is undefined
       // so OpenVidu doesn't create an HTML video by its own
-      const subscriber = mySession.subscribe(event.stream, undefined)
-      let newSubscribers = [...subscribers]
+      // 진짜 이유는 모르겠는데 newSubscribers = [...subscribers] 로 불러오면 안됨!!! 모두 처리해준 다음에 마지막 대입 전에 전개
+      const subscriber = session.subscribe(event.stream, undefined)
+      const newSubscribers = subscribers
       newSubscribers.push(subscriber)
 
       // Update the state with the new subscribers
-      setSubscribers(newSubscribers)
+      setSubscribers([...newSubscribers])
     })
 
     // On every Stream destroyed...
-    mySession.on('streamDestroyed', (event) => {
+    session.on('streamDestroyed', (event) => {
       // Remove the stream from 'subscribers' array
       deleteSubscriber(event.stream.streamManager)
     })
 
     // On every asynchronous exception...
-    mySession.on('exception', (exception) => {
+    session.on('exception', (exception) => {
       console.warn(exception)
     })
 
@@ -100,9 +104,10 @@ export default function WaitingPage() {
 
     // Get a token from the OpenVidu deployment
     getToken().then((token) => {
+      console.log('token', token)
       // First param is the token got from the OpenVidu deployment. Second param can be retrieved by every user on event
       // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-      mySession
+      session
         .connect(token, { clientData: myUserName })
         .then(async () => {
           // --- 5) Get your own camera stream ---
@@ -121,7 +126,7 @@ export default function WaitingPage() {
           })
           // --- 6) Publish your stream ---
 
-          mySession.publish(publisher)
+          session.publish(publisher)
 
           // Obtain the current video device in use
           const devices = await OV.current.getDevices()
@@ -153,10 +158,8 @@ export default function WaitingPage() {
 
   const leaveSession = () => {
     // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-    const mySession = session
-
-    if (mySession) {
-      mySession.disconnect()
+    if (session) {
+      session.disconnect()
     }
 
     // Empty all properties...
@@ -208,6 +211,95 @@ export default function WaitingPage() {
     }
   }
 
+  const toggleVideo = () => {
+    isVideo.current = !isVideo.current
+    // const newPublisher = publisher
+    publisher.publishVideo(isVideo.current) // true to enable the video track, false to disable it
+    // setPublisher({ ...newPublisher })
+  }
+
+  const toggleAudio = () => {
+    isAudio.current = !isAudio.current
+    publisher.publishAudio(isAudio.current) // true to unmute the audio track, false to mute it
+  }
+
+  const screenShare = async () => {
+    isScreen.current = !isScreen.current
+    if (!isScreen.current) {
+      const devices = await OV.current.getDevices()
+      // videoDevice 배열 추출
+      const videoDevices = devices.filter(
+        (device) => device.kind === 'videoinput',
+      )
+      const newPublisher = OV.current.initPublisher(undefined, {
+        videoSource: videoDevices[0].deviceId,
+        publishAudio: true,
+        publishVideo: true,
+        mirror: false,
+      })
+
+      await session.unpublish(mainStreamManager)
+      await session.publish(newPublisher)
+
+      setMainStreamManager(newPublisher)
+      setPublisher(newPublisher)
+      return
+    }
+    const canvas = document.querySelector('canvas')
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = 'green'
+    ctx.fillRect(10, 10, 100, 100)
+    const track = canvas.captureStream(10).getVideoTracks()[0]
+    publisher.replaceTrack(track)
+  }
+
+  const face = async () => {
+    const MODEL_URL = process.env.PUBLIC_URL + '/models'
+
+    const video = document.getElementById('video')
+
+    Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+      faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+      faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+    ]).then(startVideo)
+
+    function startVideo() {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function (stream) {
+          video.srcObject = stream
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+    }
+
+    video.addEventListener('play', () => {
+      console.log('play')
+      const canvas = faceapi.createCanvasFromMedia(video)
+      const track = canvas.captureStream(10).getVideoTracks()[0]
+      publisher.replaceTrack(track)
+      // document.getElementById('div').append(canvas)
+
+      const displaySize = { width: video.width, height: video.height }
+      faceapi.matchDimensions(canvas, displaySize)
+
+      setInterval(async () => {
+        const detections = await faceapi
+          .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks()
+          .withFaceExpressions()
+        const resizedDetections = faceapi.resizeResults(detections, displaySize)
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+        faceapi.draw.drawDetections(canvas, resizedDetections)
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+      }, 100)
+    })
+  }
+
   /**
    * --------------------------------------------
    * GETTING A TOKEN FROM YOUR APPLICATION SERVER
@@ -253,6 +345,9 @@ export default function WaitingPage() {
 
   return (
     <Container>
+      <Div id="div">
+        <video id="video" width="720" height="560" autoPlay muted></video>
+      </Div>
       {session === undefined ? (
         <div id="join">
           <div>
@@ -294,8 +389,26 @@ export default function WaitingPage() {
             <Button
               className="btn btn-large btn-success"
               id="buttonSwitchCamera"
-              onClick={switchCamera}
-              value="Switch Camera"
+              onClick={toggleVideo}
+              value="toggle Camera"
+            />
+            <Button
+              className="btn btn-large btn-success"
+              id="buttonSwitchCamera"
+              onClick={toggleAudio}
+              value="toggle audio"
+            />
+            <Button
+              className="btn btn-large btn-success"
+              id="buttonSwitchCamera"
+              onClick={screenShare}
+              value="screen share"
+            />
+            <Button
+              className="btn btn-large btn-success"
+              id="buttonSwitchCamera"
+              onClick={face}
+              value="face ai"
             />
           </div>
 
@@ -315,7 +428,7 @@ export default function WaitingPage() {
             ) : null}
             {subscribers.map((sub, i) => (
               <div
-                key={sub.id + i}
+                key={`${sub.id}-${i}`}
                 className="stream-container"
                 onClick={() => handleMainVideoStream(sub)}
               >
@@ -339,4 +452,11 @@ const Container = styled.div`
 const VideoContainer = styled.div`
   display: flex;
   justify-content: center;
+`
+const Div = styled.div`
+  position: relative;
+
+  & canvas {
+    position: absolute;
+  }
 `

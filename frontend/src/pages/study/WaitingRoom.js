@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -23,16 +23,19 @@ export default function WaitingRoom() {
   const [stomp, setStomp] = useState(false)
   const [connected, setConnected] = useState(false)
   const [enterMsg, setEnterMsg] = useState({})
-  const [isReady, setIsReady] = useState(false)
-  const [readyMsg, setReadyMsg] = useState({})
+
   const [exitMsg, setExitMsg] = useState({})
 
   // 채팅 기능 관련 state
   const [chat, setChat] = useState('')
   const [chatList, setChatList] = useState([])
   const [chatNickname, setChatNickname] = useState([])
-  //
-  const [isReadyArray, setIsReadyArray] = useState([])
+  // ready 관련 state
+  const [readyOrNot, setReadyOrNot] = useState(false)
+  const [readyMsg, setReadyMsg] = useState({})
+  const [readyArray, setReadyArray] = useState([])
+
+  const justMounted = useRef(true)
 
   // 채팅방 관련 정보 axios 요청
   useEffect(() => {
@@ -41,18 +44,19 @@ export default function WaitingRoom() {
     axios
       .request(config)
       .then((res) => {
-        console.log('axios 요청에 대하ㅑㄴ 응답', res.data)
-        setRoomInfo(res.data)
+        console.log('axios 요청에 대한 응답', res.data)
         setPersonnel(res.data.personnel)
+        console.log('인원수 업데이트 했다', personnel)
+        setRoomInfo(res.data)
       })
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
       })
   }, [])
 
-  // 웹소켓 통신 열기
+  // 웹소켓 통신 열기 hello
   const connect = function () {
-    var sock = new sockjs('http://sccs.kr:8200/sccs')
+    var sock = new sockjs('https://sccs.kr/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
@@ -84,21 +88,35 @@ export default function WaitingRoom() {
           // 나가기
           if (content.status === 'exit') {
             setExitMsg(content)
+            // console.log('content!!', content)
             setPersonnel(content.personnel)
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
           }
           if (content.status === 'ready') {
-            setReadyMsg(content)
-            if (id !== roomInfo.hostId) return
-            if (content.isReady) {
-              const newArray = [...isReadyArray, content.nickname]
-              setIsReadyArray(newArray)
+            // console.log('ready!!!!!!!!!!!!!!', content.message)
+            setReadyMsg(content.message)
+            console.log(id)
+            // 이 로직에서 자신이 방장인데도 방장이 아닌 곳으로 향함
+            // 나중에 방장인 if문으로 향해도 빈배열만 나옴... 대체 왜?
+            // 로컬에서 새로고침해서 인원수가 늘어나면 그제서야 배열에 닉네임이 추가된 걸 볼 수 있음.. 돌겠다 ㄹㅇ
+            if (id === roomInfo.hostId) {
+              if (content.ready) {
+                console.log('변경 전', readyArray)
+
+                setReadyArray((readyArray) => [...readyArray, content.nickname])
+                setTimeout(() => {
+                  console.log('변경 후', readyArray)
+                })
+              } else {
+                const newArray = readyArray.filter((nickname) => {
+                  return nickname !== content.nickname
+                })
+                setReadyArray(newArray)
+                console.log('레디취소 누름', readyArray)
+              }
             } else {
-              const newArray = isReadyArray.filter(
-                (nickname) => nickname !== content.nickname,
-              )
-              setIsReadyArray(newArray)
+              console.log('난 방장이 아님!!')
             }
           }
           if (content.status === 'chat') {
@@ -140,19 +158,29 @@ export default function WaitingRoom() {
     }
   }, [])
 
-  const ready = async () => {
-    await setIsReady(!isReady)
+  const ready = () => {
+    setReadyOrNot(!readyOrNot)
+  }
+
+  // isReady 변경시에만 실행
+  useEffect(() => {
+    // useRef는 재랜더링될 때에도 바뀌지 않음
+    if (justMounted.current) {
+      justMounted.current = false
+      return
+    }
+    console.log('버튼 누른 직후', readyOrNot)
     stomp.send(
       '/pub/studyroom',
       {},
       JSON.stringify({
         studyroomId: studyroomId,
         nickname: nickname,
-        isReady: isReady,
+        ready: readyOrNot,
         status: 'ready',
       }),
     )
-  }
+  }, [readyOrNot])
 
   // 서버에 메시지 요청 보낼 함수
   const sendMsg = (chat) => {
@@ -180,12 +208,18 @@ export default function WaitingRoom() {
     sendMsg(chat)
   }
 
+  const startCodingTest = () => {
+    navigate('/codingtest')
+  }
+
   return (
     <>
       <h1>{studyroomId}번 대기방</h1>
       <h3>방제목 : {roomInfo.title}</h3>
       <h3>방장 : {roomInfo.hostId}</h3>
-      <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3>
+      <h3>
+        {personnel ? <h3>현재 {personnel}명 있음 ㅎㅎㅎㅎㅎㅎ</h3> : null}
+      </h3>
       <h3>로그인된 유저 : {nickname}</h3>
       {connected && (
         <>
@@ -203,9 +237,25 @@ export default function WaitingRoom() {
 
           <div>{enterMsg.message}</div>
 
-          <Btn onClick={ready}>READY</Btn>
-          <div>{isReady}</div>
           <div>{readyMsg.message}</div>
+
+          {id === roomInfo.hostId ? (
+            <div>
+              {personnel === readyArray.length + 1 ? (
+                <Btn onClick={startCodingTest}>Start</Btn>
+              ) : (
+                <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
+              )}
+            </div>
+          ) : (
+            <h3>
+              {readyOrNot ? (
+                <Btn onClick={ready}>READY 취소</Btn>
+              ) : (
+                <Btn onClick={ready}>READY</Btn>
+              )}
+            </h3>
+          )}
 
           <H />
 

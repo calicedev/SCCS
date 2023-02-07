@@ -252,17 +252,28 @@ public class StudyroomServiceImpl implements StudyroomService{
         return p;
     }
 
-    @Override
-    public void changeStudyroomPersonnel(int studyroomId) {
-        studyroomMapper.changeStudyroomPersonnel(studyroomId);
-        return;
+    public int getStudyroomPersonnel(int id) {
+        int personnel = studyroomMapper.getStudyroomPersonnel(id);
+        return personnel;
     }
+
+    @Override
+    public int increaseStudyroomPersonnel(StudyroomDto studyroomDto) {
+        return  studyroomMapper.increaseStudyroomPersonnel(studyroomDto);
+    }
+
+
+    public int decreaseStudyroomPersonnel(StudyroomDto studyroomDto) {
+        return  studyroomMapper.decreaseStudyroomPersonnel(studyroomDto);
+    }
+
 
     @Override
     public boolean isExistStudyroom(int id) {
         boolean isExist = studyroomMapper.isExistStudyroom(id);
         return isExist;
     }
+
 
     private static boolean checkout(int n[], int index) {
         for (int i = 0; i < n.length; i++) {

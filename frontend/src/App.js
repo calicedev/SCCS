@@ -51,8 +51,9 @@ function App() {
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
         <Route path="/openvidu" element={<WaitingPage />}></Route>
-        <Route path="/codingtest" element={<CodingTest />}></Route>
         <Route path="/study" element={<Study />}></Route>
+        <Route path="/codingtest" element={<CodingTest />}></Route>
+
         {/* 대기방 2.4 민혁 생성 */}
         <Route
           path="/room/:studyroomId/waiting"

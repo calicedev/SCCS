@@ -2,7 +2,9 @@ package com.scss.api.socket.controller;
 
 
 import com.scss.api.socket.dto.SocketDto;
+import com.scss.api.studyroom.dto.StudyroomDto;
 import com.scss.api.studyroom.service.StudyroomService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,7 +26,11 @@ public class MessageController {
 
         if(socketDto.getStatus().equals("enter")){
             socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
-            studyroomService.changeStudyroomPersonnel(socketDto.getPersonnel());
+            StudyroomDto studyroomDto = new StudyroomDto();
+            studyroomDto.setId(socketDto.getStudyroomId());
+            int temp = studyroomService.increaseStudyroomPersonnel(studyroomDto);
+            int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+            socketDto.setPersonnel(temp2);
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
 
@@ -35,7 +41,11 @@ public class MessageController {
 
         else if(socketDto.getStatus().equals("exit")){
             socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다");
-            studyroomService.changeStudyroomPersonnel(socketDto.getPersonnel());
+            StudyroomDto studyroomDto = new StudyroomDto();
+            studyroomDto.setId(socketDto.getStudyroomId());
+            int temp = studyroomService.decreaseStudyroomPersonnel(studyroomDto);
+            int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+            socketDto.setPersonnel(temp2);
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         }
 
