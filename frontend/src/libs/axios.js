@@ -23,9 +23,13 @@ apiRequest.interceptors.request.use(
     // accessToken이 없을 경우 헤더 없이 요청
     if (!accessToken) return config
     // accessToken이 있을 경우 Authorization헤더에 추가해서 요청
+    // return {
+    //   ...config,
+    //   headers: { Authorization: `Bearer ${accessToken}` },
+    // }
+    config.headers.Authorization = `Bearer ${accessToken}`
     return {
       ...config,
-      headers: { Authorization: `Bearer ${accessToken}` },
     }
   },
   (error) => {

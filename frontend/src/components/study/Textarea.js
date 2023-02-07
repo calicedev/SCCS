@@ -15,8 +15,6 @@ const hightlightWithLineNumbers = (input, language) =>
     .split('\n')
     .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
     .join('\n')
-
-
     
 export default function Textarea() {
   // loadLanguages(['pythnm', 'java']);
