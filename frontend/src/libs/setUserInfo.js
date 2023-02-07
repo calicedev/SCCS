@@ -19,7 +19,7 @@ export default function getSetUserInfo(id) {
     .then((res) => {
       // 리덕스에 사용자 정보 저장
       console.log(res)
-      store.dispatch(setUserInfo(res.data.data))
+      store.dispatch(setUserInfo(res.data))
     })
     .catch((err) => {
       console.log(err)

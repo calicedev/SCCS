@@ -7,7 +7,7 @@ import Button from 'components/common/Button'
 import * as faceapi from 'face-api.js'
 
 const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://192.168.219.111:5000/'
+  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/'
 
 export default function WaitingPage() {
   const [mySessionId, setMySessionId] = useState('Room1')
@@ -256,7 +256,7 @@ export default function WaitingPage() {
   const face = async () => {
     const MODEL_URL = process.env.PUBLIC_URL + '/models'
 
-    const video = document.getElementById('video')
+    const video = document.createElement('video')
 
     Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
@@ -268,10 +268,10 @@ export default function WaitingPage() {
     function startVideo() {
       navigator.mediaDevices
         .getUserMedia({ video: true })
-        .then(function (stream) {
+        .then((stream) => {
           video.srcObject = stream
         })
-        .catch(function (err) {
+        .catch((err) => {
           console.log(err)
         })
     }
@@ -343,11 +343,11 @@ export default function WaitingPage() {
     return response.data // The token
   }
 
+  // <Div id="div">
+  //   <video id="video" width="720" height="560" autoPlay muted></video>
+  // </Div>
   return (
     <Container>
-      <Div id="div">
-        <video id="video" width="720" height="560" autoPlay muted></video>
-      </Div>
       {session === undefined ? (
         <div id="join">
           <div>
