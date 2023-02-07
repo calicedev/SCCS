@@ -8,7 +8,7 @@ import * as faceapi from 'face-api.js'
 import presentImg from 'assets/img/webRTC_present_image.png'
 import absentImg from 'assets/img/webRTC_absent_image.png'
 
-const APPLICATION_SERVER_URL = 'https://sccs.kr/'
+const APPLICATION_SERVER_URL = 'https://i8a301.p.ssafy.io/'
 
 export default function WaitingPage() {
   const [mySessionId, setMySessionId] = useState('Room1')
