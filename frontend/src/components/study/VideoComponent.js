@@ -29,22 +29,39 @@ export default function VideoComponent({ streamManager }) {
   return (
     <>
       {streamManager !== undefined ? (
-        <div>
-          <Video
-            autoPlay={true}
-            ref={videoRef}
-            id={streamManager instanceof Publisher ? 'publisher-video' : ''}
-          />
+        <Container>
+          <Video autoPlay={true} ref={videoRef} />
           <div>
             <p>{getNicknameTag}</p>
           </div>
-        </div>
+          {streamManager instanceof Publisher && (
+            <PublisherVideo
+              id={'publisher-video'}
+              autoPlay
+              muted
+              width="300px"
+              height="200px"
+            ></PublisherVideo>
+          )}
+        </Container>
       ) : null}
     </>
   )
 }
 
+const Container = styled.div`
+  position: relative;
+`
+const PublisherVideo = styled.video`
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  z-index: -1;
+`
+
 const Video = styled.video`
   width: 300px;
+  height: 200px;
   cursor: pointer;
 `
