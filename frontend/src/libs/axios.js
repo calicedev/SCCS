@@ -10,7 +10,7 @@ https://yamoo9.github.io/axios/guide/api.html#%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%
 */
 
 const apiRequest = axios.create({
-  baseURL: 'https://sccs.kr', // 서버 주소
+  baseURL: 'http://70.12.246.176:8200', // 서버 주소
 
   withCredentials: true,
 })

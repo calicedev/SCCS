@@ -1,69 +1,100 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
 import Textarea from 'components/study/Textarea'
 import Footer from 'components/study/Footer'
+import { useParams } from 'react-router-dom'
+import axios from 'libs/axios'
+import api from 'constants/api'
+// import CodingNavbar from 'components/study/CodingNavbar'
 
-
-export default function SolveProblem() {
+export default function CodingTest() {
   
-  return (
-    <Main>
-      {/* <Head>
-        <RoomInfo>
-          남은 시간
-          현재 인원
-        </RoomInfo>
+  const [id, setId] = useState('')
+  const [memberIds, setMemberIds] = useState([])
+  const [problems, setproblems] = useState([])
+  const [code, setCode] = useState({})
+  const [title, setTitle] = useState('')
+  const [algo_ids,setAlgo_ids] = useState([])
 
-      </Head> */}
-      <Problem>
-        <Img src="https://img3.cyberskyshop.com:8443/web/upload/prm/20200331161339247021/20200401084535615044.png"></Img>
-      </Problem>
-      <Resizable
-        defaultSize={{ width: '50%', height: '100%' }}
-        minWidth={'20%'}
-        maxWidth={'80%'}
+
+
+  const data = {
+    id : 28,
+    memberIds : ["calice","def","dsd"],
+  }
+
+  useEffect(() => {
+    const [url, method] = api('codingTest')
+    const config = { url, method, data }
+    axios(config)
+      .then((res) => {
+        console.log(res.data)
+        // setCode(res.data)
+        // console.log(study)
+      })
+      .catch((err) => {
+        console.log(err)
+        // alert('이미지 없이 풀어보아용')
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+
+
+  return (
+    
+  
+  <Main>
+    <Problem>
+      <Img src={data.image0}></Img>
+    </Problem>
+    <Resizable
+      defaultSize={{ width: '50%', height: '100%' }}
+      minWidth={'20%'}
+      maxWidth={'80%'}
+      enable={{ 
+        top: false,
+        right: true,
+        bottom: false,
+        left: true,
+        topRight: false,
+        bottomRight: false,
+        bottomLeft: false,
+        topLeft: false,
+      }}          
+    >
+        
+    <FlexColumn>
+      <CodingSection>
+        <Changer>언어 선택</Changer>          
+        <Textarea></Textarea>          
+      </CodingSection>
+    <Resizable
+        defaultSize={{ width: '100%', height: '37%' }}
+        minHeight={'20%'}
+        maxHeight={'80%'}
         enable={{ 
-          top: false,
-          right: true,
+          top: true,
+          right: false,
           bottom: false,
-          left: true,
+          left: false,
           topRight: false,
           bottomRight: false,
           bottomLeft: false,
           topLeft: false,
-        }}          
+        }}
       >
-          
-      <FlexColumn>
-        <CodingSection>
-          <Changer>언어 선택</Changer>          
-          <Textarea></Textarea>          
-        </CodingSection>
-      <Resizable
-          defaultSize={{ width: '100%', height: '37%' }}
-          minHeight={'20%'}
-          maxHeight={'80%'}
-          enable={{ 
-            top: true,
-            right: false,
-            bottom: false,
-            left: false,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false,
-          }}
-        >
-        {/* <Div>크기 조절</Div> */}
-          <ResultSection>결과창</ResultSection>
-        </Resizable>
-        <ColoredLine color="#4B91F1" />
-        <Footer></Footer>
-        </FlexColumn>
+      
+        <ResultSection>결과창</ResultSection>
       </Resizable>
-        
-    </Main>
+      <ColoredLine color="#4B91F1" />
+      <Footer></Footer>
+      </FlexColumn>
+    </Resizable>
+      
+  </Main>
+    
   )
 }
 
@@ -73,16 +104,18 @@ const Main = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  
   box-sizing: border-box;
   background-color: #263747;
 `
 // const Head = styled.div`
-//   display: flex;
+  
 // `
-// const RoomInfo = styled.div`
-//   display: flex;
-// `
+const Adjustment = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 5%;
+`
 
 
 
