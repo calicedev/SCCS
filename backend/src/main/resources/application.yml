@@ -19,7 +19,7 @@ spring:
       max-request-size: 10MB
   config:
     import:
-      - classpath:/aws.yml
+      - classpath:aws.yml
   
   mail:
     host: smtp.gmail.com
