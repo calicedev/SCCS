@@ -239,8 +239,9 @@ public class StudyroomServiceImpl implements StudyroomService{
         resultMap.put( "problems", p);
         for(int i=0; i<2; i++){
             String path = p.get(i).getProblemFolder();
-            String realPath = fileDir + path;
+            String realPath = fileDir + path + "/" + "problem.jpg";
             p.get(i).setProblemImageUrl(realPath);
+
         }
 
 
