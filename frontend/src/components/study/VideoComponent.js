@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from 'react'
+import { Publisher } from 'openvidu-browser'
+
 // import OpenViduVideoComponent from './OvVideo'
 import styled from 'styled-components'
 
@@ -28,7 +30,11 @@ export default function VideoComponent({ streamManager }) {
     <>
       {streamManager !== undefined ? (
         <div>
-          <Video autoPlay={true} ref={videoRef} />
+          <Video
+            autoPlay={true}
+            ref={videoRef}
+            id={streamManager instanceof Publisher ? 'publisher-video' : ''}
+          />
           <div>
             <p>{getNicknameTag}</p>
           </div>
