@@ -18,9 +18,12 @@ export default function CodingTest({ codingTestData }) {
 
   return (
     <Main>
-      <h1>{codingTestData.problems[0].name}</h1>
-      <Problem>{/* <Img src={data.image0}></Img> */}</Problem>
-      {/* <Resizable
+      {/* <h1>{codingTestData.problems[0].name}</h1> */}
+      <Problem>
+        <Img src="https://cdn.pixabay.com/photo/2017/09/25/13/12/puppy-2785074__480.jpg"></Img>
+        <Img src={codingTestData.problems[0].problemImageUrl}></Img>
+      </Problem>
+      <Resizable
         defaultSize={{ width: '50%', height: '100%' }}
         minWidth={'20%'}
         maxWidth={'80%'}
@@ -60,7 +63,7 @@ export default function CodingTest({ codingTestData }) {
           <ColoredLine color="#4B91F1" />
           <Footer></Footer>
         </FlexColumn>
-      </Resizable> */}
+      </Resizable>
     </Main>
   )
 }

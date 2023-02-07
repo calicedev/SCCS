@@ -232,9 +232,10 @@ export default function WebSocketRoom() {
   }
 
   const startCodingTest = () => {
+    // setReadyArray((readyArray) => [...readyArray, nickname])
     const data = {
-      id: 28,
-      memberIds: ['calice', 'def', 'dsd'],
+      id: studyroomId,
+      memberIds: [...readyArray, nickname],
     }
     const [url, method] = api('codingTest')
     const config = { url, method, data }
