@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -154,7 +155,14 @@ public class MemberController {
         MemberDto memberDto = memberService.memberInfo(id);
 
         if (memberDto != null) { // 회원 정보 반환
-            resultMap.put("data", memberDto);
+            resultMap.put("id", memberDto.getId());
+            resultMap.put("name", memberDto.getName());
+            resultMap.put("nickname", memberDto.getNickname());
+            resultMap.put("email", memberDto.getEmail());
+            resultMap.put("profileImage", memberDto.getProfileImage());
+            resultMap.put("score", memberDto.getScore());
+            logger.debug("날짜 데이터 출력값: {}" , new SimpleDateFormat("yyyy-MM-dd").format(memberDto.getJoinDate()));
+            resultMap.put("joinDate", new SimpleDateFormat("yyyy-MM-dd").format(memberDto.getJoinDate()));
             return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
         } else { // id가 없는 경우
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // 204
