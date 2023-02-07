@@ -5,9 +5,10 @@ import VideoComponent from '../../components/study/VideoComponent'
 import styled from 'styled-components'
 import Button from 'components/common/Button'
 import * as faceapi from 'face-api.js'
+import presentImg from 'assets/img/webRTC_present_image.png'
+import absentImg from 'assets/img/webRTC_absent_image.png'
 
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/'
+const APPLICATION_SERVER_URL = 'https://sccs.kr/'
 
 export default function WaitingPage() {
   const [mySessionId, setMySessionId] = useState('Room1')
@@ -25,6 +26,7 @@ export default function WaitingPage() {
   const isVideo = useRef(true)
   const isAudio = useRef(true)
   const isScreen = useRef(false)
+  const isFace = useRef(false)
 
   // componentDidMount
   useEffect(() => {
@@ -254,24 +256,49 @@ export default function WaitingPage() {
   }
 
   const face = async () => {
-    const MODEL_URL = process.env.PUBLIC_URL + '/models'
+    isFace.current = !isFace.current
+    if (!isFace.current) {
+      const video = document.getElementById('publisher-video')
+      video.srcObject = undefined
+      const devices = await OV.current.getDevices()
+      // videoDevice 배열 추출
+      const videoDevices = devices.filter(
+        (device) => device.kind === 'videoinput',
+      )
+      const newPublisher = OV.current.initPublisher(undefined, {
+        videoSource: videoDevices[0].deviceId,
+        publishAudio: true,
+        publishVideo: true,
+        mirror: false,
+      })
 
-    const video = document.createElement('video')
+      await session.unpublish(mainStreamManager)
+      await session.publish(newPublisher)
+
+      setMainStreamManager(newPublisher)
+      setPublisher(newPublisher)
+      return
+    }
+
+    const MODEL_URL = process.env.PUBLIC_URL + '/models'
+    const video = document.getElementById('publisher-video')
 
     Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-      faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-      faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+      // faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+      // faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+      // faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
     ]).then(startVideo)
 
     function startVideo() {
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => {
+          console.log('start video')
           video.srcObject = stream
         })
         .catch((err) => {
+          console.log('error')
           console.log(err)
         })
     }
@@ -281,21 +308,37 @@ export default function WaitingPage() {
       const canvas = faceapi.createCanvasFromMedia(video)
       const track = canvas.captureStream(10).getVideoTracks()[0]
       publisher.replaceTrack(track)
-      // document.getElementById('div').append(canvas)
 
       const displaySize = { width: video.width, height: video.height }
       faceapi.matchDimensions(canvas, displaySize)
 
+      // 이미지 선언
+      const img = document.createElement('img')
+      img.style.objectFit = 'contain'
+      img.width = 30
+      img.height = 20
+
       setInterval(async () => {
-        const detections = await faceapi
-          .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-          .withFaceLandmarks()
-          .withFaceExpressions()
-        const resizedDetections = faceapi.resizeResults(detections, displaySize)
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-        faceapi.draw.drawDetections(canvas, resizedDetections)
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+        const detections = await faceapi.detectSingleFace(
+          video,
+          new faceapi.TinyFaceDetectorOptions(),
+        )
+        // .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        // .withFaceLandmarks()
+        // .withFaceExpressions()
+        // const resizedDetections = faceapi.resizeResults(detections, displaySize)
+        const ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        if (detections) {
+          img.src = presentImg
+          ctx.drawImage(img, 0, 0)
+        } else {
+          img.src = absentImg
+          ctx.drawImage(img, 0, 0)
+        }
+        // faceapi.draw.drawDetections(canvas, resizedDetections)
+        // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
       }, 100)
     })
   }
@@ -323,7 +366,7 @@ export default function WaitingPage() {
   const createSession = async (sessionId) => {
     // console.log('Join Session', APPLICATION_SERVER_URL)
     const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions',
+      APPLICATION_SERVER_URL + 'openvidu/sessions',
       { customSessionId: sessionId },
       {
         headers: { 'Content-Type': 'application/json' },
@@ -334,7 +377,10 @@ export default function WaitingPage() {
 
   const createToken = async (sessionId) => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections',
+      APPLICATION_SERVER_URL +
+        'openvidu/sessions/' +
+        sessionId +
+        '/connections',
       {},
       {
         headers: { 'Content-Type': 'application/json' },
@@ -348,6 +394,7 @@ export default function WaitingPage() {
   // </Div>
   return (
     <Container>
+      <canvas></canvas>
       {session === undefined ? (
         <div id="join">
           <div>

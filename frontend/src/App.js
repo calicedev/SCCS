@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux'
 
 // import VideoRoomComponent from './components/VideoRoomComponent'
 import WaitingPage from './pages/study/WaitingPage'
-import WaitingRoom from './pages/study/WaitingRoom'
+import WebSocketRoom from './pages/study/WebSocketRoom'
 
 function App() {
   const theme = useSelector((state) => state.theme)
@@ -50,14 +50,14 @@ function App() {
           <Route path="studydetail/:id" element={<StudyDetailPage />}></Route>
           <Route path="solved" element={<SolvedPage />}></Route>
         </Route>
-        <Route path="/openvidu" element={<WaitingPage />}></Route>
+        <Route path="/ov" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
         <Route path="/codingtest" element={<CodingTest />}></Route>
 
         {/* 대기방 2.4 민혁 생성 */}
         <Route
           path="/room/:studyroomId/waiting"
-          element={<WaitingRoom />}
+          element={<WebSocketRoom />}
         ></Route>
       </Routes>
     </ThemeProvider>
