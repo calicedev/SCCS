@@ -34,7 +34,7 @@ export default function PwdModalContent({ id }) {
     axios(config)
       .then((res) => {
         console.log(res)
-        navigate('/main')
+        navigate(`/room/${id}/waiting`)
       })
       .catch((err) => {
         const newMsg = { ...message }
