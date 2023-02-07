@@ -3,6 +3,11 @@ package com.scss.api.studyroom.service;
 import com.scss.api.studyroom.dto.*;
 import com.scss.api.studyroom.mapper.StudyroomMapper;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -209,7 +218,8 @@ public class StudyroomServiceImpl implements StudyroomService{
 
     /** 코딩 테스트 시작하기 **/
     @Override
-    public Map<String, Object> startCodingTest(StudyroomDto studyroomDto) {
+    public Map<String, Object> startCodingTest(StudyroomDto studyroomDto)
+            throws IOException {
         Map<String, Object> resultMap = new HashMap<>();
 
         // 1. isSolving 상태를 진행 중(1)으로 바꾼다.
@@ -225,13 +235,15 @@ public class StudyroomServiceImpl implements StudyroomService{
         resultMap.put("id", s.getId());
 
         List<ProblemDto> p = studyroomMapper.selectProblemByStudyroomId(studyroomDto.getId());
+
+        resultMap.put( "problems", p);
         for(int i=0; i<2; i++){
             String path = p.get(i).getProblemFolder();
-            String realPath = fileDir + path + "/" + "problem.img";
-            File file = new File(realPath);
-            p.get(i).setProblemImage(file);
+            String realPath = fileDir + path;
+            p.get(i).setProblemImageUrl(realPath);
         }
-        resultMap.put( "problems", p);
+
+
 
         return resultMap;
     }

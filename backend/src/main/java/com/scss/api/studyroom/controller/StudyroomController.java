@@ -8,7 +8,9 @@ import com.scss.api.studyroom.dto.SubmissionDto;
 import com.scss.api.studyroom.file.FileStore;
 import com.scss.api.studyroom.service.StudyroomService;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -127,7 +129,8 @@ public class StudyroomController {
 
     /** 코딩 테스트 시작하기 **/
     @PostMapping("/studyroom/codingtest")
-    public ResponseEntity<?> startCodingTest(@RequestBody StudyroomDto studyroomDto){
+    public ResponseEntity<?> startCodingTest(@RequestBody StudyroomDto studyroomDto)
+            throws IOException {
         System.out.println("++++++++++++++++++++++++++++");
         if(studyroomService.isExistStudyroom(studyroomDto.getId())){
             return new ResponseEntity<>(studyroomService.startCodingTest(studyroomDto), HttpStatus.OK);
@@ -166,26 +169,29 @@ public class StudyroomController {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         //채점 서버 url
-        String url ="https://sccs.kr";
+//        String url ="https://sccs.kr";
+        String url ="http://70.12.246.161:8201";
         if(submissionDto.getLanguageId()==1){
-            url+="/solve/python";
+            url+="/solve/python/submission";
         }else if(submissionDto.getLanguageId()==2){
-            url+="/solve/java";
+            url+="/solve/java/submission";
         }
 
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        SubmissionDto s = REST_TEMPLATE.postForObject(url, requestEntity, SubmissionDto.class);
+        //Map<String, Object> s = REST_TEMPLATE.postForObject(url, requestEntity, Map.class);
+        ResponseEntity<String> s  = REST_TEMPLATE.postForObject(url, requestEntity, ResponseEntity.class);
+        System.out.println("s!!!!!!!!!!!!!!!!!!! " + s);
         //문제 제출 정보를 실제 디비에 저장한다.
         submissionDto.setFileName(fileName);
-        submissionDto.setResult(s.getResult());
-        submissionDto.setMemory(s.getMemory());
-        submissionDto.setRuntime(s.getRuntime());
-        studyroomService.submitProblem(submissionDto);
-
-        s.setProblemId(submissionDto.getProblemId());
-        s.setStudyroomId(submissionDto.getStudyroomId());
-        s.setLanguageId(submissionDto.getLanguageId());
-        s.setMemberId(submissionDto.getMemberId());
+//        submissionDto.setResult(s.getResult());
+//        submissionDto.setMemory(s.getMemory());
+//        submissionDto.setRuntime(s.getRuntiem());
+//        studyroomService.submitProblem(submissionDto);
+//
+//        s.setProblemId(submissionDto.getProblemId());
+//        s.setStudyroomId(submissionDto.getStudyroomId());
+//        s.setLanguageId(submissionDto.getLanguageId());
+//        s.setMemberId(submissionDto.getMemberId());
         return new ResponseEntity<>(s, httpStatus);
 
     }
