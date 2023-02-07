@@ -8,116 +8,80 @@ import axios from 'libs/axios'
 import api from 'constants/api'
 // import CodingNavbar from 'components/study/CodingNavbar'
 
-export default function CodingTest() {
-  
+export default function CodingTest({ codingTestData }) {
   const [id, setId] = useState('')
   const [memberIds, setMemberIds] = useState([])
   const [problems, setproblems] = useState([])
   const [code, setCode] = useState({})
   const [title, setTitle] = useState('')
-  const [algo_ids,setAlgo_ids] = useState([])
-
-
-
-  const data = {
-    id : 28,
-    memberIds : ["calice","def","dsd"],
-  }
-
-  useEffect(() => {
-    const [url, method] = api('codingTest')
-    const config = { url, method, data }
-    axios(config)
-      .then((res) => {
-        console.log(res.data)
-        // setCode(res.data)
-        // console.log(study)
-      })
-      .catch((err) => {
-        console.log(err)
-        // alert('이미지 없이 풀어보아용')
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-
+  const [algo_ids, setAlgo_ids] = useState([])
 
   return (
-    
-  
-  <Main>
-    <Problem>
-      <Img src={data.image0}></Img>
-    </Problem>
-    <Resizable
-      defaultSize={{ width: '50%', height: '100%' }}
-      minWidth={'20%'}
-      maxWidth={'80%'}
-      enable={{ 
-        top: false,
-        right: true,
-        bottom: false,
-        left: true,
-        topRight: false,
-        bottomRight: false,
-        bottomLeft: false,
-        topLeft: false,
-      }}          
-    >
-        
-    <FlexColumn>
-      <CodingSection>
-        <Changer>언어 선택</Changer>          
-        <Textarea></Textarea>          
-      </CodingSection>
-    <Resizable
-        defaultSize={{ width: '100%', height: '37%' }}
-        minHeight={'20%'}
-        maxHeight={'80%'}
-        enable={{ 
-          top: true,
-          right: false,
+    <Main>
+      <h1>{codingTestData.problems[0].name}</h1>
+      <Problem>{/* <Img src={data.image0}></Img> */}</Problem>
+      {/* <Resizable
+        defaultSize={{ width: '50%', height: '100%' }}
+        minWidth={'20%'}
+        maxWidth={'80%'}
+        enable={{
+          top: false,
+          right: true,
           bottom: false,
-          left: false,
+          left: true,
           topRight: false,
           bottomRight: false,
           bottomLeft: false,
           topLeft: false,
         }}
       >
-      
-        <ResultSection>결과창</ResultSection>
-      </Resizable>
-      <ColoredLine color="#4B91F1" />
-      <Footer></Footer>
-      </FlexColumn>
-    </Resizable>
-      
-  </Main>
-    
+        <FlexColumn>
+          <CodingSection>
+            <Changer>언어 선택</Changer>
+            <Textarea></Textarea>
+          </CodingSection>
+          <Resizable
+            defaultSize={{ width: '100%', height: '37%' }}
+            minHeight={'20%'}
+            maxHeight={'80%'}
+            enable={{
+              top: true,
+              right: false,
+              bottom: false,
+              left: false,
+              topRight: false,
+              bottomRight: false,
+              bottomLeft: false,
+              topLeft: false,
+            }}
+          >
+            <ResultSection>결과창</ResultSection>
+          </Resizable>
+          <ColoredLine color="#4B91F1" />
+          <Footer></Footer>
+        </FlexColumn>
+      </Resizable> */}
+    </Main>
   )
 }
 
-
 const Main = styled.div`
-  color:  #ffffff; // 폰트 색 바꾸려면 이거 바꿔야함
+  color: #ffffff; // 폰트 색 바꾸려면 이거 바꿔야함
   display: flex;
   width: 100%;
   height: 100%;
-  
+
   box-sizing: border-box;
   background-color: #263747;
 `
 // const Head = styled.div`
-  
+
 // `
 const Adjustment = styled.div`
   display: flex;
   flex-direction: column;
   height: 5%;
 `
-
-
 
 const Problem = styled.div`
   height: 100vh;
@@ -136,7 +100,6 @@ const FlexColumn = styled.div`
   flex-direction: column;
   flex: 1;
   overflow: auto visible;
-  
 `
 
 const CodingSection = styled.div`
@@ -151,7 +114,6 @@ const CodingSection = styled.div`
   word-wrap: break-word;
   word-break: break-all;
   height: 100vh;
-  
 `
 // const Gutter = styled.div`
 //   width: 48px;
@@ -166,23 +128,18 @@ const CodingSection = styled.div`
 // `
 const Changer = styled.div`
   dispaly: flex;
-
 `
 
 const ResultSection = styled.div`
   display: block;
 `
 
-
-
-
 const ColoredLine = ({ color }) => (
   <hr
-      style={{
-          color: color,
-          backgroundColor: color,
-          height: 5
-      }}
+    style={{
+      color: color,
+      backgroundColor: color,
+      height: 5,
+    }}
   />
-);
-
+)

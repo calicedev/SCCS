@@ -11,6 +11,7 @@ import sockjs from 'sockjs-client'
 import stompjs from 'stompjs'
 
 import WaitingRoom from './WaitingRoom'
+import CodingTest from './CodingTest'
 
 export default function WebSocketRoom() {
   const navigate = useNavigate()
@@ -39,6 +40,13 @@ export default function WebSocketRoom() {
   // ready 관련 state
   const [readyOrNot, setReadyOrNot] = useState(false)
   const [readyArray, setReadyArray] = useState([])
+
+  // waitingroom 출력 여부 state
+  const [waitingRoom, setWaitingRoom] = useState(true)
+
+  // CodingTest 페이지 state
+  const [codingTest, setCodingTest] = useState(false) // CodingTest 페이지 노출 여부
+  const [codingTestData, setCodingTestData] = useState({})
 
   const justMounted = useRef(true)
 
@@ -224,7 +232,22 @@ export default function WebSocketRoom() {
   }
 
   const startCodingTest = () => {
-    navigate('/codingtest')
+    const data = {
+      id: 28,
+      memberIds: ['calice', 'def', 'dsd'],
+    }
+    const [url, method] = api('codingTest')
+    const config = { url, method, data }
+    axios(config)
+      .then((res) => {
+        console.log(res.data)
+        setCodingTestData(res.data)
+        setWaitingRoom(false)
+        setCodingTest(true)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   return (
@@ -237,28 +260,32 @@ export default function WebSocketRoom() {
           <div>{readyMsg.message}</div>
 
           <H />
-          <WaitingRoom
-            // 기본정보
-            studyroomId={studyroomId}
-            roomInfo={roomInfo}
-            personnel={personnel}
-            nickname={nickname}
-            id={id}
-            // exit 기능
-            disconnect={disconnect}
-            // 채팅 기능
-            submitMsg={submitMsg}
-            changeMsg={changeMsg}
-            chat={chat}
-            chatList={chatList}
-            chatNickname={chatNickname}
-            // 레디 기능
-            ready={ready}
-            readyOrNot={readyOrNot}
-            readyArray={readyArray}
-            // 시작 기능
-            startCodingTest={startCodingTest}
-          />
+          {waitingRoom ? (
+            <WaitingRoom
+              // 기본정보
+              studyroomId={studyroomId}
+              roomInfo={roomInfo}
+              personnel={personnel}
+              nickname={nickname}
+              id={id}
+              // exit 기능
+              disconnect={disconnect}
+              // 채팅 기능
+              submitMsg={submitMsg}
+              changeMsg={changeMsg}
+              chat={chat}
+              chatList={chatList}
+              chatNickname={chatNickname}
+              // 레디 기능
+              ready={ready}
+              readyOrNot={readyOrNot}
+              readyArray={readyArray}
+              // 시작 기능
+              startCodingTest={startCodingTest}
+            />
+          ) : null}
+
+          {codingTest ? <CodingTest codingTestData={codingTestData} /> : null}
         </>
       )}
       {connected || (

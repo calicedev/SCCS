@@ -71,7 +71,7 @@ export default function WaitingRoom({
       {id === roomInfo.hostId ? (
         <div>
           {personnel === readyArray.length + 1 ? (
-            <Btn>Start</Btn>
+            <Btn onClick={startCodingTest}>Start</Btn>
           ) : (
             <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
           )}
