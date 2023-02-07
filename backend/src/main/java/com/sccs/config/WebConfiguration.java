@@ -79,7 +79,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     return new Docket(DocumentationType.SWAGGER_2)
         .apiInfo(apiInfo())
         .select()
-        .apis(RequestHandlerSelectors.basePackage("com.scss"))
+        .apis(RequestHandlerSelectors.basePackage("com.sccs"))
         .paths(PathSelectors.any())
         .build();
   }
