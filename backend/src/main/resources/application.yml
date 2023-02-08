@@ -12,7 +12,15 @@ spring:
         min-idle: 2
     port: 6379
     host: 54.180.164.128
-
+  #AWS S3 file settings
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  config:
+    import:
+      - optional:classpath:/aws.yml
+  
   mail:
     host: smtp.gmail.com
     port: 587
@@ -31,7 +39,7 @@ mybatis:
     jdbc-type-for-null: varchar
     default-fetch-size: 500
   mapper-locations: classpath*:mappers/*.xml
-  type-aliases-package: com.scss.api.*.*
+  type-aliases-package: com.sccs.api.*.*
 
 jwt:
   secret: oekcERFVSD3nvc9vdSGci3dzke3f09cDFiv9we3uihcdskj3vcnhzvredxzvuheanwaDDSFf3fuhvcxzGVFsgjvhnbdas8ghrf4whfgdsafvcijhsdiufgh
@@ -39,10 +47,14 @@ jwt:
 logging:
   level:
     root: debug
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
 
 file:
-    #dir: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/submission/
-    dir: C:/S08P12A301/backend/src/main/resources/submission/
-    dir2: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/problem/
+  dir: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/submission/
+  #  dir: C:/S08P12A301/backend/src/main/resources/submission/
+  dir2: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/problem/
 server:
   port: 8200

@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="com.scss.api.studyroom.mapper.StudyroomMapper">
+<mapper namespace="com.sccs.api.studyroom.mapper.StudyroomMapper">
 
   <resultMap id="studyList" type="StudyroomDto">
     <id column="id" property="id"/>
@@ -29,7 +29,8 @@
     </collection>
   </resultMap>
 
-  <insert id="createStudyroom" parameterType="StudyroomDto" useGeneratedKeys="true" keyProperty="id">
+  <insert id="createStudyroom" parameterType="StudyroomDto" useGeneratedKeys="true"
+    keyProperty="id">
     insert into studyroom(
     title,
     password,
@@ -97,13 +98,19 @@
 
 
   <select id="selectAllStudyroom" resultMap="studyList">
-    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving,  s.personnel  as personnel, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving,
+    s.personnel as personnel, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s
+    LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON
+    s.id=sl.studyroom_id
     where is_active=1
     order by create_datetime desc;
   </select>
 
   <select id="selectStudyroom" parameterType="StudyroomDto" resultMap="studyList">
-    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host_id as host_id, s.personnel  as personnel, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving,
+    s.host_id as host_id, s.personnel as personnel, sa.algo_id as algo_id , sl.language_id as
+    language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN
+    studyroom_language sl ON s.id=sl.studyroom_id
     where is_active=1
     <if test="id != 0">
       AND s.id= #{id}
@@ -112,12 +119,14 @@
       AND s.title LIKE CONCAT('%', #{title}, '%')
     </if>
     <if test="algoIds.size!=0">
-      <foreach collection="algoIds" item="item" open="AND (sa.algo_id=" close=")" separator="OR sa.algo_id=">
+      <foreach collection="algoIds" item="item" open="AND (sa.algo_id=" close=")"
+        separator="OR sa.algo_id=">
         #{item}
       </foreach>
     </if>
     <if test="languageIds.size!=0">
-      <foreach collection="languageIds" item="item" open="AND (sl.language_id=" close=")" separator="OR sl.language_id=">
+      <foreach collection="languageIds" item="item" open="AND (sl.language_id=" close=")"
+        separator="OR sl.language_id=">
         #{item}
       </foreach>
     </if>
@@ -139,13 +148,16 @@
     studyroom_id
     )
     values
-    <foreach collection="memberIds" item="item" open=""  separator=" , " >
-      (#{item},  #{id})
+    <foreach collection="memberIds" item="item" open="" separator=" , ">
+      (#{item}, #{id})
     </foreach>
   </insert>
 
   <select id="enterStudyroom" parameterType="int" resultMap="studyList">
-    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving, s.host_id as host_id, s.personnel as personnel, sa.algo_id as algo_id , sl.language_id as language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN studyroom_language sl ON s.id=sl.studyroom_id
+    SELECT s.id as id, s.title as title, s.is_private as is_private, s.is_solving as is_solving,
+    s.host_id as host_id, s.personnel as personnel, sa.algo_id as algo_id , sl.language_id as
+    language_id FROM studyroom s LEFT JOIN studyroom_algo sa ON s.id=sa.studyroom_id JOIN
+    studyroom_language sl ON s.id=sl.studyroom_id
     where is_active=1 AND s.id= #{id}
   </select>
 
@@ -162,13 +174,15 @@
     where id= #{id}
   </select>
 
-  <update id="increaseStudyroomPersonnel" parameterType="StudyroomDto" useGeneratedKeys="true" keyProperty="personnel" >
+  <update id="increaseStudyroomPersonnel" parameterType="StudyroomDto" useGeneratedKeys="true"
+    keyProperty="personnel">
     UPDATE studyroom
     SET personnel = personnel+1
     WHERE id = #{id}
   </update>
 
-  <update id="decreaseStudyroomPersonnel" parameterType="StudyroomDto"  useGeneratedKeys="true" keyProperty="personnel">
+  <update id="decreaseStudyroomPersonnel" parameterType="StudyroomDto" useGeneratedKeys="true"
+    keyProperty="personnel">
     UPDATE studyroom
     SET personnel = personnel-1
     WHERE id = #{id}
@@ -189,7 +203,8 @@
     insert into submission(
     id, file_name, runtime, memory, result, problem_id, member_id, language_id, studyroom_id
     )
-    values (#{id}, #{fileName}, #{runtime}, #{memory}, #{result}, #{problemId}, #{memberId}, #{languageId}, #{studyroomId})
+    values (#{id}, #{fileName}, #{runtime}, #{memory}, #{result}, #{problemId}, #{memberId},
+    #{languageId}, #{studyroomId})
   </insert>
 
   <select id="getProblemInfo" parameterType="int" resultType="ProblemDto">

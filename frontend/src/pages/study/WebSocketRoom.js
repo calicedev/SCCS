@@ -46,7 +46,8 @@ export default function WebSocketRoom() {
 
   // CodingTest 페이지 state
   const [codingTest, setCodingTest] = useState(false) // CodingTest 페이지 노출 여부
-  const [codingTestData, setCodingTestData] = useState({})
+  // const [codingTestData, setCodingTestData] = useState({})
+  const [membersNickname, setMembersNickname] = useState([])
 
   const justMounted = useRef(true)
 
@@ -176,6 +177,12 @@ export default function WebSocketRoom() {
             ])
             setChatList((chatList) => [...chatList, content.message])
           }
+          if (content.status === 'start') {
+            // 멤버 정보가 오면 배열에 저장
+            setMembersNickname(content.membersNickname)
+            setWaitingRoom(false)
+            setCodingTest(true)
+          }
         },
       )
     })
@@ -232,22 +239,34 @@ export default function WebSocketRoom() {
   }
 
   const startCodingTest = () => {
-    const data = {
-      id: 28,
-      memberIds: ['calice', 'def', 'dsd'],
-    }
-    const [url, method] = api('codingTest')
-    const config = { url, method, data }
-    axios(config)
-      .then((res) => {
-        console.log(res.data)
-        setCodingTestData(res.data)
-        setWaitingRoom(false)
-        setCodingTest(true)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    stomp.send(
+      '/pub/studyroom',
+      {},
+      JSON.stringify({
+        studyroomId: studyroomId,
+        nickname: nickname,
+        status: 'start',
+        membersNickname: [...readyArray, nickname],
+      }),
+    )
+
+    // const data = {
+    //   id: studyroomId,
+    //   memberIds: [...readyArray, nickname],
+    // }
+    // const [url, method] = api('codingTest')
+    // const config = { url, method, data }
+    // console.log('방장이 보낸 정보 받아라', data)
+    // axios(config)
+    //   .then((res) => {
+    //     console.log(res.data)
+    //     setCodingTestData(res.data)
+    //     setWaitingRoom(false)
+    //     setCodingTest(true)
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
   }
 
   return (
@@ -285,7 +304,12 @@ export default function WebSocketRoom() {
             />
           ) : null}
 
-          {codingTest ? <CodingTest codingTestData={codingTestData} /> : null}
+          {codingTest ? (
+            <CodingTest
+              studyroomId={studyroomId}
+              membersNickname={membersNickname}
+            />
+          ) : null}
         </>
       )}
       {connected || (
