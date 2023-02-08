@@ -7,6 +7,7 @@ import com.sccs.api.studyroom.dto.StudyroomDto;
 import com.sccs.api.studyroom.dto.SubmissionDto;
 import com.sccs.api.studyroom.file.FileStore;
 import com.sccs.api.studyroom.service.StudyroomService;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -156,7 +157,7 @@ public class StudyroomController {
       return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
     }
   }
-  /** 코딩 테스트 문제 제출 **/
+  /** 코딩 문제 제출 **/
   @PostMapping("/studyroom/codingtest/submission")
   public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
     ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
@@ -189,11 +190,11 @@ public class StudyroomController {
     }else if(submissionDto.getLanguageId()==2){
       url+="/solve/java/submission";
     }
+
     HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 //        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
     List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
     Object a = s.get(5).get("avgMemory");
-
 
     //문제 제출 정보를 실제 디비에 저장한다.
     submissionDto.setFileName(f.getName());
@@ -201,10 +202,44 @@ public class StudyroomController {
     submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
     submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
     studyroomService.submitProblem(submissionDto);
-
-
     return new ResponseEntity<>(s, httpStatus);
 
+  }
+
+
+  /** 코딩 테스트 문제 제출 **/
+  @PostMapping("/studyroom/codingtest/test")
+  public  ResponseEntity<?> testProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+    ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
+
+    //파일을 원하는 경로에 실제로 저장한다.
+    MultipartFile f = fileStore.storeFile(submissionDto, problemDto.getProblemFolder());
+    // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
+    UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(problemDto.getProblemFolder(), f.getName()));
+    String tempNo = problemDto.getProblemFolder().substring(problemDto.getProblemFolder().lastIndexOf("/")+1);
+
+    LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+    HttpStatus httpStatus = HttpStatus.CREATED;
+    map.add("mfile",resource);
+    map.add("runtime",problemDto.getTimeLimit());
+    map.add("type",problemDto.getAlgoId());
+    map.add("no",tempNo);
+    map.add("memory",problemDto.getMemoryLimit());
+
+    //여기서 찬희님한테 파일 전달
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+    //채점 서버 url
+    String url ="https://sccs.kr";
+    if(submissionDto.getLanguageId()==1){
+      url+="/solve/python/test";
+    }else if(submissionDto.getLanguageId()==2){
+      url+="/solve/java/test";
+    }
+    HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+    List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+    return new ResponseEntity<>(s, httpStatus);
   }
 
 
@@ -214,9 +249,10 @@ public class StudyroomController {
   @PatchMapping("/studyroom/codingtest")
   public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto) {
     //코딩 테스트 끝내기
-
     return new ResponseEntity<>(studyroomService.endStudyroomByOwner(studyroomDto), HttpStatus.OK);
   }
+
+
 
 
 }
