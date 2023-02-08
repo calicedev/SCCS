@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
 import Textarea from 'components/study/Textarea'
-import Footer from 'components/study/Footer'
-import { useParams } from 'react-router-dom'
+// import Footer from 'components/study/Footer'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'libs/axios'
 import api from 'constants/api'
+
+import Button from 'components/common/Button'
 
 import { algorithmPk, languagePk } from 'constants/pk'
 
@@ -58,6 +60,71 @@ export default function CodingTest({
   const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
   const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000)
 
+//---------------------------------------------------------------------------------------------------
+const [codingTestResult, setCodingTestResult] = useState([])
+const navigate = useNavigate()
+const testCode = useCallback(() => {
+  // let fileName = 'formFile.txt';
+  const content = document.querySelector("textarea").value;
+  const element = document.createElement('a');
+  const file = new Blob([content], { type: 'text/plain', });
+  const formData = new FormData();
+  formData.append("formFile", file)
+  formData.append("memberId", "mint_angel")
+  formData.append("studyroomId", 30)
+  formData.append("problemId", 1)
+  formData.append("languageId", 2)
+
+  
+  const headers = { "Content-Type": "multipart/form-data" }
+  const [url, method] = api('testCode')
+  const config = { url, method, data: formData, headers }
+  axios(config)
+    .then((res) => {
+      console.log(res)
+      // navigate('/')
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  // element.href = URL.createObjectURL(file);
+  // // element.download = fileName;
+  // document.body.appendChild(element); // Required for this to work in FireFox
+  element.click();
+},[])
+
+const submitCode = () => {
+  // let fileName = 'formFile.txt';
+  const content = document.querySelector("textarea").value;
+  const element = document.createElement('a');
+  const file = new Blob([content], { type: 'text/plain', });
+  const formData = new FormData();
+  formData.append("formFile", file)
+  formData.append("memberId", "mint_angel")
+  formData.append("studyroomId", 30)
+  formData.append("problemId", 1)
+  formData.append("languageId", 2)
+
+  const headers = { "Content-Type": "multipart/form-data" }
+
+  const [url, method] = api('submitCode')
+  const config = { url, method, data: formData, headers }
+  axios(config)
+    .then((res) => {
+      console.log(res)
+      // navigate('/')
+      setCodingTestResult(res.data)
+    })
+    .catch((err) => {
+      console.log(err)  
+    })
+  // element.href = URL.createObjectURL(file);
+  // // element.download = fileName;
+  // document.body.appendChild(element); // Required for this to work in FireFox
+  element.click();
+}
+//---------------------------------------------------------------------------------------------------
+
   return (
     <>
       {codingTestData.title && (
@@ -77,8 +144,10 @@ export default function CodingTest({
             <span> 현재 {personnel}명</span>
           </TopNavBar>
           <Main>
-            <h3>받은 첫 번째 문제 title : {codingTestData.problems[0].name}</h3>
-            <Problem></Problem>
+            {/* <h3>받은 첫 번째 문제 title : {codingTestData.problems[0].name}</h3> */}
+            <Problem>
+              <Img src={codingTestData.problems[0].problemImageUrl}></Img>
+            </Problem>
             <Resizable
               defaultSize={{ width: '50%', height: '100%' }}
               minWidth={'20%'}
@@ -114,10 +183,48 @@ export default function CodingTest({
                     topLeft: false,
                   }}
                 >
-                  <ResultSection>결과창</ResultSection>
+                  <ResultSection>
+                    {
+                      codingTestResult.map((result) => {
+                        return result.result + '\n'
+                      })
+                    }
+                  </ResultSection>
                 </Resizable>
                 <ColoredLine color="#4B91F1" />
-                <Footer startStudy={startStudy}></Footer>
+                
+                <Foot>
+                <EndBtn>
+                  <Button
+                    value="시험 종료"
+                    type='danger'
+                    size="small"
+                    // onClick={() => {
+                    //   navigate('/study')            
+                    // }}
+                  ></Button>
+                </EndBtn>
+                <CompileBtn>
+                  <Button
+                    value="테스트"
+                    type='gray'
+                    size="small"
+                    margin-right='5px'
+                    onClick={() => {
+                      testCode('')
+                    }}
+                  ></Button>
+                  <Space></Space>
+                  <Button
+                  value="제출"
+                  size="small"
+                  onClick={() => {
+                    submitCode('')
+                  }}
+                  ></Button>
+                </CompileBtn>
+              </Foot>
+                
               </FlexColumn>
             </Resizable>
           </Main>
@@ -217,3 +324,27 @@ const ColoredLine = ({ color }) => (
     }}
   />
 )
+
+const Foot = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0rem 0rem;
+  padding: 0rem 1rem;
+`
+
+const EndBtn = styled.div`
+  display: flex;  
+`
+
+const CompileBtn = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-left: 1rem;
+`
+const Space = styled.div`
+  width: 1.5rem;
+  height: auto;
+  display: inline-block;
+`
