@@ -38,4 +38,5 @@ public interface StudyroomService {
   public boolean isExistStudyroom(int id);
 
   public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
+
 }

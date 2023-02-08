@@ -158,10 +158,8 @@ public class StudyroomController {
     }
   }
 
-  /**
-   * 코딩 문제 제출
-   *
-   * **/
+
+  /** 코딩 문제 제출 **/
   @PostMapping("/studyroom/codingtest/submission")
   public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
     ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());

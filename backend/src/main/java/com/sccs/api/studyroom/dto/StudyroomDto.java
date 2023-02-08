@@ -21,11 +21,13 @@ public class StudyroomDto {
   private List<Integer> languageIds;
   private List<Integer> algoIds;
   private List<String> memberIds;
+
   private List<Integer> problemIds;
   private Boolean isPrivate;
   private int languageId;
   private int algoId;
   private int problemId;
+
   private String hostId;
   private int personnel;
 }

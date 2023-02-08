@@ -321,6 +321,7 @@ public class StudyroomServiceImpl implements StudyroomService {
   }
 
 
+
   private static boolean checkout(int n[], int index) {
     for (int i = 0; i < n.length; i++) {
         if (n[i] == index) {
