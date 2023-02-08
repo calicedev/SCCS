@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="com.scss.api.mypage.mapper.MypageMapper">
+<mapper namespace="com.sccs.api.mypage.mapper.MypageMapper">
 
 
   <resultMap id="studyroomWithProblem" type="hashmap">
