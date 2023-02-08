@@ -1,9 +1,12 @@
 package com.scss.api.socket.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,5 +19,6 @@ public class SocketDto {
     private String status;
     private int personnel;
     private boolean ready;
-
+    private List<String> membersNickname;
 }
+
