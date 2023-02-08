@@ -58,3 +58,4 @@ file:
     dir2: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/problem/
 server:
   port: 8200
+

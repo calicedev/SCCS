@@ -55,7 +55,6 @@ dependencies {
     //websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     compileOnly group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
-    //웹소켓 확인용으로 설치한 타임리프
     implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
     // https://mvnrepository.com/artifact/commons-io/commons-io
 

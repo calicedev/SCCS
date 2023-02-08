@@ -157,6 +157,8 @@ public class StudyroomController {
       return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
     }
   }
+
+
   /** 코딩 문제 제출 **/
   @PostMapping("/studyroom/codingtest/submission")
   public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
@@ -240,6 +242,26 @@ public class StudyroomController {
     HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
     List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
     return new ResponseEntity<>(s, httpStatus);
+  }
+
+
+  /** 스터디 시작 **/
+  @PostMapping("/studyroom/study")
+  public ResponseEntity<?> startStudy(@RequestBody StudyroomDto studyroomDto)  throws IOException{
+    Map<String, Object> resultMap = new HashMap<>();
+    for(int i=0; i<2; i++){
+      int problemId = studyroomDto.getProblemIds().get(i);
+      studyroomDto.setProblemId(problemId);
+      List<SubmissionDto> s = studyroomService.getStudyInfo(studyroomDto);
+      resultMap.put("problemResult"+problemId,s);
+      ProblemDto p = studyroomService.getProblemInfo(problemId);
+      String path = p.getProblemFolder();
+      String realPath = "problem/"+path.replace("/", "-")+".jpg";
+      String url = awsS3service.getTemporaryUrl(realPath);
+      resultMap.put("problem"+problemId, url);
+    }
+
+    return new ResponseEntity<>(resultMap, HttpStatus.OK);
   }
 
 
