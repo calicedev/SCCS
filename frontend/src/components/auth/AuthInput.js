@@ -53,24 +53,24 @@ const typeObj = {
   },
 }
 
-export default function AuthInput({ type, value, onChange, message }) {
+export default function AuthInput({ type, value, handleChange, message }) {
   return (
-    <Wrapper>
+    <Container>
       <Label htmlFor={type}>{typeObj[type].label}</Label>
       <FlexBox>
         {typeObj[type].logo}
-        <Input
+        <StyledInput
           id={type}
           type={typeObj[type].type}
           placeholder={typeObj[type].placeholder}
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
         />
       </FlexBox>
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
         {message.text}
       </p>
-    </Wrapper>
+    </Container>
   )
 }
 
@@ -84,18 +84,18 @@ AuthInput.propTypes = {
     'email',
   ]),
   value: PropTypes.string,
-  onChange: PropTypes.func,
+  handleChange: PropTypes.func,
   message: PropTypes.object,
 }
 
 AuthInput.defaultProps = {
   type: 'id',
   value: '',
-  onChange: undefined,
+  handleChange: undefined,
   message: { text: '', isValid: false },
 }
 
-const Wrapper = styled.div`
+const Container = styled.div`
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`
@@ -109,7 +109,7 @@ const Label = styled.label`
   color: ${({ theme }) => theme.fontColor};
   font-size: 1rem;
 `
-const Input = styled.input`
+const StyledInput = styled.input`
   padding-left: 0.5rem;
   background-color: #00000000;
 `

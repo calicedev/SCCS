@@ -7,11 +7,12 @@ import PropTypes from 'prop-types'
 
 size: 버튼 사이즈
 type: 버튼 색깔
-onClick: 클릭 시 동작
+handleClick: 클릭 시 동작
 value: 버튼 안 글자
+disabled: 버튼 클릭 가능 여부
 */
 
-export default function Button({ size, type, onClick, value }) {
+export default function Button({ size, type, handleClick, value, disabled }) {
   const sizeClass =
     size === 'tiny'
       ? 'xs-btn'
@@ -20,10 +21,14 @@ export default function Button({ size, type, onClick, value }) {
       : 'medium'
       ? 'md-btn'
       : 'lg-btn'
-  const typeClass = `${type}-btn`
 
   return (
-    <BtnWrapper className={`${sizeClass} ${typeClass}`} onClick={onClick}>
+    <BtnWrapper
+      className={`${sizeClass}`}
+      type={type}
+      disabled={disabled}
+      onClick={() => (disabled ? null : handleClick())}
+    >
       {value}
     </BtnWrapper>
   )
@@ -32,15 +37,17 @@ export default function Button({ size, type, onClick, value }) {
 Button.propTypes = {
   size: PropTypes.oneOf(['tiny', 'small', 'medium', 'large']), // 버튼 크기
   type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'danger']), // 버튼 커스터마이징 (글자색, 배경색, border-radius)
-  onClick: PropTypes.func,
+  handleClick: PropTypes.func,
   value: PropTypes.string,
+  disabled: PropTypes.bool,
 }
 
 Button.defaultProps = {
   size: 'small',
   type: 'primary',
-  onClick: undefined,
+  handleClick: undefined,
   value: '',
+  disabled: false,
 }
 
 const BtnWrapper = styled.button`
@@ -57,36 +64,12 @@ const BtnWrapper = styled.button`
 
   transition: background-color ease 0.1s;
 
-  &.primary-btn {
-    background-color: ${({ theme }) => theme.primaryColor};
-    &:hover {
-      background-color: ${({ theme }) => theme.deepPrimaryColor};
-    }
+  background-color: ${({ theme, type }) => theme[`${type}Color`]};
+  &:hover {
+    background-color: ${({ theme, type }) =>
+      theme[`deep${type.replace(/^[a-z]/, (c) => c.toUpperCase())}Color`]};
   }
-  &.secondary-btn {
-    background-color: ${({ theme }) => theme.secondaryColor};
-    &:hover {
-      background-color: ${({ theme }) => theme.deepSecondaryColor};
-    }
-  }
-  &.tertiary-btn {
-    background-color: ${({ theme }) => theme.tertiaryColor};
-    &:hover {
-      background-color: ${({ theme }) => theme.deepTertiaryColor};
-    }
-  }
-  &.gray-btn {
-    background-color: ${({ theme }) => theme.grayColor};
-    &:hover {
-      background-color: ${({ theme }) => theme.deepGrayColor};
-    }
-  }
-  &.danger-btn {
-    background-color: ${({ theme }) => theme.dangerColor};
-    &:hover {
-      background-color: ${({ theme }) => theme.deepDangerColor};
-    }
-  }
+
   &.xs-btn {
     align-items: center;
     width: 1.7rem;
@@ -107,3 +90,34 @@ const BtnWrapper = styled.button`
     font-size: 2rem;
   }
 `
+
+// &.primary-btn {
+//   background-color: ${({ theme }) => theme.primaryColor};
+//   &:hover {
+//     background-color: ${({ theme }) => theme.deepPrimaryColor};
+//   }
+// }
+// &.secondary-btn {
+//   background-color: ${({ theme }) => theme.secondaryColor};
+//   &:hover {
+//     background-color: ${({ theme }) => theme.deepSecondaryColor};
+//   }
+// }
+// &.tertiary-btn {
+//   background-color: ${({ theme }) => theme.tertiaryColor};
+//   &:hover {
+//     background-color: ${({ theme }) => theme.deepTertiaryColor};
+//   }
+// }
+// &.gray-btn {
+//   background-color: ${({ theme }) => theme.grayColor};
+//   &:hover {
+//     background-color: ${({ theme }) => theme.deepGrayColor};
+//   }
+// }
+// &.danger-btn {
+//   background-color: ${({ theme }) => theme.dangerColor};
+//   &:hover {
+//     background-color: ${({ theme }) => theme.deepDangerColor};
+//   }
+// }

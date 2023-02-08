@@ -6,9 +6,14 @@ import api from 'constants/api'
 import checkReg from 'libs/regExp'
 import Button from 'components/common/Button'
 
+/*
+방 비밀번호를 체크하는 모달의 컨텐츠 컴포넌트
+*/
+
 export default function PwdModalContent({ id }) {
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
+
   // useState
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState({
@@ -16,7 +21,9 @@ export default function PwdModalContent({ id }) {
     isValid: '',
   })
 
+  // 패스워드 서버 단에 체크하는 함수
   const submitPassword = () => {
+    // 4자리 숫자 형식 정규식 체크
     const [isValid, msg] = checkReg('roomPassword', password)
     if (!isValid) {
       const newMsg = { ...message }
@@ -25,6 +32,7 @@ export default function PwdModalContent({ id }) {
       setMessage(newMsg)
       return
     }
+    // 서버에 데이터 체크
     const data = {
       id,
       password,
@@ -48,12 +56,15 @@ export default function PwdModalContent({ id }) {
   return (
     <Container>
       <h3 className="bold">비밀번호</h3>
-      <Input
+      <StyledInput
         type="number"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-      ></Input>
-      <Button value="제출" onClick={submitPassword}></Button>
+      ></StyledInput>
+      <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
+        {message.text}
+      </p>
+      <Button value="제출" handleClick={submitPassword}></Button>
     </Container>
   )
 }
@@ -64,7 +75,7 @@ const Container = styled.div`
   align-items: center;
 `
 
-const Input = styled.input`
+const StyledInput = styled.input`
 width: 100%;
 height: 1.7rem;
 

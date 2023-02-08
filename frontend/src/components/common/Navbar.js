@@ -63,11 +63,11 @@ const NavStyle = styled(NavLink)`
   padding: 1rem;
 
   font-size: 1.5rem;
-  font-weight: 400;
-  color: ${({ theme }) => theme.secondaryColor};
+  font-weight: 500;
+  color: ${({ theme }) => theme.secondaryFontColor};
 
   &.active {
-    color: ${({ theme }) => theme.primaryColor};
+    color: ${({ theme }) => theme.primaryFontColor};
     font-weight: 600;
   }
 `

@@ -1,30 +1,55 @@
 import React, { useState } from 'react'
-import Checkbox from 'components/common/Checkbox'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import Checkbox from 'components/common/Checkbox'
 import IconButton from 'components/common/IconButton'
 import { FaCaretDown } from 'react-icons/fa'
 
-export default function CheckDropdown({ title, options, onChange }) {
+/*
+Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
+
+title: 옵션들의 제목
+opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
+handleChange: 클릭 시 동작할 함수
+
+*/
+
+export default function CheckDropdown({ title, options, handleChange }) {
   const [showOptions, setShowOptions] = useState(false)
 
   return (
     <Container onClick={() => setShowOptions(true)}>
-      <Title>
+      <StyledDiv>
         {title}
         <IconButton icon={<FaCaretDown />} />
-      </Title>
-      <Options hidden={!showOptions} onMouseLeave={() => setShowOptions(false)}>
+      </StyledDiv>
+      <OptionWrapper
+        hidden={!showOptions}
+        onMouseLeave={() => setShowOptions(false)}
+      >
         {Object.keys(options).map((key) => (
           <Checkbox
-            key={key}
+            key={key + options[key].toString()}
             id={key + options[key].toString()}
             label={options[key]}
-            onChange={onChange}
+            onChange={handleChange}
           ></Checkbox>
         ))}
-      </Options>
+      </OptionWrapper>
     </Container>
   )
+}
+
+CheckDropdown.propTypes = {
+  title: PropTypes.string.isRequired,
+  options: PropTypes.object.isRequired,
+  handleChange: PropTypes.func,
+}
+
+CheckDropdown.defaultProps = {
+  handleChange: undefined,
+  name: '',
+  value: '',
 }
 
 const Container = styled.div`
@@ -32,7 +57,7 @@ const Container = styled.div`
   margin: 0rem 1rem;
 `
 
-const Title = styled.div`
+const StyledDiv = styled.div`
   height: 100%;
 
   padding: 0rem 0.5rem;
@@ -48,7 +73,7 @@ const Title = styled.div`
   cursor: pointer;
 `
 
-const Options = styled.div`
+const OptionWrapper = styled.div`
   position: absolute;
   top: 2rem;
 

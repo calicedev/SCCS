@@ -42,14 +42,14 @@ const NavStyle = styled(NavLink)`
   background-repeat: no-repeat;
   background-position: 350% 0%;
 
-  color: ${({ theme }) => theme.secondaryColor};
+  color: ${({ theme }) => theme.secondaryFontColor};
   font-size: 1.2rem;
-  font-weight: 400;
+  font-weight: 600;
 
   transition: background-position 0.3s ease-in-out;
 
   &:hover {
-    color: ${({ theme }) => theme.primaryColor};
+    color: ${({ theme }) => theme.primaryFontColor};
     font-weight: 600;
   }
 

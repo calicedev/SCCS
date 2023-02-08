@@ -1,32 +1,61 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import Radio from 'components/common/Radio'
 import styled from 'styled-components'
 import IconButton from 'components/common/IconButton'
 import { FaCaretDown } from 'react-icons/fa'
 
-export default function RadioDropdown({ selectedId, name, options, onChange }) {
+/*
+Dropbox 우측의 아래 버튼 아이콘 클릭 시, 라디오버튼 옵션들이 보여지는 컴포넌트
+
+name: 라디오 버튼들을 그룹질 이름
+opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
+handleChange: 클릭 시 동작할 함수
+*/
+
+export default function RadioDropdown({
+  name,
+  options,
+  selectedKey,
+  handleChange,
+}) {
   const [showOptions, setShowOptions] = useState(false)
 
   return (
     <Container onClick={() => setShowOptions(true)}>
-      <Title>
-        {options[selectedId]}
+      <StyledDiv>
+        {options[selectedKey] ? options[selectedKey] : '옵션 선택'}
         <IconButton icon={<FaCaretDown />} />
-      </Title>
-      <Options hidden={!showOptions} onMouseLeave={() => setShowOptions(false)}>
+      </StyledDiv>
+      <OptionWrapper
+        hidden={!showOptions}
+        onMouseLeave={() => setShowOptions(false)}
+      >
         {Object.keys(options).map((key) => (
           <Radio
             key={key}
             name={name}
             id={key}
             label={options[key]}
-            onChange={onChange}
-            checked={key === selectedId ? true : false}
+            onChange={handleChange}
+            checked={key === selectedKey ? true : false}
           ></Radio>
         ))}
-      </Options>
+      </OptionWrapper>
     </Container>
   )
+}
+
+RadioDropdown.propTypes = {
+  name: PropTypes.string.isRequired,
+  options: PropTypes.object.isRequired,
+  selectedKey: PropTypes.string,
+  handleChange: PropTypes.func,
+}
+
+RadioDropdown.defaultProps = {
+  selectedKey: '1',
+  handleChange: undefined,
 }
 
 const Container = styled.div`
@@ -34,7 +63,7 @@ const Container = styled.div`
   margin: 0rem 1rem;
 `
 
-const Title = styled.div`
+const StyledDiv = styled.div`
   display: flex;
   align-items: center;
 
@@ -51,7 +80,7 @@ const Title = styled.div`
   cursor: pointer;
 `
 
-const Options = styled.div`
+const OptionWrapper = styled.div`
   position: absolute;
   top: 2rem;
 

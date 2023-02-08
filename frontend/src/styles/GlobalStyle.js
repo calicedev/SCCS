@@ -6,26 +6,30 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'cursiveFont'; 
     src: url(${cursiveFont});
   }
+
   .pass {
-    color: ${({ theme }) => theme.passColor};
+    color: ${({ theme }) => theme.passFontColor};
   }
   .error {
-    color: ${({ theme }) => theme.errorColor};
+    color: ${({ theme }) => theme.errorFontColor};
   }
   .gray {
-    color: ${({ theme }) => theme.grayColor};
+    color: ${({ theme }) => theme.grayFontColor};
+  }
+  .white {
+    color: ${({ theme }) => theme.whiteFontColor};
   }
   .main {
     color: ${({ theme }) => theme.fontColor};
   }
   .primary {
-    color: ${({ theme }) => theme.primaryColor};
+    color: ${({ theme }) => theme.primaryFontColor};
   }
   .secondary {
-    color: ${({ theme }) => theme.secondaryColor};
+    color: ${({ theme }) => theme.secondaryFontColor};
   }
   .tertiary {
-    color: ${({ theme }) => theme.tertiaryColor};
+    color: ${({ theme }) => theme.tertiaryFontColor};
   }
 
   .light {
@@ -82,6 +86,7 @@ const GlobalStyle = createGlobalStyle`
       font-weight: 300;
     }
   }
+  
   a {
     text-decoration: none;
     font-size: 1rem;

@@ -8,7 +8,7 @@ import RadioDropdown from 'components/common/RadioDropdown'
 import { algorithmPk, languagePk } from 'constants/pk'
 import styled from 'styled-components'
 import Modal from 'components/common/Modal'
-import CreateModalContent from 'components/main/CreateModalContent'
+import CreateModalContent from 'components/main/CreateRoomMdContent'
 
 const searchOptions = {
   title: '방 이름',
@@ -23,7 +23,7 @@ export default function MainRooms() {
   const [query, setQuery] = useState('')
   const [showModal, setShowModal] = useState(false)
 
-  // 전체 방 조회
+  // 마운트 시 방 전체조회
   useEffect(() => {
     const [url, method] = api('searchRoom')
     const config = { url, method }
@@ -33,14 +33,33 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert(
-          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
-        )
+        alert('서버와의 통신이 불안정합니다.')
         console.log(err)
       })
   }, [])
 
-  // 옵션변화로 인한 방 세부 조회
+  // 언어 선택에 다른 languageIds 배열 변환 함수
+  const changeLanguageIds = (e) => {
+    const id = parseInt(e.target.id.slice(0, 1))
+    if (e.target.checked) {
+      setLanguageIds([...languageIds, id])
+      return
+    }
+    setLanguageIds(languageIds.filter((ele) => ele !== id))
+  }
+
+  // 알고리즘 선택에 다른 algoIds 배열 변환 함수
+  const changeAlgoIds = (e) => {
+    const id = parseInt(e.target.id.slice(0, 1))
+    console.log(id)
+    if (e.target.checked) {
+      setAlgoIds([...algoIds, id])
+      return
+    }
+    setAlgoIds(algoIds.filter((ele) => ele !== id))
+  }
+
+  // 옵션변화로 인한 방 세부 조회 요청
   useEffect(() => {
     let data = {}
     if (selectedOption === 'title') {
@@ -64,18 +83,15 @@ export default function MainRooms() {
     axios(config)
       .then((res) => {
         console.log(res)
-
         setRooms(res.data)
       })
       .catch((err) => {
-        alert(
-          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
-        )
+        alert('서버와의 통신이 불안정합니다.')
         console.log(err)
       })
   }, [algoIds, languageIds])
 
-  // 검색버튼
+  // 검색버튼을 눌렀을 때 방 세부 조회
   const searchRoom = () => {
     let data = {}
     if (selectedOption === 'title') {
@@ -102,31 +118,9 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert(
-          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
-        )
+        alert('서버와의 연결이 불안정합니다.')
         console.log(err)
       })
-  }
-
-  // changeHandler
-  const changeLanguageIds = (e) => {
-    const id = parseInt(e.target.id.slice(0, 1))
-    if (e.target.checked) {
-      setLanguageIds([...languageIds, id])
-      return
-    }
-    setLanguageIds(languageIds.filter((ele) => ele !== id))
-  }
-
-  const changeAlgoIds = (e) => {
-    const id = parseInt(e.target.id.slice(0, 1))
-    console.log(id)
-    if (e.target.checked) {
-      setAlgoIds([...algoIds, id])
-      return
-    }
-    setAlgoIds(algoIds.filter((ele) => ele !== id))
   }
 
   return (
@@ -142,31 +136,31 @@ export default function MainRooms() {
           <CheckDropdown
             title="언어선택"
             options={languagePk}
-            onChange={changeLanguageIds}
+            handleChange={changeLanguageIds}
           />
           <CheckDropdown
             title="알고리즘선택"
             options={algorithmPk}
-            onChange={changeAlgoIds}
+            handleChange={changeAlgoIds}
           />
           <InputBox>
             <RadioDropdown
               selectedId={selectedOption}
               name="검색옵션"
               options={searchOptions}
-              onChange={(e) => setSelectedOption(e.target.id)}
+              handleChange={(e) => setSelectedOption(e.target.id)}
             />
             <Input
               type={selectedOption === 'title' ? 'text' : 'number'}
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              handleChange={(e) => setQuery(e.target.value)}
             ></Input>
           </InputBox>
-          <Button onClick={searchRoom} value="검색"></Button>
+          <Button handleClick={searchRoom} value="검색"></Button>
         </SearchContainer>
         <Button
           type="secondary"
-          onClick={() => setShowModal(!showModal)}
+          handleClick={() => setShowModal(!showModal)}
           value="방 만들기"
         ></Button>
       </FlexBox>
@@ -180,7 +174,7 @@ export default function MainRooms() {
             isPrivate={room.isPrivate}
             algoIds={room.algoIds}
             languageIds={room.languageIds}
-            // 방 클릭시 해당 대기방으로 이동 (2.4 민혁 추가)
+            personnel={room.personnel}
           />
         ))}
       </GridBox>

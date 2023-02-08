@@ -35,7 +35,7 @@ const LeftPaneBg = styled.div`
   width: 300px;
   height: 100%;
 
-  background-color: ${({ theme }) => theme.lightSecondaryColor};
+  background-color: ${({ theme }) => theme.bluishBgColor};
 `
 
 const RightPane = styled.div`
