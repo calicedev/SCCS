@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -404,6 +405,23 @@ public class MemberController {
   public ResponseEntity<?> deleteKeys() {
     redisService.deleteAllKeys();
     return new ResponseEntity<>("모든 키 삭제 성공", HttpStatus.OK);
+  }
+
+  /** 쿠키 통신 테스트 컨트롤러 **/
+  @GetMapping("/cookie/test")
+  public ResponseEntity<?> testCookie(HttpServletRequest request) {
+
+    Cookie[] list = request.getCookies();
+
+    for (Cookie cookie : list) {
+      logger.info("쿠기 시간 : {}", cookie.getMaxAge()+"");
+      logger.info("쿠기 이름 : {}", cookie.getName());
+    }
+
+    if (list.length >= 1) {
+      return new ResponseEntity<>("cookie exist", HttpStatus.OK);
+    }
+    return new ResponseEntity<>("null", HttpStatus.OK);
   }
 
 }
