@@ -33,9 +33,7 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert(
-          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
-        )
+        alert('방 정보를 불러올 수 없습니다.')
         console.log(err)
       })
   }, [])
@@ -68,9 +66,7 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert(
-          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
-        )
+        alert('원하는 조건의 방이 없습니다.')
         console.log(err)
       })
   }, [algoIds, languageIds])
@@ -102,9 +98,7 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert(
-          '원하는 조건의 방이 없습니다. 님 뭔가 잘못된거임 ㅋㅋㅋㅋㅋㅋㅋㅋ 고생해라',
-        )
+        alert('원하는 조건의 방이 없습니다.')
         console.log(err)
       })
   }

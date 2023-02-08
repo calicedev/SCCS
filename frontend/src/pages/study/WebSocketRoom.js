@@ -12,6 +12,7 @@ import stompjs from 'stompjs'
 
 import WaitingRoom from './WaitingRoom'
 import CodingTest from './CodingTest'
+import Study from './Study'
 
 export default function WebSocketRoom() {
   const navigate = useNavigate()
@@ -46,8 +47,11 @@ export default function WebSocketRoom() {
 
   // CodingTest 페이지 state
   const [codingTest, setCodingTest] = useState(false) // CodingTest 페이지 노출 여부
-  // const [codingTestData, setCodingTestData] = useState({})
   const [membersNickname, setMembersNickname] = useState([])
+
+  // Study 페이지 state
+  const [study, setStudy] = useState(false)
+  const [readyForStudyArray, setReadyForStudyArray] = useState([])
 
   const justMounted = useRef(true)
 
@@ -183,6 +187,19 @@ export default function WebSocketRoom() {
             setWaitingRoom(false)
             setCodingTest(true)
           }
+          if (content.status === 'study') {
+            // 시험 종료 버튼 전부 누르면 스터디 페이지로 이동
+            console.log(readyForStudyArray)
+            setReadyForStudyArray(content.readyForStudyArray, () => {
+              if (personnel === readyForStudyArray.length + 1) {
+                setCodingTest(false)
+                setStudy(true)
+              }
+            })
+            console.log(readyForStudyArray)
+            // 원래 if문보다 이게 먼저 실행되어야 하는데 해당 setState가 if문보다 더 늦게 실행될 것 같아서 그냥 length에 1추가 해주고 다음에 실행함
+            // setReadyForStudyArray(content.readyForStudyArray)
+          }
         },
       )
     })
@@ -249,34 +266,28 @@ export default function WebSocketRoom() {
         membersNickname: [...readyArray, nickname],
       }),
     )
+  }
 
-    // const data = {
-    //   id: studyroomId,
-    //   memberIds: [...readyArray, nickname],
-    // }
-    // const [url, method] = api('codingTest')
-    // const config = { url, method, data }
-    // console.log('방장이 보낸 정보 받아라', data)
-    // axios(config)
-    //   .then((res) => {
-    //     console.log(res.data)
-    //     setCodingTestData(res.data)
-    //     setWaitingRoom(false)
-    //     setCodingTest(true)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
+  const startStudy = () => {
+    stomp.send(
+      '/pub/studyroom',
+      {},
+      JSON.stringify({
+        studyroomId: studyroomId,
+        nickname: nickname,
+        status: 'study',
+        readyForStudyArray: [...readyForStudyArray, nickname],
+      }),
+    )
   }
 
   return (
     <>
       {connected && (
         <>
-          <h1>여기는 전체 웹소켓</h1>
-          <div>{exitMsg.message}</div>
+          {/* <div>{exitMsg.message}</div>
           <div>{enterMsg.message}</div>
-          <div>{readyMsg.message}</div>
+          <div>{readyMsg.message}</div> */}
 
           <H />
           {waitingRoom ? (
@@ -308,8 +319,12 @@ export default function WebSocketRoom() {
             <CodingTest
               studyroomId={studyroomId}
               membersNickname={membersNickname}
+              roomInfo={roomInfo}
+              personnel={personnel}
+              startStudy={startStudy}
             />
           ) : null}
+          {study ? <Study /> : null}
         </>
       )}
       {connected || (
@@ -353,4 +368,8 @@ const MySubmit = styled.input`
 const H = styled.hr`
   background: indigo;
   height: 1px;
+`
+
+const TopNavBar = styled.div`
+  background: grey;
 `
