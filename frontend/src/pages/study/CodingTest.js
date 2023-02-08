@@ -8,7 +8,7 @@ import axios from 'libs/axios'
 import api from 'constants/api'
 // import CodingNavbar from 'components/study/CodingNavbar'
 
-export default function CodingTest({ codingTestData }) {
+export default function CodingTest({ studyroomId, membersNickname }) {
   const [id, setId] = useState('')
   const [memberIds, setMemberIds] = useState([])
   const [problems, setproblems] = useState([])
@@ -16,55 +16,79 @@ export default function CodingTest({ codingTestData }) {
   const [title, setTitle] = useState('')
   const [algo_ids, setAlgo_ids] = useState([])
 
+  const [codingTestData, setCodingTestData] = useState({})
+
+  useEffect(() => {
+    const data = {
+      id: studyroomId,
+      memberIds: membersNickname,
+    }
+    const [url, method] = api('codingTest')
+    const config = { url, method, data }
+    console.log('방장이 보낸 정보 받아라', data)
+    axios(config)
+      .then((res) => {
+        console.log(res.data)
+        setCodingTestData(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
+
   return (
-    <Main>
-      {/* <h1>{codingTestData.problems[0].name}</h1> */}
-      <Problem>
-        <Img src="https://cdn.pixabay.com/photo/2017/09/25/13/12/puppy-2785074__480.jpg"></Img>
-        <Img src={codingTestData.problems[0].problemImageUrl}></Img>
-      </Problem>
-      <Resizable
-        defaultSize={{ width: '50%', height: '100%' }}
-        minWidth={'20%'}
-        maxWidth={'80%'}
-        enable={{
-          top: false,
-          right: true,
-          bottom: false,
-          left: true,
-          topRight: false,
-          bottomRight: false,
-          bottomLeft: false,
-          topLeft: false,
-        }}
-      >
-        <FlexColumn>
-          <CodingSection>
-            <Changer>언어 선택</Changer>
-            <Textarea></Textarea>
-          </CodingSection>
+    <>
+      {codingTestData.title && (
+        <Main>
+          <h1>{codingTestData.problems[0].name}</h1>
+          <Problem>
+            {/* <Img src="https://cdn.pixabay.com/photo/2017/09/25/13/12/puppy-2785074__480.jpg"></Img> */}
+            {/* <Img src={codingTestData.problems[0].problemImageUrl}></Img> */}
+          </Problem>
           <Resizable
-            defaultSize={{ width: '100%', height: '37%' }}
-            minHeight={'20%'}
-            maxHeight={'80%'}
+            defaultSize={{ width: '50%', height: '100%' }}
+            minWidth={'20%'}
+            maxWidth={'80%'}
             enable={{
-              top: true,
-              right: false,
+              top: false,
+              right: true,
               bottom: false,
-              left: false,
+              left: true,
               topRight: false,
               bottomRight: false,
               bottomLeft: false,
               topLeft: false,
             }}
           >
-            <ResultSection>결과창</ResultSection>
+            <FlexColumn>
+              <CodingSection>
+                <Changer>언어 선택</Changer>
+                <Textarea></Textarea>
+              </CodingSection>
+              <Resizable
+                defaultSize={{ width: '100%', height: '37%' }}
+                minHeight={'20%'}
+                maxHeight={'80%'}
+                enable={{
+                  top: true,
+                  right: false,
+                  bottom: false,
+                  left: false,
+                  topRight: false,
+                  bottomRight: false,
+                  bottomLeft: false,
+                  topLeft: false,
+                }}
+              >
+                <ResultSection>결과창</ResultSection>
+              </Resizable>
+              <ColoredLine color="#4B91F1" />
+              <Footer></Footer>
+            </FlexColumn>
           </Resizable>
-          <ColoredLine color="#4B91F1" />
-          <Footer></Footer>
-        </FlexColumn>
-      </Resizable>
-    </Main>
+        </Main>
+      )}
+    </>
   )
 }
 

@@ -11,20 +11,25 @@ import sockjs from 'sockjs-client'
 import stompjs from 'stompjs'
 
 export default function WaitingRoom({
+  // 기본정보
   studyroomId,
   roomInfo,
   personnel,
   nickname,
   id,
+  // exit 기능
   disconnect,
+  // 채팅 기능
   submitMsg,
   changeMsg,
   chat,
   chatList,
   chatNickname,
+  // 레디 기능
   ready,
   readyOrNot,
   readyArray,
+  // 시작 기능
   startCodingTest,
 }) {
   const navigate = useNavigate()
