@@ -1,5 +1,7 @@
 package com.sccs.api.studyroom.controller;
 
+import com.sccs.api.aws.dto.FileDto;
+import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.studyroom.dto.ProblemDto;
 import com.sccs.api.studyroom.dto.StudyroomDto;
 import com.sccs.api.studyroom.dto.SubmissionDto;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -43,7 +46,7 @@ public class StudyroomController {
   private final FileStore fileStore;
 
   private static final RestTemplate REST_TEMPLATE;
-
+  private final AwsS3Service awsS3service;
 
   static {
     // RestTemplate 기본 설정을 위한 Factory 생성
@@ -156,14 +159,13 @@ public class StudyroomController {
   /** 코딩 테스트 문제 제출 **/
   @PostMapping("/studyroom/codingtest/submission")
   public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
-    System.out.println("지금 채점 서버 잘 도착합니다!!!!!!!!!!!!!");
     ProblemDto problemDto = studyroomService.getProblemInfo(submissionDto.getProblemId());
 
     //파일을 원하는 경로에 실제로 저장한다.
-    String fileName = fileStore.storeFile(submissionDto, problemDto.getProblemFolder());
-
+    MultipartFile f = fileStore.storeFile(submissionDto, problemDto.getProblemFolder());
+    FileDto fileDto = awsS3service.upload(f,"submission");
     // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
-    UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(problemDto.getProblemFolder(), fileName));
+    UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(problemDto.getProblemFolder(), f.getName()));
 
     String tempNo = problemDto.getProblemFolder().substring(problemDto.getProblemFolder().lastIndexOf("/")+1);
 
@@ -190,15 +192,15 @@ public class StudyroomController {
     HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 //        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
     List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
-    System.out.println(s.get(5).get("avgRuntime"));
+    Object a = s.get(5).get("avgMemory");
 
 
     //문제 제출 정보를 실제 디비에 저장한다.
-    submissionDto.setFileName(fileName);
-//        submissionDto.setResult(s.getResult());
-//        submissionDto.setMemory(s.getMemory());
-//        submissionDto.setRuntime();
-//        studyroomService.submitProblem(submissionDto);
+    submissionDto.setFileName(f.getName());
+    submissionDto.setResult(String.valueOf(s.get(5).get("isAnswer")));
+    submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
+    submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
+    studyroomService.submitProblem(submissionDto);
 
 
     return new ResponseEntity<>(s, httpStatus);
