@@ -161,7 +161,6 @@
     where is_active=1 AND s.id= #{id}
   </select>
 
-
   <update id="changeStudyroomSolvingStatus" parameterType="StudyroomDto">
     UPDATE studyroom
     SET is_solving = true
@@ -198,13 +197,10 @@
     LEFT JOIN studyroom_problem sp ON p.id=sp.problem_id where sp.studyroom_id=#{id};
   </select>
 
-
   <insert id="submitProblem" parameterType="SubmissionDto">
     insert into submission(
-    id, file_name, runtime, memory, result, problem_id, member_id, language_id, studyroom_id
-    )
-    values (#{id}, #{fileName}, #{runtime}, #{memory}, #{result}, #{problemId}, #{memberId},
-    #{languageId}, #{studyroomId})
+    id, file_name, runtime, memory, result, problem_id, member_id, language_id, studyroom_id)
+    values (#{id}, #{fileName}, #{runtime}, #{memory}, #{result}, #{problemId}, #{memberId}, #{languageId}, #{studyroomId})
   </insert>
 
   <select id="getProblemInfo" parameterType="int" resultType="ProblemDto">
