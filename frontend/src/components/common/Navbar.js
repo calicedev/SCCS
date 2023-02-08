@@ -6,6 +6,7 @@ import IconButton from 'components/common/IconButton'
 import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from 'redux/themeSlice'
+import { deleteUserInfo } from 'redux/userSlice'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -16,6 +17,10 @@ export default function Navbar() {
   const theme = useSelector((state) => state.theme)
   const dispatch = useDispatch()
 
+  const logout = () => {
+    dispatch(deleteUserInfo())
+  }
+
   return (
     <Nav>
       <Flexbox>
@@ -24,7 +29,7 @@ export default function Navbar() {
           icon={theme === 'light' ? <BsCloudSun /> : <BsCloudMoon />}
           type={theme === 'light' ? 'primary' : 'secondary'}
           size={'middle'}
-          onClick={() => {
+          handleClick={() => {
             dispatch(toggleTheme())
           }}
         />
@@ -34,7 +39,9 @@ export default function Navbar() {
         <NavStyle to="/mypage/calendar">Calender</NavStyle>
         <NavStyle to="/mypage/solved">Solved</NavStyle>
         <NavStyle to="/mypage/profile">Profile</NavStyle>
-        <NavStyle to="/auth/login">Logout</NavStyle>
+        <NavStyle to="/auth/login" onClick={logout}>
+          Logout
+        </NavStyle>
       </NavContent>
     </Nav>
   )

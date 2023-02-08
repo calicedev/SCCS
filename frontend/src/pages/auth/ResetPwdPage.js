@@ -22,6 +22,7 @@ export default function ResetPasswordForm() {
 
   // 비밀번호 초기화 서버 요청
   const resetPassword = () => {
+    // 아이디와 메일 입력 여부 확인
     if (!id || !email) {
       const newMsg = { ...message }
       newMsg.text = '아이디와 이메일을 모두 입력해주세요'
@@ -56,7 +57,7 @@ export default function ResetPasswordForm() {
         icon={<RiArrowGoBackFill />}
         size={'small'}
         text={'로그인으로'}
-        onClick={() => {
+        handleClick={() => {
           navigate('/auth/login')
         }}
       />
@@ -69,14 +70,14 @@ export default function ResetPasswordForm() {
         <AuthInput
           type="id"
           value={id}
-          onChange={(e) => {
+          handleChange={(e) => {
             setId(e.target.value)
           }}
         ></AuthInput>
         <AuthInput
           type="email"
           value={email}
-          onChange={(e) => {
+          handleChange={(e) => {
             setEmail(e.target.value)
           }}
           result={message}
@@ -85,7 +86,11 @@ export default function ResetPasswordForm() {
       </Form>
 
       <ButtonContainer>
-        <Button onClick={resetPassword} value="Submit" size="medium"></Button>
+        <Button
+          handleClick={resetPassword}
+          value="Submit"
+          size="medium"
+        ></Button>
       </ButtonContainer>
     </Flexbox>
   )

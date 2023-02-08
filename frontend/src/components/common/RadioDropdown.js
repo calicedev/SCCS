@@ -22,7 +22,7 @@ export default function RadioDropdown({
   const [showOptions, setShowOptions] = useState(false)
 
   return (
-    <Container onClick={() => setShowOptions(true)}>
+    <Container onClick={() => setShowOptions(!showOptions)}>
       <StyledDiv>
         {options[selectedKey] ? options[selectedKey] : '옵션 선택'}
         <IconButton icon={<FaCaretDown />} />
@@ -37,7 +37,7 @@ export default function RadioDropdown({
             name={name}
             id={key}
             label={options[key]}
-            onChange={handleChange}
+            handleChange={handleChange}
             checked={key === selectedKey ? true : false}
           ></Radio>
         ))}
@@ -60,11 +60,12 @@ RadioDropdown.defaultProps = {
 
 const Container = styled.div`
   position: relative;
-  margin: 0rem 1rem;
 `
 
 const StyledDiv = styled.div`
   display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   align-items: center;
 
   padding: 0rem 0.5rem;
@@ -86,7 +87,7 @@ const OptionWrapper = styled.div`
 
   width: 100%;
 
-  padding: 0.5em 0.5rem;
+  padding: 0em 0.2rem;
 
   border: 0;
   border-radius: 0.5rem;

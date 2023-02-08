@@ -23,6 +23,7 @@ function Calendar({
   onMouseLeaveDateBox,
   contents,
 }) {
+  // currentDate를 기반으로 한 데이터
   const monthStart = startOfMonth(currentDate) // 현 월의 시작 일자
   const monthEnd = endOfMonth(currentDate) // 현 월의 마지막 일자
   const calendarStart = startOfWeek(monthStart) // 달력의 시작 일자
@@ -68,7 +69,7 @@ function Calendar({
 }
 
 Calendar.propTypes = {
-  currentDate: PropTypes.instanceOf(Date),
+  currentDate: PropTypes.instanceOf(Date).isRequired,
   onClickDateBox: PropTypes.func,
   onMouseEnterDateBox: PropTypes.func,
   onMouseLeaveDateBox: PropTypes.func,
@@ -76,7 +77,6 @@ Calendar.propTypes = {
 }
 
 Calendar.defaultProps = {
-  currentDate: null,
   onClickDateBox: undefined,
   onMouseEnterDateBox: undefined,
   onMouseLeaveDateBox: undefined,
@@ -99,6 +99,7 @@ const WeekDays = styled.div`
   width: 100%;
   font-family: cursiveFont;
 `
+// Memoized React Component
 const MemoizedCalendar = React.memo(Calendar)
 export default MemoizedCalendar
 export { Calendar }

@@ -22,7 +22,7 @@ export default function Radio({
   checked,
 }) {
   return (
-    <div>
+    <Container>
       <StyledDiv
         type="radio"
         id={id}
@@ -32,7 +32,7 @@ export default function Radio({
         checked={checked}
       />
       <label htmlFor={id}>{label}</label>
-    </div>
+    </Container>
   )
 }
 
@@ -49,6 +49,10 @@ Radio.defaultProps = {
   value: '',
   handleChange: undefined,
 }
+
+const Container = styled.div`
+  margin: 0.5rem 0.2rem;
+`
 
 const StyledDiv = styled.input`
   margin-right: 0.5rem;

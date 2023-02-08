@@ -8,5 +8,9 @@ import { useSelector } from 'react-redux'
 
 export default function PrivateRoute() {
   const user = useSelector((state) => state.user)
-  return user ? <Outlet /> : <Navigate to="/auth/login" />
+  if (user) {
+    return <Outlet />
+  }
+  alert('로그인 후 이용해주세요')
+  return <Navigate to="/auth/login" />
 }

@@ -46,7 +46,7 @@ const NavStyle = styled(NavLink)`
   font-size: 1.2rem;
   font-weight: 600;
 
-  transition: background-position 0.3s ease-in-out;
+  transition: background-position 0.5s ease-in-out;
 
   &:hover {
     color: ${({ theme }) => theme.primaryFontColor};

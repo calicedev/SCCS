@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { getDay } from 'date-fns'
 
 /*
 달력(Calendar) 컴포넌트에서 사용하는 날짜 박스
@@ -8,8 +9,8 @@ import PropTypes from 'prop-types'
 date: 날짜, YYYY-MM-DD
 disabled: 날짜박스의 활성화 여부, className="disabled or abled" 할당
 onClick: 클릭 시에 동작할 함수
-onMouseEnter: 마우스 Enter시에 동작할 함수
-onMouseLeave: 마우스 Leave시에 동작할 함수
+onMouseEnter: 마우스 Enter시에 동작할 함수. 해당 DateBox의 날짜를 첫번째 인자로 받음
+onMouseLeave: 마우스 Leave시에 동작할 함수. 해당 DateBox의 날짜를 첫번째 인자로 받음 
 */
 export default function DateBox({
   date,
@@ -21,9 +22,11 @@ export default function DateBox({
 }) {
   // disabled 여부에 따라 className 할당
   const disabledClass = disabled ? 'disabled' : 'abled'
+  // 0 ~ 6 에 해당하는 요일
+  const day = getDay(date)
 
   return (
-    <DateContainer
+    <Container
       id={date}
       className={disabledClass}
       onMouseEnter={() => (onMouseEnter ? onMouseEnter(date) : null)}
@@ -31,15 +34,21 @@ export default function DateBox({
       onClick={() => (onClick ? onClick(date) : null)}
     >
       <FlexBox>
-        <p>{date.slice(-2)}</p>
+        <p
+          className={`${
+            disabled ? 'gray' : day === 0 ? 'error' : day === 6 ? 'pass' : null
+          }`}
+        >
+          {date.slice(-2)}
+        </p>
         {content}
       </FlexBox>
-    </DateContainer>
+    </Container>
   )
 }
 
 DateBox.propTypes = {
-  date: PropTypes.string,
+  date: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
@@ -47,7 +56,6 @@ DateBox.propTypes = {
 }
 
 DateBox.defaultProps = {
-  date: '',
   disabled: false,
   onClick: undefined,
   onMouseEnter: undefined,
@@ -64,10 +72,12 @@ const FlexBox = styled.div`
 
   width: 100%;
   height: 100%;
+
+  padding: 0.2rem;
 `
 
 // ::after는 날짜 박스를 정사각형으로 유지하기 위해서 사용
-const DateContainer = styled.div`
+const Container = styled.div`
   position: relative;
 
   width: 100%;

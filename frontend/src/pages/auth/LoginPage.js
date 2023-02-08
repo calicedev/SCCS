@@ -57,6 +57,7 @@ export default function LoginForm() {
         checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
         checkmsg.isValid = false
         setMessage(checkmsg)
+        setPassword('')
       })
   }
 
@@ -72,12 +73,12 @@ export default function LoginForm() {
         <AuthInput
           type="id"
           value={id}
-          onChange={(e) => setId(e.target.value)}
+          handleChange={(e) => setId(e.target.value)}
         ></AuthInput>
         <AuthInput
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          handleChange={(e) => setPassword(e.target.value)}
         ></AuthInput>
         <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
           {message.text}
@@ -88,16 +89,16 @@ export default function LoginForm() {
         <Checkbox
           id="remeberMe"
           label="Remember Me"
-          onChange={(e) => setIsChecked(!isChecked)}
+          handleChange={(e) => setIsChecked(!isChecked)}
         ></Checkbox>
-        <div>
+        <LinkWrapper>
           <Link to="/auth/findid">Forgot ID?</Link>
           <Link to="/auth/resetpassword">Forgot Password?</Link>
-        </div>
+        </LinkWrapper>
       </Flexbox>
 
       <ButtonContainer>
-        <Button onClick={login} value="Login" size="medium"></Button>
+        <Button handleClick={login} value="Login" size="medium"></Button>
       </ButtonContainer>
     </Container>
   )
@@ -115,12 +116,17 @@ const Container = styled.div`
 const Flexbox = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   margin: 1.5rem 0rem;
 `
+const LinkWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+`
 
 const Form = styled.div`
-  margin: 3rem 0rem;
+  margin: 3rem 0rem 1rem;
 `
 const ButtonContainer = styled.div`
   display: flex;

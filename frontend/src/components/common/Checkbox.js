@@ -44,7 +44,7 @@ Checkbox.defaultProps = {
 }
 
 const Container = styled.div`
-  margin-bottom: 0.5rem;
+  margin: 0.5rem 0.2rem;
 `
 
 const StyledInput = styled.input`

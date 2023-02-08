@@ -36,6 +36,7 @@ export default function SignupForm() {
 
   // 회원가입 서버 요청
   const signup = () => {
+    // 모든 정보를 유효하게 입력했는지 확인
     if (
       !idMsg.isValid ||
       !nameMsg.isValid ||
@@ -77,43 +78,43 @@ export default function SignupForm() {
         <AuthInput
           type="id"
           value={id}
-          onChange={(e) => setId(e.target.value)}
+          handleChange={(e) => setId(e.target.value)}
           message={idMsg}
         ></AuthInput>
         <AuthInput
           type="name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          handleChange={(e) => setName(e.target.value)}
           message={nameMsg}
         ></AuthInput>
         <AuthInput
           type="nickname"
           value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          handleChange={(e) => setNickname(e.target.value)}
           message={nicknameMsg}
         ></AuthInput>
         <AuthInput
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          handleChange={(e) => setEmail(e.target.value)}
           message={emailMsg}
         ></AuthInput>
         <AuthInput
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          handleChange={(e) => setPassword(e.target.value)}
           message={passwordMsg}
         ></AuthInput>
         <AuthInput
           type="confirmPassword"
           value={confirmPwd}
-          onChange={(e) => setConfirmPwd(e.target.value)}
+          handleChange={(e) => setConfirmPwd(e.target.value)}
           message={confirmPwdMsg}
         ></AuthInput>
       </Form>
 
       <ButtonContainer>
-        <Button size="medium" onClick={signup} value="회원가입"></Button>
+        <Button size="medium" handleClick={signup} value="회원가입"></Button>
       </ButtonContainer>
     </Flexbox>
   )

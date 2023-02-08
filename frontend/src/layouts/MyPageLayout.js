@@ -26,13 +26,17 @@ const UpperPane = styled.div`
 
 const LeftPane = styled.div`
   z-index: 1;
-  min-width: 300px;
+  min-width: 250px;
+  max-width: 300px;
+  width: 25%;
 `
 
 const LeftPaneBg = styled.div`
   position: absolute;
 
-  width: 300px;
+  min-width: 250px;
+  max-width: 300px;
+  width: 25%;
   height: 100%;
 
   background-color: ${({ theme }) => theme.bluishBgColor};

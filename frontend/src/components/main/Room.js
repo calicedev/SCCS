@@ -83,19 +83,19 @@ export default function Room({
         onMouseLeave={() => setIsHover(false)}
       >
         <Flexbox>
-          <OutlineBox isSolving={isSolving} flex={1}>
+          <OutlineBox isSolving={isSolving} isHover={isHover} flex={1}>
             {id}
           </OutlineBox>
-          <OutlineBox isSolving={isSolving} flex={5}>
+          <OutlineBox isSolving={isSolving} isHover={isHover} flex={5}>
             {algorithms}
           </OutlineBox>
-          <OutlineBox isSolving={isSolving} flex={1}>
+          <OutlineBox isSolving={isSolving} isHover={isHover} flex={1}>
             {personnel}/6
           </OutlineBox>
         </Flexbox>
         <Flexbox>
           {languages}
-          <OutlineBox isSolving={isSolving} flex={1}>
+          <OutlineBox isSolving={isSolving} isHover={isHover} flex={1}>
             {isPrivate && (
               <IconButton
                 icon={<FaLock />}
@@ -133,9 +133,9 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  padding: 0rem 1rem;
+  padding: 0rem 0.7rem;
 
-  width: 20rem;
+  width: 19rem;
   height: 8rem;
 
   border: 5px solid
@@ -169,7 +169,7 @@ const Flexbox = styled.div`
 `
 
 const OutlineBox = styled.div`
-  flex: ${(flex) => flex};
+  flex: ${({ flex }) => flex};
 
   display: flex;
   justify-content: start;
@@ -185,8 +185,14 @@ const OutlineBox = styled.div`
   padding: 0rem 0.5rem;
 
   background-color: #ffffff;
-  border: 3px solid
-    ${({ isSolving, theme }) =>
-      isSolving ? theme.deepTertiaryColor : theme.deepSecondaryColor};
+  border: 4px solid
+    ${({ isSolving, isHover, theme }) =>
+      isSolving
+        ? isHover
+          ? theme.deepTertiaryColor
+          : theme.tertiaryColor
+        : isHover
+        ? theme.deepSecondaryColor
+        : theme.secondaryColor};
   border-radius: 1rem;
 `

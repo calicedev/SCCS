@@ -57,7 +57,7 @@ export default function FindIdForm() {
         icon={<RiArrowGoBackFill />}
         size={'small'}
         text={'로그인으로'}
-        onClick={() => {
+        handleClick={() => {
           navigate('/auth/login')
         }}
       />
@@ -67,18 +67,18 @@ export default function FindIdForm() {
         <AuthInput
           type="id"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          handleChange={(e) => setName(e.target.value)}
         ></AuthInput>
         <AuthInput
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          handleChange={(e) => setEmail(e.target.value)}
         ></AuthInput>
         <p color={message.isValid ? 'pass' : 'error'} value={message.text} />
       </Form>
 
       <ButtonContainer>
-        <Button onClick={findId} value="Find" size="medium"></Button>
+        <Button handleClick={findId} value="Find" size="medium"></Button>
       </ButtonContainer>
     </Flexbox>
   )

@@ -45,7 +45,7 @@ export default function StudyList({ studies }) {
           <p>{study.studyroomTitle}</p>
           {study.problems?.map((problem) => (
             <Option key={problem.problemId} hidden={!showOptions}>
-              <p className="c">{problem.problemName}</p>
+              <p className="c">&nbsp;&nbsp;{problem.problemName}</p>
             </Option>
           ))}
         </Study>

@@ -18,7 +18,7 @@ export default function CheckDropdown({ title, options, handleChange }) {
   const [showOptions, setShowOptions] = useState(false)
 
   return (
-    <Container onClick={() => setShowOptions(true)}>
+    <Container onClick={() => setShowOptions(!showOptions)}>
       <StyledDiv>
         {title}
         <IconButton icon={<FaCaretDown />} />
@@ -32,7 +32,7 @@ export default function CheckDropdown({ title, options, handleChange }) {
             key={key + options[key].toString()}
             id={key + options[key].toString()}
             label={options[key]}
-            onChange={handleChange}
+            handleChange={handleChange}
           ></Checkbox>
         ))}
       </OptionWrapper>
@@ -54,10 +54,14 @@ CheckDropdown.defaultProps = {
 
 const Container = styled.div`
   position: relative;
-  margin: 0rem 1rem;
 `
 
 const StyledDiv = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  align-items: center;
+
   height: 100%;
 
   padding: 0rem 0.5rem;

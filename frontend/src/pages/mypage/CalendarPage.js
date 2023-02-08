@@ -124,7 +124,7 @@ export default function StudyCalendar() {
       </Modal>
       <MonthSelector
         currentDate={currentDate}
-        onChange={(e) => setCurrentDate(new Date(e.target.value))}
+        handleChange={(e) => setCurrentDate(new Date(e.target.value))}
         onClickPrevious={previousMonth}
         onClickNext={nextMonth}
       />
@@ -162,6 +162,8 @@ const Modal = styled.div`
 
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
+
+  padding: 0.2rem;
 
   border: 1px solid gray;
   border-radius: 5px;

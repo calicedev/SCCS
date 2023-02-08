@@ -16,7 +16,7 @@ onClickNext: 오른쪽 화살표 버튼 클릭 시 동작할 함수
 
 export default function MonthSelector({
   currentDate,
-  onChange,
+  handleChange,
   onClickPrevious,
   onClickNext,
 }) {
@@ -30,7 +30,7 @@ export default function MonthSelector({
         type="gray"
         onClick={onClickPrevious}
       />
-      <Input type="month" value={month} onChange={onChange} />
+      <StyledInput type="month" value={month} onChange={handleChange} />
       <IconButton
         icon={<AiFillCaretRight />}
         size={'small'}
@@ -43,14 +43,14 @@ export default function MonthSelector({
 
 MonthSelector.propTypes = {
   currentDate: PropTypes.instanceOf(Date),
-  onChange: PropTypes.func,
+  handleChange: PropTypes.func,
   onClickPrevious: PropTypes.func,
   onClickNext: PropTypes.func,
 }
 
 MonthSelector.defaultProps = {
   currentDate: '',
-  onChange: undefined,
+  handleChange: undefined,
   onClickPrevious: undefined,
   onClickNext: undefined,
 }
@@ -60,13 +60,18 @@ const Flexbox = styled.div`
   align-items: center;
 `
 
-const Input = styled.input`
-  background-color: #00000000;
+const StyledInput = styled.input`
+  width: 10rem;
+
   padding: 0.2rem 0.5rem;
-  color: ${({ theme }) => theme.fontColor};
-  font-size: 1rem;
+
   border: none;
   outline: none;
+
+  color: ${({ theme }) => theme.fontColor};
+  font-size: 1rem;
+
+  background-color: #00000000;
 
   &::-webkit-calendar-picker-indicator {
     background-color: #ffffff;

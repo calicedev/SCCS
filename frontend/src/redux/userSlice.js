@@ -12,13 +12,13 @@ const userSlice = createSlice({
       if (!userInfo.profileImage) userInfo.profileImage = defaultProfileImg
       return action.payload
     },
-    setUserId: (state, action) => {
-      state.id = action.payload
-      state.nickname = action.payload
+    deleteUserInfo: (state, action) => {
+      console.log(1)
+      return null
     },
   },
 })
 
 export default userSlice
 
-export const { setUserInfo, setUserId } = userSlice.actions
+export const { setUserInfo, deleteUserInfo } = userSlice.actions

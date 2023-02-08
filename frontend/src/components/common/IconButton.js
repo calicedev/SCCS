@@ -45,7 +45,7 @@ IconButton.propTypes = {
     'gray',
     'white',
   ]),
-  size: PropTypes.oneOf(['small', 'middle', 'large']),
+  size: PropTypes.oneOf(['tiny', 'small', 'middle', 'large']),
   handleClick: PropTypes.func,
   disabled: PropTypes.bool,
 }
@@ -66,6 +66,9 @@ const IconWrapper = styled.div`
       theme[`deep${type.replace(/^[a-z]/, (c) => c.toUpperCase())}Color`]};
   }
 
+  &.tiny-icbtn {
+    font-size: 1.2rem;
+  }
   &.small-icbtn {
     font-size: 1.5rem;
   }

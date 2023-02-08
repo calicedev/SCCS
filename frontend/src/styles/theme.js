@@ -33,6 +33,7 @@ const color = {
   secondaryFontColor: '#6FABFD',
   tertiaryFontColor: '#596B84',
   whiteFontColor: '#FFFFFF',
+  grayFontColor: '#666666',
   passFontColor: '#1C6FBC',
   errorFontColor: '#EF0A0A',
 }
