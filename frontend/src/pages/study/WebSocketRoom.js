@@ -55,6 +55,7 @@ export default function WebSocketRoom() {
 
   const justMounted = useRef(true)
 
+  console.log('stomp밖', personnel)
   // 새로고침시에 유저 수 그대로 유지하기
   window.addEventListener('beforeunload', (event) => {
     // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
@@ -106,7 +107,10 @@ export default function WebSocketRoom() {
       setConnected(false)
     }
   }
-
+  useEffect(() => {
+    console.log(personnel)
+    console.log('1111111111111111111')
+  }, [personnel])
   // 웹소켓 통신 열기 hello
   const connect = function () {
     var sock = new sockjs('https://sccs.kr/sccs')
@@ -189,16 +193,16 @@ export default function WebSocketRoom() {
           }
           if (content.status === 'study') {
             // 시험 종료 버튼 전부 누르면 스터디 페이지로 이동
-            console.log(readyForStudyArray)
-            setReadyForStudyArray(content.readyForStudyArray, () => {
-              if (personnel === readyForStudyArray.length + 1) {
-                setCodingTest(false)
-                setStudy(true)
-              }
-            })
-            console.log(readyForStudyArray)
+            console.log(personnel, readyForStudyArray.length)
+            console.log('stomp안', personnel)
+            if (personnel === readyForStudyArray.length + 1) {
+              setCodingTest(false)
+              setStudy(true)
+            }
             // 원래 if문보다 이게 먼저 실행되어야 하는데 해당 setState가 if문보다 더 늦게 실행될 것 같아서 그냥 length에 1추가 해주고 다음에 실행함
-            // setReadyForStudyArray(content.readyForStudyArray)
+            setReadyForStudyArray(
+              (readyForStudyArray) => content.readyForStudyArray,
+            )
           }
         },
       )
