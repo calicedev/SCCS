@@ -38,4 +38,4 @@ out/
 
 
 ### aws
-aws.yml
+src/main/resources/aws.yml
