@@ -66,6 +66,10 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 비밀번호 랜덤 문자열 생성 라이브러리
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+
 }
 tasks.named('test') {
     useJUnitPlatform()
