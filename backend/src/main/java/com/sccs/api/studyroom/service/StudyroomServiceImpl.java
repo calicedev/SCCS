@@ -1,5 +1,6 @@
 package com.sccs.api.studyroom.service;
 
+import com.sccs.api.aws.dto.FileDto;
 import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.studyroom.dto.ProblemDto;
 import com.sccs.api.studyroom.dto.StudyroomAlgoDto;
@@ -8,6 +9,7 @@ import com.sccs.api.studyroom.dto.StudyroomLanguageDto;
 import com.sccs.api.studyroom.dto.StudyroomMemberDto;
 import com.sccs.api.studyroom.dto.StudyroomProblemDto;
 import com.sccs.api.studyroom.dto.SubmissionDto;
+import com.sccs.api.studyroom.file.FileStore;
 import com.sccs.api.studyroom.mapper.StudyroomMapper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +20,16 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +40,18 @@ public class StudyroomServiceImpl implements StudyroomService {
   private static final String FAIL = "fail";
   private final StudyroomMapper studyroomMapper;
   private final AwsS3Service awsS3service;
+  private final FileStore fileStore;
+  private static final RestTemplate REST_TEMPLATE;
+
+  static {
+    // RestTemplate 기본 설정을 위한 Factory 생성
+    SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+    factory.setConnectTimeout(30000);
+    factory.setReadTimeout(30000);
+    factory.setBufferRequestBody(false); // 파일 전송은 이 설정을 꼭 해주자.
+    REST_TEMPLATE = new RestTemplate(factory);
+  }
+
   @Value("${file.dir2}")
   private String fileDir;
 
@@ -74,7 +97,7 @@ public class StudyroomServiceImpl implements StudyroomService {
           int min2 = 1;
           int max2 = algoCount;
           int randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
-          String path = Integer.toString(randomAlgo) + "/" + Integer.toString(randomProblem);
+          String path = Integer.toString(randomAlgo) + "-" + Integer.toString(randomProblem);
           int problemId = studyroomMapper.selectProblemId(path);
           StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
           studyroomProblemDto.setStudyroomId(id);
@@ -101,7 +124,7 @@ public class StudyroomServiceImpl implements StudyroomService {
         StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
         studyroomProblemDto.setStudyroomId(id);
         for (int i = 0; i < 2; i++) {
-          String path = Integer.toString(algo_ids.get(0)) + "/" + Integer.toString(n[i]);
+          String path = Integer.toString(algo_ids.get(0)) + "-" + Integer.toString(n[i]);
           int problemId = studyroomMapper.selectProblemId(path);
           studyroomProblemDto.setProblemId(problemId);
           studyroomMapper.insertProblemId(studyroomProblemDto);
@@ -118,7 +141,7 @@ public class StudyroomServiceImpl implements StudyroomService {
           int max2 = algoCount;
           int randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
           StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
-          String path = Integer.toString(algo_ids.get(i)) + "/" + Integer.toString(randomProblem);
+          String path = Integer.toString(algo_ids.get(i)) + "-" + Integer.toString(randomProblem);
           int problemId = studyroomMapper.selectProblemId(path);
           studyroomProblemDto.setStudyroomId(id);
           studyroomProblemDto.setProblemId(problemId);
@@ -251,7 +274,7 @@ public class StudyroomServiceImpl implements StudyroomService {
     resultMap.put("problems", p);
     for (int i = 0; i < 2; i++) {
       String path = p.get(i).getProblemFolder();
-      String realPath = "problem/"+path.replace("/", "-")+".jpg";
+      String realPath = "problem/"+path+".jpg";
       System.out.println(realPath);
       p.get(i).setProblemImageUrl(awsS3service.getTemporaryUrl(realPath));
     }
@@ -261,10 +284,101 @@ public class StudyroomServiceImpl implements StudyroomService {
 
   /**
    * 코딩 테스트 문제 제출
-   **/
+   *
+   * @return
+   */
   @Override
-  public void submitProblem(SubmissionDto submissionDto) {
+  public List<Map<String, Object>> submitProblem(SubmissionDto submissionDto) throws IOException {
+    ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
+    String slashProblemFolder =problemDto.getProblemFolder().replace("-", "/");
+    //파일을 원하는 경로에 실제로 저장한다.
+    MultipartFile f = fileStore.storeFile(submissionDto, slashProblemFolder);
+    FileDto fileDto = awsS3service.upload(f,"submission");
+    // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
+    UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(slashProblemFolder, f.getName()));
+
+    String tempNo = slashProblemFolder.substring(slashProblemFolder.lastIndexOf("/")+1);
+
+    LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+    HttpStatus httpStatus = HttpStatus.CREATED;
+    map.add("mfile",resource);
+    map.add("runtime",problemDto.getTimeLimit());
+    map.add("type",problemDto.getAlgoId());
+    map.add("no",tempNo);
+    map.add("memory",problemDto.getMemoryLimit());
+
+    //여기서 찬희님한테 파일 전달
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+    //채점 서버 url
+    String url ="https://sccs.kr";
+    if(submissionDto.getLanguageId()==1){
+      url+="/solve/python/submission";
+    }else if(submissionDto.getLanguageId()==2){
+      url+="/solve/java/submission";
+    }
+
+    HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+//        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
+    List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+
+    //문제 제출 정보를 실제 디비에 저장한다.
+    submissionDto.setFileName(f.getName());
+    submissionDto.setResult(String.valueOf(s.get(5).get("isAnswer")));
+    submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
+    submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
     studyroomMapper.submitProblem(submissionDto);
+
+    return s;
+  }
+
+  /**
+   * 코딩 테스트 테스트 코드 제출
+   */
+  public List<Map<String, Object>> submitTest(SubmissionDto submissionDto) throws IOException {
+    ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
+    String slashProblemFolder =problemDto.getProblemFolder().replace("-", "/");
+    //파일을 원하는 경로에 실제로 저장한다.
+    MultipartFile f = fileStore.storeFile(submissionDto, slashProblemFolder);
+    FileDto fileDto = awsS3service.upload(f,"submission");
+    // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
+    UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(slashProblemFolder, f.getName()));
+
+    String tempNo = slashProblemFolder.substring(slashProblemFolder.lastIndexOf("/")+1);
+
+    LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+    HttpStatus httpStatus = HttpStatus.CREATED;
+    map.add("mfile",resource);
+    map.add("runtime",problemDto.getTimeLimit());
+    map.add("type",problemDto.getAlgoId());
+    map.add("no",tempNo);
+    map.add("memory",problemDto.getMemoryLimit());
+
+    //여기서 찬희님한테 파일 전달
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+    //채점 서버 url
+    String url ="https://sccs.kr";
+    if(submissionDto.getLanguageId()==1){
+      url+="/solve/python/submission";
+    }else if(submissionDto.getLanguageId()==2){
+      url+="/solve/java/submission";
+    }
+
+    HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+//        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
+    List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+
+    //문제 제출 정보를 실제 디비에 저장한다.
+    submissionDto.setFileName(f.getName());
+    submissionDto.setResult(String.valueOf(s.get(5).get("isAnswer")));
+    submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
+    submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
+    studyroomMapper.submitProblem(submissionDto);
+
+    return s;
   }
 
   /**

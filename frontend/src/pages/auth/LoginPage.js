@@ -9,7 +9,6 @@ import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import { useDispatch } from 'react-redux'
-import { setUserId } from 'redux/userSlice'
 
 export default function LoginForm() {
   // 라액트 훅 관련 함수 정의
@@ -57,6 +56,7 @@ export default function LoginForm() {
         checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
         checkmsg.isValid = false
         setMessage(checkmsg)
+        setPassword('')
       })
   }
 
@@ -90,10 +90,10 @@ export default function LoginForm() {
           label="Remember Me"
           onChange={(e) => setIsChecked(!isChecked)}
         ></Checkbox>
-        <div>
+        <LinkWrapper>
           <Link to="/auth/findid">Forgot ID?</Link>
           <Link to="/auth/resetpassword">Forgot Password?</Link>
-        </div>
+        </LinkWrapper>
       </Flexbox>
 
       <ButtonContainer>
@@ -115,12 +115,17 @@ const Container = styled.div`
 const Flexbox = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   margin: 1.5rem 0rem;
 `
+const LinkWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+`
 
 const Form = styled.div`
-  margin: 3rem 0rem;
+  margin: 3rem 0rem 1rem;
 `
 const ButtonContainer = styled.div`
   display: flex;

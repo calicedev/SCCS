@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import 'styles/font.css'
 
 /*
 CalendarPage에서 날짜박스에 안에 넣을 StudyList 컴포넌트
@@ -40,12 +41,12 @@ export default function StudyList({ studies }) {
       {studies.map((study) => (
         <Study
           key={study.id}
-          onClick={() => navigate(`/mypage/studydetail/${study.id}`)}
+          onClick={() => navigate(`/mypage/study/${study.id}`)}
         >
           <p>{study.studyroomTitle}</p>
           {study.problems?.map((problem) => (
             <Option key={problem.problemId} hidden={!showOptions}>
-              <p className="c">{problem.problemName}</p>
+              <p>&nbsp;&nbsp;{problem.problemName}</p>
             </Option>
           ))}
         </Study>
@@ -65,16 +66,26 @@ StudyList.defaultProps = {
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
+
+  font-family: 'handFont';
 `
 
 const Study = styled.div`
   margin-bottom: 0.5rem;
   cursor: pointer;
+
+  & > p {
+    font-size: 1.5rem;
+  }
 `
 
 // 호버 시 위에서 아래로 내려오는 듯한 애니메이션
 const Option = styled.div`
   animation: 0.5s ease-in-out forwards dropdown;
+
+  & > p {
+    font-size: 1.2rem;
+  }
 
   @keyframes dropdown {
     0% {

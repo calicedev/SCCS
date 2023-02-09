@@ -14,6 +14,7 @@ public class CookieService {
     cookie.setMaxAge(60 * 60); // 5분
     cookie.setSecure(true);
     cookie.setHttpOnly(true);
+    cookie.setPath("/");
     return cookie;
   }
 }

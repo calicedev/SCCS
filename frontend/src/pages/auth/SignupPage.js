@@ -2,18 +2,14 @@ import styled from 'styled-components'
 import Button from 'components/common/Button'
 import AuthInput from 'components/auth/AuthInput'
 import { useNavigate, Link } from 'react-router-dom'
-import setUserInfo from 'libs/setUserInfo'
-import { setTokens } from 'redux/tokenSlice'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
 import api from 'constants/api'
-import { useDispatch } from 'react-redux'
 
 export default function SignupForm() {
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [id, setId, idMsg] = useAuthInput('id', '', true, true)
@@ -36,6 +32,7 @@ export default function SignupForm() {
 
   // 회원가입 서버 요청
   const signup = () => {
+    // 모든 정보를 유효하게 입력했는지 확인
     if (
       !idMsg.isValid ||
       !nameMsg.isValid ||

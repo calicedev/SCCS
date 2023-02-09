@@ -5,17 +5,18 @@ import PropTypes from 'prop-types'
 /*
 input type='checkbox'와 라벨을 가지는 컴포넌트
 
-id: input 태그 id & label 태그 for
-name: input 태그의 name 
-value: input 태그의 value, checkbox의 value는 boolean이 아님!
+id: input 태그의 id & label 태그의 for
 label: label 태그의 문구
 onChange: 클릭 시 동작
+
+name: input 태그의 name (Radio버튼들의 그불을 구별지음)
+value: input 태그의 value
 */
 
 export default function Radio({ id, name, value, label, onChange, checked }) {
   return (
-    <div>
-      <InputCheck
+    <Container>
+      <StyledDiv
         type="radio"
         id={id}
         name={name}
@@ -24,26 +25,28 @@ export default function Radio({ id, name, value, label, onChange, checked }) {
         checked={checked}
       />
       <label htmlFor={id}>{label}</label>
-    </div>
+    </Container>
   )
 }
 
 Radio.propTypes = {
-  id: PropTypes.string,
-  label: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   name: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
 }
 
 Radio.defaultProps = {
-  id: '',
-  label: '',
   name: '',
   value: '',
   onChange: undefined,
 }
 
-const InputCheck = styled.input`
+const Container = styled.div`
+  margin: 0.5rem 0.2rem;
+`
+
+const StyledDiv = styled.input`
   margin-right: 0.5rem;
 `

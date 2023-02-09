@@ -1,6 +1,7 @@
 import './App.css'
 
 import { Route, Routes } from 'react-router-dom'
+import PrivateRoute from 'components/common/PrivateRoute'
 import AuthPage from './pages/auth/AuthPageLayout'
 import MainPage from './pages/main/MainPage'
 import LoginForm from './pages/auth/LoginPage'
@@ -15,6 +16,7 @@ import EditPwdPage from './pages/mypage/EditPwdPage'
 import SolvedPage from './pages/mypage/SolvedPage'
 import CalendarPage from './pages/mypage/CalendarPage'
 import StudyDetailPage from 'pages/mypage/StudyDetailPage'
+import NotFound from 'pages/404NotFound'
 
 import CodingTest from 'pages/study/CodingTest'
 import Study from 'pages/study/Study'
@@ -27,8 +29,10 @@ import { useSelector } from 'react-redux'
 // import VideoRoomComponent from './components/VideoRoomComponent'
 import WaitingPage from './pages/study/WaitingPage'
 import WebSocketRoom from './pages/study/WebSocketRoom'
+import axios from 'axios'
 
 function App() {
+  axios.defaults.withCredentials = true
   const theme = useSelector((state) => state.theme)
 
   return (
@@ -42,13 +46,18 @@ function App() {
           <Route path="findid" element={<FindIdForm />} />
           <Route path="resetpassword" element={<ResetPasswordForm />} />
         </Route>
-        <Route path="/mypage" element={<MyPage />}>
-          <Route path="profile" element={<ProfilePage />}></Route>
-          <Route path="profile/edit" element={<EditProfilePage />}></Route>
-          <Route path="profile/editpassword" element={<EditPwdPage />}></Route>
-          <Route path="calendar" element={<CalendarPage />}></Route>
-          <Route path="studydetail/:id" element={<StudyDetailPage />}></Route>
-          <Route path="solved" element={<SolvedPage />}></Route>
+        <Route element={<PrivateRoute />}>
+          <Route path="/mypage" element={<MyPage />}>
+            <Route path="profile" element={<ProfilePage />}></Route>
+            <Route path="profile/edit" element={<EditProfilePage />}></Route>
+            <Route
+              path="profile/editpassword"
+              element={<EditPwdPage />}
+            ></Route>
+            <Route path="study" element={<CalendarPage />}></Route>
+            <Route path="study/:id" element={<StudyDetailPage />}></Route>
+            <Route path="solved" element={<SolvedPage />}></Route>
+          </Route>
         </Route>
         <Route path="/ov" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
@@ -59,6 +68,7 @@ function App() {
           path="/room/:studyroomId/waiting"
           element={<WebSocketRoom />}
         ></Route>
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </ThemeProvider>
   )

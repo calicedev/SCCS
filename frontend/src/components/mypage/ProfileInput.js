@@ -104,7 +104,9 @@ ProfileInput.defaultProps = {
 const Wrapper = styled.div``
 
 const Input = styled.input`
-  padding: 0.2rem 0.5rem;
+  width: 17rem;
+
+  padding: 0.5rem 0.5rem;
 
   border: 1px solid;
   border-radius: 5px;
@@ -112,7 +114,7 @@ const Input = styled.input`
   background-color: ${({ disabled }) => (disabled ? '#EEEEEE' : 'white')};
 
   color: #000000;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 `
 
 const Label = styled.label`

@@ -15,7 +15,7 @@ export default function Logo({ width, height }) {
   const navigate = useNavigate()
 
   return (
-    <LogoContainer
+    <Container
       onClick={() => {
         navigate('/')
       }}
@@ -35,7 +35,7 @@ Logo.defaultProps = {
   height: '4rem',
 }
 
-const LogoContainer = styled.div`
+const Container = styled.div`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
 
