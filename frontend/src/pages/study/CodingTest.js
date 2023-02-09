@@ -19,6 +19,7 @@ export default function CodingTest({
   startStudy,
   dataForStudy,
   setDataForStudy,
+  nickname,
 }) {
   const [codingTestData, setCodingTestData] = useState({})
 
@@ -28,7 +29,8 @@ export default function CodingTest({
   const [timeLeft, setTimeLeft] = useState(7200000)
 
   // 문제 선택하기 위한 state
-  const [onProblem, SetOnProblem] = useState()
+  const [onProblem, setOnProblem] = useState(dataForStudy[0])
+  const [onProblemIdx, setOnProblemIdx] = useState(0)
 
   // 코딩테스트 페이지 입장 시 axios 요청
   useEffect(() => {
@@ -77,9 +79,9 @@ export default function CodingTest({
     const file = new Blob([content], { type: 'text/plain' })
     const formData = new FormData()
     formData.append('formFile', file)
-    formData.append('memberId', 'mint_angel')
-    formData.append('studyroomId', 30)
-    formData.append('problemId', 1)
+    formData.append('memberId', nickname)
+    formData.append('studyroomId', studyroomId)
+    formData.append('problemId', onProblem)
     formData.append('languageId', 2)
 
     const headers = { 'Content-Type': 'multipart/form-data' }
@@ -127,11 +129,14 @@ export default function CodingTest({
     // element.href = URL.createObjectURL(file);
     // // element.download = fileName;
     // document.body.appendChild(element); // Required for this to work in FireFox
-    element.click()
+    // element.click()
   }
   //---------------------------------------------------------------------------------------------------
 
-  const changeProblem = () => {}
+  const changeProblem = (idx) => {
+    setOnProblem(dataForStudy[idx - 1])
+    setOnProblemIdx(idx)
+  }
   return (
     <>
       {codingTestData.title && (
@@ -143,7 +148,16 @@ export default function CodingTest({
               return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
             })}
             {['1번', '2번'].map((problem, idx) => {
-              return <Btn key={idx}>{problem}</Btn>
+              return (
+                <Btn
+                  onClick={() => {
+                    changeProblem(idx)
+                  }}
+                  key={idx}
+                >
+                  {problem}
+                </Btn>
+              )
             })}
             <span>
               남은 시간: {hours}시간 {minutes}분 {seconds}초
@@ -153,7 +167,9 @@ export default function CodingTest({
           <Main>
             {/* <h3>받은 첫 번째 문제 title : {codingTestData.problems[0].name}</h3> */}
             <Problem>
-              <Img src={codingTestData.problems[0].problemImageUrl}></Img>
+              <Img
+                src={codingTestData.problems[onProblemIdx].problemImageUrl}
+              ></Img>
             </Problem>
             <Resizable
               defaultSize={{ width: '50%', height: '100%' }}
