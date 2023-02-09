@@ -21,18 +21,16 @@ public class MessageController {
 
   @MessageMapping(value = "/studyroom")
   public void socketConnect(SocketDto socketDto, SimpMessageHeaderAccessor headerAccessor){
-    System.out.println(headerAccessor.getSessionId());
 
     if(socketDto.getStatus().equals("enter")){
       socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
-      // 방장 입장 한다. 그러니깐 호스트 닉네임이 비어있는 것임.
-      if(socketDto.getHost()==0){
-        socketDto.setPersonnel(1);
-      }
-      else if(!socketDto.getNickname().equals("")){
-        socketDto.setPersonnel(socketDto.getPersonnel()+1);
-      }
-        template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+      StudyroomDto studyroomDto = new StudyroomDto();
+      studyroomDto.setId(socketDto.getStudyroomId());
+      studyroomService.increaseStudyroomPersonnel(studyroomDto);
+      int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+      socketDto.setPersonnel(temp2);
+      socketDto.setPersonnel(socketDto.getPersonnel()+1);
+      template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 
     else if(socketDto.getStatus().equals("ready")){
