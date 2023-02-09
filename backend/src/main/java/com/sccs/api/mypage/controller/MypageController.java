@@ -1,7 +1,15 @@
 package com.sccs.api.mypage.controller;
 
+import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.mypage.service.MypageService;
 import com.sccs.api.studyroom.controller.StudyroomController;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +24,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/mypage")
 @RequiredArgsConstructor
+@Api(tags = "마이페이지 컨트롤러 API")
 public class MypageController {
 
   private static final Logger logger = LoggerFactory.getLogger(StudyroomController.class);
   private static final String SUCCESS = "success";
   private static final String FAIL = "fail";
   private final MypageService mypageService;
+  private final AwsS3Service awsS3service;
 
   @GetMapping("/history/{memberId}/{year}/{month}")
-  public ResponseEntity<?> getHistory(@PathVariable String memberId, @PathVariable String year,
+  @ApiOperation(value = "스터디 기록 조회", notes = "<strong>날짜</strong>와 로그인하고있는 <strong>아이디</strong>를 받아서 해당 아이디의 스터디 기록을 조회한다.")
+  @ApiResponses({
+      @ApiResponse(code = 200, message = "스터디 기록 조회 완료!! 결과가 없다면 공부를 안했다는거야"),
+      @ApiResponse(code = 404, message = "제대로 알고 보낸거야?"),
+      @ApiResponse(code = 500, message = "아무튼 서버 잘못임 ㄹㅇㅋㅋ")
+  })
+  @ApiImplicitParams({
+      @ApiImplicitParam(name = "memberId", value = "로그인하고있는 아이디", required = true),
+      @ApiImplicitParam(name = "year", value = "조회하고싶은 연도", required = true),
+      @ApiImplicitParam(name = "month", value = "조회하고싶은 달", required = true)
+  })
+  public ResponseEntity<?> getHistory(@PathVariable String memberId,
+      @PathVariable String year,
       @PathVariable String month) {
     List<HashMap<String, Object>> targets = mypageService.getHistory(memberId, year, month);
 
@@ -36,8 +58,19 @@ public class MypageController {
   }
 
   @GetMapping("/history/detail/{studyId}")
+  @ApiOperation(value = "스터디 기록 상세 조회", notes = "해당 <strong>스터디의 아이디</strong>를 받아서 스터디에 대한 상세정보를 조회한다.")
+  @ApiImplicitParam(name = "studyId", value = "스터디 아이디", required = true)
   public ResponseEntity<?> getHistoryDetail(@PathVariable int studyId) {
     HashMap<String, Object> targets = mypageService.getHistoryDetail(studyId);
+
+    ArrayList<HashMap<String, Object>> a;
+    a = (ArrayList<HashMap<String, Object>>) targets.get("studyroomWithProblems");
+    for (int i = 0; i < a.size(); i++) {
+      String url = (String) a.get(i).get("problemFolder");
+      String realPath = "problem/" + url + ".jpg";
+      String tempUrl = awsS3service.getTemporaryUrl(realPath);
+      a.get(i).put("problemFolder", tempUrl);
+    }
     if (targets != null) {
       return ResponseEntity.ok(targets);
     } else {
@@ -46,8 +79,11 @@ public class MypageController {
   }
 
   @GetMapping("/problem/{memberId}")
-  public ResponseEntity<?> getProblems(@PathVariable String memberId) {
+  @ApiOperation(value = "내가 푼 문제 조회", notes = "<strong>로그인하고있는 아이디</strong>를 받아서 해당 아이디가 푼 문제를 모두 조회한다.")
+  @ApiImplicitParam(name = "memberId", value = "로그인하고있는 아이디", required = true)
+  public ResponseEntity<?> getSubmissions(@PathVariable String memberId) {
     List<HashMap<String, Object>> targets = mypageService.getProblems(memberId);
+
     if (targets != null) {
       return ResponseEntity.ok(targets);
     } else {

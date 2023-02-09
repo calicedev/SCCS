@@ -26,7 +26,8 @@
     studyroom sr, problem
     p, studyroom_member sm,
     member m, studyroom_problem sp where DATE(sr.create_datetime) between
-    concat(#{year},'-',#{month}) and m.join_date and sm.member_id =
+    concat(#{year},'-',#{month},'-','01') and LAST_DAY(concat(#{year},'-',#{month},'-','01'))
+    and sm.member_id =
     #{memberId} and sm.studyroom_id = sr.id and m.id = sm.member_id and
     sp.problem_id = p.id and sp.studyroom_id = sr.id
   </select>
@@ -74,7 +75,8 @@
     ANY_VALUE(language_id) as 'submission_languageId'
     from studyroom sr, submission s, problem p,studyroom_problem sp
     where sr.id = #{studyId} and sr.id = s.studyroom_id and sr.id = s.studyroom_id and
-    sp.problem_id = p.id and sp.studyroom_id=sr.id and s.problem_id = p.id group by s.member_id
+    sp.problem_id = p.id and sp.studyroom_id=sr.id and s.problem_id = p.id group by s.problem_id,
+    s.member_id
     order by s.submit_datetime;
   </select>
 
