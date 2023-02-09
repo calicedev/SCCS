@@ -55,12 +55,9 @@ export default function SignupForm() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res)
         navigate('/auth/login')
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
   }
 
   return (

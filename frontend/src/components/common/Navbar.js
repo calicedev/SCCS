@@ -1,6 +1,6 @@
 import React from 'react'
 import Logo from 'components/common/Logo'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from 'components/common/IconButton'
 import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
@@ -13,6 +13,8 @@ import { deleteUserInfo } from 'redux/userSlice'
 */
 
 export default function Navbar() {
+  const navigate = useNavigate()
+
   // 리덕스 -> theme정보
   const theme = useSelector((state) => state.theme)
   const user = useSelector((state) => state.user)
@@ -20,6 +22,7 @@ export default function Navbar() {
 
   const logout = () => {
     dispatch(deleteUserInfo())
+    navigate('/')
   }
 
   return (
@@ -37,15 +40,13 @@ export default function Navbar() {
       </Flexbox>
       <NavContent>
         <NavStyle to="/">Home</NavStyle>
-        <NavStyle to="/mypage/study">Calender</NavStyle>
-        <NavStyle to="/mypage/solved">Solved</NavStyle>
-        <NavStyle to="/mypage/profile">Profile</NavStyle>
         {user ? (
-          <NavStyle to="/" onClick={logout}>
-            Logout
-          </NavStyle>
+          <>
+            <NavStyle to="/mypage/study">MyPage</NavStyle>
+            <StyledDiv onClick={logout}>Logout</StyledDiv>
+          </>
         ) : (
-          <NavStyle to="/auth/login">Login</NavStyle>
+          <StyledDiv onClick={() => navigate('/auth/login')}>Login</StyledDiv>
         )}
       </NavContent>
     </Nav>
@@ -82,4 +83,13 @@ const NavStyle = styled(NavLink)`
     color: ${({ theme }) => theme.primaryFontColor};
     font-weight: 600;
   }
+`
+const StyledDiv = styled.div`
+  padding: 1rem;
+
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.secondaryFontColor};
+
+  cursor: pointer;
 `

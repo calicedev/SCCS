@@ -43,14 +43,11 @@ export default function CodingTest({
     console.log('방장이 보낸 정보 받아라', data)
     axios(config)
       .then((res) => {
-        console.log(res.data)
         setCodingTestData(res.data)
         setDataForStudy([res.data.problems[0].id, res.data.problems[1].id])
         console.log(res.data.problems[0].id, res.data.problems[1].id)
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
   }, [])
 
   // 남은 시간 카운트 다운 useEffect
@@ -89,12 +86,9 @@ export default function CodingTest({
     const config = { url, method, data: formData, headers }
     axios(config)
       .then((res) => {
-        console.log(res)
         // navigate('/')
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
     // element.href = URL.createObjectURL(file);
     // // element.download = fileName;
     // document.body.appendChild(element); // Required for this to work in FireFox
@@ -119,13 +113,10 @@ export default function CodingTest({
     const config = { url, method, data: formData, headers }
     axios(config)
       .then((res) => {
-        console.log(res)
         // navigate('/')
         setCodingTestResult(res.data)
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
     // element.href = URL.createObjectURL(file);
     // // element.download = fileName;
     // document.body.appendChild(element); // Required for this to work in FireFox

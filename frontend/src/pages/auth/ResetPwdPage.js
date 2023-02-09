@@ -38,14 +38,12 @@ export default function ResetPasswordForm() {
     const config = { method, data }
     axios(url, config)
       .then((res) => {
-        console.log(res)
         const newMsg = { ...message }
         newMsg.text = `입력하신 이메일로 임시 비밀번호가 발급되었습니다.`
         newMsg.isValid = true
         setMessage(newMsg)
       })
       .catch((err) => {
-        console.log(err)
         const newMsg = { ...message }
         newMsg.text = '해당 정보의 회원이 존재하지 않습니다.'
         newMsg.isValid = false

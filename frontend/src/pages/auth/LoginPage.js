@@ -38,12 +38,10 @@ export default function LoginForm() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res)
         getUserInfo(id)
         navigate('/')
       })
       .catch((err) => {
-        console.log(err)
         const checkmsg = { ...message }
         checkmsg.text = '아이디 혹은 패스워드를 잘못 입력했습니다'
         checkmsg.isValid = false
