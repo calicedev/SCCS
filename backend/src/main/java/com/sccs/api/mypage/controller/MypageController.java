@@ -1,5 +1,6 @@
 package com.sccs.api.mypage.controller;
 
+import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.mypage.service.MypageService;
 import com.sccs.api.studyroom.controller.StudyroomController;
 import io.swagger.annotations.Api;
@@ -8,6 +9,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class MypageController {
   private static final String SUCCESS = "success";
   private static final String FAIL = "fail";
   private final MypageService mypageService;
+  private final AwsS3Service awsS3service;
 
   @GetMapping("/history/{memberId}/{year}/{month}")
   @ApiOperation(value = "스터디 기록 조회", notes = "<strong>날짜</strong>와 로그인하고있는 <strong>아이디</strong>를 받아서 해당 아이디의 스터디 기록을 조회한다.")
@@ -59,8 +62,14 @@ public class MypageController {
   @ApiImplicitParam(name = "studyId", value = "스터디 아이디", required = true)
   public ResponseEntity<?> getHistoryDetail(@PathVariable int studyId) {
     HashMap<String, Object> targets = mypageService.getHistoryDetail(studyId);
-    for (int i = 0; i < targets.size(); i++) {
 
+    ArrayList<HashMap<String, Object>> a;
+    a = (ArrayList<HashMap<String, Object>>) targets.get("studyroomWithProblems");
+    for (int i = 0; i < a.size(); i++) {
+      String url = (String) a.get(i).get("problemFolder");
+      String realPath = "problem/" + url + ".jpg";
+      String tempUrl = awsS3service.getTemporaryUrl(realPath);
+      a.get(i).put("problemFolder", tempUrl);
     }
     if (targets != null) {
       return ResponseEntity.ok(targets);

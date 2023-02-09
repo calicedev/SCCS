@@ -25,7 +25,9 @@
     'createDateTime',p.id as pid, p.name as pname from
     studyroom sr, problem
     p, studyroom_member sm,
-    member m, studyroom_problem sp where concat(#{year},'-',#{month}) and sm.member_id =
+    member m, studyroom_problem sp where DATE(sr.create_datetime) between
+    concat(#{year},'-',#{month},'-','01') and LAST_DAY(concat(#{year},'-',#{month},'-','01'))
+    and sm.member_id =
     #{memberId} and sm.studyroom_id = sr.id and m.id = sm.member_id and
     sp.problem_id = p.id and sp.studyroom_id = sr.id
   </select>
