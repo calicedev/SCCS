@@ -6,11 +6,10 @@ const userSlice = createSlice({
   name: 'userSlice',
   initialState: {
     id: 'ssafy01',
-    name: 'defaultName',
-    nickname: 'defaultNickname',
-    email: 'default@email.com',
+    nickname: 'ssafy01',
+    email: 'lbh@naver.com',
     score: 100,
-    joinDatetime: '2017-12-31 10:10:00',
+    joinDate: '2021-12-23',
     profileImage: defaultProfileImg,
   },
   reducers: {
@@ -20,13 +19,22 @@ const userSlice = createSlice({
       if (!userInfo.profileImage) userInfo.profileImage = defaultProfileImg
       return action.payload
     },
-    setUserId: (state, action) => {
-      state.id = action.payload
-      state.nickname = action.payload
+    deleteUserInfo: (state, action) => {
+      console.log(1)
+      return null
     },
   },
 })
 
 export default userSlice
 
-export const { setUserInfo, setUserId } = userSlice.actions
+export const { setUserInfo, deleteUserInfo } = userSlice.actions
+
+// {
+//   id: 'ssafy01',
+//   nickname: 'ssafy01',
+//   email: 'lbh@naver.com',
+//   score: 100,
+//   joinDate: '2021-12-23',
+//   profileImage: defaultProfileImg
+// }

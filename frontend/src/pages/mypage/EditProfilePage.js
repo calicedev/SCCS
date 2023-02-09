@@ -5,8 +5,10 @@ import Button from 'components/common/Button'
 import OutlineButton from 'components/common/OutlineButton'
 import ProfileImgInput from 'components/mypage/ProfileImgInput'
 import { useNavigate } from 'react-router-dom'
-import { useAuthInput } from 'hooks/useAuthInput'
+import { useProfileInput } from 'hooks/useProfileInput'
 import { useSelector } from 'react-redux'
+import axios from 'libs/axios'
+import api from 'constants/api'
 
 export default function ProfileEdit() {
   // 리액트 훅관련 함수 정의
@@ -15,24 +17,18 @@ export default function ProfileEdit() {
   // 리덕스 -> 사용자 정보 읽어오기
   const user = useSelector((state) => state.user)
 
-  // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
-  const [nickname, setNickname, nicknameMsg] = useAuthInput(
-    'nickname',
-    user.nickname,
-    true,
-    true,
-  )
-  const [email, setEmail, emailMsg] = useAuthInput(
+  // 커스텀 훅 useProfileInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
+  const [nickname, setNickname, nicknameMsg, nicknameIsChanged] =
+    useProfileInput('nickname', user.nickname, true, true)
+  const [email, setEmail, emailMsg, emailIsChanged] = useProfileInput(
     'email',
     user.email,
     true,
     true,
   )
-  // useState
   const [img, setImg] = useState(user.profileImage)
 
-  // useMemo
-  // // 서버에서 받은 정보는 img url이 string값 그대로지만, edit시에는 파일이 업로드 됨으로 url 주소를 추출
+  // 서버에서 받은 정보는 img url이 string값 그대로지만, edit시에는 파일이 업로드 됨으로 url 주소를 추출
   const imgUrl = useMemo(() => {
     if (typeof img === 'string') {
       return img
@@ -40,26 +36,57 @@ export default function ProfileEdit() {
     return URL.createObjectURL(img[0])
   }, [img])
 
-  // 수정 정보 저장 서버요청
-  const save = () => {}
+  // 정보수정 서버요청
+  const save = () => {
+    const data = {
+      nickname: nicknameIsChanged ? nickname : null,
+      email: emailIsChanged ? email : null,
+      mfile: typeof img !== 'string' ? img : null,
+    }
+    const [url, method] = api('updateUserInfo')
+    const config = { url, method, data }
+    axios(config)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        alert('서버와의 통신이 원활하지 않습니다.')
+        console.log(err)
+      })
+  }
 
   // 회원탈퇴 서버요청
-  const withdrawl = () => {}
+  const withdrawl = () => {
+    const data = {
+      id: user.id,
+    }
+    const [url, method] = api('login')
+    const config = { url, method, data }
+    axios(config)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        alert('서버와의 통신이 원활하지 않습니다.')
+        console.log(err)
+      })
+  }
 
   return (
-    <ProfileContent>
+    <Container>
       <h1>Edit Profile</h1>
 
-      <EditBtns>
-        <Button value="기본정보" type="primary"></Button>
+      <TapWrapper>
+        <Button value="기본정보" type="primary" size="small"></Button>
         <Button
           value="비밀번호"
           type="secondary"
+          size="small"
           onClick={() => {
             navigate('/mypage/profile/editpassword')
           }}
         ></Button>
-      </EditBtns>
+      </TapWrapper>
 
       <ProfileContainer>
         <ProfileImgInput
@@ -92,36 +119,37 @@ export default function ProfileEdit() {
         ></ProfileInput>
       </InputContainer>
 
-      <Buttons>
+      <Flexbox>
         <OutlineButton
           value="회원탈퇴"
           type="danger"
           onClick={withdrawl}
         ></OutlineButton>
-        <div>
+        <TapWrapper>
           <OutlineButton
             value="Cancel"
-            type="secondary"
+            type="gray"
             onClick={() => {
               navigate('/mypage/profile')
             }}
           ></OutlineButton>
-          <Button value="Save" onClick={save}></Button>
-        </div>
-      </Buttons>
-    </ProfileContent>
+          <OutlineButton value="Save" onClick={save}></OutlineButton>
+        </TapWrapper>
+      </Flexbox>
+    </Container>
   )
 }
 
-const ProfileContent = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
 
   position: relative;
 
   max-width: 700px;
-
   width: 100%;
+
+  padding: 2rem;
 `
 
 const ProfileContainer = styled.div`
@@ -130,8 +158,8 @@ const ProfileContainer = styled.div`
   align-items: end;
 
   position: absolute;
-  top: 2rem;
-  right: 0rem;
+  top: 3.5rem;
+  right: 2rem;
 `
 
 const InputContainer = styled.div`
@@ -143,14 +171,12 @@ const InputContainer = styled.div`
 
 const Flexbox = styled.div`
   display: flex;
+  justify-content: space-between;
+  gap: 10px;
 `
 
-const EditBtns = styled.div`
+const TapWrapper = styled.div`
   display: flex;
   justify-content: start;
-`
-
-const Buttons = styled.div`
-  display: flex;
-  justify-content: space-between;
+  gap: 15px;
 `

@@ -26,16 +26,20 @@ const UpperPane = styled.div`
 
 const LeftPane = styled.div`
   z-index: 1;
-  min-width: 300px;
+  min-width: 250px;
+  max-width: 300px;
+  width: 25%;
 `
 
 const LeftPaneBg = styled.div`
   position: absolute;
 
-  width: 300px;
+  min-width: 250px;
+  max-width: 300px;
+  width: 25%;
   height: 100%;
 
-  background-color: ${({ theme }) => theme.lightSecondaryColor};
+  background-color: ${({ theme }) => theme.bluishBgColor};
 `
 
 const RightPane = styled.div`
@@ -46,7 +50,6 @@ const RightPane = styled.div`
   height: 90%;
 
   margin: 0rem 3rem;
-  padding: 2rem 3rem;
 
   border-radius: 1rem;
   box-shadow: 5px 5px 10px #00000050;

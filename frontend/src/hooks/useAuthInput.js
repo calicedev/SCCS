@@ -53,7 +53,7 @@ export function useAuthInput(
     if (!isValid) {
       const newMsg = { ...message }
       newMsg.text = msg
-      newMsg.isValid = isValid
+      newMsg.isValid = false
       setMessage(newMsg)
       return
     }

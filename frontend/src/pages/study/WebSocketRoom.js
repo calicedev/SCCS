@@ -52,6 +52,8 @@ export default function WebSocketRoom() {
   // Study 페이지 state
   const [study, setStudy] = useState(false)
   const [readyForStudyArray, setReadyForStudyArray] = useState([])
+  // 코테 페이지에서 axios로 가져온 정보를 study 페이지로 내려주기 위해 선언하는 state
+  const [dataForStudy, setDataForStudy] = useState([])
 
   const justMounted = useRef(true)
 
@@ -333,9 +335,17 @@ export default function WebSocketRoom() {
               roomInfo={roomInfo}
               personnel={personnel}
               startStudy={startStudy}
+              setDataForStudy={setDataForStudy}
             />
           ) : null}
-          {study ? <Study roomInfo={roomInfo} personnel={personnel} /> : null}
+          {study ? (
+            <Study
+              roomInfo={roomInfo}
+              studyroomId={studyroomId}
+              personnel={personnel}
+              dataForStudy={dataForStudy}
+            />
+          ) : null}
         </>
       )}
       {connected || (

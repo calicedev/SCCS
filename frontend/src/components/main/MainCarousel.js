@@ -4,14 +4,23 @@ import { Carousel } from 'react-responsive-carousel'
 import mainBanner1 from 'assets/img/main_banner_1.png'
 import mainBanner2 from 'assets/img/main_banner_2.png'
 
+/*
+ 메인 배너이미지 캐러셀
+*/
+
 export default function MainCarousel() {
   return (
-    <Carousel showThumbs={false} infiniteLoop={true} interval={2000}>
+    <Carousel
+      showThumbs={false}
+      autoPlay={true}
+      infiniteLoop={true}
+      interval={2000}
+    >
       <div>
-        <img src={mainBanner1} />
+        <img src={mainBanner1} alt="배너이미지1" />
       </div>
       <div>
-        <img src={mainBanner2} />
+        <img src={mainBanner2} alt="배너이미지2" />
       </div>
     </Carousel>
   )
