@@ -11,6 +11,7 @@ import Modal from 'components/common/Modal'
 import CreateRoomMdContent from 'components/main/CreateRoomMdContent'
 import Loading from 'components/common/Loading'
 import getUserInfo from 'libs/getUserInfo'
+import useInterval from 'hooks/useInterval'
 
 const searchOptions = {
   title: '방 이름',
@@ -66,8 +67,8 @@ export default function MainRooms() {
     setAlgoIds(algoIds.filter((ele) => ele !== id))
   }
 
-  // 옵션변화로 인한 방 세부 조회 요청
-  useEffect(() => {
+  // 방 세부 검색 함수
+  const searchRoomDetail = () => {
     let data = {}
     if (selectedOption === 'title') {
       data = {
@@ -96,40 +97,16 @@ export default function MainRooms() {
         alert('서버와의 통신이 불안정합니다.')
         console.log(err)
       })
+  }
+
+  // 옵션변화로 인한 방 세부 조회 요청
+  useEffect(() => {
+    searchRoomDetail()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [algoIds, languageIds])
 
-  // 검색버튼을 눌렀을 때 방 세부 조회
-  const searchRoom = () => {
-    let data = {}
-    if (selectedOption === 'title') {
-      data = {
-        algoIds,
-        languageIds,
-        title: query,
-        id: 0,
-      }
-    }
-    if (selectedOption === 'id') {
-      data = {
-        algoIds,
-        languageIds,
-        title: '',
-        id: parseInt(query),
-      }
-    }
-    const [url, method] = api('searchRoomDetail')
-    const config = { url, method, data }
-    axios(config)
-      .then((res) => {
-        console.log(res)
-        setRooms(res.data)
-      })
-      .catch((err) => {
-        alert('서버와의 연결이 불안정합니다.')
-        console.log(err)
-      })
-  }
+  // useInterval 훅으로 5초마다 마지막 요청 보내기
+  useInterval(searchRoomDetail, 10000)
 
   return (
     <Container>
@@ -165,7 +142,7 @@ export default function MainRooms() {
               onChange={(e) => setQuery(e.target.value)}
             ></StyledInput>
           </InputBox>
-          <Button onClick={searchRoom} value="검색"></Button>
+          <Button onClick={searchRoomDetail} value="검색"></Button>
         </SearchContainer>
         <Button
           type="secondary"

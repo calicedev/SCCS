@@ -33,9 +33,11 @@ apiRequest.interceptors.request.use(
 // response 인터셉터
 apiRequest.interceptors.response.use(
   (response) => {
+    console.log('response', response)
     return response
   },
   async (error) => {
+    console.log('error', error)
     const originalConfig = error.config // 기존 요청 정보 저장
     const response = error.response // 에러 정보 추출
     // accesstoken 재발급 로직
