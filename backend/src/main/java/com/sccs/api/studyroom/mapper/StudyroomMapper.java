@@ -40,6 +40,7 @@ public interface StudyroomMapper {
   public List<ProblemDto> selectProblemByStudyroomId(int id);
 
   public void submitProblem(SubmissionDto submissionDto);
+  public void submitTest(SubmissionDto submissionDto);
 
   public void changeStudyroomSolvingStatus(StudyroomDto studyroomDto);
 
