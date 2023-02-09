@@ -29,8 +29,10 @@ import { useSelector } from 'react-redux'
 // import VideoRoomComponent from './components/VideoRoomComponent'
 import WaitingPage from './pages/study/WaitingPage'
 import WebSocketRoom from './pages/study/WebSocketRoom'
+import axios from 'axios'
 
 function App() {
+  axios.defaults.withCredentials = true
   const theme = useSelector((state) => state.theme)
 
   return (
@@ -52,8 +54,8 @@ function App() {
               path="profile/editpassword"
               element={<EditPwdPage />}
             ></Route>
-            <Route path="calendar" element={<CalendarPage />}></Route>
-            <Route path="studydetail/:id" element={<StudyDetailPage />}></Route>
+            <Route path="study" element={<CalendarPage />}></Route>
+            <Route path="study/:id" element={<StudyDetailPage />}></Route>
             <Route path="solved" element={<SolvedPage />}></Route>
           </Route>
         </Route>

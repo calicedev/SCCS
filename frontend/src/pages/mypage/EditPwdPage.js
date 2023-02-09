@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import ProfileInput from 'components/mypage/ProfileInput'
 import Button from 'components/common/Button'
@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import { useSelector } from 'react-redux'
+import axios from 'libs/axios'
+import api from 'constants/api'
 
 export default function PasswordEdit() {
   // 리액트 훅관련 함수 정의
@@ -25,19 +27,34 @@ export default function PasswordEdit() {
     newPassword,
   )
 
-  // 가입 일자 YYYY-MM-DD
-  const joinDate = useMemo(() => {
-    return user.joinDatetime.slice(0, 10)
-  }, [user])
-
   // 수정 정보 저장
-  const save = () => {}
+  const save = () => {
+    // 모든 정보를 유효하게 입력했는지 확인
+    if (!newPwdMsg.isValid || !confirmPwdMsg.isValid) {
+      alert('입력 양식을 모두 유효하게 입력해주세요')
+      return
+    }
+    const data = {
+      newPassword,
+    }
+    const [url, method] = api('updatePassword')
+    const config = { url, method, data }
+    axios(config)
+      .then((res) => {
+        console.log(res)
+        navigate('/mypage/profile')
+      })
+      .catch((err) => {
+        console.log(err)
+        alert('서버와의 통신이 원활하지 않습니다.')
+      })
+  }
 
   return (
-    <ProfileContent>
+    <Container>
       <h1>Edit Profile</h1>
 
-      <EditBtns>
+      <TapWrapper>
         <Button
           value="기본정보"
           type="secondary"
@@ -46,11 +63,11 @@ export default function PasswordEdit() {
           }}
         ></Button>
         <Button value="비밀번호"></Button>
-      </EditBtns>
+      </TapWrapper>
 
       <ProfileContainer>
-        <ProfileImg />
-        <p className="semi-bold">Joined at: {joinDate}</p>
+        <ProfileImg imgUrl={user.profileImage} />
+        <p className="semi-bold">가입일: {user.joinDate}</p>
       </ProfileContainer>
 
       <InputContainer>
@@ -59,21 +76,23 @@ export default function PasswordEdit() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></ProfileInput>
-        <ProfileInput
-          type="newPassword"
-          value={newPassword}
-          message={newPwdMsg}
-          onChange={(e) => setNewPassword(e.target.value)}
-        ></ProfileInput>
-        <ProfileInput
-          type="confirmPassword"
-          value={confirmPassword}
-          message={confirmPwdMsg}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        ></ProfileInput>
+        <Flexbox>
+          <ProfileInput
+            type="newPassword"
+            value={newPassword}
+            message={newPwdMsg}
+            onChange={(e) => setNewPassword(e.target.value)}
+          ></ProfileInput>
+          <ProfileInput
+            type="confirmPassword"
+            value={confirmPassword}
+            message={confirmPwdMsg}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          ></ProfileInput>
+        </Flexbox>
       </InputContainer>
 
-      <ButtonContainer>
+      <ButtonWrapper>
         <OutlineButton
           value="Cancel"
           type="secondary"
@@ -82,20 +101,21 @@ export default function PasswordEdit() {
           }}
         ></OutlineButton>
         <Button value="Save" onClick={save}></Button>
-      </ButtonContainer>
-    </ProfileContent>
+      </ButtonWrapper>
+    </Container>
   )
 }
 
-const ProfileContent = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
 
   position: relative;
 
   max-width: 700px;
-
   width: 100%;
+
+  padding: 2rem;
 `
 
 const ProfileContainer = styled.div`
@@ -104,8 +124,8 @@ const ProfileContainer = styled.div`
   align-items: end;
 
   position: absolute;
-  top: 2rem;
-  right: 0rem;
+  top: 3.5rem;
+  right: 2rem;
 `
 
 const InputContainer = styled.div`
@@ -115,12 +135,21 @@ const InputContainer = styled.div`
   margin: 2rem 0rem;
 `
 
-const EditBtns = styled.div`
+const Flexbox = styled.div`
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
+  gap: 10px;
 `
 
-const ButtonContainer = styled.div`
+const TapWrapper = styled.div`
   display: flex;
-  justify-content: end;
+  justify-content: start;
+  gap: 15px;
+`
+const ButtonWrapper = styled.div`
+  align-self: end;
+
+  display: flex;
+  justify-content: start;
+  gap: 15px;
 `

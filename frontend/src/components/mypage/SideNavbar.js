@@ -9,7 +9,7 @@ import sideNavBlueBg from 'assets/img/side_nav_blue_bg.png'
 const SideNavbar = () => {
   return (
     <SideNav>
-      <NavStyle to="/mypage/calendar">
+      <NavStyle to="/mypage/study">
         <FaRegBookmark />
         스터디 기록
       </NavStyle>

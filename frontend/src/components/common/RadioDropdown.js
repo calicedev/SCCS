@@ -10,14 +10,14 @@ Dropbox 우측의 아래 버튼 아이콘 클릭 시, 라디오버튼 옵션들�
 
 name: 라디오 버튼들을 그룹질 이름
 opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
-handleChange: 클릭 시 동작할 함수
+onChange: 클릭 시 동작할 함수
 */
 
 export default function RadioDropdown({
   name,
   options,
   selectedKey,
-  handleChange,
+  onChange,
 }) {
   const [showOptions, setShowOptions] = useState(false)
 
@@ -37,7 +37,7 @@ export default function RadioDropdown({
             name={name}
             id={key}
             label={options[key]}
-            handleChange={handleChange}
+            onChange={onChange}
             checked={key === selectedKey ? true : false}
           ></Radio>
         ))}
@@ -50,12 +50,12 @@ RadioDropdown.propTypes = {
   name: PropTypes.string.isRequired,
   options: PropTypes.object.isRequired,
   selectedKey: PropTypes.string,
-  handleChange: PropTypes.func,
+  onChange: PropTypes.func,
 }
 
 RadioDropdown.defaultProps = {
   selectedKey: '1',
-  handleChange: undefined,
+  onChange: undefined,
 }
 
 const Container = styled.div`

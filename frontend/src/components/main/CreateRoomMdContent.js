@@ -148,14 +148,14 @@ export default function CreateRoomMdContent() {
         <p>방 이름</p>
         <StyledInput
           value={title}
-          handleChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         ></StyledInput>
       </Wrapper>
 
       <Wrapper>
         <p>비밀번호</p>
         <Checkbox
-          handleChange={toggleIsPrivate}
+          onChange={toggleIsPrivate}
           id="isPrivate"
           label="비밀방 설정"
         />
@@ -163,7 +163,7 @@ export default function CreateRoomMdContent() {
           type="number"
           disabled={!isPrivate}
           value={password}
-          handleChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         ></StyledInput>
       </Wrapper>
 
@@ -175,7 +175,7 @@ export default function CreateRoomMdContent() {
               key={key}
               id={key + languagePk[key].toString()}
               label={languagePk[key]}
-              handleChange={changeLanguageIds}
+              onChange={changeLanguageIds}
             />
           ))}
         </GridBox>
@@ -189,7 +189,7 @@ export default function CreateRoomMdContent() {
               key={key}
               id={key + algorithmPk[key].toString()}
               label={algorithmPk[key]}
-              handleChange={changeAlgoIds}
+              onChange={changeAlgoIds}
             />
           ))}
         </GridBox>
@@ -203,7 +203,7 @@ export default function CreateRoomMdContent() {
         <Button
           type="secondary"
           value="방 만들기"
-          handleClick={createRoom}
+          onClick={createRoom}
         ></Button>
       </ButtonWrapper>
     </Container>

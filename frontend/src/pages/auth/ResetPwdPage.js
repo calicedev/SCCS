@@ -57,7 +57,7 @@ export default function ResetPasswordForm() {
         icon={<RiArrowGoBackFill />}
         size={'small'}
         text={'로그인으로'}
-        handleClick={() => {
+        onClick={() => {
           navigate('/auth/login')
         }}
       />
@@ -70,14 +70,14 @@ export default function ResetPasswordForm() {
         <AuthInput
           type="id"
           value={id}
-          handleChange={(e) => {
+          onChange={(e) => {
             setId(e.target.value)
           }}
         ></AuthInput>
         <AuthInput
           type="email"
           value={email}
-          handleChange={(e) => {
+          onChange={(e) => {
             setEmail(e.target.value)
           }}
           result={message}
@@ -86,11 +86,7 @@ export default function ResetPasswordForm() {
       </Form>
 
       <ButtonContainer>
-        <Button
-          handleClick={resetPassword}
-          value="Submit"
-          size="medium"
-        ></Button>
+        <Button onClick={resetPassword} value="Submit" size="medium"></Button>
       </ButtonContainer>
     </Flexbox>
   )

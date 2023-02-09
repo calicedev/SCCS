@@ -16,7 +16,7 @@ onClickNext: 오른쪽 화살표 버튼 클릭 시 동작할 함수
 
 export default function MonthSelector({
   currentDate,
-  handleChange,
+  onChange,
   onClickPrevious,
   onClickNext,
 }) {
@@ -30,7 +30,7 @@ export default function MonthSelector({
         type="gray"
         onClick={onClickPrevious}
       />
-      <StyledInput type="month" value={month} onChange={handleChange} />
+      <StyledInput type="month" value={month} onChange={onChange} />
       <IconButton
         icon={<AiFillCaretRight />}
         size={'small'}
@@ -43,14 +43,14 @@ export default function MonthSelector({
 
 MonthSelector.propTypes = {
   currentDate: PropTypes.instanceOf(Date),
-  handleChange: PropTypes.func,
+  onChange: PropTypes.func,
   onClickPrevious: PropTypes.func,
   onClickNext: PropTypes.func,
 }
 
 MonthSelector.defaultProps = {
   currentDate: '',
-  handleChange: undefined,
+  onChange: undefined,
   onClickPrevious: undefined,
   onClickNext: undefined,
 }

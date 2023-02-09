@@ -64,7 +64,7 @@ export default function PwdModalContent({ id }) {
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
         {message.text}
       </p>
-      <Button value="제출" handleClick={submitPassword}></Button>
+      <Button value="제출" onClick={submitPassword}></Button>
     </Container>
   )
 }

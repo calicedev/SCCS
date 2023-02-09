@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'cursiveFont';
+  src: url('assets/font/DancingScript-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'handFont';
+  src: url('assets/font/Nanum-Hand-Writing.ttf');
+}

@@ -50,7 +50,6 @@ const RightPane = styled.div`
   height: 90%;
 
   margin: 0rem 3rem;
-  padding: 2rem 3rem;
 
   border-radius: 1rem;
   box-shadow: 5px 5px 10px #00000050;

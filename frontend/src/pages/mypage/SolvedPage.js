@@ -88,7 +88,11 @@ const Container = styled.div`
 
   width: 80%;
 
-  margin-top: 2rem;
+  padding: 2rem 0.5rem;
+
+  @media screen and (min-width: 1024px) {
+    padding: 2rem 3rem;
+  }
 `
 const ProblemsContainer = styled.div`
   margin: 2rem 0rem;

@@ -2,18 +2,14 @@ import styled from 'styled-components'
 import Button from 'components/common/Button'
 import AuthInput from 'components/auth/AuthInput'
 import { useNavigate, Link } from 'react-router-dom'
-import setUserInfo from 'libs/setUserInfo'
-import { setTokens } from 'redux/tokenSlice'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
 import axios from 'libs/axios'
 import api from 'constants/api'
-import { useDispatch } from 'react-redux'
 
 export default function SignupForm() {
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [id, setId, idMsg] = useAuthInput('id', '', true, true)
@@ -78,43 +74,43 @@ export default function SignupForm() {
         <AuthInput
           type="id"
           value={id}
-          handleChange={(e) => setId(e.target.value)}
+          onChange={(e) => setId(e.target.value)}
           message={idMsg}
         ></AuthInput>
         <AuthInput
           type="name"
           value={name}
-          handleChange={(e) => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           message={nameMsg}
         ></AuthInput>
         <AuthInput
           type="nickname"
           value={nickname}
-          handleChange={(e) => setNickname(e.target.value)}
+          onChange={(e) => setNickname(e.target.value)}
           message={nicknameMsg}
         ></AuthInput>
         <AuthInput
           type="email"
           value={email}
-          handleChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           message={emailMsg}
         ></AuthInput>
         <AuthInput
           type="password"
           value={password}
-          handleChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           message={passwordMsg}
         ></AuthInput>
         <AuthInput
           type="confirmPassword"
           value={confirmPwd}
-          handleChange={(e) => setConfirmPwd(e.target.value)}
+          onChange={(e) => setConfirmPwd(e.target.value)}
           message={confirmPwdMsg}
         ></AuthInput>
       </Form>
 
       <ButtonContainer>
-        <Button size="medium" handleClick={signup} value="회원가입"></Button>
+        <Button size="medium" onClick={signup} value="회원가입"></Button>
       </ButtonContainer>
     </Flexbox>
   )

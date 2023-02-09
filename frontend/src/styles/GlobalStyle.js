@@ -1,12 +1,7 @@
 import { createGlobalStyle } from 'styled-components'
-import cursiveFont from 'assets/font/DancingScript-Regular.ttf'
+
 /** reset css */
 const GlobalStyle = createGlobalStyle`
-  @font-face { 
-    font-family: 'cursiveFont'; 
-    src: url(${cursiveFont});
-  }
-
   .pass {
     color: ${({ theme }) => theme.passFontColor};
   }

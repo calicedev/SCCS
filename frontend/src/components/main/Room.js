@@ -93,6 +93,7 @@ export default function Room({
             {personnel}/6
           </OutlineBox>
         </Flexbox>
+
         <Flexbox>
           {languages}
           <OutlineBox isSolving={isSolving} isHover={isHover} flex={1}>

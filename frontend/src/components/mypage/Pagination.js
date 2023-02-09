@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/common/Button'
 import IconButton from 'components/common/IconButton'
@@ -98,7 +98,7 @@ export default function Pagination({
           size="tiny"
           disabled={num === null ? true : false}
           value={num === null ? null : (num + 1).toString()}
-          handleClick={() => setCurrentPage(num)}
+          onClick={() => setCurrentPage(num)}
         />
       ))}
 

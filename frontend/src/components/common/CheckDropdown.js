@@ -10,11 +10,11 @@ Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 
 
 title: 옵션들의 제목
 opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
-handleChange: 클릭 시 동작할 함수
+onChange: 클릭 시 동작할 함수
 
 */
 
-export default function CheckDropdown({ title, options, handleChange }) {
+export default function CheckDropdown({ title, options, onChange }) {
   const [showOptions, setShowOptions] = useState(false)
 
   return (
@@ -32,7 +32,7 @@ export default function CheckDropdown({ title, options, handleChange }) {
             key={key + options[key].toString()}
             id={key + options[key].toString()}
             label={options[key]}
-            handleChange={handleChange}
+            onChange={onChange}
           ></Checkbox>
         ))}
       </OptionWrapper>
@@ -43,11 +43,11 @@ export default function CheckDropdown({ title, options, handleChange }) {
 CheckDropdown.propTypes = {
   title: PropTypes.string.isRequired,
   options: PropTypes.object.isRequired,
-  handleChange: PropTypes.func,
+  onChange: PropTypes.func,
 }
 
 CheckDropdown.defaultProps = {
-  handleChange: undefined,
+  onChange: undefined,
   name: '',
   value: '',
 }

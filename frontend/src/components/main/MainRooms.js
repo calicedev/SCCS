@@ -89,6 +89,7 @@ export default function MainRooms() {
         alert('서버와의 통신이 불안정합니다.')
         console.log(err)
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [algoIds, languageIds])
 
   // 검색버튼을 눌렀을 때 방 세부 조회
@@ -136,12 +137,12 @@ export default function MainRooms() {
           <CheckDropdown
             title="언어 선택"
             options={languagePk}
-            handleChange={changeLanguageIds}
+            onChange={changeLanguageIds}
           />
           <CheckDropdown
             title="알고리즘 선택"
             options={algorithmPk}
-            handleChange={changeAlgoIds}
+            onChange={changeAlgoIds}
           />
           <InputBox>
             <RadioDropdown
@@ -149,7 +150,7 @@ export default function MainRooms() {
               name="검색 옵션"
               options={searchOptions}
               selectedKey="title"
-              handleChange={(e) => setSelectedOption(e.target.id)}
+              onChange={(e) => setSelectedOption(e.target.id)}
             />
             <StyledInput
               type={selectedOption === 'title' ? 'text' : 'number'}
@@ -157,11 +158,11 @@ export default function MainRooms() {
               onChange={(e) => setQuery(e.target.value)}
             ></StyledInput>
           </InputBox>
-          <Button handleClick={searchRoom} value="검색"></Button>
+          <Button onClick={searchRoom} value="검색"></Button>
         </SearchContainer>
         <Button
           type="secondary"
-          handleClick={() => setShowModal(!showModal)}
+          onClick={() => setShowModal(!showModal)}
           value="방 만들기"
         ></Button>
       </FlexBox>
@@ -239,6 +240,7 @@ const GridBox = styled.div`
   margin: 2rem 0rem 0rem;
 
   grid-template-columns: repeat(2, 1fr);
+
   @media screen and (min-width: 1024px) {
     gap: 1rem 2rem;
     grid-template-columns: repeat(3, 1fr);

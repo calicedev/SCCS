@@ -95,8 +95,8 @@ export default function StudyCalendar() {
       setModalDay(date.slice(-2))
       setModalContent(dateToStudies[id])
       setIsHovered(true)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [studies],
   )
 
@@ -124,7 +124,7 @@ export default function StudyCalendar() {
       </Modal>
       <MonthSelector
         currentDate={currentDate}
-        handleChange={(e) => setCurrentDate(new Date(e.target.value))}
+        onChange={(e) => setCurrentDate(new Date(e.target.value))}
         onClickPrevious={previousMonth}
         onClickNext={nextMonth}
       />
@@ -144,6 +144,11 @@ const Container = styled.div`
   align-items: center;
 
   width: 100%;
+
+  padding: 1rem;
+  @media screen and (min-width: 1024px) {
+    padding: 3rem;
+  }
 `
 
 // 평소에 모달 창은 hidden

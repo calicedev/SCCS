@@ -53,7 +53,7 @@ const typeObj = {
   },
 }
 
-export default function AuthInput({ type, value, handleChange, message }) {
+export default function AuthInput({ type, value, onChange, message }) {
   return (
     <Container>
       <Label htmlFor={type}>{typeObj[type].label}</Label>
@@ -64,7 +64,7 @@ export default function AuthInput({ type, value, handleChange, message }) {
           type={typeObj[type].type}
           placeholder={typeObj[type].placeholder}
           value={value}
-          onChange={handleChange}
+          onChange={onChange}
         />
       </FlexBox>
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
@@ -84,14 +84,14 @@ AuthInput.propTypes = {
     'email',
   ]),
   value: PropTypes.string,
-  handleChange: PropTypes.func,
+  onChange: PropTypes.func,
   message: PropTypes.object,
 }
 
 AuthInput.defaultProps = {
   type: 'id',
   value: '',
-  handleChange: undefined,
+  onChange: undefined,
   message: { text: '', isValid: false },
 }
 

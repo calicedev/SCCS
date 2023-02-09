@@ -13,14 +13,7 @@ name: input 태그의 name (Radio버튼들의 그불을 구별지음)
 value: input 태그의 value
 */
 
-export default function Radio({
-  id,
-  name,
-  value,
-  label,
-  handleChange,
-  checked,
-}) {
+export default function Radio({ id, name, value, label, onChange, checked }) {
   return (
     <Container>
       <StyledDiv
@@ -28,7 +21,7 @@ export default function Radio({
         id={id}
         name={name}
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         checked={checked}
       />
       <label htmlFor={id}>{label}</label>
@@ -41,13 +34,13 @@ Radio.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string,
   value: PropTypes.string,
-  handleChange: PropTypes.func,
+  onChange: PropTypes.func,
 }
 
 Radio.defaultProps = {
   name: '',
   value: '',
-  handleChange: undefined,
+  onChange: undefined,
 }
 
 const Container = styled.div`

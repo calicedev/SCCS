@@ -29,14 +29,14 @@ export default function Navbar() {
           icon={theme === 'light' ? <BsCloudSun /> : <BsCloudMoon />}
           type={theme === 'light' ? 'primary' : 'secondary'}
           size={'middle'}
-          handleClick={() => {
+          onClick={() => {
             dispatch(toggleTheme())
           }}
         />
       </Flexbox>
       <NavContent>
         <NavStyle to="/">Home</NavStyle>
-        <NavStyle to="/mypage/calendar">Calender</NavStyle>
+        <NavStyle to="/mypage/study">Calender</NavStyle>
         <NavStyle to="/mypage/solved">Solved</NavStyle>
         <NavStyle to="/mypage/profile">Profile</NavStyle>
         <NavStyle to="/auth/login" onClick={logout}>

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns'
 import { isSameMonth, addDays, format } from 'date-fns'
 import PropTypes from 'prop-types'
+import 'styles/font.css'
 
 /*
 달력 컴포넌트. React.memo 컴포넌트 제공 (MemoizedCalendar)
@@ -97,7 +98,8 @@ const WeekDays = styled.div`
   justify-content: space-around;
 
   width: 100%;
-  font-family: cursiveFont;
+
+  font-family: 'cursiveFont';
 `
 // Memoized React Component
 const MemoizedCalendar = React.memo(Calendar)

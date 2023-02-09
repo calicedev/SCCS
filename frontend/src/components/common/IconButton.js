@@ -9,7 +9,7 @@ icon: 아이콘. 기본적으로 'react-icon'라이브러리의 아이콘을 pro
 type: 색깔
 size: 버튼의 크기
 text: 버튼 옆에 표시할 글자
-handleClick: 클릭 시 동작
+onClick: 클릭 시 동작
 disabled: 클릭 가능 여부
 */
 
@@ -18,7 +18,7 @@ export default function IconButton({
   type,
   size,
   text,
-  handleClick,
+  onClick,
   disabled,
 }) {
   const sizeClass = `${size}-icbtn`
@@ -28,7 +28,7 @@ export default function IconButton({
       disabled={disabled}
       type={type}
       className={`${sizeClass}`}
-      onClick={handleClick}
+      onClick={onClick}
     >
       {icon} {text}
     </IconWrapper>
@@ -46,13 +46,13 @@ IconButton.propTypes = {
     'white',
   ]),
   size: PropTypes.oneOf(['tiny', 'small', 'middle', 'large']),
-  handleClick: PropTypes.func,
+  onClick: PropTypes.func,
   disabled: PropTypes.bool,
 }
 IconButton.defaultProps = {
   type: 'black',
   size: 'small',
-  handleClick: undefined,
+  onClick: undefined,
   disabled: false,
 }
 
