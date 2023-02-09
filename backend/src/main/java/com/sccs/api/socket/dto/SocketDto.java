@@ -18,6 +18,7 @@ public class SocketDto {
   private String status;
   private int personnel;
   private boolean ready;
+  private int host;
 
   private List<String> membersNickname;
   private List<String> readyForStudyArray;

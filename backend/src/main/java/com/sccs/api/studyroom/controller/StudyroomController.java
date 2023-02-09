@@ -182,16 +182,14 @@ public class StudyroomController {
       studyroomDto.setProblemId(problemId);
       List<SubmissionDto> s = studyroomService.getStudyInfo(studyroomDto);
       resultMap.put("problemResult"+problemId,s);
+
       ProblemDto p = studyroomService.getProblemInfo(problemId);
-      String path = p.getProblemFolder();
-      String realPath = "problem/"+path+".jpg";
-      String url = awsS3service.getTemporaryUrl(realPath);
+      String url = awsS3service.getTemporaryUrl("problem/"+p.getProblemFolder()+".jpg");
       resultMap.put("problem"+problemId, url);
     }
 
     return new ResponseEntity<>(resultMap, HttpStatus.OK);
   }
-
 
   /**
    * 코딩 테스트 방장에 의해 끝내기
@@ -201,8 +199,5 @@ public class StudyroomController {
     //코딩 테스트 끝내기
     return new ResponseEntity<>(studyroomService.endStudyroomByOwner(studyroomDto), HttpStatus.OK);
   }
-
-
-
 
 }

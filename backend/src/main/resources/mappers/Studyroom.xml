@@ -228,6 +228,4 @@
     SET is_active=FALSE
     WHERE id = #{id}
   </update>
-
-
 </mapper>
