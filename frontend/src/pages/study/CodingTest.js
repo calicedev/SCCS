@@ -29,7 +29,7 @@ export default function CodingTest({
   const [timeLeft, setTimeLeft] = useState(7200000)
 
   // 문제 선택하기 위한 state
-  const [onProblem, setOnProblem] = useState(dataForStudy[0])
+  const [onProblem, setOnProblem] = useState(null)
   const [onProblemIdx, setOnProblemIdx] = useState(0)
 
   // 코딩테스트 페이지 입장 시 axios 요청
@@ -141,29 +141,32 @@ export default function CodingTest({
     <>
       {codingTestData.title && (
         <>
-          <TopNavBar>
-            <Btn>{roomInfo.title}</Btn>
-            <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
-            {roomInfo.algoIds.map((algoId, idx) => {
-              return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
-            })}
-            {['1번', '2번'].map((problem, idx) => {
-              return (
-                <Btn
-                  onClick={() => {
-                    changeProblem(idx)
-                  }}
-                  key={idx}
-                >
-                  {problem}
-                </Btn>
-              )
-            })}
-            <span>
-              남은 시간: {hours}시간 {minutes}분 {seconds}초
-            </span>
-            <span> 현재 {personnel}명</span>
-          </TopNavBar>
+          {onProblem && (
+            <TopNavBar>
+              <Btn>{roomInfo.title}</Btn>
+              <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
+              {roomInfo.algoIds.map((algoId, idx) => {
+                return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
+              })}
+              {['1번', '2번'].map((problem, idx) => {
+                return (
+                  <Btn
+                    onClick={() => {
+                      changeProblem(idx)
+                    }}
+                    key={idx}
+                  >
+                    {problem}
+                  </Btn>
+                )
+              })}
+              <span>
+                남은 시간: {hours}시간 {minutes}분 {seconds}초
+              </span>
+              <span> 현재 {personnel}명</span>
+            </TopNavBar>
+          )}
+
           <Main>
             {/* <h3>받은 첫 번째 문제 title : {codingTestData.problems[0].name}</h3> */}
             <Problem>
