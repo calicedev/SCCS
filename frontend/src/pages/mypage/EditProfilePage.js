@@ -45,19 +45,16 @@ export default function ProfileEdit() {
       email: emailIsChanged ? email : null,
       mfile: typeof img !== 'string' ? img[0] : null,
     }
-    console.log('data', data)
     const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api('updateUserInfo')
     const config = { url, method, data, headers }
     axios(config)
       .then((res) => {
-        console.log(res)
         getUserInfo()
         navigate('/mypage/profile')
       })
       .catch((err) => {
         alert('서버와의 통신이 원활하지 않습니다.')
-        console.log(err)
       })
   }
 
@@ -69,12 +66,9 @@ export default function ProfileEdit() {
     const [url, method] = api('login')
     const config = { url, method, data }
     axios(config)
-      .then((res) => {
-        console.log(res)
-      })
+      .then((res) => {})
       .catch((err) => {
         alert('서버와의 통신이 원활하지 않습니다.')
-        console.log(err)
       })
   }
 

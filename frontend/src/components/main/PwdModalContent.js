@@ -32,7 +32,7 @@ export default function PwdModalContent({ id }) {
       setMessage(newMsg)
       return
     }
-    // 서버에 데이터 체크
+    // 서버에 패스워드 유효성 체크
     const data = {
       id,
       password,
@@ -41,7 +41,6 @@ export default function PwdModalContent({ id }) {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res)
         navigate(`/room/${id}/waiting`)
       })
       .catch((err) => {

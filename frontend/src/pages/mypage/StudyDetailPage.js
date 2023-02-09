@@ -23,7 +23,6 @@ export default function StudyDetailPage() {
     axios
       .request(config)
       .then((res) => {
-        console.log(res.data)
         setStudy(res.data)
         // console.log(study)
       })

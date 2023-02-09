@@ -79,7 +79,6 @@ export default function WebSocketRoom() {
     axios
       .request(config)
       .then((res) => {
-        console.log('axios 요청에 대한 응답', res.data)
         setPersonnel(res.data.personnel)
         setRoomInfo(res.data)
       })

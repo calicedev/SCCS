@@ -43,7 +43,6 @@ export default function CreateRoomMdContent() {
   const changeLanguageIds = (e) => {
     // 체크박스 옵션의 id가 10이하의 정수문자열로 시작하는 전제조건
     const id = parseInt(e.target.id.slice(0, 1))
-    console.log(id)
     if (e.target.checked) {
       setLanguageIds([...languageIds, id])
       return
@@ -131,14 +130,11 @@ export default function CreateRoomMdContent() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res.data)
         // 서버로부터 받은 Room의 pk값을 path variable로 사용해서 navigate
         const studyroomId = res.data.studyroomId
         navigate(`/room/${studyroomId}/waiting`)
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
   }
   return (
     <Container>

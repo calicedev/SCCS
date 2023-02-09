@@ -39,7 +39,6 @@ export default function StudyCalendar() {
       }
       hashedStudies[key].push(study)
     })
-    console.log('hashedStudes', hashedStudies)
     return Object.fromEntries(
       Object.entries(hashedStudies).map(([key, studies]) => [
         key,
@@ -57,11 +56,9 @@ export default function StudyCalendar() {
     axios
       .request(config)
       .then((res) => {
-        console.log(res)
         setStudies(res.data)
       })
       .catch((err) => {
-        console.log(err)
         alert('스터디 내역을 불러오지 못했습니다.')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps

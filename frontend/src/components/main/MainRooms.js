@@ -10,7 +10,6 @@ import styled from 'styled-components'
 import Modal from 'components/common/Modal'
 import CreateRoomMdContent from 'components/main/CreateRoomMdContent'
 import Loading from 'components/common/Loading'
-import getUserInfo from 'libs/getUserInfo'
 import useInterval from 'hooks/useInterval'
 
 const searchOptions = {
@@ -32,7 +31,6 @@ export default function MainRooms() {
     const config = { url, method }
     axios(config)
       .then((res) => {
-        console.log(res)
         setRooms(res.data)
       })
       .catch((err) => {
@@ -42,7 +40,6 @@ export default function MainRooms() {
           alert('서버와의 통신이 불안정합니다.')
         }
         setRooms([])
-        console.log(err)
       })
   }, [])
 
@@ -59,7 +56,6 @@ export default function MainRooms() {
   // 알고리즘 선택에 다른 algoIds 배열 변환 함수
   const changeAlgoIds = (e) => {
     const id = parseInt(e.target.id.slice(0, 1))
-    console.log(id)
     if (e.target.checked) {
       setAlgoIds([...algoIds, id])
       return
@@ -90,12 +86,10 @@ export default function MainRooms() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res)
         setRooms(res.data)
       })
       .catch((err) => {
         alert('서버와의 통신이 불안정합니다.')
-        console.log(err)
       })
   }
 
@@ -150,7 +144,6 @@ export default function MainRooms() {
           value="방 만들기"
         ></Button>
       </FlexBox>
-      <Button onClick={getUserInfo}> 누르지 마세요</Button>
       {rooms ? (
         <GridBox>
           {rooms.map((room) => (

@@ -41,11 +41,9 @@ export default function PasswordEdit() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        console.log(res)
         navigate('/mypage/profile')
       })
       .catch((err) => {
-        console.log(err)
         alert('서버와의 통신이 원활하지 않습니다.')
       })
   }
