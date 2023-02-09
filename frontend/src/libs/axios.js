@@ -1,5 +1,6 @@
 import axios from 'axios'
-// import store from 'redux/store'
+import api from 'constants/api'
+import { redirect } from 'react-router-dom'
 
 /*
 서버에 요청을 날리는 axios instance
@@ -14,15 +15,10 @@ const apiRequest = axios.create({
 // request 인터셉터
 apiRequest.interceptors.request.use(
   (config) => {
+    // // accessToken이 있을 경우 Authorization헤더에 추가해서 요청
     // const state = store.getState()
     // const accessToken = state.token.accessToken
-    // // accessToken이 없을 경우 헤더 없이 요청
     // if (!accessToken) return config
-    // // accessToken이 있을 경우 Authorization헤더에 추가해서 요청
-    // // return {
-    // //   ...config,
-    // //   headers: { Authorization: `Bearer ${accessToken}` },
-    // // }
     // config.headers.Authorization = `Bearer ${accessToken}`
     // return {
     //   ...config,
@@ -39,28 +35,33 @@ apiRequest.interceptors.response.use(
   (response) => {
     return response
   },
-  // accesstoken 재발급 로직
-  (error) => {
-    // const { originalConfig, response } = error
-    // if (response.errCode === 403) {
-    //   // accessToken 재발급 요청
-    //   const [url, method] = api('refreshToken')
-    //   const config = { url, method }
-    //   axios(config)
-    //     // accessToken 재발급 성공
-    //     .then((res) => {
-    //       const newAccessToken = res.data.accessToken
-    //       store.dispatch(setUserInfo(res.data))
-    //       originalConfig.headers.Authorization = `Bearer ${newAccessToken}`
-    //       // 기존 요청을 새로운 accessToken으로 재요청
-    //       return apiRequest(originalConfig)
-    //     })
-    //     // accessToken 재발급 실패
-    //     .catch(() => {
-    //       alert('다시 로그인 해주세요')
-    //       return redirect('/auth/login')
-    //     })
-    // }
+  async (error) => {
+    const originalConfig = error.config // 기존 요청 정보 저장
+    const response = error.response // 에러 정보 추출
+    // accesstoken 재발급 로직
+    if (
+      response.status === 401 &&
+      response.data.errorMessage === 'accessToken expired'
+    ) {
+      console.log('accessToken 재발급 요청 보냄')
+      // accessToken 재발급 요청
+      const [url, method] = api('refreshToken')
+      const config = { url, method }
+      await axios
+        .request(config)
+        .then((res) => {
+          console.log('accessToken 재발급 요청 response', res)
+          // accessToken 재발급 성공 시, 새로운 accessToken으로 기존 요청 반복
+          return apiRequest(originalConfig)
+        })
+        .catch((err) => {
+          console.log('accessToken 재발급 요청 error', err)
+          // accessToken 재발급 실패 시, 로그인 페이지로 사용자 이동
+          alert('다시 로그인 해주세요')
+          redirect('/auth/login')
+          return
+        })
+    }
     return Promise.reject(error)
   },
 )

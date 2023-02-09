@@ -34,7 +34,11 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert('서버와의 통신이 불안정합니다.')
+        if (err.response.status === 400) {
+          alert(err.response.data.message)
+        } else {
+          alert('서버와의 통신이 불안정합니다.')
+        }
         setRooms([])
         console.log(err)
       })

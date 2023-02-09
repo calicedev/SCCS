@@ -10,7 +10,7 @@ INPUT
 id: 유저의 아이디
 */
 
-export default function getUserInfo() {
+export default function getUserInfo(id) {
   // 서버에 사용자 정보 요청
   const [url, method] = api('getUserInfo')
   const config = { method }
@@ -23,5 +23,15 @@ export default function getUserInfo() {
     })
     .catch((err) => {
       console.log(err)
+      store.dispatch(
+        setUserInfo({
+          id: id,
+          nickname: id,
+          email: 'test@naver.com',
+          score: 100,
+          joinDate: '2023-01-01',
+          profileImage: null,
+        }),
+      )
     })
 }

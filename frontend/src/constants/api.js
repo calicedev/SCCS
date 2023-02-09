@@ -12,7 +12,7 @@ const api = function (type, options = {}) {
     check_id: [`/api/unique/id/${options.id}`, 'get'],
     check_nickname: [`/api/unique/nickname/${options.nickname}`, 'get'],
     check_email: [`/api/unique/email/${options.email}`, 'get'],
-    accessToken: [`/api/member/accesstoken`, 'get'],
+    refreshToken: ['/api/member/refreshToken', 'get'],
     createRoom: ['/api/studyroom', 'post'],
     searchRoom: ['/api/studyroom', 'get'],
     // 방 입장 (2.4 민혁 추가)
