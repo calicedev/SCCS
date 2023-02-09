@@ -43,4 +43,5 @@ public interface StudyroomService {
 
   public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
 
+
 }

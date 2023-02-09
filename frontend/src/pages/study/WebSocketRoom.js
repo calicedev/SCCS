@@ -111,22 +111,38 @@ export default function WebSocketRoom() {
   }
   // 웹소켓 통신 열기 hello
   const connect = function () {
-    var sock = new sockjs('https://sccs.kr/sccs')
+    var sock = new sockjs('http://localhost:8080/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
       setConnected(true)
 
-      stompClient.send(
-        '/pub/studyroom',
-        {},
-        JSON.stringify({
-          studyroomId: studyroomId,
-          nickname: nickname,
-          status: 'enter',
-        }),
-      )
-      console.log('입장 에베베베베베~')
+        // 방장 입장의 경우
+        if (roomInfo.hostId === id) {
+          stompClient.send(
+            '/pub/studyroom',
+            {},
+            JSON.stringify({
+              studyroomId: studyroomId,
+              nickname: nickname,
+              status: 'enter',
+              host: 0, // 방장의 경우 1로 보냄
+            }),
+          )
+          console.log('방장 입장 에베베베베베~')
+        } else {
+          stompClient.send(
+            '/pub/studyroom',
+            {},
+            JSON.stringify({
+              studyroomId: studyroomId,
+              nickname: nickname,
+              status: 'enter',
+              host: 1, // 참여자의 경우 0으로 보냄
+            }),
+          )
+          console.log('일반 참여자 입장 에베베베베베~')
+        }
 
       // ************************ 여기서부터는 sub입니다******************************
 
