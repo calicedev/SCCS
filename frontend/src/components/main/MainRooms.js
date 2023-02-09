@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import Modal from 'components/common/Modal'
 import CreateRoomMdContent from 'components/main/CreateRoomMdContent'
 import Loading from 'components/common/Loading'
+import getUserInfo from 'libs/getUserInfo'
 
 const searchOptions = {
   title: '방 이름',
@@ -172,6 +173,7 @@ export default function MainRooms() {
           value="방 만들기"
         ></Button>
       </FlexBox>
+      <Button onClick={getUserInfo}> 누르지 마세요</Button>
       {rooms ? (
         <GridBox>
           {rooms.map((room) => (
