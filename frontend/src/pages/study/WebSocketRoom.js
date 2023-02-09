@@ -57,7 +57,7 @@ export default function WebSocketRoom() {
 
   const justMounted = useRef(true)
 
-  // console.log(readyForStudyArray)
+  console.log(readyForStudyArray)
   // 새로고침시에 유저 수 그대로 유지하기
   window.addEventListener('beforeunload', (event) => {
     // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
@@ -111,38 +111,22 @@ export default function WebSocketRoom() {
   }
   // 웹소켓 통신 열기 hello
   const connect = function () {
-    var sock = new sockjs('http://localhost:8080/sccs')
+    var sock = new sockjs('https://sccs.kr/sccs')
     const stompClient = stompjs.over(sock)
     setStomp(stompClient)
     stompClient.connect({}, function (chatDto) {
       setConnected(true)
 
-        // 방장 입장의 경우
-        if (roomInfo.hostId === id) {
-          stompClient.send(
-            '/pub/studyroom',
-            {},
-            JSON.stringify({
-              studyroomId: studyroomId,
-              nickname: nickname,
-              status: 'enter',
-              host: 0, // 방장의 경우 1로 보냄
-            }),
-          )
-          console.log('방장 입장 에베베베베베~')
-        } else {
-          stompClient.send(
-            '/pub/studyroom',
-            {},
-            JSON.stringify({
-              studyroomId: studyroomId,
-              nickname: nickname,
-              status: 'enter',
-              host: 1, // 참여자의 경우 0으로 보냄
-            }),
-          )
-          console.log('일반 참여자 입장 에베베베베베~')
-        }
+      stompClient.send(
+        '/pub/studyroom',
+        {},
+        JSON.stringify({
+          studyroomId: studyroomId,
+          nickname: nickname,
+          status: 'enter',
+        }),
+      )
+      console.log('입장 에베베베베베~')
 
       // ************************ 여기서부터는 sub입니다******************************
 
@@ -351,7 +335,6 @@ export default function WebSocketRoom() {
               roomInfo={roomInfo}
               personnel={personnel}
               startStudy={startStudy}
-              dataForStudy={dataForStudy}
               setDataForStudy={setDataForStudy}
             />
           ) : null}
