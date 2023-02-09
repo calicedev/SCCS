@@ -57,7 +57,7 @@ export default function WebSocketRoom() {
 
   const justMounted = useRef(true)
 
-  console.log(readyForStudyArray)
+  // console.log(readyForStudyArray)
   // 새로고침시에 유저 수 그대로 유지하기
   window.addEventListener('beforeunload', (event) => {
     // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
@@ -335,6 +335,7 @@ export default function WebSocketRoom() {
               roomInfo={roomInfo}
               personnel={personnel}
               startStudy={startStudy}
+              dataForStudy={dataForStudy}
               setDataForStudy={setDataForStudy}
             />
           ) : null}
