@@ -29,8 +29,11 @@ const api = function (type, options = {}) {
     submitCode: ['/api/studyroom/codingtest/submission', 'post'],
     testCode: ['/api/studyroom/codingtest/test', 'post'],
     codingTest: ['/api/studyroom/codingtest', 'post'],
+    codeReview: [`/api/mypage/problem/codreview/${options.problemId}`, 'get'],
+
     // 2.9 민혁 추가 (스터디 페이지 입장)
     study: ['api/studyroom/study', 'post'],
+
   }
 
   return apiObject[type]
