@@ -65,12 +65,20 @@ export default function WebSocketRoom() {
     disconnect(stomp)
   })
 
-  // 브라우저창 닫을 시에 현재 인원 수 -1 (disconnect())o9
+  // 브라우저창 닫을 시에 현재 인원 수 -1 (disconnect())
   window.addEventListener('unload', (event) => {
     // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
     event.preventDefault()
     disconnect(stomp)
   })
+
+  // 브라우저에서 뒤로가기 누를 시 (대기방) 인원수 -1 기능
+  // 코테방, 스터디 방에서 뒤로가기 누를 시에는 메인페이지로 가지지만 인원수 count가 안됨. 추후 수정해보자 (2.10 민혁)
+  window.onpopstate = (event) => {
+    if (waitingRoom) {
+      disconnect(stomp)
+    }
+  }
 
   // 채팅방 관련 정보 axios 요청
   useEffect(() => {
