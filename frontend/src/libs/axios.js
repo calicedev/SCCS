@@ -1,38 +1,33 @@
 import axios from 'axios'
-import api from 'constants/api'
-import store from 'redux/store'
-import { setUserInfo } from 'redux/userSlice'
-import { redirect } from 'react-router-dom'
+// import store from 'redux/store'
 
 /*
 서버에 요청을 날리는 axios instance
 https://yamoo9.github.io/axios/guide/api.html#%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4-%EC%83%9D%EC%84%B1
 */
 
-axios.defaults.withCredentials = true
-
 const apiRequest = axios.create({
   baseURL: 'https://sccs.kr', // 서버 주소
-
-  withCredentials: true,
+  withCredentials: true, // 쿠키 사용을 위해 설정
 })
 
 // request 인터셉터
 apiRequest.interceptors.request.use(
   (config) => {
-    const state = store.getState()
-    const accessToken = state.token.accessToken
-    // accessToken이 없을 경우 헤더 없이 요청
-    if (!accessToken) return config
-    // accessToken이 있을 경우 Authorization헤더에 추가해서 요청
+    // const state = store.getState()
+    // const accessToken = state.token.accessToken
+    // // accessToken이 없을 경우 헤더 없이 요청
+    // if (!accessToken) return config
+    // // accessToken이 있을 경우 Authorization헤더에 추가해서 요청
+    // // return {
+    // //   ...config,
+    // //   headers: { Authorization: `Bearer ${accessToken}` },
+    // // }
+    // config.headers.Authorization = `Bearer ${accessToken}`
     // return {
     //   ...config,
-    //   headers: { Authorization: `Bearer ${accessToken}` },
     // }
-    config.headers.Authorization = `Bearer ${accessToken}`
-    return {
-      ...config,
-    }
+    return config
   },
   (error) => {
     return Promise.reject(error)

@@ -38,12 +38,14 @@ export default function ResetPasswordForm() {
     const config = { method, data }
     axios(url, config)
       .then((res) => {
+        console.log(res)
         const newMsg = { ...message }
         newMsg.text = `입력하신 이메일로 임시 비밀번호가 발급되었습니다.`
         newMsg.isValid = true
         setMessage(newMsg)
       })
       .catch((err) => {
+        console.log(err)
         const newMsg = { ...message }
         newMsg.text = '해당 정보의 회원이 존재하지 않습니다.'
         newMsg.isValid = false
@@ -52,7 +54,7 @@ export default function ResetPasswordForm() {
   }
 
   return (
-    <Flexbox>
+    <Container>
       <IconButton
         icon={<RiArrowGoBackFill />}
         size={'small'}
@@ -82,23 +84,27 @@ export default function ResetPasswordForm() {
           }}
           result={message}
         ></AuthInput>
-        <p color={message.isValid ? 'pass' : 'error'} value={message.text} />
+        <p className={message.isValid ? 'pass' : 'error'}>{message.text}</p>
       </Form>
 
       <ButtonContainer>
         <Button onClick={resetPassword} value="Submit" size="medium"></Button>
       </ButtonContainer>
-    </Flexbox>
+    </Container>
   )
 }
 
-const Flexbox = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
 
+  width: 90%;
   height: 100%;
-  padding: 0rem 8rem;
+
+  @media screen and (min-width: 1024px) {
+    width: 60%;
+  }
 `
 const Form = styled.div`
   margin: 3rem 0rem;

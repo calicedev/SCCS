@@ -7,6 +7,7 @@ import ProfileImgInput from 'components/mypage/ProfileImgInput'
 import { useNavigate } from 'react-router-dom'
 import { useProfileInput } from 'hooks/useProfileInput'
 import { useSelector } from 'react-redux'
+import getUserInfo from 'libs/getUserInfo'
 import axios from 'libs/axios'
 import api from 'constants/api'
 
@@ -38,16 +39,21 @@ export default function ProfileEdit() {
 
   // 정보수정 서버요청
   const save = () => {
+    // 데이터가 변하지 않은 경우, 해당 항목을 null값으로 보냄
     const data = {
       nickname: nicknameIsChanged ? nickname : null,
       email: emailIsChanged ? email : null,
-      mfile: typeof img !== 'string' ? img : null,
+      mfile: typeof img !== 'string' ? img[0] : null,
     }
+    console.log('data', data)
+    const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api('updateUserInfo')
-    const config = { url, method, data }
+    const config = { url, method, data, headers }
     axios(config)
       .then((res) => {
         console.log(res)
+        getUserInfo()
+        navigate('/mypage/profile')
       })
       .catch((err) => {
         alert('서버와의 통신이 원활하지 않습니다.')
@@ -55,7 +61,7 @@ export default function ProfileEdit() {
       })
   }
 
-  // 회원탈퇴 서버요청
+  // 회원탈퇴 서버 요청
   const withdrawl = () => {
     const data = {
       id: user.id,

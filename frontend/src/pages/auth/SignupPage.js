@@ -64,7 +64,7 @@ export default function SignupForm() {
   }
 
   return (
-    <Flexbox>
+    <Container>
       <h1>Signup</h1>
       <p>If you already have an account</p>
       <Link to="/auth/login" className="pass bold" weight="500">
@@ -112,17 +112,21 @@ export default function SignupForm() {
       <ButtonContainer>
         <Button size="medium" onClick={signup} value="회원가입"></Button>
       </ButtonContainer>
-    </Flexbox>
+    </Container>
   )
 }
 
-const Flexbox = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
 
+  width: 90%;
   height: 100%;
-  padding: 0rem 8rem;
+
+  @media screen and (min-width: 1024px) {
+    width: 60%;
+  }
 `
 
 const Form = styled.div`

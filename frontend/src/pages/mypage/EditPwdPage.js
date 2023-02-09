@@ -30,7 +30,7 @@ export default function PasswordEdit() {
   // 수정 정보 저장
   const save = () => {
     // 모든 정보를 유효하게 입력했는지 확인
-    if (!newPwdMsg.isValid || !confirmPwdMsg.isValid) {
+    if (!confirmPwdMsg.isValid) {
       alert('입력 양식을 모두 유효하게 입력해주세요')
       return
     }
