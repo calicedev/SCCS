@@ -65,11 +65,11 @@ export default function CodingTest({
           <TopNavBar>
             <Btn>{roomInfo.title}</Btn>
             <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
-            {roomInfo.algoIds.map((algoId) => {
-              return <Btn>#{algorithmPk[algoId]}</Btn>
+            {roomInfo.algoIds.map((algoId, idx) => {
+              return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
             })}
-            {['1번', '2번'].map((problem) => {
-              return <Btn>{problem}</Btn>
+            {['1번', '2번'].map((problem, idx) => {
+              return <Btn key={idx}>{problem}</Btn>
             })}
             <span>
               남은 시간: {hours}시간 {minutes}분 {seconds}초
