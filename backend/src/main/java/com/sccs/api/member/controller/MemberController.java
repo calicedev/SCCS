@@ -99,7 +99,7 @@ public class MemberController {
   }
 
   /**
-   * 로그인 : 아이디, 비밀번호 일치시 토큰 생성
+   * 로그인 : id, password 일치시 토큰 생성
    * Auth
    **/
   @PostMapping("/member/login")
@@ -121,9 +121,9 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-            (MINUTE * 30)); // 30분
+            (MINUTE * 2)); // 2분
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-            (WEEK)); // 1주일
+            (MINUTE * 5)); // 5분
 
 //        resultmap.put("accessToken", accessToken);
 //        resultmap.put("refreshToken", refreshToken);
@@ -163,9 +163,8 @@ public class MemberController {
    * 회원 정보
    * Auth
    **/
-  // @GetMapping("/member/{id}")
   @GetMapping("/member")
-  public ResponseEntity<?> memberInfo(@CookieValue String accessToken, @CookieValue String refreshToken /** HttpServletRequest request **/ ) {
+  public ResponseEntity<?> memberInfo(@CookieValue String accessToken /** HttpServletRequest request **/ ) {
     Map<String, Object> resultMap = new HashMap<>();
 
     // 헤더 방식
@@ -194,42 +193,38 @@ public class MemberController {
   }
 
   /**
-   * 아이디 찾기 : 이름과 이메일로 아이디 찾기
+   * 아이디 찾기 : name, password 일치시 로직 실행
    **/
   @PostMapping("/member/id")
   public ResponseEntity<?> findId(@RequestBody HashMap<String, String> map) {
-    String id = memberService.findId(map); // 이름과 이메일로 아이디 찾기
+    String id = memberService.findId(map); // name과 email로 id 찾기
 
     if (id != null) {
+      logger.debug("[findId]아이디 찾기 성공");
       return new ResponseEntity<>(id, HttpStatus.OK); // 200
     } else {
+      logger.debug("[findId]회원정보가 존재하지 않습니다.");
       HashMap<String, String> resultMap = new HashMap<>();
       resultMap.put("message" , "회원정보가 존재하지 않습니다.");
       return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND); // 404
     }
   }
 
-  /** 회원 정보 수정 **/
   /**
+   * 회원 정보 수정
    * Auth
    **/
   @PatchMapping("/member")
-  public ResponseEntity<?> modify(/**@RequestBody HashMap<String, String> paramMap**/String email,
-      String nickname, HttpServletRequest request, MultipartFile mfile
-      /**@CookieValue String accessToken, @CookieValue String refreshToken **/) throws IOException {
+  public ResponseEntity<?> modify(String email,
+      String nickname, MultipartFile mfile,
+      @CookieValue String accessToken) throws IOException {
     Map<String, String> resultMap = new HashMap<>();
-
-    final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
-    logger.info("헤더에서 accessToken 파싱 성공 : {}", accessToken);
 
     Claims claims = jwtService.getToken(accessToken);   // accessToken에서 Claims 파싱
     String id = (String) claims.get("id");              // accessToken에서 회원 id 파싱
-    logger.info("accessToken에서 id 파싱 성공 : {}", id);
 
     MemberDto memberDto = memberService.memberInfo(id);
-    String result = awsS3Service.getTemporaryUrl("aa"+mfile.getOriginalFilename());
-    System.out.println("결과는?????????????"+result);
-//    String awsProfilePath = "";
+    //String result = awsS3Service.getTemporaryUrl("aa"+mfile.getOriginalFilename());
 
     FileDto fileDto = null;
     if (!mfile.isEmpty()) {
@@ -237,14 +232,11 @@ public class MemberController {
       //awsProfilePath = uuid + "_" + mfile.getOriginalFilename();
       fileDto = awsS3Service.upload(mfile, "sccs");
 
-      logger.info("파일이름 : {}", fileDto.getFileName());
-      logger.info("URL 경로 : {}", fileDto.getUrl());
-
-
-
+      logger.info("[modify]파일이름 : {}", fileDto.getFileName());
+      logger.info("[modify]파일경로 : {}", fileDto.getUrl());
     }
 
-    logger.debug("[modify]수정 전 : {}", memberDto);
+    logger.debug("[modify]회원정보 수정 전 : {}", memberDto);
       if (nickname != null) {
           memberDto.setNickname(nickname);
       }
@@ -254,32 +246,30 @@ public class MemberController {
       if (mfile != null) {
         memberDto.setProfileImage(fileDto.getUrl());
       }
-    logger.debug("[modify]수정 후 : {}", memberDto);
+    logger.debug("[modify]회원정보 수정 후 : {}", memberDto);
 
     if (memberService.modify(memberDto).equals(SUCCESS)) {
+      logger.debug("[modify]회원정보 수정 성공");
       resultMap.put("message", "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else {
-      resultMap.put("message", "권한이 없습니다");
+      logger.debug("[modify]회원정보 수정 실패");
+      resultMap.put("message", "실패");
       return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 401
     }
   }
 
-  /** 비밀번호 수정 **/
   /**
+   * 비밀번호 수정
    * Auth
    **/
   @PatchMapping("/member/password")
   public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> paramMap,
-      HttpServletRequest request
-      /** @CookieValue String accessToken, @CookieValue String refreshToken **/) throws NoSuchAlgorithmException {
-    String newPassword = paramMap.get("newPassword"); // 클라이언트에서 넘어온 변경하고자 하는 비밀번호
-    logger.debug("변경하고자 하는 비밀번호 : {}", newPassword);
+      @CookieValue String accessToken) {
+    String newPassword = paramMap.get("newPassword"); // 변경하고자 하는 비밀번호
+    logger.debug("[modifyPassword]변경하고자 하는 비밀번호 : {}", newPassword);
 
-    Map<String, String> resultMap = new HashMap<>(); // 결과를 담을 자료구조
-
-    final String accessToken = request.getHeader(HEADER_AUTH)
-        .substring("Bearer ".length()); // 헤더 방식
+    Map<String, String> resultMap = new HashMap<>();
 
     Claims claims = jwtService.getToken(accessToken);
     String id = null;
@@ -287,18 +277,15 @@ public class MemberController {
           id = (String) claims.get("id"); // accessToken에서 회원 id 파싱
       }
 
-      logger.info("새롭게 받은 비밀번호 : {}", newPassword);
-
     MemberDto memberDto = memberService.memberInfo(id); // DB에서 회원 정보 조회
-
     memberDto.setPassword(newPassword); // modifyPassword 에서 암호화 하기 때문에 여기선 세팅만 해준다.
 
-    // memberDto.setPassword(newPassword);
-
     if (memberService.modifyPassword(memberDto).equals(SUCCESS)) {
+      logger.debug("[modifyPassword]비밀번호 수정 성공");
       resultMap.put("message", "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else {
+      logger.debug("[modifyPassword]비밀번호 수정 실패");
       resultMap.put("message", "실패");
       return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 401
     }
@@ -316,15 +303,17 @@ public class MemberController {
 
     String result = memberService.uniqueParam(uniqueDto); // DB에서 해당 param이 있는지 조회 (값이 있다면 중복임)
 
-    Map<String, Object> resultMap = new HashMap<>(); // 결과를 담는 자료구조
+    Map<String, Object> resultMap = new HashMap<>();
 
     if (result == null) { // 중복이 존재하지 않는 경우 unique = true
+      logger.debug("[duplicateParam]사용 가능한 {}입니다.", uniqueDto.getType());
       resultMap.put("unique", true);
       resultMap.put("message", "사용 가능한 " + uniqueDto.getType() + " 입니다");
       return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     } else { // 중복인 경우 unique = false
+      logger.debug("[duplicateParam]이미 존재하는 {}입니다.", uniqueDto.getType());
       resultMap.put("unique", false);
-      resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + " 입니다");
+      resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + "입니다");
       return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     }
   }
@@ -337,68 +326,89 @@ public class MemberController {
   public ResponseEntity<?> initPassword(
       @RequestBody @ApiParam(value = "아이디와 이메일", required = true) Map<String, String> paramMap)
       throws MessagingException {
-
-    logger.debug("paramMap : {}", paramMap);
-
-    String mail = paramMap.get("email"); // 받는 사람 주소
+    String email = paramMap.get("email"); // 받는 사람 주소
     String id = paramMap.get("id"); // 회원 아이디
 
-    if (emailService.sendEmail(id, mail)) {
-      return new ResponseEntity<String>("성공", HttpStatus.OK);
+    HashMap<String, String> resultMap = new HashMap();
+
+    MemberDto memberDto = memberService.memberInfo(id);
+
+    if (memberDto == null) {
+      logger.debug("[initPassword]유효하지 않은 아이디 입니다.");
+      resultMap.put("message", "유효하지 않은 아이디 입니다.");
+      return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
     }
-    return new ResponseEntity<>("실패", HttpStatus.OK);
+
+    if (!memberDto.getEmail().equals(email)) {
+      logger.debug("[initPassword]이메일 정보가 일치하지 않습니다.");
+      resultMap.put("message", "이메일 정보가 일치하지 않습니다.");
+      return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
+    }
+
+    if (emailService.sendEmail(id, email)) {
+      logger.debug("[initPassword]비밀번호 초기화 성공");
+      resultMap.put("message", "성공");
+      return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+
+    logger.debug("[initPassword]비밀번호 초기화 실패");
+    resultMap.put("message", "실패");
+    return new ResponseEntity<>(resultMap, HttpStatus.OK);
   }
 
   /**
    * access-token 재발급
    **/
-  // Todo : access , refresh 모두 받아서 refresh 토큰 값으로 id 값을 value 로 redis에 저장
   @GetMapping("/member/refreshToken")
-  public ResponseEntity<?> refreshToken(
-/**@CookieValue String accessToken, @CookieValue String refreshToken **/
-      HttpServletRequest request) {
-    Map<String, Object> resultMap = new HashMap<>();
+  public ResponseEntity<?> refreshToken(@CookieValue String refreshToken, HttpServletResponse response) {
+    HashMap<String, Object> resultMap = new HashMap<>();
     HttpStatus status = HttpStatus.OK;
-
-    final String refreshToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
 
     if (jwtService.checkToken(refreshToken)) {
       Claims claims = jwtService.getToken(refreshToken);
       String id = (String) claims.get("id");
-      logger.debug("토큰 인증 성공! 회원 id : {}", id);
-      redisService.showAllKeys();
-      logger.debug("redis에 저장된 토큰 값 : {}", redisService.getRefreshTokenWithRedis(refreshToken));
+      logger.debug("[refreshToken]토큰 인증 성공");
       if (id.equals(redisService.getRefreshTokenWithRedis(refreshToken))) {
+        logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
         String newAccessToken = jwtService.createToken(id, "accessToken", 30 * MINUTE);
-        resultMap.put("accessToken", newAccessToken);
+
+        // 토큰 생성
+        Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);
+
+        // 엑세스 토큰 세팅
+        response.addCookie(accessTokenCookie);
+
         resultMap.put("message", SUCCESS);
-        status = HttpStatus.OK;
-        logger.debug("리프레쉬 토큰 인증 성공 !! ");
       }
     } else {
       logger.debug("리프레쉬 토큰 사용 불가");
       resultMap.put("message", "로그인 페이지로 이동하세요");
       status = HttpStatus.UNAUTHORIZED;
     }
-    return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    return new ResponseEntity<>(resultMap, status);
   }
 
   @DeleteMapping("/member")
-  public ResponseEntity<?> delete(HttpServletRequest request) {
+  public ResponseEntity<?> delete(@CookieValue String accessToken) {
     HashMap<String, String> resultMap = new HashMap<>();
-    final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
+
     Claims claims = jwtService.getToken(accessToken);
     String id = (String) claims.get("id");
-    logger.info("id는 : {}", id);
 
-    if (memberService.delete(id) == SUCCESS) {
+    if (memberService.delete(id).equals(SUCCESS)) {
+      logger.debug("[delete]회원 탈퇴 성공");
       resultMap.put("message", "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
+    logger.debug("[delete]회원 탈퇴 실패");
     resultMap.put("message", "실패");
     return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
   }
+
+
+
+
 
   /**
    * 레디스 전체 키 개수 조회
@@ -416,23 +426,6 @@ public class MemberController {
   public ResponseEntity<?> deleteKeys() {
     redisService.deleteAllKeys();
     return new ResponseEntity<>("모든 키 삭제 성공", HttpStatus.OK);
-  }
-
-  /** 쿠키 통신 테스트 컨트롤러 **/
-  @GetMapping("/cookie/test")
-  public ResponseEntity<?> testCookie(HttpServletRequest request) {
-
-    Cookie[] list = request.getCookies();
-
-    for (Cookie cookie : list) {
-      logger.info("쿠기 시간 : {}", cookie.getMaxAge()+"");
-      logger.info("쿠기 이름 : {}", cookie.getName());
-    }
-
-    if (list.length >= 1) {
-      return new ResponseEntity<>("cookie exist", HttpStatus.OK);
-    }
-    return new ResponseEntity<>("null", HttpStatus.OK);
   }
 
 }
