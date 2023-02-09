@@ -26,14 +26,14 @@ export default function MonthSelector({
     <Flexbox>
       <IconButton
         icon={<AiFillCaretLeft />}
-        size="small"
+        size="medium"
         type="gray"
         onClick={onClickPrevious}
       />
       <StyledInput type="month" value={month} onChange={onChange} />
       <IconButton
         icon={<AiFillCaretRight />}
-        size={'small'}
+        size="medium"
         type="gray"
         onClick={onClickNext}
       />
@@ -61,7 +61,7 @@ const Flexbox = styled.div`
 `
 
 const StyledInput = styled.input`
-  width: 10rem;
+  width: 12rem;
 
   padding: 0.2rem 0.5rem;
 
@@ -69,7 +69,7 @@ const StyledInput = styled.input`
   outline: none;
 
   color: ${({ theme }) => theme.fontColor};
-  font-size: 1rem;
+  font-size: 1.5rem;
 
   background-color: #00000000;
 

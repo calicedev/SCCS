@@ -1,7 +1,7 @@
 const api = function (type, options = {}) {
   const apiObject = {
     signup: ['/api/member', 'post'],
-    getUserInfo: [`/api/member/${options.id}`, 'get'],
+    getUserInfo: [`/api/member`, 'get'],
     updateUserInfo: ['/api/member', 'patch'],
     withdrawl: ['/api/member', 'delete'],
     login: ['/api/member/login', 'post'],

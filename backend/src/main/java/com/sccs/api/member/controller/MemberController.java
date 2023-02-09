@@ -84,26 +84,28 @@ public class MemberController {
     String salt = encryptService.newSalt(); // 암호용 난수
     String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
-    logger.debug("[signUp]암호화 후 비밀번호 : {}", hex);
     memberDto.setPassword(hex); // 설정된 DTO가 DB에 반영될 예정
     memberDto.setSalt(salt); // salt 값을 기록. 로그인 처리시 비밀번호 검증시 사용
 
     if (memberService.signUp(memberDto).equals(SUCCESS)) {
-      resultMap.put("message", "회원 가입 성공");
+      logger.debug("[signUp]회원 가입 성공");
+      resultMap.put("message", "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else {
-      resultMap.put("message", "회원 가입 실패");
+      logger.debug("[signUp]회원 가입 실패");
+      resultMap.put("message", "실패");
       return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 401
     }
   }
 
   /**
    * 로그인 : 아이디, 비밀번호 일치시 토큰 생성
+   * Auth
    **/
   @PostMapping("/member/login")
   public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap,
       HttpServletResponse response) {
-    Map<String, String> resultmap = new HashMap<>(); // 결과를 담는 자료구조
+    Map<String, String> resultmap = new HashMap<>();
 
     try {
       MemberDto memberDto = memberService.memberInfo(paramMap.get("id")); // memberDto를 DB에서 조회
@@ -112,39 +114,41 @@ public class MemberController {
       String salt = memberDto.getSalt(); // DTO에 저장된 salt 값 불러오기
       String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
-      logger.debug("[logIn]로그인 시도 비번 : {}", hex);
-      logger.debug("[logIn]기존   비밀번호 : {}", memberDto.getPassword());
+//      logger.debug("[logIn]로그인 시도 비번 : {}", hex);
+//      logger.debug("[logIn]기존   비밀번호 : {}", memberDto.getPassword());
 
       if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
         logger.debug("[logIn]로그인 성공");
+
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
             (MINUTE * 30)); // 30분
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
             (WEEK)); // 1주일
-        resultmap.put("accessToken", accessToken);
-        resultmap.put("refreshToken", refreshToken);
 
+//        resultmap.put("accessToken", accessToken);
+//        resultmap.put("refreshToken", refreshToken);
+
+        // 쿠키 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", accessToken);
         Cookie refreshTokenCookie = cookieService.createCookie("refreshToken", refreshToken);
 
-        // Redis에 저장 (key: refreshtoken값, value: 회원 아이디)
+        // Redis에 리프레쉬 토큰 저장
         try {
           redisService.setRefreshTokenWithRedis(refreshToken,
               memberDto.getId()); // vDeXz2onv3wFn : ssafy
-          logger.debug("[logIn]Redis에 리프레시토큰 저장완료");
+          logger.debug("[logIn]레디스 리프레시토큰 저장완료");
         } catch (Exception e) {
-          logger.error(e.getMessage());
+          logger.error("[login]레디스 값 저장 실패, {}", e.getMessage());
           return new ResponseEntity<>(resultmap, HttpStatus.BAD_GATEWAY);
         }
-        logger.debug("accessToken : {}", accessToken);
-        logger.debug("refreshToken : {}", refreshToken);
-
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
+        logger.debug("[login]로그인 성공");
+        resultmap.put("message", "성공");
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
-        logger.debug("[logIn]비밀번호 불일치!!!");
+        logger.debug("[logIn]비밀번호 불일치");
         resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
         return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED); // 401
       }
@@ -155,19 +159,20 @@ public class MemberController {
     }
   }
 
-  /** 회원 정보 **/
   /**
+   * 회원 정보
    * Auth
    **/
-  @GetMapping("/member/{id}")
-  public ResponseEntity<?> memberInfo(HttpServletRequest request) {
+  // @GetMapping("/member/{id}")
+  @GetMapping("/member")
+  public ResponseEntity<?> memberInfo(@CookieValue String accessToken, @CookieValue String refreshToken /** HttpServletRequest request **/ ) {
     Map<String, Object> resultMap = new HashMap<>();
 
-    final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
+    // 헤더 방식
+    // final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length()); // 헤더에서 토큰 파싱
+    // String id = (String) jwtService.getToken(token).get("id"); // 회원 아이디를 accessToken에서 파싱
 
-    String id = (String) jwtService.getToken(token).get("id"); // 회원 아이디를 accessToken에서 파싱
-    logger.info("accessToken에서 회원 아이디 파싱 : {}", id);
-    logger.info("회원정보 조회!!!!");
+    String id = (String) jwtService.getToken(accessToken).get("id");
     MemberDto memberDto = memberService.memberInfo(id);
 
     if (memberDto != null) { // 회원 정보 반환
@@ -177,12 +182,14 @@ public class MemberController {
       resultMap.put("email", memberDto.getEmail());
       resultMap.put("profileImage", memberDto.getProfileImage());
       resultMap.put("score", memberDto.getScore());
-      logger.debug("날짜 데이터 출력값: {}",
-          new SimpleDateFormat("yyyy-MM-dd").format(memberDto.getJoinDate()));
       resultMap.put("joinDate", new SimpleDateFormat("yyyy-MM-dd").format(memberDto.getJoinDate()));
+
+      logger.debug("[memberInfo]회원 정보 조회 성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else { // id가 없는 경우
-      return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // 204
+      logger.debug("[memberInfo]회원이 존재하지 않습니다.");
+      resultMap.put("message", "회원이 존재하지 않습니다.");
+      return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND); // 404
     }
   }
 
@@ -196,7 +203,9 @@ public class MemberController {
     if (id != null) {
       return new ResponseEntity<>(id, HttpStatus.OK); // 200
     } else {
-      return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // 204
+      HashMap<String, String> resultMap = new HashMap<>();
+      resultMap.put("message" , "회원정보가 존재하지 않습니다.");
+      return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND); // 404
     }
   }
 
@@ -209,9 +218,6 @@ public class MemberController {
       String nickname, HttpServletRequest request, MultipartFile mfile
       /**@CookieValue String accessToken, @CookieValue String refreshToken **/) throws IOException {
     Map<String, String> resultMap = new HashMap<>();
-
-    logger.info("오리지널 파일이름 : {}", mfile.getOriginalFilename());
-    logger.info("넘어온 값: " + email + " " + nickname);
 
     final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
     logger.info("헤더에서 accessToken 파싱 성공 : {}", accessToken);

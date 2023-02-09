@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Button from 'components/common/Button'
 import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
-import setUserInfo from 'libs/setUserInfo'
+import getUserInfo from 'libs/getUserInfo'
 import { setTokens } from 'redux/tokenSlice'
 import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
@@ -43,12 +43,9 @@ export default function LoginForm() {
       .then((res) => {
         const tokens = res.data
         console.log(res)
-        dispatch(setTokens(tokens))
+        // dispatch(setTokens(tokens))
+        getUserInfo()
         navigate('/')
-      })
-      .then(() => {
-        setUserInfo(id)
-        // dispatch(setUserId(id))
       })
       .catch((err) => {
         console.log(err)
@@ -108,8 +105,12 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
 
+  width: 90%;
   height: 100%;
-  width: 60%;
+
+  @media screen and (min-width: 1024px) {
+    width: 60%;
+  }
 `
 
 const Flexbox = styled.div`

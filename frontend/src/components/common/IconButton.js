@@ -45,7 +45,7 @@ IconButton.propTypes = {
     'gray',
     'white',
   ]),
-  size: PropTypes.oneOf(['tiny', 'small', 'middle', 'large']),
+  size: PropTypes.oneOf(['tiny', 'small', 'medium', 'large']),
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
 }
@@ -72,7 +72,7 @@ const IconWrapper = styled.div`
   &.small-icbtn {
     font-size: 1.5rem;
   }
-  &.middle-icbtn {
+  &.medium-icbtn {
     font-size: 2rem;
   }
   &.large-icbtn {
