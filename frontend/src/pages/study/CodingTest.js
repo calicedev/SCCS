@@ -60,70 +60,69 @@ export default function CodingTest({
   const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
   const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000)
 
-//---------------------------------------------------------------------------------------------------
-const [codingTestResult, setCodingTestResult] = useState([])
-const navigate = useNavigate()
-const testCode = useCallback(() => {
-  // let fileName = 'formFile.txt';
-  const content = document.querySelector("textarea").value;
-  const element = document.createElement('a');
-  const file = new Blob([content], { type: 'text/plain', });
-  const formData = new FormData();
-  formData.append("formFile", file)
-  formData.append("memberId", "mint_angel")
-  formData.append("studyroomId", 30)
-  formData.append("problemId", 1)
-  formData.append("languageId", 2)
+  //---------------------------------------------------------------------------------------------------
+  const [codingTestResult, setCodingTestResult] = useState([])
+  const navigate = useNavigate()
+  const testCode = useCallback(() => {
+    // let fileName = 'formFile.txt';
+    const content = document.querySelector('textarea').value
+    const element = document.createElement('a')
+    const file = new Blob([content], { type: 'text/plain' })
+    const formData = new FormData()
+    formData.append('formFile', file)
+    formData.append('memberId', 'mint_angel')
+    formData.append('studyroomId', 30)
+    formData.append('problemId', 1)
+    formData.append('languageId', 2)
 
-  
-  const headers = { "Content-Type": "multipart/form-data" }
-  const [url, method] = api('testCode')
-  const config = { url, method, data: formData, headers }
-  axios(config)
-    .then((res) => {
-      console.log(res)
-      // navigate('/')
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  // element.href = URL.createObjectURL(file);
-  // // element.download = fileName;
-  // document.body.appendChild(element); // Required for this to work in FireFox
-  element.click();
-},[])
+    const headers = { 'Content-Type': 'multipart/form-data' }
+    const [url, method] = api('testCode')
+    const config = { url, method, data: formData, headers }
+    axios(config)
+      .then((res) => {
+        console.log(res)
+        // navigate('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    // element.href = URL.createObjectURL(file);
+    // // element.download = fileName;
+    // document.body.appendChild(element); // Required for this to work in FireFox
+    element.click()
+  }, [])
 
-const submitCode = () => {
-  // let fileName = 'formFile.txt';
-  const content = document.querySelector("textarea").value;
-  const element = document.createElement('a');
-  const file = new Blob([content], { type: 'text/plain', });
-  const formData = new FormData();
-  formData.append("formFile", file)
-  formData.append("memberId", "mint_angel")
-  formData.append("studyroomId", 30)
-  formData.append("problemId", 1)
-  formData.append("languageId", 2)
+  const submitCode = () => {
+    // let fileName = 'formFile.txt';
+    const content = document.querySelector('textarea').value
+    const element = document.createElement('a')
+    const file = new Blob([content], { type: 'text/plain' })
+    const formData = new FormData()
+    formData.append('formFile', file)
+    formData.append('memberId', 'mint_angel')
+    formData.append('studyroomId', 30)
+    formData.append('problemId', 1)
+    formData.append('languageId', 2)
 
-  const headers = { "Content-Type": "multipart/form-data" }
+    const headers = { 'Content-Type': 'multipart/form-data' }
 
-  const [url, method] = api('submitCode')
-  const config = { url, method, data: formData, headers }
-  axios(config)
-    .then((res) => {
-      console.log(res)
-      // navigate('/')
-      setCodingTestResult(res.data)
-    })
-    .catch((err) => {
-      console.log(err)  
-    })
-  // element.href = URL.createObjectURL(file);
-  // // element.download = fileName;
-  // document.body.appendChild(element); // Required for this to work in FireFox
-  element.click();
-}
-//---------------------------------------------------------------------------------------------------
+    const [url, method] = api('submitCode')
+    const config = { url, method, data: formData, headers }
+    axios(config)
+      .then((res) => {
+        console.log(res)
+        // navigate('/')
+        setCodingTestResult(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    // element.href = URL.createObjectURL(file);
+    // // element.download = fileName;
+    // document.body.appendChild(element); // Required for this to work in FireFox
+    element.click()
+  }
+  //---------------------------------------------------------------------------------------------------
 
   return (
     <>
@@ -132,11 +131,11 @@ const submitCode = () => {
           <TopNavBar>
             <Btn>{roomInfo.title}</Btn>
             <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
-            {roomInfo.algoIds.map((algoId) => {
-              return <Btn>#{algorithmPk[algoId]}</Btn>
+            {roomInfo.algoIds.map((algoId, idx) => {
+              return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
             })}
-            {['1번', '2번'].map((problem) => {
-              return <Btn>{problem}</Btn>
+            {['1번', '2번'].map((problem, idx) => {
+              return <Btn key={idx}>{problem}</Btn>
             })}
             <span>
               남은 시간: {hours}시간 {minutes}분 {seconds}초
@@ -184,47 +183,41 @@ const submitCode = () => {
                   }}
                 >
                   <ResultSection>
-                    {
-                      codingTestResult.map((result) => {
-                        return result.result + '\n'
-                      })
-                    }
+                    {codingTestResult.map((result) => {
+                      return result.result + '\n'
+                    })}
                   </ResultSection>
                 </Resizable>
                 <ColoredLine color="#4B91F1" />
-                
-                <Foot>
-                <EndBtn>
-                  <Button
-                    value="시험 종료"
-                    type='danger'
-                    size="small"
-                    // onClick={() => {
-                    //   navigate('/study')            
-                    // }}
-                  ></Button>
-                </EndBtn>
-                <CompileBtn>
-                  <Button
-                    value="테스트"
-                    type='gray'
-                    size="small"
-                    margin-right='5px'
-                    onClick={() => {
-                      testCode('')
-                    }}
-                  ></Button>
-                  <Space></Space>
-                  <Button
-                  value="제출"
-                  size="small"
-                  onClick={() => {
-                    submitCode('')
-                  }}
-                  ></Button>
-                </CompileBtn>
-              </Foot>
-                
+
+                <Foot onClick={startStudy}>
+                  <EndBtn>
+                    <Button
+                      value="시험 종료"
+                      type="danger"
+                      size="small"
+                    ></Button>
+                  </EndBtn>
+                  <CompileBtn>
+                    <Button
+                      value="테스트"
+                      type="gray"
+                      size="small"
+                      margin-right="5px"
+                      onClick={() => {
+                        testCode('')
+                      }}
+                    ></Button>
+                    <Space></Space>
+                    <Button
+                      value="제출"
+                      size="small"
+                      onClick={() => {
+                        submitCode('')
+                      }}
+                    ></Button>
+                  </CompileBtn>
+                </Foot>
               </FlexColumn>
             </Resizable>
           </Main>
@@ -335,7 +328,7 @@ const Foot = styled.div`
 `
 
 const EndBtn = styled.div`
-  display: flex;  
+  display: flex;
 `
 
 const CompileBtn = styled.div`
