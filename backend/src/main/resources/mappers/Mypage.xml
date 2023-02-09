@@ -95,5 +95,9 @@
     WHERE p.id = s.problem_id AND s.member_id = #{memberId};
   </select>
 
+  <select id="getProblemUrl" parameterType="int" resultType="String">
+    SELECT problem_folder FROM problem WHERE id=#{problemId}
+  </select>
+
 
 </mapper>

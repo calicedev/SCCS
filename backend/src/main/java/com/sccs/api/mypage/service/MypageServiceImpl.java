@@ -32,4 +32,9 @@ public class MypageServiceImpl implements MypageService {
   public List<HashMap<String, Object>> getProblems(String memberId) {
     return mypageMapper.getProblems(memberId);
   }
+
+  @Override
+  public String getProblemUrl(int problemId) {
+    return mypageMapper.getProblemUrl(problemId);
+  }
 }
