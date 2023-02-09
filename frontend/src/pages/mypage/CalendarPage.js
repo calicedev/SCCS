@@ -15,7 +15,7 @@ export default function StudyCalendar() {
 
   // useState
   const [currentDate, setCurrentDate] = useState(new Date())
-  // // 모달 관련 useState
+  // 모달 관련 useState
   const [studies, setStudies] = useState([])
   const [isHovered, setIsHovered] = useState(false)
   const [modalLeft, setModalLeft] = useState(0)
@@ -26,8 +26,8 @@ export default function StudyCalendar() {
   const [height, setHeight] = useState(0)
 
   // useMemo
-  // // studies 변경 시 Calendar에 prop해 줄 dateToStudies 오브젝트 생성
-  // // { YYYY-MM-DD: 날짜박스에 표시할 컨텐츠 }
+  // 스터디내역(studies)를 달력 컴포넌트에 내려 줄 형태로 가곧
+  // Result : { YYYY-MM-DD: 날짜박스에 표시할 컨텐츠 }
   const dateToStudies = useMemo(() => {
     const hashedStudies = {}
     studies.forEach((study) => {
@@ -48,8 +48,7 @@ export default function StudyCalendar() {
     )
   }, [studies])
 
-  // useEffect
-  // // currentDate에 따라 studies 데이터 서버 요청
+  // 현재날짜(currentDate)에 따라 스터디내역(studies) 데이터 서버 요청
   useEffect(() => {
     const year = format(currentDate, 'YYYY')
     const month = format(currentDate, 'MM')
@@ -68,17 +67,17 @@ export default function StudyCalendar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate])
 
-  // useCallback
+  // 날짜박스(DateBox) 클릭 시 현재 날짜 변경하는 함수
   // 달력(Calendar)컴포넌트의 잦은 재렌더링을 막기 위해, useCallback사용
-  // // DateBox 클릭 시 날짜 변경
   const changeMonth = useCallback((id) => {
     const element = document.getElementById(id)
     if (element.classList.contains('abled')) return
     setCurrentDate(new Date(id))
   }, [])
 
+  // 날짜박스(DateBox) 호버 시 모달창 생성
+  // 달력(Calendar)컴포넌트의 잦은 재렌더링을 막기 위해, useCallback사용
   // TroubleShooting : 함수를 저장한다는 것은 안의 변수 들도 고정!!
-  // // DateBox 호버 시 모달창 생성
   const showModal = useCallback(
     (id) => {
       const element = document.getElementById(id)
@@ -100,12 +99,12 @@ export default function StudyCalendar() {
     [studies],
   )
 
-  // currentDate 한 달 전으로 변경
+  // 현재날짜(currentDate) 한 달 전으로 변경하는 함수
   const previousMonth = () => {
     setCurrentDate(subMonths(currentDate, 1))
   }
 
-  // currentDate 한 달 후로 변경
+  // 현재날짜(currentDate) 한 달 후로 변경하는 함수
   const nextMonth = () => {
     setCurrentDate(addMonths(currentDate, 1))
   }

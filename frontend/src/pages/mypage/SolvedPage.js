@@ -7,6 +7,7 @@ import axios from 'libs/axios'
 import api from 'constants/api'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Loading from 'components/common/Loading'
 
 const PROBLEM_PER_PAGE = 7 // 페이지 당 문제 수
 const BUTTON_PER_PAGINATION = 5 // 페이네이션에 표시할 버튼 수
@@ -19,11 +20,11 @@ export default function ProblemList() {
   const id = useSelector((state) => state.user.id)
 
   // useState
-  const [problems, setProblems] = useState([])
+  const [problems, setProblems] = useState(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [startPagination, setStartPagination] = useState(0)
 
-  // mount시 problems 데이터 fetch
+  // 컴포넌트 생성 시 문제내역(problems) 서버 요청
   useEffect(() => {
     const [url, method] = api('solvedProblem', { id })
     const config = { method }
@@ -35,6 +36,7 @@ export default function ProblemList() {
       })
       .catch((err) => {
         console.log(err)
+        setProblems([])
         alert('문제 내역을 불러오지 못했습니다.')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,6 +44,7 @@ export default function ProblemList() {
 
   // lastPage : 마지막 페이지의 인덱스
   const lastPage = useMemo(() => {
+    if (!problems) return
     if (problems.length / PROBLEM_PER_PAGE) {
       return parseInt(problems.length / PROBLEM_PER_PAGE)
     }
@@ -50,25 +53,29 @@ export default function ProblemList() {
 
   return (
     <Container>
-      <ProblemsContainer>
-        {problems
-          .slice(
-            currentPage * PROBLEM_PER_PAGE,
-            currentPage * PROBLEM_PER_PAGE + PROBLEM_PER_PAGE,
-          )
-          .map((problem, i) => {
-            return (
-              <ProblemItem
-                problemName={problem.name}
-                answerRate={problem.answerRate}
-                submitDatetime={problem.date}
-                difficulty={problem.difficulty}
-                onClick={() => navigate(`/problem/${problem.id}`)}
-                key={i}
-              />
+      {problems ? (
+        <ProblemsContainer>
+          {problems
+            .slice(
+              currentPage * PROBLEM_PER_PAGE,
+              currentPage * PROBLEM_PER_PAGE + PROBLEM_PER_PAGE,
             )
-          })}
-      </ProblemsContainer>
+            .map((problem, i) => {
+              return (
+                <ProblemItem
+                  problemName={problem.name}
+                  answerRate={problem.answerRate}
+                  submitDatetime={problem.date}
+                  difficulty={problem.difficulty}
+                  onClick={() => navigate(`/problem/${problem.id}`)}
+                  key={i}
+                />
+              )
+            })}
+        </ProblemsContainer>
+      ) : (
+        <Loading height="20rem" />
+      )}
       <Pagination
         numBtns={BUTTON_PER_PAGINATION}
         currentPage={currentPage}

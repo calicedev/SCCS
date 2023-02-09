@@ -9,6 +9,7 @@ import { algorithmPk, languagePk } from 'constants/pk'
 import styled from 'styled-components'
 import Modal from 'components/common/Modal'
 import CreateRoomMdContent from 'components/main/CreateRoomMdContent'
+import Loading from 'components/common/Loading'
 
 const searchOptions = {
   title: '방 이름',
@@ -16,7 +17,7 @@ const searchOptions = {
 }
 
 export default function MainRooms() {
-  const [rooms, setRooms] = useState([])
+  const [rooms, setRooms] = useState(null)
   const [algoIds, setAlgoIds] = useState([])
   const [languageIds, setLanguageIds] = useState([])
   const [selectedOption, setSelectedOption] = useState('title')
@@ -34,6 +35,7 @@ export default function MainRooms() {
       })
       .catch((err) => {
         alert('서버와의 통신이 불안정합니다.')
+        setRooms([])
         console.log(err)
       })
   }, [])
@@ -166,20 +168,24 @@ export default function MainRooms() {
           value="방 만들기"
         ></Button>
       </FlexBox>
-      <GridBox>
-        {rooms.map((room) => (
-          <Room
-            key={room.id}
-            id={room.id}
-            title={room.title}
-            isSolving={room.isSolving}
-            isPrivate={room.isPrivate}
-            algoIds={room.algoIds}
-            languageIds={room.languageIds}
-            personnel={room.personnel}
-          />
-        ))}
-      </GridBox>
+      {rooms ? (
+        <GridBox>
+          {rooms.map((room) => (
+            <Room
+              key={room.id}
+              id={room.id}
+              title={room.title}
+              isSolving={room.isSolving}
+              isPrivate={room.isPrivate}
+              algoIds={room.algoIds}
+              languageIds={room.languageIds}
+              personnel={room.personnel}
+            />
+          ))}
+        </GridBox>
+      ) : (
+        <Loading height="30rem" />
+      )}
     </Container>
   )
 }

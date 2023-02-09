@@ -10,9 +10,9 @@ INPUT
 id: 유저의 아이디
 */
 
-export default function getSetUserInfo(id) {
+export default function getUserInfo() {
   // 서버에 사용자 정보 요청
-  const [url, method] = api('getUserInfo', { id })
+  const [url, method] = api('getUserInfo')
   const config = { method }
 
   axios(url, config)

@@ -15,8 +15,8 @@ export default function StudyDetailPage() {
   const [problemId, setProblemId] = useState(0)
   // 해당 스터디에 대한 정보를 back에서 가져와서 저장하기 위해 사용
   const [study, setStudy] = useState({})
-  // mount시 axios 요청으로 해당 study data 불러오기
 
+  // mount시 axios 요청으로 해당 study data 불러오기
   useEffect(() => {
     const [url, method] = api('studyHistoryDetail', { id })
     const config = { url, method }

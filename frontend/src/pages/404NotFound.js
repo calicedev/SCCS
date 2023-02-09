@@ -12,7 +12,7 @@ export default function NotFound() {
       <ButtonWrapper>
         <Button
           type="secondary"
-          value="Back"
+          value="홈으로"
           onClick={() => navigate('/')}
         ></Button>
       </ButtonWrapper>
