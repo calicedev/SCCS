@@ -28,7 +28,7 @@ export default function Navbar() {
         <IconButton
           icon={theme === 'light' ? <BsCloudSun /> : <BsCloudMoon />}
           type={theme === 'light' ? 'primary' : 'secondary'}
-          size={'middle'}
+          size={'medium'}
           onClick={() => {
             dispatch(toggleTheme())
           }}

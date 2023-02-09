@@ -6,6 +6,7 @@ import sideNavBlueBg from 'assets/img/side_nav_blue_bg.png'
 /*
 마이페이지에서 사용할 사이드 네비게이션 바
 */
+
 const SideNavbar = () => {
   return (
     <SideNav>

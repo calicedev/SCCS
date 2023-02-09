@@ -44,7 +44,7 @@ OutlineButton.propTypes = {
   size: PropTypes.oneOf(['tiny', 'small', 'medium', 'large']), // 버튼 크기
   type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'danger']), // 버튼 커스터마이징 (글자색, 배경색, border-radius)
   onClick: PropTypes.func,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   disabled: PropTypes.bool,
 }
 

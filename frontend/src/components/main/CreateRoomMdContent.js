@@ -220,12 +220,18 @@ const H3 = styled.h3`
 
 const Wrapper = styled.div`
   margin: 0.7rem 0rem;
+
+  & > p {
+    font-weight: bold;
+  }
 `
 const StyledInput = styled.input`
   width: 100%;
-  height: 1.7rem;
 
-  box-shadow: 5px 5px 10px #00000050;
+  margin: 0.5rem 0rem;
+  padding: 0.5rem;
+
+  box-shadow: 3px 3px 5px #00000050;
   border-radius: 0.5rem;
   color black;
 `

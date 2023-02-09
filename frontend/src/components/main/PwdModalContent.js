@@ -64,7 +64,7 @@ export default function PwdModalContent({ id }) {
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
         {message.text}
       </p>
-      <Button value="제출" onClick={submitPassword}></Button>
+      <Button type="secondary" value="제출" onClick={submitPassword}></Button>
     </Container>
   )
 }
@@ -73,15 +73,21 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  padding: 0rem 1rem;
 `
 
 const StyledInput = styled.input`
 width: 100%;
-height: 1.7rem;
 
-margin-bottom: 1rem;
+margin: 1rem 0rem 2rem;
+padding: 0.5rem 0rem;
 
 box-shadow: 5px 5px 10px #00000050;
 border-radius: 0.5rem;
+
 color black;
+font-size: 1.2rem;
+font-weight: bold;
+text-align: center;
 `

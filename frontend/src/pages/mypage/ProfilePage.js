@@ -13,17 +13,12 @@ export default function Profile() {
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
 
-  // 가입 일자 YYYY-MM-DD
-  const joinDate = useMemo(() => {
-    return user.joinDate.slice(0, 10)
-  }, [user])
-
   return (
     <Container>
       <h1>Profile</h1>
       <ProfileContainer>
         <ProfileImg imgUrl={user.profileImage} />
-        <p className="semi-bold">가입일: {joinDate}</p>
+        <p className="semi-bold">가입일: {user.joinDate}</p>
       </ProfileContainer>
 
       <InputContainer>

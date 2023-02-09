@@ -5,7 +5,7 @@ import api from 'constants/api'
 import { useSelector } from 'react-redux'
 
 /* 
-사용자 정보변경 input태그 관련 커스텀 훅
+사용자 정보변경 input태그 관련 커스텀 훅, 리덕스의 현재 사용자 정보와 비교
 
 INPUT
 type: id, name, nickname, email, password로 분류
@@ -17,6 +17,7 @@ OUTPUT
 value: state
 setValue: setState
 message: { text: String, isValid: Boolean }
+isChanged: 리덕스의 사용자 정보와 비교하여 변경 여부를 확인
 */
 
 // type에 해당하는 한글 정보
