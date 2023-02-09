@@ -53,7 +53,8 @@ public class WebConfiguration implements WebMvcConfigurer {
 //                .allowedOrigins("*")
 //        .allowedOriginPatterns("*")
 //                .allowedHeaders("*")
-		.allowedOrigins("http://localhost:8080", "http://localhost:3000", "https://sccs.kr", "http://sccs.kr", "http://sccs.kr:8201")
+        .allowedOrigins("http://localhost:8080", "http://localhost:3000", "https://sccs.kr",
+            "http://sccs.kr", "http://sccs.kr:8201")
 //                .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(),
 //                        HttpMethod.DELETE.name(), HttpMethod.HEAD.name(), HttpMethod.OPTIONS.name(),
 //                        HttpMethod.PATCH.name())
@@ -77,6 +78,7 @@ public class WebConfiguration implements WebMvcConfigurer {
   @Bean
   public Docket restAPI() {
     return new Docket(DocumentationType.SWAGGER_2)
+        .useDefaultResponseMessages(false)
         .apiInfo(apiInfo())
         .select()
         .apis(RequestHandlerSelectors.basePackage("com.sccs"))

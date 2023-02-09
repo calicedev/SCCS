@@ -13,5 +13,6 @@ public interface MypageMapper {
 
   public List<HashMap<String, Object>> getProblems(String memberId);
 
+  public String getProblemUrl(int problemId);
 
 }

@@ -91,4 +91,15 @@ public class MypageController {
     }
   }
 
+  @GetMapping("/problem/codereview/{problemId}")
+  @ApiOperation(value = "문제 URL 요청", notes = "해당 <strong>문제의 아이디</strong>를 받아서 URL을 제공한다.")
+  @ApiImplicitParam(name = "studyId", value = "스터디 아이디", required = true)
+  public String getProblemUrl(@PathVariable int problemId) {
+    String filename = mypageService.getProblemUrl(problemId);
+    String realPath = "problem/" + filename + ".jpg";
+    String tempUrl = awsS3service.getTemporaryUrl(realPath);
+    return tempUrl;
+  }
+
+
 }
