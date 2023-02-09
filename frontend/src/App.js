@@ -16,7 +16,7 @@ import EditPwdPage from './pages/mypage/EditPwdPage'
 import SolvedPage from './pages/mypage/SolvedPage'
 import CalendarPage from './pages/mypage/CalendarPage'
 import StudyDetailPage from 'pages/mypage/StudyDetailPage'
-import NotFound from 'pages/404NotFound'
+import CodeReview from 'pages/mypage/CodeReview'
 
 import CodingTest from 'pages/study/CodingTest'
 import Study from 'pages/study/Study'
@@ -59,6 +59,7 @@ function App() {
             <Route path="solved" element={<SolvedPage />}></Route>
           </Route>
         </Route>
+        <Route path="/codereview" element={<CodeReview />}></Route>
         <Route path="/ov" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
         <Route path="/codingtest" element={<CodingTest />}></Route>
@@ -68,7 +69,6 @@ function App() {
           path="/room/:studyroomId/waiting"
           element={<WebSocketRoom />}
         ></Route>
-        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </ThemeProvider>
   )
