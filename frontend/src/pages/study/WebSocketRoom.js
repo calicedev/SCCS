@@ -337,6 +337,7 @@ export default function WebSocketRoom() {
               startStudy={startStudy}
               dataForStudy={dataForStudy}
               setDataForStudy={setDataForStudy}
+              nickname={nickname}
             />
           ) : null}
           {study ? (
