@@ -29,7 +29,6 @@ public class MessageController {
       studyroomService.increaseStudyroomPersonnel(studyroomDto);
       int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
       socketDto.setPersonnel(temp2);
-      socketDto.setPersonnel(socketDto.getPersonnel()+1);
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 
