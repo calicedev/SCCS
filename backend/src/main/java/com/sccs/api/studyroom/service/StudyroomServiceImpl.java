@@ -1,5 +1,6 @@
 package com.sccs.api.studyroom.service;
 
+import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.studyroom.dto.ProblemDto;
 import com.sccs.api.studyroom.dto.StudyroomAlgoDto;
 import com.sccs.api.studyroom.dto.StudyroomDto;
@@ -27,6 +28,7 @@ public class StudyroomServiceImpl implements StudyroomService {
   private static final String SUCCESS = "success";
   private static final String FAIL = "fail";
   private final StudyroomMapper studyroomMapper;
+  private final AwsS3Service awsS3service;
   @Value("${file.dir2}")
   private String fileDir;
 
@@ -249,9 +251,9 @@ public class StudyroomServiceImpl implements StudyroomService {
     resultMap.put("problems", p);
     for (int i = 0; i < 2; i++) {
       String path = p.get(i).getProblemFolder();
-      String realPath = fileDir + path + "/" + "problem.jpg";
-      p.get(i).setProblemImageUrl(realPath);
-
+      String realPath = "problem/"+path.replace("/", "-")+".jpg";
+      System.out.println(realPath);
+      p.get(i).setProblemImageUrl(awsS3service.getTemporaryUrl(realPath));
     }
 
     return resultMap;
@@ -308,6 +310,16 @@ public class StudyroomServiceImpl implements StudyroomService {
     boolean isExist = studyroomMapper.isExistStudyroom(id);
     return isExist;
   }
+
+  @Override
+  public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto) {
+    List<SubmissionDto> s= studyroomMapper.getStudyInfo(studyroomDto);
+    for(int i=0; i<s.size(); i++){
+      s.get(i).setFileUrl(awsS3service.getTemporaryUrl("submission/"+s.get(i).getFileName()));
+    }
+    return s;
+  }
+
 
 
   private static boolean checkout(int n[], int index) {

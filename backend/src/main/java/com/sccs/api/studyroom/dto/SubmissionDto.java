@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class SubmissionDto {
 
   private int id;
-  private int runtime;
+  private double runtime;
   private int memory;
   private String result;
   private Timestamp submitDatetime;
@@ -22,5 +22,7 @@ public class SubmissionDto {
   private int studyroomId;
   private MultipartFile formFile;
   private String fileName;
+  private String fileUrl;
+
 
 }

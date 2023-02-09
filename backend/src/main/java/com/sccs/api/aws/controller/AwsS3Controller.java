@@ -24,6 +24,12 @@ public class AwsS3Controller {
     return awsS3service.upload(multipartFile, "sccs");
   }
 
+  @PostMapping("/uploadProblem")
+  public FileDto uploadProblem(@RequestParam(value = "file") MultipartFile multipartFile)
+          throws IOException {
+    return awsS3service.upload(multipartFile, "problem");
+  }
+
   //this link is access denied because this url is private.
   //if s3 settings that all user can be access all of objects that are same as upload method will be insecure.
   @GetMapping("/getimageurl")

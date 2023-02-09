@@ -56,4 +56,7 @@ public interface StudyroomMapper {
   public int decreaseStudyroomPersonnel(StudyroomDto studyroomDto);
 
   public boolean isExistStudyroom(int id);
+
+  public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
+
 }

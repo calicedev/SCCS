@@ -10,10 +10,13 @@ import java.util.Map;
 public interface StudyroomService {
 
 
+  /** 방 생성 로직  **/
   public int createStudyroom(StudyroomDto studyroomDto);
 
+  /** 메인 페이지를 위한 모든 방 정보 가져오기 **/
   public List<Map<String, Object>> selectAllStudyroom();
 
+  /** 검색 조건에 맞는 방 정보 가져오기  **/
   public List<Map<String, Object>> selectStudyroom(StudyroomDto studyroomDto);
 
   public Map<String, Object> enterStudyroom(int id);
@@ -36,4 +39,7 @@ public interface StudyroomService {
   public int decreaseStudyroomPersonnel(StudyroomDto studyroomDto);
 
   public boolean isExistStudyroom(int id);
+
+  public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
+
 }

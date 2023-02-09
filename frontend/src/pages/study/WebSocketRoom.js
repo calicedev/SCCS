@@ -12,6 +12,7 @@ import stompjs from 'stompjs'
 
 import WaitingRoom from './WaitingRoom'
 import CodingTest from './CodingTest'
+import Study from './Study'
 
 export default function WebSocketRoom() {
   const navigate = useNavigate()
@@ -46,10 +47,17 @@ export default function WebSocketRoom() {
 
   // CodingTest 페이지 state
   const [codingTest, setCodingTest] = useState(false) // CodingTest 페이지 노출 여부
-  const [codingTestData, setCodingTestData] = useState({})
+  const [membersNickname, setMembersNickname] = useState([])
+
+  // Study 페이지 state
+  const [study, setStudy] = useState(false)
+  const [readyForStudyArray, setReadyForStudyArray] = useState([])
+  // 코테 페이지에서 axios로 가져온 정보를 study 페이지로 내려주기 위해 선언하는 state
+  const [dataForStudy, setDataForStudy] = useState([])
 
   const justMounted = useRef(true)
 
+  console.log(readyForStudyArray)
   // 새로고침시에 유저 수 그대로 유지하기
   window.addEventListener('beforeunload', (event) => {
     // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
@@ -101,7 +109,6 @@ export default function WebSocketRoom() {
       setConnected(false)
     }
   }
-
   // 웹소켓 통신 열기 hello
   const connect = function () {
     var sock = new sockjs('https://sccs.kr/sccs')
@@ -154,9 +161,6 @@ export default function WebSocketRoom() {
                 // console.log('변경 전', readyArray)
 
                 setReadyArray((readyArray) => [...readyArray, content.nickname])
-                setTimeout(() => {
-                  // console.log('변경 후', readyArray)
-                })
               } else {
                 const newArray = readyArray.filter((nickname) => {
                   return nickname !== content.nickname
@@ -175,6 +179,38 @@ export default function WebSocketRoom() {
               content.nickname,
             ])
             setChatList((chatList) => [...chatList, content.message])
+          }
+          if (content.status === 'start') {
+            // 멤버 정보가 오면 배열에 저장
+            setMembersNickname(content.membersNickname)
+            setWaitingRoom(false)
+            setCodingTest(true)
+          }
+          if (content.status === 'study') {
+            // 시험 종료 버튼 전부 누르면 스터디 페이지로 이동
+
+            // useState의 setReadyForStudyArray은 비동기적으로 처리되므로 그냥 push를 해주면 동기적으로 처리되는 것 같음
+            // push를 했을 때 실제로 readyForStudyArray가 setState하는 것처럼 바뀜.
+            // console.log 찍어봐도 같음.
+            readyForStudyArray.push(content.nickname)
+            console.log(
+              '바깥 state : ',
+              readyForStudyArray,
+              'stomp 내부 : ',
+              content.readyForStudyArray,
+            )
+            console.log(
+              '현재인원:',
+              content.personnel,
+              '배열길이 state:',
+              readyForStudyArray.length,
+              '배열길이 stomp 내부:',
+              content.readyForStudyArray.length,
+            )
+            if (content.personnel === content.readyForStudyArray.length) {
+              setCodingTest(false)
+              setStudy(true)
+            }
           }
         },
       )
@@ -232,33 +268,39 @@ export default function WebSocketRoom() {
   }
 
   const startCodingTest = () => {
-    // setReadyArray((readyArray) => [...readyArray, nickname])
-    const data = {
-      id: studyroomId,
-      memberIds: [...readyArray, nickname],
-    }
-    const [url, method] = api('codingTest')
-    const config = { url, method, data }
-    axios(config)
-      .then((res) => {
-        console.log(res.data)
-        setCodingTestData(res.data)
-        setWaitingRoom(false)
-        setCodingTest(true)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    stomp.send(
+      '/pub/studyroom',
+      {},
+      JSON.stringify({
+        studyroomId: studyroomId,
+        nickname: nickname,
+        status: 'start',
+        membersNickname: [...readyArray, nickname],
+      }),
+    )
+  }
+
+  const startStudy = () => {
+    stomp.send(
+      '/pub/studyroom',
+      {},
+      JSON.stringify({
+        studyroomId: studyroomId,
+        nickname: nickname,
+        status: 'study',
+        personnel: personnel,
+        readyForStudyArray: [...readyForStudyArray, nickname],
+      }),
+    )
   }
 
   return (
     <>
       {connected && (
         <>
-          <h1>여기는 전체 웹소켓</h1>
-          <div>{exitMsg.message}</div>
+          {/* <div>{exitMsg.message}</div>
           <div>{enterMsg.message}</div>
-          <div>{readyMsg.message}</div>
+          <div>{readyMsg.message}</div> */}
 
           <H />
           {waitingRoom ? (
@@ -286,7 +328,24 @@ export default function WebSocketRoom() {
             />
           ) : null}
 
-          {codingTest ? <CodingTest codingTestData={codingTestData} /> : null}
+          {codingTest ? (
+            <CodingTest
+              studyroomId={studyroomId}
+              membersNickname={membersNickname}
+              roomInfo={roomInfo}
+              personnel={personnel}
+              startStudy={startStudy}
+              setDataForStudy={setDataForStudy}
+            />
+          ) : null}
+          {study ? (
+            <Study
+              roomInfo={roomInfo}
+              studyroomId={studyroomId}
+              personnel={personnel}
+              dataForStudy={dataForStudy}
+            />
+          ) : null}
         </>
       )}
       {connected || (
@@ -330,4 +389,8 @@ const MySubmit = styled.input`
 const H = styled.hr`
   background: indigo;
   height: 1px;
+`
+
+const TopNavBar = styled.div`
+  background: grey;
 `

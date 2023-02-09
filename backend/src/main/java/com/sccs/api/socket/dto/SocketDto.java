@@ -1,5 +1,6 @@
 package com.sccs.api.socket.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,8 @@ public class SocketDto {
   private String status;
   private int personnel;
   private boolean ready;
+
+  private List<String> membersNickname;
+  private List<String> readyForStudyArray;
 
 }

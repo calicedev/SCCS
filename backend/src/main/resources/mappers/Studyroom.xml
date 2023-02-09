@@ -161,7 +161,6 @@
     where is_active=1 AND s.id= #{id}
   </select>
 
-
   <update id="changeStudyroomSolvingStatus" parameterType="StudyroomDto">
     UPDATE studyroom
     SET is_solving = true
@@ -194,23 +193,35 @@
   </select>
 
   <select id="selectProblemByStudyroomId" parameterType="int" resultType="ProblemDto">
-    SELECT p.name, p.problem_folder FROM problem p
+    SELECT p.id, p.name, p.problem_folder FROM problem p
     LEFT JOIN studyroom_problem sp ON p.id=sp.problem_id where sp.studyroom_id=#{id};
   </select>
 
-
   <insert id="submitProblem" parameterType="SubmissionDto">
     insert into submission(
-    id, file_name, runtime, memory, result, problem_id, member_id, language_id, studyroom_id
-    )
-    values (#{id}, #{fileName}, #{runtime}, #{memory}, #{result}, #{problemId}, #{memberId},
-    #{languageId}, #{studyroomId})
+    id, file_name, runtime, memory, result, problem_id, member_id, language_id, studyroom_id)
+    values (#{id}, #{fileName}, #{runtime}, #{memory}, #{result}, #{problemId}, #{memberId}, #{languageId}, #{studyroomId})
   </insert>
 
   <select id="getProblemInfo" parameterType="int" resultType="ProblemDto">
     SELECT * from problem where id=#{problemId}
   </select>
 
+  <select id="getStudyInfo" parameterType="StudyroomDto" resultType="SubmissionDto">
+    select
+    *
+    from(
+      select
+      *
+      from submission
+      where (member_id, submit_datetime) in (
+        select member_id, max(submit_datetime) as submit_datetime
+        from submission where studyroom_id=#{id} and problem_id=#{problemId} group by member_id
+      )
+      order by submit_datetime desc
+    ) t
+    group by t.member_id
+  </select>
 
   <update id="endStudyroomByOwner" parameterType="StudyroomDto">
     UPDATE studyroom

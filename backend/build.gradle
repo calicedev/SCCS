@@ -55,12 +55,19 @@ dependencies {
     //websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     compileOnly group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
-    //웹소켓 확인용으로 설치한 타임리프
     implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+
+    // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 스웨거 설정
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 비밀번호 랜덤 문자열 생성 라이브러리
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
 
 }
 tasks.named('test') {

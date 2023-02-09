@@ -98,7 +98,7 @@ public class AwsS3Service {
 
     Date expiration = new Date();
     long expTimeMillis = expiration.getTime();
-    expTimeMillis += 1000 * 60 * 2; //expired 2 min
+    expTimeMillis += 1000 * 60 * 120; //expired 2 min
     expiration.setTime(expTimeMillis);
 
     log.info(expiration.toString());
@@ -126,7 +126,7 @@ public class AwsS3Service {
 
     Date expiration = new Date();
     long expTimeMillis = expiration.getTime();
-    expTimeMillis += 1000 * 60 * 2; //expired 2 min
+    expTimeMillis += 1000 * 60 * 120; //expired 2 min
     expiration.setTime(expTimeMillis);
 
     log.info(expiration.toString());

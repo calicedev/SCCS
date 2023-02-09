@@ -10,32 +10,46 @@ import styled from 'styled-components'
 import sockjs from 'sockjs-client'
 import stompjs from 'stompjs'
 
+import { algorithmPk, languagePk } from 'constants/pk'
+
 export default function WaitingRoom({
+  // 기본정보
   studyroomId,
   roomInfo,
   personnel,
   nickname,
   id,
+  // exit 기능
   disconnect,
+  // 채팅 기능
   submitMsg,
   changeMsg,
   chat,
   chatList,
   chatNickname,
+  // 레디 기능
   ready,
   readyOrNot,
   readyArray,
+  // 시작 기능
   startCodingTest,
 }) {
   const navigate = useNavigate()
   return (
     <>
-      <h1>여기는 그냥 대기방</h1>
-      <h2>{studyroomId}번 대기방입니다.</h2>
-      <h2>방제목 {roomInfo.title}</h2>
-      <h3>방장 아이디: {roomInfo.hostId}</h3>
-      <h3>현재인원: {personnel}</h3>
+      <TopNavBar>
+        <Btn>
+          {studyroomId}번방 {roomInfo.title}
+        </Btn>
+        <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
+        {roomInfo.algoIds.map((algoId) => {
+          return <Btn>#{algorithmPk[algoId]}</Btn>
+        })}
 
+        <span>현재 {personnel}명</span>
+      </TopNavBar>
+
+      <h3>방장 아이디: {roomInfo.hostId}</h3>
       <h4>현재 로그인된 내 아이디: {id}</h4>
       <h4>현재 로그인된 내 닉네임: {nickname}</h4>
 
@@ -51,7 +65,7 @@ export default function WaitingRoom({
       <form onSubmit={submitMsg}>
         <MyInput
           type="text"
-          placeholder="좋은 말로 할 때 메시지 입력해라 ㅡ.ㅡ"
+          placeholder="채팅 메시지를 입력하세요."
           value={chat}
           onChange={changeMsg}
         />
@@ -73,7 +87,10 @@ export default function WaitingRoom({
           {personnel === readyArray.length + 1 ? (
             <Btn onClick={startCodingTest}>Start</Btn>
           ) : (
-            <h1>아직 전부 다 레디 안했음. 너넨 그냥 공부하지마라</h1>
+            <h1>
+              아직 모든 참여자가 레디 버튼을 누르지 않아 코딩 테스트를 시작할 수
+              없습니다.
+            </h1>
           )}
         </div>
       ) : (
@@ -114,4 +131,8 @@ const MySubmit = styled.input`
 const H = styled.hr`
   background: indigo;
   height: 1px;
+`
+
+const TopNavBar = styled.div`
+  background: grey;
 `

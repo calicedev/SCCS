@@ -1,5 +1,8 @@
 package com.sccs.api.member.controller;
 
+import com.amazonaws.util.IOUtils;
+import com.sccs.api.aws.dto.FileDto;
+import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.member.dto.UniqueDto;
 import com.sccs.api.member.service.JWTService;
@@ -13,7 +16,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -24,10 +31,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -59,6 +70,7 @@ public class MemberController {
   private final EmailService emailService;
   private final RedisService redisService;
   private final CookieService cookieService;
+  private final AwsS3Service awsS3Service;
 
   /**
    * 회원 가입
@@ -201,12 +213,6 @@ public class MemberController {
     logger.info("오리지널 파일이름 : {}", mfile.getOriginalFilename());
     logger.info("넘어온 값: " + email + " " + nickname);
 
-    // ToDo : 공통으로 처리하는 경로 처리 필요
-    // 맥
-    String PROFILE_IMAGE_FOLDER = "/Users/leechanhee/Desktop/SCCS/S08P12A301/backend/src/main/resources/profileImage/";
-    // 윈도우
-    //String PROFILE_IMAGE_FOLDER = "\\";
-
     final String accessToken = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
     logger.info("헤더에서 accessToken 파싱 성공 : {}", accessToken);
 
@@ -215,22 +221,22 @@ public class MemberController {
     logger.info("accessToken에서 id 파싱 성공 : {}", id);
 
     MemberDto memberDto = memberService.memberInfo(id);
+    String result = awsS3Service.getTemporaryUrl("aa"+mfile.getOriginalFilename());
+    System.out.println("결과는?????????????"+result);
+//    String awsProfilePath = "";
 
-    String imageFileName = memberDto.getProfileImage(); // 기존 이미지 파일 경로
-
+    FileDto fileDto = null;
     if (!mfile.isEmpty()) {
-      UUID uuid = UUID.randomUUID();
-      imageFileName = uuid + "_" + mfile.getOriginalFilename(); // 새로운 이미지 파일 경로
-      // 기존 파일 삭제
-      File file = new File(memberDto.getProfileImage());
-        if (file != null) {
-            file.delete();
-        }
+      //UUID uuid = UUID.randomUUID();
+      //awsProfilePath = uuid + "_" + mfile.getOriginalFilename();
+      fileDto = awsS3Service.upload(mfile, "sccs");
+
+      logger.info("파일이름 : {}", fileDto.getFileName());
+      logger.info("URL 경로 : {}", fileDto.getUrl());
+
+
+
     }
-    String profileImagePath = PROFILE_IMAGE_FOLDER + imageFileName;
-    logger.info("사용자 프로필 이미지 경로 : {}", profileImagePath);
-    File convFile = new File(profileImagePath);
-    convFile.createNewFile();
 
     logger.debug("[modify]수정 전 : {}", memberDto);
       if (nickname != null) {
@@ -239,10 +245,8 @@ public class MemberController {
       if (email != null) {
           memberDto.setEmail(email);
       }
-//        if (paramMap.get("nickname") != null) memberDto.setNickname(paramMap.get("nickname")); // null 이 넘어오면 수정 x (기존 값 유지)
-//        if (paramMap.get("email") != null) memberDto.setEmail(paramMap.get("email"));
       if (mfile != null) {
-          memberDto.setProfileImage(profileImagePath);
+        memberDto.setProfileImage(fileDto.getUrl());
       }
     logger.debug("[modify]수정 후 : {}", memberDto);
 
@@ -260,10 +264,10 @@ public class MemberController {
    * Auth
    **/
   @PatchMapping("/member/password")
-  public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> param,
+  public ResponseEntity<?> modifyPassword(@RequestBody HashMap<String, String> paramMap,
       HttpServletRequest request
-      /** @CookieValue String accessToken, @CookieValue String refreshToken **/) {
-    String newPassword = param.get("new_password"); // 클라이언트에서 넘어온 변경하고자 하는 비밀번호
+      /** @CookieValue String accessToken, @CookieValue String refreshToken **/) throws NoSuchAlgorithmException {
+    String newPassword = paramMap.get("newPassword"); // 클라이언트에서 넘어온 변경하고자 하는 비밀번호
     logger.debug("변경하고자 하는 비밀번호 : {}", newPassword);
 
     Map<String, String> resultMap = new HashMap<>(); // 결과를 담을 자료구조
@@ -277,8 +281,13 @@ public class MemberController {
           id = (String) claims.get("id"); // accessToken에서 회원 id 파싱
       }
 
+      logger.info("새롭게 받은 비밀번호 : {}", newPassword);
+
     MemberDto memberDto = memberService.memberInfo(id); // DB에서 회원 정보 조회
-    memberDto.setPassword(newPassword);
+
+    memberDto.setPassword(newPassword); // modifyPassword 에서 암호화 하기 때문에 여기선 세팅만 해준다.
+
+    // memberDto.setPassword(newPassword);
 
     if (memberService.modifyPassword(memberDto).equals(SUCCESS)) {
       resultMap.put("message", "성공");
@@ -401,6 +410,23 @@ public class MemberController {
   public ResponseEntity<?> deleteKeys() {
     redisService.deleteAllKeys();
     return new ResponseEntity<>("모든 키 삭제 성공", HttpStatus.OK);
+  }
+
+  /** 쿠키 통신 테스트 컨트롤러 **/
+  @GetMapping("/cookie/test")
+  public ResponseEntity<?> testCookie(HttpServletRequest request) {
+
+    Cookie[] list = request.getCookies();
+
+    for (Cookie cookie : list) {
+      logger.info("쿠기 시간 : {}", cookie.getMaxAge()+"");
+      logger.info("쿠기 이름 : {}", cookie.getName());
+    }
+
+    if (list.length >= 1) {
+      return new ResponseEntity<>("cookie exist", HttpStatus.OK);
+    }
+    return new ResponseEntity<>("null", HttpStatus.OK);
   }
 
 }

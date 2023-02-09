@@ -11,8 +11,8 @@ public class CookieService {
    **/
   public Cookie createCookie(String name, String value) {
     Cookie cookie = new Cookie(name, value);
-    cookie.setMaxAge(60 * 5); // 5분
-    cookie.setSecure(true);
+    cookie.setMaxAge(60 * 60); // 5분
+    cookie.setSecure(false);
     cookie.setHttpOnly(true);
     return cookie;
   }
