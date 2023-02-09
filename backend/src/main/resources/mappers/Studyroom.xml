@@ -193,7 +193,7 @@
   </select>
 
   <select id="selectProblemByStudyroomId" parameterType="int" resultType="ProblemDto">
-    SELECT p.name, p.problem_folder FROM problem p
+    SELECT p.id, p.name, p.problem_folder FROM problem p
     LEFT JOIN studyroom_problem sp ON p.id=sp.problem_id where sp.studyroom_id=#{id};
   </select>
 
