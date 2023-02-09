@@ -22,5 +22,7 @@ public class SubmissionDto {
   private int studyroomId;
   private MultipartFile formFile;
   private String fileName;
+  private String fileUrl;
+
 
 }
