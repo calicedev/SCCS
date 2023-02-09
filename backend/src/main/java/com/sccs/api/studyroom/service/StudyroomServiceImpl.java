@@ -97,7 +97,7 @@ public class StudyroomServiceImpl implements StudyroomService {
           int min2 = 1;
           int max2 = algoCount;
           int randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
-          String path = Integer.toString(randomAlgo) + "/" + Integer.toString(randomProblem);
+          String path = Integer.toString(randomAlgo) + "-" + Integer.toString(randomProblem);
           int problemId = studyroomMapper.selectProblemId(path);
           StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
           studyroomProblemDto.setStudyroomId(id);
@@ -124,7 +124,7 @@ public class StudyroomServiceImpl implements StudyroomService {
         StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
         studyroomProblemDto.setStudyroomId(id);
         for (int i = 0; i < 2; i++) {
-          String path = Integer.toString(algo_ids.get(0)) + "/" + Integer.toString(n[i]);
+          String path = Integer.toString(algo_ids.get(0)) + "-" + Integer.toString(n[i]);
           int problemId = studyroomMapper.selectProblemId(path);
           studyroomProblemDto.setProblemId(problemId);
           studyroomMapper.insertProblemId(studyroomProblemDto);
@@ -141,7 +141,7 @@ public class StudyroomServiceImpl implements StudyroomService {
           int max2 = algoCount;
           int randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
           StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
-          String path = Integer.toString(algo_ids.get(i)) + "/" + Integer.toString(randomProblem);
+          String path = Integer.toString(algo_ids.get(i)) + "-" + Integer.toString(randomProblem);
           int problemId = studyroomMapper.selectProblemId(path);
           studyroomProblemDto.setStudyroomId(id);
           studyroomProblemDto.setProblemId(problemId);
