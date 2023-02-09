@@ -23,7 +23,7 @@ const api = function (type, options = {}) {
       `/api/mypage/history/${options.id}/${options.year}/${options.month}`,
       'get',
     ],
-    studyHistoryDetail: [`/api/mypage/history/detail/${options.id}`, 'get'],
+    studyDetail: [`/api/mypage/history/detail/${options.id}`, 'get'],
     submitProblem: ['/api/mypage/problem', 'post'],
     solvedProblem: [`/api/mypage/problem/${options.id}`, 'get'],
     submitCode: ['/api/studyroom/codingtest/submission', 'post'],
