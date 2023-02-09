@@ -7,13 +7,31 @@ import api from 'constants/api'
 
 import styled from 'styled-components'
 
-import sockjs from 'sockjs-client'
-import stompjs from 'stompjs'
-
 import Drawing from 'components/study/Drawing'
 import { algorithmPk, languagePk } from 'constants/pk'
 
-export default function Study({ roomInfo, personnel }) {
+export default function Study({
+  roomInfo,
+  studyroomId,
+  personnel,
+  dataForStudy,
+}) {
+  useEffect(() => {
+    const data = {
+      id: studyroomId,
+      problemIds: dataForStudy,
+    }
+    const [url, method] = api('study')
+    const config = { url, method, data }
+    console.log('스터디 페이지 입장할 때 back으로 보내는 정보!', data)
+    axios(config)
+      .then((res) => {
+        console.log('스터디페이지 데이터', res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
   return (
     <>
       <TopNavBar>

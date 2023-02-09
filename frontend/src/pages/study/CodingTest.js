@@ -17,10 +17,11 @@ export default function CodingTest({
   roomInfo,
   personnel,
   startStudy,
+  setDataForStudy,
 }) {
   const [codingTestData, setCodingTestData] = useState({})
 
-  // 시간 남은 표시하기 위한 state
+  // 남은 시간 표시하기 위한 state
   const [startTime, setStartTime] = useState(Date.now())
   const [currentTime, setCurrentTime] = useState(Date.now())
   const [timeLeft, setTimeLeft] = useState(7200000)
@@ -38,6 +39,8 @@ export default function CodingTest({
       .then((res) => {
         console.log(res.data)
         setCodingTestData(res.data)
+        setDataForStudy([res.data.problems[0].id, res.data.problems[1].id])
+        console.log(res.data.problems[0].id, res.data.problems[1].id)
       })
       .catch((err) => {
         console.log(err)
@@ -190,8 +193,8 @@ export default function CodingTest({
                 </Resizable>
                 <ColoredLine color="#4B91F1" />
 
-                <Foot onClick={startStudy}>
-                  <EndBtn>
+                <Foot>
+                  <EndBtn onClick={startStudy}>
                     <Button
                       value="시험 종료"
                       type="danger"

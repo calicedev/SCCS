@@ -26,9 +26,11 @@ const api = function (type, options = {}) {
     studyHistoryDetail: [`/api/mypage/history/detail/${options.id}`, 'get'],
     submitProblem: ['/api/mypage/problem', 'post'],
     solvedProblem: [`/api/mypage/problem/${options.id}`, 'get'],
-    submitCode:['/api/studyroom/codingtest/submission', 'post',],
-    testCode:['/api/studyroom/codingtest/test', 'post',],
-    codingTest:['/api/studyroom/codingtest', 'post',],
+    submitCode: ['/api/studyroom/codingtest/submission', 'post'],
+    testCode: ['/api/studyroom/codingtest/test', 'post'],
+    codingTest: ['/api/studyroom/codingtest', 'post'],
+    // 2.9 민혁 추가 (스터디 페이지 입장)
+    study: ['api/studyroom/study', 'post'],
   }
 
   return apiObject[type]
