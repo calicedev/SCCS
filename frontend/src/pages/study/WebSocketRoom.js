@@ -21,7 +21,7 @@ export default function WebSocketRoom() {
   const { studyroomId } = useParams()
 
   const [roomInfo, setRoomInfo] = useState(undefined)
-  const [personnel, setPersonnel] = useState(0)
+  const [personnel, setPersonnel] = useState({ current: 0 })
 
   const nickname = useSelector((state) => state.user.nickname)
   const id = useSelector((state) => state.user.id)
@@ -139,6 +139,7 @@ export default function WebSocketRoom() {
           if (content.status === 'enter') {
             setEnterMsg(content)
             setPersonnel(content.personnel)
+            // personnel.current = personnel.current + 1
           }
           // 나가기
           if (content.status === 'exit') {
@@ -173,11 +174,14 @@ export default function WebSocketRoom() {
             }
           }
           if (content.status === 'chat') {
+            console.log('콜백함수 내부에서 출력하는 채팅 기록', chatList)
             // 채팅 정보가 서버로부터 오면 배열에 저장
+            // chatNickname.push(content.nickname)
             setChatNickname((chatNickname) => [
               ...chatNickname,
               content.nickname,
             ])
+            // chatList.push(content.message)
             setChatList((chatList) => [...chatList, content.message])
           }
           if (content.status === 'start') {
@@ -216,6 +220,18 @@ export default function WebSocketRoom() {
       )
     })
   }
+
+  // useEffect(() => {
+  //   if (!connected) return
+  //   stomp.subscribe('/sub/studyroom/' + studyroomId, function (chatDto) {
+  //     // console.log(chatDto.body)
+  //     var content = JSON.parse(chatDto.body)
+  //     // 입장
+  //     if (content.status === 'chat') {
+  //       console.log('콜백함수 밖에서 출력하는 채팅 기록', chatList)
+  //     }
+  //   })
+  // }, [connected, chatList])
 
   const ready = () => {
     setReadyOrNot(!readyOrNot)
