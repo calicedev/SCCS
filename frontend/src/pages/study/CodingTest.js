@@ -17,8 +17,6 @@ export default function CodingTest({
   roomInfo,
   personnel,
   startStudy,
-  dataForStudy,
-  setDataForStudy,
   nickname,
 }) {
   const [codingTestData, setCodingTestData] = useState({})
@@ -29,8 +27,11 @@ export default function CodingTest({
   const [timeLeft, setTimeLeft] = useState(7200000)
 
   // 문제 선택하기 위한 state
-  const [onProblem, setOnProblem] = useState(null)
-  const [onProblemIdx, setOnProblemIdx] = useState(0)
+  const [onProblem, setOnProblem] = useState() // 현재 선택된 문제의 pk
+  const [onProblemIdx, setOnProblemIdx] = useState(0) // 현재 선택된 버튼의 idx (이미지 표시하기 위함)
+  const [problemArray, setProblemArray] = useState([]) // 문제 pk 리스트 ex) [7, 19]
+
+  // 정보 저장해보자
 
   // 코딩테스트 페이지 입장 시 axios 요청
   useEffect(() => {
@@ -44,8 +45,12 @@ export default function CodingTest({
     axios(config)
       .then((res) => {
         setCodingTestData(res.data)
-        setDataForStudy([res.data.problems[0].id, res.data.problems[1].id])
         console.log(res.data.problems[0].id, res.data.problems[1].id)
+        setProblemArray([
+          ...problemArray,
+          res.data.problems[0].id,
+          res.data.problems[1].id,
+        ])
       })
       .catch((err) => {})
   }, [])
@@ -79,7 +84,7 @@ export default function CodingTest({
     formData.append('memberId', nickname)
     formData.append('studyroomId', studyroomId)
     formData.append('problemId', onProblem)
-    formData.append('languageId', 2)
+    formData.append('languageId', 2) // 고쳐야함
 
     const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api('testCode')
@@ -102,10 +107,10 @@ export default function CodingTest({
     const file = new Blob([content], { type: 'text/plain' })
     const formData = new FormData()
     formData.append('formFile', file)
-    formData.append('memberId', 'mint_angel') // 고쳐야함
+    formData.append('memberId', nickname)
     formData.append('studyroomId', studyroomId)
-    formData.append('problemId', 1) // 고쳐야함
-    formData.append('languageId', 2) // 고쳐야함
+    formData.append('problemId', onProblem)
+    formData.append('languageId', 2)
 
     const headers = { 'Content-Type': 'multipart/form-data' }
 
@@ -125,38 +130,38 @@ export default function CodingTest({
   //---------------------------------------------------------------------------------------------------
 
   const changeProblem = (idx) => {
-    setOnProblem(dataForStudy[idx - 1])
+    // console.log(problemArray)
+    setOnProblem(problemArray[idx])
     setOnProblemIdx(idx)
+    // console.log(onProblem)
   }
   return (
     <>
       {codingTestData.title && (
         <>
-          {onProblem && (
-            <TopNavBar>
-              <Btn>{roomInfo.title}</Btn>
-              <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
-              {roomInfo.algoIds.map((algoId, idx) => {
-                return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
-              })}
-              {['1번', '2번'].map((problem, idx) => {
-                return (
-                  <Btn
-                    onClick={() => {
-                      changeProblem(idx)
-                    }}
-                    key={idx}
-                  >
-                    {problem}
-                  </Btn>
-                )
-              })}
-              <span>
-                남은 시간: {hours}시간 {minutes}분 {seconds}초
-              </span>
-              <span> 현재 {personnel}명</span>
-            </TopNavBar>
-          )}
+          <TopNavBar>
+            <Btn>{roomInfo.title}</Btn>
+            <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
+            {roomInfo.algoIds.map((algoId, idx) => {
+              return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
+            })}
+            {['1번', '2번'].map((problem, idx) => {
+              return (
+                <Btn
+                  onClick={() => {
+                    changeProblem(idx)
+                  }}
+                  key={idx}
+                >
+                  {problem}
+                </Btn>
+              )
+            })}
+            <span>
+              남은 시간: {hours}시간 {minutes}분 {seconds}초
+            </span>
+            <span> 현재 {personnel}명</span>
+          </TopNavBar>
 
           <Main>
             {/* <h3>받은 첫 번째 문제 title : {codingTestData.problems[0].name}</h3> */}
