@@ -121,9 +121,9 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-            (MINUTE * 2)); // 2분
+            (MINUTE * 1)); // 2분
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-            (MINUTE * 5)); // 5분
+            (MINUTE * 2)); // 5분
 
 //        resultmap.put("accessToken", accessToken);
 //        resultmap.put("refreshToken", refreshToken);

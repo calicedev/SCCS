@@ -62,6 +62,7 @@ public class JWTServiceImpl implements JWTService {
           .getBody();
     } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
       logger.debug("토큰 만료");
+      //throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "token expired");
       throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
     } catch (Exception e) {
       logger.debug("토큰 검증 에러");
