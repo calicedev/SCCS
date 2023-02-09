@@ -40,7 +40,7 @@ apiRequest.interceptors.response.use(
     const response = error.response // 에러 정보 추출
     // accesstoken 재발급 로직
     if (
-      response.status === 401 &&
+      response.status === 400 &&
       response.data.errorMessage === 'accessToken expired'
     ) {
       console.log('accessToken 재발급 요청 보냄')
