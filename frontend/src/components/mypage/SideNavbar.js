@@ -9,7 +9,7 @@ import sideNavBlueBg from 'assets/img/side_nav_blue_bg.png'
 const SideNavbar = () => {
   return (
     <SideNav>
-      <NavStyle to="/mypage/calendar">
+      <NavStyle to="/mypage/study">
         <FaRegBookmark />
         스터디 기록
       </NavStyle>
@@ -42,14 +42,14 @@ const NavStyle = styled(NavLink)`
   background-repeat: no-repeat;
   background-position: 350% 0%;
 
-  color: ${({ theme }) => theme.secondaryColor};
+  color: ${({ theme }) => theme.secondaryFontColor};
   font-size: 1.2rem;
-  font-weight: 400;
+  font-weight: 600;
 
-  transition: background-position 0.3s ease-in-out;
+  transition: background-position 0.5s ease-in-out;
 
   &:hover {
-    color: ${({ theme }) => theme.primaryColor};
+    color: ${({ theme }) => theme.primaryFontColor};
     font-weight: 600;
   }
 

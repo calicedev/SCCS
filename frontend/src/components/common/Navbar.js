@@ -6,6 +6,7 @@ import IconButton from 'components/common/IconButton'
 import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from 'redux/themeSlice'
+import { deleteUserInfo } from 'redux/userSlice'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -15,6 +16,10 @@ export default function Navbar() {
   // 리덕스 -> theme정보
   const theme = useSelector((state) => state.theme)
   const dispatch = useDispatch()
+
+  const logout = () => {
+    dispatch(deleteUserInfo())
+  }
 
   return (
     <Nav>
@@ -31,10 +36,12 @@ export default function Navbar() {
       </Flexbox>
       <NavContent>
         <NavStyle to="/">Home</NavStyle>
-        <NavStyle to="/mypage/calendar">Calender</NavStyle>
+        <NavStyle to="/mypage/study">Calender</NavStyle>
         <NavStyle to="/mypage/solved">Solved</NavStyle>
         <NavStyle to="/mypage/profile">Profile</NavStyle>
-        <NavStyle to="/auth/login">Logout</NavStyle>
+        <NavStyle to="/auth/login" onClick={logout}>
+          Logout
+        </NavStyle>
       </NavContent>
     </Nav>
   )
@@ -63,11 +70,11 @@ const NavStyle = styled(NavLink)`
   padding: 1rem;
 
   font-size: 1.5rem;
-  font-weight: 400;
-  color: ${({ theme }) => theme.secondaryColor};
+  font-weight: 500;
+  color: ${({ theme }) => theme.secondaryFontColor};
 
   &.active {
-    color: ${({ theme }) => theme.primaryColor};
+    color: ${({ theme }) => theme.primaryFontColor};
     font-weight: 600;
   }
 `

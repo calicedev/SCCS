@@ -10,7 +10,7 @@ type: 색깔
 size: 버튼의 크기
 text: 버튼 옆에 표시할 글자
 onClick: 클릭 시 동작
-disabled: hover시 색깔 전활 활성화 여부
+disabled: 클릭 가능 여부
 */
 
 export default function IconButton({
@@ -21,13 +21,13 @@ export default function IconButton({
   onClick,
   disabled,
 }) {
-  const typeClass = `${type}-icbtn`
   const sizeClass = `${size}-icbtn`
 
   return (
     <IconWrapper
       disabled={disabled}
-      className={`${typeClass} ${sizeClass}`}
+      type={type}
+      className={`${sizeClass}`}
       onClick={onClick}
     >
       {icon} {text}
@@ -36,17 +36,23 @@ export default function IconButton({
 }
 
 IconButton.propTypes = {
-  icon: PropTypes.element,
-  type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'white']),
-  size: PropTypes.oneOf(['small', 'middle', 'large']),
+  icon: PropTypes.element.isRequired,
+  type: PropTypes.oneOf([
+    'black',
+    'primary',
+    'secondary',
+    'tertiary',
+    'gray',
+    'white',
+  ]),
+  size: PropTypes.oneOf(['tiny', 'small', 'middle', 'large']),
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
 }
 IconButton.defaultProps = {
-  icon: {},
-  type: undefined,
+  type: 'black',
   size: 'small',
-  onChange: undefined,
+  onClick: undefined,
   disabled: false,
 }
 
@@ -54,39 +60,14 @@ const IconWrapper = styled.div`
   cursor: pointer;
   color: black;
 
-  &.primary-icbtn {
-    color: ${({ theme }) => theme.primaryColor};
-    :hover {
-      color: ${({ disabled, theme }) =>
-        disabled ? theme.primaryColor : theme.deepPrimaryColor};
-    }
+  color: ${({ theme, type }) => theme[`${type}Color`]};
+  &:hover {
+    color: ${({ theme, type }) =>
+      theme[`deep${type.replace(/^[a-z]/, (c) => c.toUpperCase())}Color`]};
   }
-  &.secondary-icbtn {
-    color: ${({ theme }) => theme.secondaryColor};
-    :hover {
-      color: ${({ disabled, theme }) =>
-        disabled ? theme.secondaryColor : theme.deepSecondaryColor};
-    }
-  }
-  &.tertiary-icbtn {
-    color: ${({ theme }) => theme.tertiaryColor};
-    :hover {
-      color: ${({ disabled, theme }) =>
-        disabled ? theme.tertiaryColor : theme.deepTertiaryColor};
-    }
-  }
-  &.gray-icbtn {
-    color: ${({ theme }) => theme.grayColor};
-    :hover {
-      color: ${({ disabled, theme }) =>
-        disabled ? theme.grayColor : theme.deepGrayColor};
-    }
-  }
-  &.white-icbtn {
-    color: #ffffff;
-    :hover {
-      color: #ffffff;
-    }
+
+  &.tiny-icbtn {
+    font-size: 1.2rem;
   }
   &.small-icbtn {
     font-size: 1.5rem;

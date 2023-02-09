@@ -55,11 +55,11 @@ const typeObj = {
 
 export default function AuthInput({ type, value, onChange, message }) {
   return (
-    <Wrapper>
+    <Container>
       <Label htmlFor={type}>{typeObj[type].label}</Label>
       <FlexBox>
         {typeObj[type].logo}
-        <Input
+        <StyledInput
           id={type}
           type={typeObj[type].type}
           placeholder={typeObj[type].placeholder}
@@ -70,7 +70,7 @@ export default function AuthInput({ type, value, onChange, message }) {
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
         {message.text}
       </p>
-    </Wrapper>
+    </Container>
   )
 }
 
@@ -95,10 +95,11 @@ AuthInput.defaultProps = {
   message: { text: '', isValid: false },
 }
 
-const Wrapper = styled.div`
+const Container = styled.div`
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`
+  white-space: nowrap;
   padding: 0.3rem 0rem;
 
   border-bottom: 1px solid gray;
@@ -109,7 +110,7 @@ const Label = styled.label`
   color: ${({ theme }) => theme.fontColor};
   font-size: 1rem;
 `
-const Input = styled.input`
+const StyledInput = styled.input`
   padding-left: 0.5rem;
   background-color: #00000000;
 `

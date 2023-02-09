@@ -23,8 +23,7 @@ export default function ProblemList() {
   const [currentPage, setCurrentPage] = useState(0)
   const [startPagination, setStartPagination] = useState(0)
 
-  // useEffect
-  // mount시 problems 데이터 서버 요청
+  // mount시 problems 데이터 fetch
   useEffect(() => {
     const [url, method] = api('solvedProblem', { id })
     const config = { method }
@@ -41,36 +40,13 @@ export default function ProblemList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // uesMemo
-  // problems의 길이에 따라 마지막 페이지의 인덱스 저장
+  // lastPage : 마지막 페이지의 인덱스
   const lastPage = useMemo(() => {
     if (problems.length / PROBLEM_PER_PAGE) {
-      return parseInt(problems.length / PROBLEM_PER_PAGE) - 1
+      return parseInt(problems.length / PROBLEM_PER_PAGE)
     }
-    return parseInt(problems.length / PROBLEM_PER_PAGE)
+    return parseInt(problems.length / PROBLEM_PER_PAGE) - 1
   }, [problems])
-
-  // 다음 페이지네이션
-  const nextPagination = () => {
-    if (startPagination + 2 * BUTTON_PER_PAGINATION - 1 > lastPage) {
-      setCurrentPage(lastPage - BUTTON_PER_PAGINATION + 1)
-      setStartPagination(lastPage - BUTTON_PER_PAGINATION + 1)
-      return
-    }
-    setCurrentPage(startPagination + BUTTON_PER_PAGINATION)
-    setStartPagination(startPagination + BUTTON_PER_PAGINATION)
-  }
-
-  // 이전 페이지네이션
-  const previousPagination = () => {
-    if (startPagination - BUTTON_PER_PAGINATION <= 0) {
-      setCurrentPage(0)
-      setStartPagination(0)
-      return
-    }
-    setCurrentPage(startPagination - BUTTON_PER_PAGINATION)
-    setStartPagination(startPagination - BUTTON_PER_PAGINATION)
-  }
 
   return (
     <Container>
@@ -94,20 +70,12 @@ export default function ProblemList() {
           })}
       </ProblemsContainer>
       <Pagination
-        currentPage={currentPage}
-        startPagination={startPagination}
-        onClick={setCurrentPage}
         numBtns={BUTTON_PER_PAGINATION}
-        onClickLeft={previousPagination}
-        onClickRight={nextPagination}
-        onClickDoubleLeft={() => {
-          setCurrentPage(0)
-          setStartPagination(0)
-        }}
-        onClickDoubleRight={() => {
-          setCurrentPage(lastPage - BUTTON_PER_PAGINATION + 1)
-          setStartPagination(lastPage - BUTTON_PER_PAGINATION + 1)
-        }}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        lastPage={lastPage}
+        startPagination={startPagination}
+        setStartPagination={setStartPagination}
       />
     </Container>
   )
@@ -120,7 +88,11 @@ const Container = styled.div`
 
   width: 80%;
 
-  margin-top: 2rem;
+  padding: 2rem 0.5rem;
+
+  @media screen and (min-width: 1024px) {
+    padding: 2rem 3rem;
+  }
 `
 const ProblemsContainer = styled.div`
   margin: 2rem 0rem;

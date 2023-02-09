@@ -95,8 +95,8 @@ export default function StudyCalendar() {
       setModalDay(date.slice(-2))
       setModalContent(dateToStudies[id])
       setIsHovered(true)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [studies],
   )
 
@@ -144,6 +144,11 @@ const Container = styled.div`
   align-items: center;
 
   width: 100%;
+
+  padding: 1rem;
+  @media screen and (min-width: 1024px) {
+    padding: 3rem;
+  }
 `
 
 // 평소에 모달 창은 hidden
@@ -162,6 +167,8 @@ const Modal = styled.div`
 
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
+
+  padding: 0.2rem;
 
   border: 1px solid gray;
   border-radius: 5px;

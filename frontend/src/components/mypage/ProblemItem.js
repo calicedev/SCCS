@@ -20,16 +20,18 @@ export default function ProblemItem({
   onClick,
 }) {
   return (
-    <ProblemContainer onClick={onClick}>
-      <FirstLine>
+    <Container onClick={onClick}>
+      <Flexbox>
         <p>{problemName}</p>
         <p className="c">마지막 제출일: {submitDatetime}</p>
-      </FirstLine>
-      <SecondLine>
-        <p className="c gray">정답률: {answerRate}</p>
-        <p className="c">{difficulty}</p>
-      </SecondLine>
-    </ProblemContainer>
+      </Flexbox>
+      <Flexbox>
+        <p className="c">정답률: {answerRate}%</p>
+        <p className="c">
+          {difficulty === 1 ? '쉬움' : difficulty === 2 ? '보통' : '어려움'}
+        </p>
+      </Flexbox>
+    </Container>
   )
 }
 
@@ -49,11 +51,11 @@ ProblemItem.defaultProps = {
   difficulty: 0,
 }
 
-const ProblemContainer = styled.div`
-  padding: 0.7rem 0.5rem;
+const Container = styled.div`
+  padding: 0.5rem 0.5rem;
 
   border-bottom: solid 1px gray;
-  border-top: solid 1px gray;
+  border-radius: 1rem;
 
   background-color: ${({ theme }) => theme.bgColor};
 
@@ -62,19 +64,18 @@ const ProblemContainer = styled.div`
 
   &:hover {
     scale: 1.05;
-    background-color: #00000012;
+    background-color: #7ab6ec24;
   }
 `
 
-const FirstLine = styled.div`
+const Flexbox = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
-`
+  align-items: center;
 
-const SecondLine = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin: 0.5rem 0.2rem;
+
+  & > .c {
+    opacity: 0.7;
+  }
 `

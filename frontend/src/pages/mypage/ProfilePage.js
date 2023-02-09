@@ -19,12 +19,13 @@ export default function Profile() {
   }, [user])
 
   return (
-    <ProfileContent>
+    <Container>
       <h1>Profile</h1>
       <ProfileContainer>
-        <ProfileImg />
-        <p className="semi-bold">Joined at: {joinDate}</p>
+        <ProfileImg imgUrl={user.profileImage} />
+        <p className="semi-bold">가입일: {joinDate}</p>
       </ProfileContainer>
+
       <InputContainer>
         <ProfileInput type="id" value={user.id} disabled={true}></ProfileInput>
         <Flexbox>
@@ -45,37 +46,39 @@ export default function Profile() {
           disabled={true}
         ></ProfileInput>
       </InputContainer>
-      <ButtonContainer>
+
+      <ButtonWrapper>
         <Button
           value="Edit"
           onClick={() => {
             navigate('/mypage/profile/edit')
           }}
         ></Button>
-      </ButtonContainer>
-    </ProfileContent>
+      </ButtonWrapper>
+    </Container>
   )
 }
 
-const ProfileContent = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
 
   position: relative;
 
   max-width: 700px;
-
   width: 100%;
+
+  padding: 2rem;
 `
 
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: center;
 
   position: absolute;
-  top: 2rem;
-  right: 0rem;
+  top: 3.5rem;
+  right: 2rem;
 `
 
 const InputContainer = styled.div`
@@ -88,8 +91,9 @@ const InputContainer = styled.div`
 const Flexbox = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 `
-const ButtonContainer = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
   justify-content: end;
 `
