@@ -1,25 +1,39 @@
 import React from 'react'
+import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import { useState } from 'react'
+import Modal from 'components/common/Modal'
 
-import SonModal from './SonModal'
+export default function StudyDetailCodeItem({
+  id,
+  memberId,
+  memory,
+  runtime,
+  result,
+}) {
+  const [showModal, setShowModal] = useState(false)
 
-export default function StudyDetailCodeItem({ code, idx }) {
-  const [modal, setModal] = useState(false)
   return (
     <>
+      {showModal ? <Modal close={() => setShowModal(false)} /> : null}
       <div
         onClick={() => {
-          setModal(!modal)
+          setShowModal(true)
         }}
       >
-        <span>
-          {idx + 1}. {code.submissionMemberId} :
-        </span>
-        <span> 실행시간 : {code.submissionRuntime}ms </span>
-        <span> 메모리 : {code.submissionMemory}KB </span>
-
-        {modal ? <SonModal code={code} close={() => setModal(false)} /> : null}
+        <span>{memberId}</span>
+        <span>{runtime}ms</span>
+        <span>{memory}kb</span>
+        <span>{result}</span>
       </div>
     </>
   )
+}
+
+StudyDetailCodeItem.propTypes = {
+  id: PropTypes.number.isRequired,
+  memberId: PropTypes.string.isRequired,
+  memory: PropTypes.number.isRequired,
+  runtime: PropTypes.number.isRequired,
+  result: PropTypes.string.isRequired,
 }
