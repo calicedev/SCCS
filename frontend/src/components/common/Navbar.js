@@ -15,6 +15,7 @@ import { deleteUserInfo } from 'redux/userSlice'
 export default function Navbar() {
   // 리덕스 -> theme정보
   const theme = useSelector((state) => state.theme)
+  const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
   const logout = () => {
@@ -39,9 +40,13 @@ export default function Navbar() {
         <NavStyle to="/mypage/study">Calender</NavStyle>
         <NavStyle to="/mypage/solved">Solved</NavStyle>
         <NavStyle to="/mypage/profile">Profile</NavStyle>
-        <NavStyle to="/auth/login" onClick={logout}>
-          Logout
-        </NavStyle>
+        {user ? (
+          <NavStyle to="/" onClick={logout}>
+            Logout
+          </NavStyle>
+        ) : (
+          <NavStyle to="/auth/login">Login</NavStyle>
+        )}
       </NavContent>
     </Nav>
   )

@@ -98,7 +98,6 @@ export default function ProfileEdit() {
         <ProfileImgInput
           imgUrl={imgUrl}
           onChange={(e) => setImg(e.target.files)}
-          onDelete={() => setImg('')}
         ></ProfileImgInput>
       </ProfileContainer>
 

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import ProfileInput from 'components/mypage/ProfileInput'
 import Button from 'components/common/Button'

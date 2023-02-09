@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import ProfileImg from 'components/common/ProfileImg'
-import IconButton from 'components/common/IconButton'
-import { FaTrash } from 'react-icons/fa'
 import PropTypes from 'prop-types'
 
 /*
@@ -24,7 +22,6 @@ export default function ProfileImgInput({ imgUrl, onChange, onDelete }) {
           accept="image/*"
           onChange={onChange}
         />
-        <IconButton icon={<FaTrash />} onClick={onDelete} />
       </Flexbox>
     </>
   )

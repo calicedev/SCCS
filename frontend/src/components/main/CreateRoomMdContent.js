@@ -43,6 +43,7 @@ export default function CreateRoomMdContent() {
   const changeLanguageIds = (e) => {
     // 체크박스 옵션의 id가 10이하의 정수문자열로 시작하는 전제조건
     const id = parseInt(e.target.id.slice(0, 1))
+    console.log(id)
     if (e.target.checked) {
       setLanguageIds([...languageIds, id])
       return
@@ -54,14 +55,13 @@ export default function CreateRoomMdContent() {
   const changeAlgoIds = (e) => {
     // 체크박스 옵션의 id가 10이하의 정수문자열로 시작하는 전제조건
     const id = parseInt(e.target.id.slice(0, 1))
-
     // 랜덤 항목
     if (!id) {
       // 랜덤 항목을 체크한 경우
       if (e.target.checked) {
         // 랜덤 외의 다른 모든 배열을 체크해제
-        const checkEles = document.querySelectorAll('#algo-options input')
-        checkEles.forEach((ele, index) => {
+        const allChecks = document.querySelectorAll('#algo-options input')
+        allChecks.forEach((ele, index) => {
           if (index) {
             ele.checked = false
           }
@@ -78,9 +78,9 @@ export default function CreateRoomMdContent() {
     // 랜덤외의 항목
     if (e.target.checked) {
       // 랜덤 항목이 체크되어 있던 경우
-      if (algoIds.includes(0)) {
-        const checkEle = document.querySelector('#algo-options input')
-        checkEle.checked = false
+      const randomCheck = document.querySelector('#algo-options input')
+      if (randomCheck.checked) {
+        randomCheck.checked = false
         setAlgoIds([id])
         return
       }
@@ -169,7 +169,7 @@ export default function CreateRoomMdContent() {
 
       <Wrapper>
         <p>언어</p>
-        <GridBox className="language-options">
+        <GridBox id="language-options">
           {Object.keys(languagePk).map((key) => (
             <Checkbox
               key={key}
@@ -183,7 +183,7 @@ export default function CreateRoomMdContent() {
 
       <Wrapper>
         <p>알고리즘</p>
-        <GridBox className="algo-options">
+        <GridBox id="algo-options">
           {Object.keys(algorithmPk).map((key) => (
             <Checkbox
               key={key}
