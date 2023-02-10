@@ -58,19 +58,21 @@ export default function Study({
           발표자 : {presenter}
         </Btn>
         {id === roomInfo.hostId ? (
-          <span>
-            참여자 :
-            {readyForStudyArray.map((presenterNickname) => {
-              return (
-                <div
-                  onClick={() => changePresenter(presenterNickname)}
-                  key={presenterNickname}
-                >
-                  {presenterNickname}
-                </div>
-              )
-            })}
-          </span>
+          showParticipants ? (
+            <span>
+              참여자 :
+              {readyForStudyArray.map((presenterNickname) => {
+                return (
+                  <div
+                    onClick={() => changePresenter(presenterNickname)}
+                    key={presenterNickname}
+                  >
+                    {presenterNickname}
+                  </div>
+                )
+              })}
+            </span>
+          ) : null
         ) : null}
       </TopNavBar>
       <Drawing></Drawing>
