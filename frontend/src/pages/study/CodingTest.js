@@ -17,6 +17,7 @@ export default function CodingTest({
   roomInfo,
   personnel,
   startStudy,
+  id,
   nickname,
 }) {
   const [codingTestData, setCodingTestData] = useState({})
@@ -51,6 +52,8 @@ export default function CodingTest({
           res.data.problems[0].id,
           res.data.problems[1].id,
         ])
+        // 0번 인덱스의 문제 pk를 onProblem에 넣어줌
+        setOnProblem(problemArray[0])
       })
       .catch((err) => {})
   }, [])
@@ -74,6 +77,7 @@ export default function CodingTest({
   //---------------------------------------------------------------------------------------------------
   const [codingTestResult, setCodingTestResult] = useState([])
   const navigate = useNavigate()
+
   const testCode = useCallback(() => {
     // let fileName = 'formFile.txt';
     const content = document.querySelector('textarea').value
@@ -81,16 +85,21 @@ export default function CodingTest({
     const file = new Blob([content], { type: 'text/plain' })
     const formData = new FormData()
     formData.append('formFile', file)
-    formData.append('memberId', nickname)
+    formData.append('memberId', id)
     formData.append('studyroomId', studyroomId)
-    formData.append('problemId', onProblem)
-    formData.append('languageId', 2) // 고쳐야함
+    console.log(onProblem)
+    // 지금은 채점 서버에 1번 문제밖에 없어서 이렇게 하지만 더 들어오면 OnProblem으로 해야함 (2.10 민혁)
+    formData.append('problemId', 1)
+    // formData.append('problemId', onProblem)
+    // 지금은 Java(2)로 고정하지만 나중에는 파이썬 or 파이썬+자바의 경우도 넣어줘야함 (2.10 민혁)
+    formData.append('languageId', 2)
 
     const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api('testCode')
     const config = { url, method, data: formData, headers }
     axios(config)
       .then((res) => {
+        setCodingTestResult(res.data)
         // navigate('/')
       })
       .catch((err) => {})
@@ -107,13 +116,18 @@ export default function CodingTest({
     const file = new Blob([content], { type: 'text/plain' })
     const formData = new FormData()
     formData.append('formFile', file)
-    formData.append('memberId', nickname)
+    formData.append('memberId', id)
     formData.append('studyroomId', studyroomId)
-    formData.append('problemId', onProblem)
+    console.log(onProblem)
+    // 지금은 채점 서버에 1번 문제밖에 없어서 이렇게 하지만 더 들어오면 OnProblem으로 해야함 (2.10 민혁)
+    formData.append('problemId', 1)
+    // formData.append('problemId', onProblem)
+    // 지금은 Java(2)로 고정하지만 나중에는 파이썬 or 파이썬+자바의 경우도 넣어줘야함 (2.10 민혁)
     formData.append('languageId', 2)
 
     const headers = { 'Content-Type': 'multipart/form-data' }
 
+    // console.log(formData)
     const [url, method] = api('submitCode')
     const config = { url, method, data: formData, headers }
     axios(config)

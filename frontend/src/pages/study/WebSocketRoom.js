@@ -359,6 +359,7 @@ export default function WebSocketRoom() {
               roomInfo={roomInfo}
               personnel={personnel}
               startStudy={startStudy}
+              id={id}
               nickname={nickname}
             />
           ) : null}
