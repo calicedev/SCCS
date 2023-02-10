@@ -325,7 +325,7 @@ public class StudyroomServiceImpl implements StudyroomService {
 
     //문제 제출 정보를 실제 디비에 저장한다.
     submissionDto.setFileName(f.getName());
-    submissionDto.setResult(String.valueOf(s.get(5).get("isAnswer")));
+    submissionDto.setResult((Boolean) s.get(5).get("isAnswer"));
     submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
     submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
     studyroomMapper.submitProblem(submissionDto);
@@ -373,7 +373,7 @@ public class StudyroomServiceImpl implements StudyroomService {
 
     //문제 제출 정보를 실제 디비에 저장한다.
     submissionDto.setFileName(f.getName());
-    submissionDto.setResult(String.valueOf(s.get(5).get("isAnswer")));
+    submissionDto.setResult((Boolean) s.get(5).get("isAnswer"));
     submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
     submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
     studyroomMapper.submitProblem(submissionDto);
