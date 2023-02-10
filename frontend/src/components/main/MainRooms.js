@@ -179,11 +179,15 @@ const Container = styled.div`
 
 const FlexBox = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   gap: 40px;
 
   width: 100%;
+  @media screen and (min-width: 1024px) {
+    flex-direction: row;
+  }
 `
 
 const SearchContainer = styled.div`
@@ -202,7 +206,7 @@ const InputBox = styled.div`
 
   border: none;
   border-radius: 0.5rem;
-  box-shadow: 3px 3px 7px #000000a0;
+  box-shadow: 3px 3px 7px #00000050;
 
   background-color: white;
 `
@@ -213,7 +217,7 @@ const StyledInput = styled.input`
 `
 const GridBox = styled.div`
   display: grid;
-  gap: 1rem 1rem;
+  gap: 1rem 3rem;
   overflow-y: auto;
 
   height: 32rem;
@@ -224,7 +228,7 @@ const GridBox = styled.div`
   grid-template-columns: repeat(2, 1fr);
 
   @media screen and (min-width: 1024px) {
-    gap: 1rem 2rem;
+    gap: 1rem 1rem;
     grid-template-columns: repeat(3, 1fr);
   }
 `
