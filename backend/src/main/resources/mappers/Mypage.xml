@@ -45,6 +45,7 @@
   <resultMap id="studyroomWithProblems" type="HashMap">
     <result column="problem_name" property="problemName"></result>
     <result column="problem_folder" property="problemFolder"></result>
+    <result column="problem_id" property="problemId"></result>
     <collection property="participantWithCode" javaType="list"
       resultMap="ParticipantWithCode"></collection>
   </resultMap>
@@ -56,7 +57,6 @@
     <result column="submission_memory" property="submissionMemory"></result>
     <result column="submission_result" property="submissionResult"></result>
     <result column="submission_submitDatetime" property="submissionSubmitDateTime"></result>
-    <result column="problem_id" property="problemId"></result>
     <result column="submission_memberId" property="submissionMemberId"></result>
     <result column="submission_languageId" property="submissionLanguageId"></result>
   </resultMap>
@@ -90,7 +90,7 @@
   </resultMap>
 
   <select id="getProblems" parameterType="hashmap" resultMap="submissionWithProblemAboutUser">
-    SELECT p.id, p.name ,format(p.accepted_number/p.submission_number*100,2) as 'answerRate'
+    SELECT s.id, p.name ,format(p.accepted_number/p.submission_number*100,2) as 'answerRate'
     ,DATE_FORMAT(submit_datetime,'%y-%m-%d') as 'date',p.difficulty,s.language_id
     FROM problem p, submission s
     WHERE p.id = s.problem_id AND s.member_id = #{memberId};
@@ -98,6 +98,18 @@
 
   <select id="getProblemUrl" parameterType="int" resultType="String">
     SELECT problem_folder FROM problem WHERE id=#{problemId}
+  </select>
+
+  <resultMap id="submissionFromProblem" type="hashmap">
+    <result column="problemId" property="pId"></result>
+    <result column="submissionUrl" property="sURL"></result>
+    <result column="problemUrl" property="pURL"></result>
+  </resultMap>
+  <select id="getProblemIdAndUrl" parameterType="hashmap"
+    resultMap="submissionFromProblem">
+    SELECT s.problem_id as problemId, s.file_name as submissionUrl, p.problem_folder as problemUrl
+    FROM submission s, problem p WHERE
+    s.id=#{submissionId} and problem_id = p.id;
   </select>
 
 
