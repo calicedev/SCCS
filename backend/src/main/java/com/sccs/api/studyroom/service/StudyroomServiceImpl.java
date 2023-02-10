@@ -343,10 +343,12 @@ public class StudyroomServiceImpl implements StudyroomService {
     String slashProblemFolder =problemDto.getProblemFolder().replace("-", "/");
     //파일을 원하는 경로에 실제로 저장한다.
     MultipartFile f = fileStore.storeFile(submissionDto, slashProblemFolder);
-    FileDto fileDto = awsS3service.upload(f,"submission");
+
+
     // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
     UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(slashProblemFolder, f.getName()));
 
+    FileDto fileDto = awsS3service.upload(f,"submission");
     String tempNo = slashProblemFolder.substring(slashProblemFolder.lastIndexOf("/")+1);
 
     LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
