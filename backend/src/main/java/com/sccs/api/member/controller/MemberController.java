@@ -144,14 +144,14 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
-        logger.debug("토큰 파싱 시작 !!");
-        Claims claims = jwtService.getToken(accessToken);
-        String exp = (String) claims.get("expiration");
-        logger.debug("exp타임 : {}", exp);
+//        logger.debug("토큰 파싱 시작 !!");
+//        Claims claims = jwtService.getToken(accessToken);
+//        String exp = (String) claims.get("expiration");
+//        logger.debug("exp타임 : {}", exp);
 
         logger.debug("[login]로그인 성공");
         resultmap.put("message", "성공");
-        resultmap.put("expiration", String.valueOf(exp));
+        resultmap.put("expiration", "작업중 ");
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
         logger.debug("[logIn]비밀번호 불일치");
