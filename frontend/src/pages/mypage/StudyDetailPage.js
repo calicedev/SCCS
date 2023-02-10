@@ -52,7 +52,7 @@ export default function StudyDetailPage() {
             </Pane>
             <Pane>
               <StudyDetailCodeList
-                codeList={problems[problemIdx].ParticipantWithCode}
+                codeList={problems[problemIdx].participantWithCode}
               />
             </Pane>
           </Flexbox>

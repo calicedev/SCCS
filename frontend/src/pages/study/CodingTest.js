@@ -19,6 +19,8 @@ export default function CodingTest({
   startStudy,
   id,
   nickname,
+  dataForStudy,
+  setDataForStudy,
 }) {
   const [codingTestData, setCodingTestData] = useState({})
 
@@ -49,6 +51,11 @@ export default function CodingTest({
         console.log(res.data.problems[0].id, res.data.problems[1].id)
         setProblemArray([
           ...problemArray,
+          res.data.problems[0].id,
+          res.data.problems[1].id,
+        ])
+        setDataForStudy([
+          ...dataForStudy,
           res.data.problems[0].id,
           res.data.problems[1].id,
         ])
@@ -154,11 +161,17 @@ export default function CodingTest({
       {codingTestData.title && (
         <>
           <TopNavBar>
-            <Btn>{roomInfo.title}</Btn>
-            <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
+            <Btn>
+              {studyroomId}번방 {roomInfo.title}
+            </Btn>
+            {roomInfo.languageIds.map((languageId, idx) => {
+              return <Btn key={idx}>{languagePk[languageId]}</Btn>
+            })}
+
             {roomInfo.algoIds.map((algoId, idx) => {
               return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
             })}
+
             {['1번', '2번'].map((problem, idx) => {
               return (
                 <Btn

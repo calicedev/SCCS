@@ -41,7 +41,10 @@ export default function WaitingRoom({
         <Btn>
           {studyroomId}번방 {roomInfo.title}
         </Btn>
-        <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
+        {roomInfo.languageIds.map((languageId) => {
+          return <Btn>{languagePk[languageId]}</Btn>
+        })}
+
         {roomInfo.algoIds.map((algoId) => {
           return <Btn>#{algorithmPk[algoId]}</Btn>
         })}
