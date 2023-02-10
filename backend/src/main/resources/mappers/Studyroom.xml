@@ -161,6 +161,12 @@
     where is_active=1 AND s.id= #{id}
   </select>
 
+  <select id="getNicknameById" parameterType="String" resultMap="String">
+    select nickname
+    from member
+    where id=#{id}
+  </select>
+
   <update id="changeStudyroomSolvingStatus" parameterType="StudyroomDto">
     UPDATE studyroom
     SET is_solving = true
