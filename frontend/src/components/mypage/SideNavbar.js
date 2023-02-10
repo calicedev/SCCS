@@ -32,13 +32,11 @@ const SideNav = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  fontFamily: 'NanumSquareR';
   margin: 1.5rem 0rem;
 `
 
 const NavStyle = styled(NavLink)`
   padding: 1rem 0rem 1rem 3rem;
-
   background-image: url(${sideNavBlueBg});
   background-repeat: no-repeat;
   background-position: 350% 0%;

@@ -56,7 +56,6 @@ const Nav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'bigjohn';
   margin: 1.5rem 0rem;
   padding: 0rem 2rem;
 `

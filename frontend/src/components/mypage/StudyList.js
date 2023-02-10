@@ -65,9 +65,7 @@ StudyList.defaultProps = {
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
-
-  font-family: 'handFont';
+  font-family: 'NanumSquareB';
 `
 
 const Study = styled.div`

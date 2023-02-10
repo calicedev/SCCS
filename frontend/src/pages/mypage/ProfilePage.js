@@ -57,7 +57,6 @@ export default function Profile() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-
   position: relative;
 
   max-width: 700px;
