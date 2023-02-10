@@ -44,6 +44,10 @@ public class MessageController {
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 
+    else if(socketDto.getStatus().equals("present")){
+      template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+    }
+
     else if(socketDto.getStatus().equals("chat")){
       socketDto.setMessage(socketDto.getMessage());
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);

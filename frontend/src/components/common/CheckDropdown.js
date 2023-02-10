@@ -70,7 +70,7 @@ const StyledDiv = styled.div`
   border-radius: 0.5rem;
 
   background-color: ${({ theme }) => theme.bgColor};
-  box-shadow: 3px 3px 7px #000000a0;
+  box-shadow: 3px 3px 7px #00000050;
 
   font-weight: bold;
 
@@ -79,7 +79,7 @@ const StyledDiv = styled.div`
 
 const OptionWrapper = styled.div`
   position: absolute;
-  top: 2rem;
+  top: 2.1rem;
 
   width: 100%;
 
@@ -89,5 +89,5 @@ const OptionWrapper = styled.div`
   border-radius: 0.5rem;
 
   background-color: ${({ theme }) => theme.bgColor};
-  box-shadow: 5px 5px 10px #00000050;
+  box-shadow: 3px 3px 7px #00000050;
 `
