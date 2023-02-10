@@ -105,7 +105,7 @@ public class MemberController {
   @PostMapping("/member/login")
   public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap,
       HttpServletResponse response) {
-    Map<String, String> resultmap = new HashMap<>();
+    Map<String, Object> resultmap = new HashMap<>();
 
     try {
       MemberDto memberDto = memberService.memberInfo(paramMap.get("id")); // memberDto를 DB에서 조회
@@ -154,7 +154,7 @@ public class MemberController {
 
         logger.debug("[login]로그인 성공");
         resultmap.put("message", "성공");
-        resultmap.put("expiration", String.valueOf(exp));
+        resultmap.put("expiration", exp);
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
         logger.debug("[logIn]비밀번호 불일치");
@@ -384,7 +384,9 @@ public class MemberController {
       logger.debug("[refreshToken]토큰 인증 성공");
       if (id.equals(redisService.getRefreshTokenWithRedis(refreshToken))) {
         logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
-        String newAccessToken = jwtService.createToken(id, "accessToken", 30 * MINUTE);
+        String newAccessToken = jwtService.createToken(id, "accessToken", 1 * MINUTE);
+
+        long exp = System.currentTimeMillis() + (MINUTE * 1);
 
         // 토큰 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);
@@ -393,10 +395,11 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
 
         resultMap.put("message", SUCCESS);
+        resultMap.put("expiration", exp);
       }
     } else {
       logger.debug("리프레쉬 토큰 사용 불가");
-      resultMap.put("message", "로그인 페이지로 이동하세요");
+      resultMap.put("message", "리프레쉬 토큰 사용 불가 \n 로그인 페이지로 이동하세요");
       status = HttpStatus.UNAUTHORIZED;
     }
     return new ResponseEntity<>(resultMap, status);
@@ -421,8 +424,22 @@ public class MemberController {
   }
 
 
-
-
+  /**
+   * 레디스 특정 키 값 삭제
+   */
+  @DeleteMapping ("/member/refreshToken")
+  public ResponseEntity<?> deleteRefreshToken(@CookieValue String refreshToken) {
+    HashMap<String, String> resultMap = new HashMap<>();
+    if (redisService.deleteKey(refreshToken) == SUCCESS) {
+      logger.debug("deleteRefreshToken레디스 값 삭제 성공");
+      resultMap.put("message", "성공");
+      return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    } else {
+      logger.debug("[deleteRefreshToken]레디스 값 삭제 실패");
+      resultMap.put("message", "실패");
+      return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
+    }
+  }
 
   /**
    * 레디스 전체 키 개수 조회

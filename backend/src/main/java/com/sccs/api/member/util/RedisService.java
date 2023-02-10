@@ -22,8 +22,6 @@ public class RedisService {
    **/
   public String getRefreshTokenWithRedis(String key) {
     ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
-    logger.debug("[getRefreshTokenWithRedis] - key : {}, value : {}", key,
-        stringValueOperations.get(key));
     return stringValueOperations.get(key); // value return
   }
 
@@ -61,6 +59,20 @@ public class RedisService {
       stringRedisTemplate.delete(k);
     });
     showAllKeys();
+  }
+
+  /**
+   * 특정 키 삭제
+   */
+  public String deleteKey(String key) {
+    try {
+      logger.debug("값 삭제 시도 !!!!!!");
+      stringRedisTemplate.delete(key);
+      return "success";
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "fail";
+    }
   }
 
 }

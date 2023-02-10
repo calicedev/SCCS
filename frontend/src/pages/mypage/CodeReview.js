@@ -13,7 +13,7 @@ export default function CodeReview() {
   const [problemId, setProblemId] = useState()
 
   useEffect(() => {
-    const [url, method] = api('studyHistoryDetail', { id })
+    const [url, method] = api('codeReview', { id })
     const config = { url, method }
     axios
       .request(config)
@@ -37,107 +37,101 @@ export default function CodeReview() {
 
 
   return (
-    <>
-      {/* {problemId.studyroomwithProblems && ( */}
-        <>
-          <Main>
-            <Problem>
-              <Img src={problemId.studyroomwithProblems.problemFolder}></Img>
-            </Problem>
-            <Resizable
-              defaultSize={{ width: '50%', height: '100%' }}
-              minWidth={'20%'}
-              maxWidth={'80%'}
-              enable={{
-                top: false,
-                right: true,
-                bottom: false,
-                left: true,
-                topRight: false,
-                bottomRight: false,
-                bottomLeft: false,
-                topLeft: false,
-              }}
-            >
-              <FlexColumn>
-                <CodingSection>
-                  <Changer>언어 선택</Changer>
-                  <Textarea></Textarea>
-                </CodingSection>
-                <Resizable
-                  defaultSize={{ width: '100%', height: '37%' }}
-                  minHeight={'20%'}
-                  maxHeight={'80%'}
-                  enable={{
-                    top: true,
-                    right: false,
-                    bottom: false,
-                    left: false,
-                    topRight: false,
-                    bottomRight: false,
-                    bottomLeft: false,
-                    topLeft: false,
-                  }}
-                >
-                  {/* <ResultSection>
-                    {codingTestResult.map((result, idx) => {
-                      if (idx !== 5) {
-                        return <div key={idx}>{result.result}</div>
-                      } else {
-                        return (
-                          <div key={idx}>
-                            <div>메모리: {result.avgMemory}</div>
-                            <div>실행시간: {result.avgRuntime}ms</div>
-                            <div>
-                              결과:
-                              {result.isAnswer ? (
-                                <span> Success</span>
-                              ) : (
-                                <span> Fail</span>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      }
-                    })}
-                  </ResultSection> */}
-                </Resizable>
-                <ColoredLine color="#4B91F1" />
+    <Main>
+      <Problem>
+        <Img src={problemId}></Img>
+      </Problem>
+      <Resizable
+        defaultSize={{ width: '50%', height: '100%' }}
+        minWidth={'20%'}
+        maxWidth={'80%'}
+        enable={{
+          top: false,
+          right: true,
+          bottom: false,
+          left: true,
+          topRight: false,
+          bottomRight: false,
+          bottomLeft: false,
+          topLeft: false,
+        }}
+      >
+        <FlexColumn>
+          <CodingSection>
+            <Changer>언어 선택</Changer>
+            <Textarea></Textarea>
+          </CodingSection>
+          <Resizable
+            defaultSize={{ width: '100%', height: '37%' }}
+            minHeight={'20%'}
+            maxHeight={'80%'}
+            enable={{
+              top: true,
+              right: false,
+              bottom: false,
+              left: false,
+              topRight: false,
+              bottomRight: false,
+              bottomLeft: false,
+              topLeft: false,
+            }}
+          >
+            {/* <ResultSection>
+              {codingTestResult.map((result, idx) => {
+                if (idx !== 5) {
+                  return <div key={idx}>{result.result}</div>
+                } else {
+                  return (
+                    <div key={idx}>
+                      <div>메모리: {result.avgMemory}</div>
+                      <div>실행시간: {result.avgRuntime}ms</div>
+                      <div>
+                        결과:
+                        {result.isAnswer ? (
+                          <span> Success</span>
+                        ) : (
+                          <span> Fail</span>
+                        )}
+                      </div>
+                    </div>
+                  )
+                }
+              })}
+            </ResultSection> */}
+          </Resizable>
+          <ColoredLine color="#4B91F1" />
 
-                <Foot>
-                  <EndBtn>
-                    <Button
-                      value="시험 종료"
-                      type="danger"
-                      size="small"
-                    ></Button>
-                  </EndBtn>
-                  <CompileBtn>
-                    {/* <Button
-                      value="테스트"
-                      type="gray"
-                      size="small"
-                      margin-right="5px"
-                      onClick={() => {
-                        testCode('')
-                      }}
-                    ></Button>
-                    <Space></Space>
-                    <Button
-                      value="제출"
-                      size="small"
-                      onClick={() => {
-                        submitCode('')
-                      }} */}
-                    {/* ></Button> */}
-                  </CompileBtn>
-                </Foot>
-              </FlexColumn>
-            </Resizable>
-          </Main>
-        </>
-      {/* )}  */}
-    </>
+          <Foot>
+            <EndBtn>
+              <Button
+                value="시험 종료"
+                type="danger"
+                size="small"
+              ></Button>
+            </EndBtn>
+            <CompileBtn>
+              {/* <Button
+                value="테스트"
+                type="gray"
+                size="small"
+                margin-right="5px"
+                onClick={() => {
+                  testCode('')
+                }}
+              ></Button>
+              <Space></Space>
+              <Button
+                value="제출"
+                size="small"
+                onClick={() => {
+                  submitCode('')
+                }} */}
+              {/* ></Button> */}
+            </CompileBtn>
+          </Foot>
+        </FlexColumn>
+      </Resizable>
+    </Main>
   )
 }
 
