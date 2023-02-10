@@ -161,7 +161,7 @@
     where is_active=1 AND s.id= #{id}
   </select>
 
-  <select id="getNicknameById" parameterType="String" resultMap="String">
+  <select id="getNicknameById" parameterType="String" resultType="String">
     select nickname
     from member
     where id=#{id}
