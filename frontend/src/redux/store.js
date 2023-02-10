@@ -5,17 +5,18 @@ import { persistReducer } from 'redux-persist'
 import thunk from 'redux-thunk'
 import userSlice from './userSlice'
 import themeSlice from './themeSlice'
-import tokenSlice from './tokenSlice'
+import expSlice from './expSlice'
 
 const reducers = combineReducers({
   user: userSlice.reducer,
   theme: themeSlice.reducer,
-  token: tokenSlice.reducer,
+  expiration: expSlice.reducer,
 })
 
 const persistConfig = {
   key: 'root',
   storage,
+  blacklist: ['user'],
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

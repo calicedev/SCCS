@@ -16,7 +16,8 @@ export default function ProfileEdit() {
   const navigate = useNavigate()
 
   // 리덕스 -> 사용자 정보 읽어오기
-  const user = useSelector((state) => state.user)
+  // const user = useSelector((state) => state.user)
+  const user = getUserInfo()
 
   // 커스텀 훅 useProfileInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [nickname, setNickname, nicknameMsg, nicknameIsChanged] =

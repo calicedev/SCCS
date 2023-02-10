@@ -1,35 +1,25 @@
 import store from 'redux/store'
-import { setUserInfo } from 'redux/userSlice'
-import axios from 'libs/axios'
-import api from 'constants/api'
+import getLogin from 'libs/getLogin'
+import requestUserInfo from 'libs/requestUserInfo'
 
 /*
-서버로부터 유저 정보를 받아와서 리덕스에 저장하는 라이브러리
-
-INPUT
-id: 유저의 아이디
+유저 정보를 반환해주는 함수
+로컬(세션)스토리지에 사용자 정보를 저장하지 않는다.
 */
 
-export default function getUserInfo(id) {
-  // 서버에 사용자 정보 요청
-  const [url, method] = api('getUserInfo')
-  const config = { method }
+export default function getUserInfo() {
+  // 리덕스에 사용자 정보가 있을 경우, 해당 정보 반환
+  const state = store.getState()
+  const reduxUser = state.user
+  if (reduxUser) return reduxUser
 
-  axios(url, config)
-    .then((res) => {
-      // 리덕스에 사용자 정보 저장
-      store.dispatch(setUserInfo(res.data))
-    })
-    .catch((err) => {
-      store.dispatch(
-        setUserInfo({
-          id: id,
-          nickname: id,
-          email: 'test@naver.com',
-          score: 100,
-          joinDate: '2023-01-01',
-          profileImage: null,
-        }),
-      )
-    })
+  // 리덕스에 사용자 정보가 없을 경우, 로그인 여부를 확인
+  const islogin = getLogin()
+
+  // 로그인 하였을 경우, 사용자 정보를 서버에 재요청 하여 해당 정보 반환
+  if (islogin) {
+    return requestUserInfo()
+  }
+  // 로그인 하지 않았을 경우, 사용자 정보를 null로 반환
+  return null
 }
