@@ -105,7 +105,7 @@ public class MemberController {
   @PostMapping("/member/login")
   public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap,
       HttpServletResponse response) {
-    Map<String, String> resultmap = new HashMap<>();
+    Map<String, Object> resultmap = new HashMap<>();
 
     try {
       MemberDto memberDto = memberService.memberInfo(paramMap.get("id")); // memberDto를 DB에서 조회
@@ -154,7 +154,7 @@ public class MemberController {
 
         logger.debug("[login]로그인 성공");
         resultmap.put("message", "성공");
-        resultmap.put("expiration", String.valueOf(exp));
+        resultmap.put("expiration", exp);
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
         logger.debug("[logIn]비밀번호 불일치");
