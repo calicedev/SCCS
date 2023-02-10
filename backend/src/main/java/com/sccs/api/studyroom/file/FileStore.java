@@ -43,6 +43,23 @@ public class FileStore {
     }
     String fileName = createStoreFileName(end);
     File f = new File(getFullPath(path, fileName));
+
+    file.transferTo(f);
+    FileItem fileItem = new DiskFileItem(fileName, Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
+    InputStream input = new FileInputStream(f);
+    OutputStream os = fileItem.getOutputStream();
+    IOUtils.copy(input, os);
+    MultipartFile mFile = new CommonsMultipartFile(fileItem);
+    return mFile;
+  }
+
+  public MultipartFile storeTextFile(SubmissionDto submissionDto, String problemFolder) throws IOException {
+    MultipartFile file = submissionDto.getFormFile();
+    String path = problemFolder;
+    String end = "txt";
+    String fileName = file.getName()+end;
+    System.out.println(fileName);
+    File f = new File(getFullPath(path, fileName));
     file.transferTo(f);
     FileItem fileItem = new DiskFileItem(fileName, Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
     InputStream input = new FileInputStream(f);
@@ -56,4 +73,5 @@ public class FileStore {
     String uuid = UUID.randomUUID().toString();
     return uuid + "." + end;
   }
+
 }

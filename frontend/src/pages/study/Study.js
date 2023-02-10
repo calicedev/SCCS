@@ -15,7 +15,13 @@ export default function Study({
   studyroomId,
   personnel,
   dataForStudy,
+  readyForStudyArray,
+  presenter,
+  setPresenter,
+  id,
+  changePresenter,
 }) {
+  const [showParticipants, setShowParticipants] = useState(false)
   useEffect(() => {
     const data = {
       id: studyroomId,
@@ -35,8 +41,12 @@ export default function Study({
   return (
     <>
       <TopNavBar>
-        <Btn>{roomInfo.title}</Btn>
-        <Btn>{languagePk[roomInfo.languageIds[0]]}</Btn>
+        <Btn>
+          {studyroomId}번방 {roomInfo.title}
+        </Btn>
+        {roomInfo.languageIds.map((languageId, idx) => {
+          return <Btn key={idx}>{languagePk[languageId]}</Btn>
+        })}
         {roomInfo.algoIds.map((algoId, idx) => {
           return <Btn key={idx}>#{algorithmPk[algoId]}</Btn>
         })}
@@ -44,6 +54,26 @@ export default function Study({
           return <Btn key={idx}>{problem}</Btn>
         })}
         <span> 현재 {personnel}명</span>
+        <Btn onClick={() => setShowParticipants(!showParticipants)}>
+          발표자 : {presenter}
+        </Btn>
+        {id === roomInfo.hostId ? (
+          showParticipants ? (
+            <span>
+              참여자 :
+              {readyForStudyArray.map((presenterNickname) => {
+                return (
+                  <div
+                    onClick={() => changePresenter(presenterNickname)}
+                    key={presenterNickname}
+                  >
+                    {presenterNickname}
+                  </div>
+                )
+              })}
+            </span>
+          ) : null
+        ) : null}
       </TopNavBar>
       <Drawing></Drawing>
     </>
