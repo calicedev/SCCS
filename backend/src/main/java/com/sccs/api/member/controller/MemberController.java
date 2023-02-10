@@ -120,10 +120,15 @@ public class MemberController {
       if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
         logger.debug("[logIn]로그인 성공");
 
+//        String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
+//            (MINUTE * 1)); // 2분
+//        String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
+//            (MINUTE * 2)); // 5분
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-            (MINUTE * 1)); // 2분
+                (MINUTE * 1)); // 2분
+        long exp = System.currentTimeMillis() + (MINUTE * 1);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-            (MINUTE * 2)); // 5분
+                (MINUTE * 2)); // 5분
 
 //        resultmap.put("accessToken", accessToken);
 //        resultmap.put("refreshToken", refreshToken);
@@ -144,14 +149,12 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
-//        logger.debug("토큰 파싱 시작 !!");
 //        Claims claims = jwtService.getToken(accessToken);
-//        String exp = (String) claims.get("expiration");
-//        logger.debug("exp타임 : {}", exp);
+//        String exp = (String) jwtService.getToken(accessToken).get("expiration");
 
         logger.debug("[login]로그인 성공");
         resultmap.put("message", "성공");
-        resultmap.put("expiration", "작업중 ");
+        resultmap.put("expiration", String.valueOf(exp));
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
         logger.debug("[logIn]비밀번호 불일치");

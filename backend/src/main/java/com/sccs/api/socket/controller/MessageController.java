@@ -37,6 +37,7 @@ public class MessageController {
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
     else if(socketDto.getStatus().equals("start")){
+
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 

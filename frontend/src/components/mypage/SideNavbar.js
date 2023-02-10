@@ -32,7 +32,7 @@ const SideNav = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
+  fontFamily: 'NanumSquareR';
   margin: 1.5rem 0rem;
 `
 

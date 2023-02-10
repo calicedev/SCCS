@@ -38,8 +38,8 @@ public class JWTServiceImpl implements JWTService {
     byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
     Key signinKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
 
-    logger.debug("{} 토큰 만료 시간 !!!!!!!! : {}", subject, new SimpleDateFormat(
-        "yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis() + expTime));
+    //logger.debug("{} 토큰 만료 시간 !!!!!!!! : {}", subject, new SimpleDateFormat(
+    //    "yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis() + expTime));
     logger.debug("토큰 만료 시간 (초) : {}", System.currentTimeMillis() + expTime);
     return Jwts.builder()
         .setSubject(subject) // access or refresh
