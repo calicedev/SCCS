@@ -148,9 +148,10 @@ public class MemberController {
 //        Claims claims = jwtService.getToken(accessToken);
 //        String exp = (String) claims.get("expiration");
 //        logger.debug("exp타임 : {}", exp);
+        String exp = (String) jwtService.getToken(accessToken).get("expiration");
 
         logger.debug("[login]로그인 성공");
-        resultmap.put("message", "성공");
+        resultmap.put("message", exp);
         resultmap.put("expiration", "작업중 ");
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
