@@ -20,6 +20,8 @@ spring:
   config:
     import:
       - optional:classpath:/aws.yml
+server:
+  port: 8200
   
   mail:
     host: smtp.gmail.com
@@ -56,7 +58,3 @@ file:
   dir: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/submission/
   #dir: C:/S08P12A301/backend/src/main/resources/submission/
   dir2: /home/project/judgeonline/sccs-online-judge/backend/src/main/resources/problem/
-  
-server:
-  port: 8200
-
