@@ -99,7 +99,7 @@ const WeekDays = styled.div`
 
   width: 100%;
 
-  font-family: 'cursiveFont';
+  font-family: 'NanumOeHarMeoNiGeurSsi';
 `
 // Memoized React Component
 const MemoizedCalendar = React.memo(Calendar)

@@ -13,3 +13,39 @@
   font-family: 'bigjohn';
   src: url('assets/font/bigjohn.ttf');
 }
+
+@font-face {
+  font-family: 'GmarketSansTTFBold';
+  src: url('assets/font/GmarketSansTTFBold.ttf');
+}
+
+@font-face {
+  font-family: 'GmarketSansTTFLight';
+  src: url('assets/font/GmarketSansTTFLight.ttf');
+}
+
+@font-face {
+  font-family: 'GmarketSansTTFMedium';
+  src: url('assets/font/GmarketSansTTFMedium.ttf');
+}
+
+@font-face {
+  font-family: 'NanumSquare_acB';
+  src: url('assets/font/NanumSquare_acB.ttf');
+}
+
+@font-face {
+  font-family: 'NanumSquare_acEB';
+  src: url('assets/font/NanumSquare_acEB.ttf');
+}
+
+@font-face {
+  font-family: 'NanumSquareL';
+  src: url('assets/font/NanumSquareL.ttf');
+}
+
+@font-face {
+  font-family: 'NanumOeHarMeoNiGeurSsi';
+  src: url('assets/font/NanumOeHarMeoNiGeurSsi.ttf');
+}
+
