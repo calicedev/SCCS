@@ -59,5 +59,5 @@ public interface StudyroomMapper {
   public boolean isExistStudyroom(int id);
 
   public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
-
+  public String getNicknameById(String id);
 }
