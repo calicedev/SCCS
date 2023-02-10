@@ -5,69 +5,84 @@ import styled from 'styled-components'
 import axios from 'libs/axios'
 import api from 'constants/api'
 
-import StudyDetailTopNavbar from 'components/mypage/StudyDetailTopNavbar'
+import StudyDetailHeader from 'components/mypage/StudyDetailHeader'
 import StudyDetailCodeList from 'components/mypage/StudyDetailCodeList'
+import Loading from 'components/common/Loading'
 
 export default function StudyDetailPage() {
-  // 스터디의 id (duseParams로 자동으로 가져와줌)
+  // url 파라미터로 가져오 스터디의 pk
   const { id } = useParams()
-  // 버튼 클릭시 해당 문제로 이동하기 위해 problemId 사용
-  const [problemId, setProblemId] = useState(0)
-  // 해당 스터디에 대한 정보를 back에서 가져와서 저장하기 위해 사용
-  const [study, setStudy] = useState({})
 
-  // mount시 axios 요청으로 해당 study data 불러오기
+  // useState
+  const [studyTitle, setStudyTitle] = useState(null)
+  const [problems, setProblems] = useState(null) // 스터디에서 푼 문제 배열
+  const [problemIdx, setProblemIdx] = useState(0) // 현재 보여지는 문제의 인덱스
+
+  // 마운트시 axios 요청으로 스터디 데이터(study) 요청
   useEffect(() => {
-    const [url, method] = api('studyHistoryDetail', { id })
+    const [url, method] = api('studyDetail', { id })
     const config = { url, method }
     axios
       .request(config)
       .then((res) => {
-        console.log(res.data)
-        setStudy(res.data)
-        // console.log(study)
+        setStudyTitle(res.data.studyroomTitle)
+        setProblems(res.data.studyroomWithProblems)
       })
       .catch((err) => {
+        setStudyTitle('')
+        setProblems([])
         alert('스터디 내역을 불러오지 못했습니다.')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <Flexbox>
-      <h1>스터디 디테일 페이지입니다!</h1>
-      {study.studyroomWithProblems && (
-        <StudyDetailTopNavbar
-          study={study}
-          problemId={problemId}
-          setProblemId={setProblemId}
-        />
-      )}
-
-      <Container>
-        {/* 객체는 항상 참이므로 studyroomId가 들어왔을 때 img를 보여줌 (안 그러면 undefined 뜸) */}
-        {study.studyroomId && (
-          <img
-            src={study.studyroomWithProblems[problemId].problemFolder}
-            alt="문제 사진임"
+    <Container>
+      {problems ? (
+        <>
+          <StudyDetailHeader
+            studyTitle={studyTitle}
+            numProblems={problems.length}
+            problemIdx={problemIdx}
+            setProblemIdx={setProblemIdx}
           />
-        )}
-
-        <StudyDetailCodeList
-          study={study}
-          problemId={problemId}
-          setProblemId={setProblemId}
-        />
-      </Container>
-    </Flexbox>
+          <Flexbox>
+            <Pane>
+              <StyledDiv imgUrl={problems[problemIdx].problemFolder} />
+            </Pane>
+            <Pane>
+              <StudyDetailCodeList
+                codeList={problems[problemIdx].ParticipantWithCode}
+              />
+            </Pane>
+          </Flexbox>
+        </>
+      ) : (
+        <Loading height="20rem" />
+      )}
+    </Container>
   )
 }
 
-const Flexbox = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`
+const Flexbox = styled.div`
+  display: flex;
+  gap: 20px;
+`
+const Pane = styled.div`
   flex: 1;
+`
+const StyledDiv = styled.div`
+  overflow-y: auto;
+
+  width: 100%;
+  height: 70vh;
+
+  background-image: url(${({ imgUrl }) => imgUrl});
+  background-size: cover;
+  background-repeat: no-repeat;
 `

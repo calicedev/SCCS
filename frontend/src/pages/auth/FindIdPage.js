@@ -38,7 +38,6 @@ export default function FindIdForm() {
     const config = { method, data }
     axios(url, config)
       .then((res) => {
-        console.log(res)
         const id = res.data
         const newMsg = { ...message }
         newMsg.text = `회원님의 아이디는 ${id}입니다.`

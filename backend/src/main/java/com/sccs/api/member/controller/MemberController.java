@@ -121,9 +121,9 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-            (MINUTE * 2)); // 2분
+            (MINUTE * 1)); // 2분
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-            (MINUTE * 5)); // 5분
+            (MINUTE * 2)); // 5분
 
 //        resultmap.put("accessToken", accessToken);
 //        resultmap.put("refreshToken", refreshToken);
@@ -227,24 +227,23 @@ public class MemberController {
     //String result = awsS3Service.getTemporaryUrl("aa"+mfile.getOriginalFilename());
 
     FileDto fileDto = null;
-    if (!mfile.isEmpty()) {
+
+    logger.debug("[modify]회원정보 수정 전 : {}", memberDto);
+
+    if (mfile != null) {
       //UUID uuid = UUID.randomUUID();
       //awsProfilePath = uuid + "_" + mfile.getOriginalFilename();
       fileDto = awsS3Service.upload(mfile, "sccs");
 
       logger.info("[modify]파일이름 : {}", fileDto.getFileName());
       logger.info("[modify]파일경로 : {}", fileDto.getUrl());
+      memberDto.setProfileImage(fileDto.getUrl());
     }
-
-    logger.debug("[modify]회원정보 수정 전 : {}", memberDto);
       if (nickname != null) {
           memberDto.setNickname(nickname);
       }
       if (email != null) {
           memberDto.setEmail(email);
-      }
-      if (mfile != null) {
-        memberDto.setProfileImage(fileDto.getUrl());
       }
     logger.debug("[modify]회원정보 수정 후 : {}", memberDto);
 

@@ -31,11 +31,9 @@ export default function ProblemList() {
     axios
       .request(url, config)
       .then((res) => {
-        console.log(res)
         setProblems(res.data)
       })
       .catch((err) => {
-        console.log(err)
         setProblems([])
         alert('문제 내역을 불러오지 못했습니다.')
       })

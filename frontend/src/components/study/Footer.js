@@ -48,12 +48,9 @@ export default function Footer({ startStudy }) {
     const config = { url, method, data: formData, headers }
     axios(config)
       .then((res) => {
-        console.log(res)
         // navigate('/')
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
     // element.href = URL.createObjectURL(file);
     // // element.download = fileName;
     // document.body.appendChild(element); // Required for this to work in FireFox
@@ -77,12 +74,9 @@ export default function Footer({ startStudy }) {
     const config = { url, method, data: formData, headers }
     axios(config)
       .then((res) => {
-        console.log(res)
         // navigate('/')
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
     // element.href = URL.createObjectURL(file);
     // // element.download = fileName;
     // document.body.appendChild(element); // Required for this to work in FireFox

@@ -2,6 +2,7 @@ import checkReg from 'libs/regExp'
 import { useEffect, useState } from 'react'
 import axios from 'libs/axios'
 import api from 'constants/api'
+import useDebounce from 'hooks/useDebounce'
 
 /* 
 사용자 인증 input태그 관련 커스텀 훅
@@ -36,7 +37,10 @@ export function useAuthInput(
   const [inputValue, setInputValue] = useState(initialValue)
   const [message, setMessage] = useState({ text: '', isValid: false })
 
-  // inputValue에 의존적인 useEffect
+  // useDebounce 훅을 사용하여 서버요청 최소화
+  const debouncedInputValue = useDebounce(inputValue, 300)
+
+  // debouncedInputValue에 의존적인 useEffect
   useEffect(() => {
     // 입력값이 없을 경우, 함수 종료
     if (!inputValue) {
@@ -93,7 +97,6 @@ export function useAuthInput(
       })
       .catch((err) => {
         // 서버 중복 검사 통과한 경우
-        console.log(err)
         const newMsg = { ...message }
         newMsg.text = '서버의 정보를 받아오지 못했습니다.'
         newMsg.isValid = false
@@ -101,7 +104,7 @@ export function useAuthInput(
         return
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputValue])
+  }, [debouncedInputValue])
 
   return [inputValue, setInputValue, message]
 }
