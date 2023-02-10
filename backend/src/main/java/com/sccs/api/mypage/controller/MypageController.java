@@ -45,7 +45,8 @@ public class MypageController {
       @ApiImplicitParam(name = "year", value = "조회하고싶은 연도", required = true),
       @ApiImplicitParam(name = "month", value = "조회하고싶은 달", required = true)
   })
-  public ResponseEntity<?> getHistory(@PathVariable String memberId,
+  public ResponseEntity<?> getHistory(
+      @PathVariable String memberId,
       @PathVariable String year,
       @PathVariable String month) {
     List<HashMap<String, Object>> targets = mypageService.getHistory(memberId, year, month);
@@ -63,13 +64,21 @@ public class MypageController {
   public ResponseEntity<?> getHistoryDetail(@PathVariable int studyId) {
     HashMap<String, Object> targets = mypageService.getHistoryDetail(studyId);
 
-    ArrayList<HashMap<String, Object>> a;
-    a = (ArrayList<HashMap<String, Object>>) targets.get("studyroomWithProblems");
-    for (int i = 0; i < a.size(); i++) {
-      String url = (String) a.get(i).get("problemFolder");
+    ArrayList<HashMap<String, Object>> problems;
+    problems = (ArrayList<HashMap<String, Object>>) targets.get("studyroomWithProblems");
+    for (int i = 0; i < problems.size(); i++) {
+      ArrayList<HashMap<String, Object>> participants;
+      participants = (ArrayList<HashMap<String, Object>>) problems.get(i)
+          .get("participantWithCode");
+      String filename = (String) participants.get(i).get("submissionFileName");
+      System.out.println("HELLO" + filename);
+      String realFilePath = "submission/" + filename;
+      String tempFileUrl = awsS3service.getTemporaryUrl(realFilePath);
+      participants.get(i).put("submissionFileName", tempFileUrl);
+      String url = (String) problems.get(i).get("problemFolder");
       String realPath = "problem/" + url + ".jpg";
       String tempUrl = awsS3service.getTemporaryUrl(realPath);
-      a.get(i).put("problemFolder", tempUrl);
+      problems.get(i).put("problemFolder", tempUrl);
     }
     if (targets != null) {
       return ResponseEntity.ok(targets);
@@ -93,7 +102,7 @@ public class MypageController {
 
   @GetMapping("/problem/codereview/{problemId}")
   @ApiOperation(value = "문제 URL 요청", notes = "해당 <strong>문제의 아이디</strong>를 받아서 URL을 제공한다.")
-  @ApiImplicitParam(name = "studyId", value = "스터디 아이디", required = true)
+  @ApiImplicitParam(name = "problem", value = "문제 아이디", required = true)
   public String getProblemUrl(@PathVariable int problemId) {
     String filename = mypageService.getProblemUrl(problemId);
     String realPath = "problem/" + filename + ".jpg";
