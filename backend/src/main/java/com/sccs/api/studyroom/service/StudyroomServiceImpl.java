@@ -350,7 +350,7 @@ public class StudyroomServiceImpl implements StudyroomService {
 
     FileDto fileDto = awsS3service.upload(f,"submission");
     String tempNo = slashProblemFolder.substring(slashProblemFolder.lastIndexOf("/")+1);
-
+    System.out.println(tempNo);
     LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
     HttpStatus httpStatus = HttpStatus.CREATED;
     map.add("mfile",resource);
