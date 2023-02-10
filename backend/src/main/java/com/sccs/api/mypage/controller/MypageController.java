@@ -70,11 +70,12 @@ public class MypageController {
       ArrayList<HashMap<String, Object>> participants;
       participants = (ArrayList<HashMap<String, Object>>) problems.get(i)
           .get("participantWithCode");
-      String filename = (String) participants.get(i).get("submissionFileName");
-      System.out.println("HELLO" + filename);
-      String realFilePath = "submission/" + filename;
-      String tempFileUrl = awsS3service.getTemporaryUrl(realFilePath);
-      participants.get(i).put("submissionFileName", tempFileUrl);
+      for (int j = 0; j < participants.size(); j++) {
+        String filename = (String) participants.get(j).get("submissionFileName");
+        String realFilePath = "submission/" + filename;
+        String tempFileUrl = awsS3service.getTemporaryUrl(realFilePath);
+        participants.get(j).put("submissionFileName", tempFileUrl);
+      }
       String url = (String) problems.get(i).get("problemFolder");
       String realPath = "problem/" + url + ".jpg";
       String tempUrl = awsS3service.getTemporaryUrl(realPath);
