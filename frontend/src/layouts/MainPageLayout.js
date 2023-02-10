@@ -52,7 +52,7 @@ export default function MainPageLayout({ children }) {
     <Container>
       <UpperPane>{Up}</UpperPane>
       <MiddlePane>{Middle}</MiddlePane>
-      <StyledH1>Find Your Match!</StyledH1>
+      <StyledH1>Find Your Match</StyledH1>
       <LowerPane>{Down}</LowerPane>
     </Container>
   )
