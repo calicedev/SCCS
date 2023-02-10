@@ -21,7 +21,9 @@ export default function StudyDetailHeader({
   numProblems,
   problemIdx,
   setProblemIdx,
+  problemId,
 }) {
+  console.log(setProblemIdx)
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
 
@@ -42,7 +44,7 @@ export default function StudyDetailHeader({
       </ButtonWrapper>
       <h2>{studyTitle}</h2>
       <Button
-        onClick={() => navigate(`/problem/${problemIdx}`)}
+        onClick={() => navigate(`/problem/${problemId}`)}
         value="문제풀기"
       />
     </Flexbox>
@@ -54,6 +56,7 @@ StudyDetailHeader.propTypes = {
   numProblems: PropTypes.number.isRequired,
   problemIdx: PropTypes.number,
   setProblemIdx: PropTypes.func,
+  problemId: PropTypes.number,
 }
 
 StudyDetailHeader.defaultProps = {
