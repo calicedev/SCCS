@@ -20,7 +20,7 @@ public class SocketDto {
   private boolean ready;
   private String presenter;
 
-//  private List<String> membersNickname;
-//  private List<String> readyForStudyArray;
+  private List<String> membersNickname;
+  private List<String> readyForStudyArray;
 
 }
