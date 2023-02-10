@@ -144,11 +144,8 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
-//        logger.debug("토큰 파싱 시작 !!");
-//        Claims claims = jwtService.getToken(accessToken);
-//        String exp = (String) claims.get("expiration");
-//        logger.debug("exp타임 : {}", exp);
-        String exp = (String) jwtService.getToken(accessToken).get("expiration");
+        Claims claims = jwtService.getToken(accessToken);   // accessToken에서 Claims 파싱
+        String exp = (String) claims.get("exp");              // accessToken에서 회원 id 파싱
 
         logger.debug("[login]로그인 성공");
         resultmap.put("message", exp);
