@@ -37,14 +37,15 @@
     <result column="studyroom_id" property="studyroomId"></result>
     <result column="studyroom_title" property="studyroomTitle"></result>
     <result column="studyroom_create_datetime" property="studyroom_createDatetime"></result>
-    <collection property="studyroomWithProblems" javaType="List" resultMap="studyroomWithProblems">
+    <collection property="studyroomWithProblems" javaType="list"
+      resultMap="studyroomWithProblems">
     </collection>
   </resultMap>
 
   <resultMap id="studyroomWithProblems" type="HashMap">
     <result column="problem_name" property="problemName"></result>
     <result column="problem_folder" property="problemFolder"></result>
-    <collection property="ParticipantWithCode" javaType="List"
+    <collection property="participantWithCode" javaType="list"
       resultMap="ParticipantWithCode"></collection>
   </resultMap>
 
