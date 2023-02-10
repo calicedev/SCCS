@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -100,7 +101,6 @@ public class MemberController {
 
   /**
    * 로그인 : id, password 일치시 토큰 생성
-   * Auth
    **/
   @PostMapping("/member/login")
   public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap,
@@ -144,8 +144,14 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
+        logger.debug("토큰 파싱 시작 !!");
+        Claims claims = jwtService.getToken(accessToken);
+        String exp = (String) claims.get("expiration");
+        logger.debug("exp타임 : {}", exp);
+
         logger.debug("[login]로그인 성공");
         resultmap.put("message", "성공");
+        resultmap.put("expiration", String.valueOf(exp));
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
         logger.debug("[logIn]비밀번호 불일치");
@@ -164,8 +170,14 @@ public class MemberController {
    * Auth
    **/
   @GetMapping("/member")
-  public ResponseEntity<?> memberInfo(@CookieValue String accessToken /** HttpServletRequest request **/ ) {
+  public ResponseEntity<?> memberInfo(HttpServletRequest request) { // @CookieValue String accessToken
     Map<String, Object> resultMap = new HashMap<>();
+
+
+    logger.info("회원정보 조회 컨트롤러 입장 !!");
+    Cookie[] cookies = request.getCookies();
+    logger.debug("쿠키에서 값 가져오기 1!!! : {}", cookies[0].getName());
+    String accessToken = cookies[0].getValue();
 
     // 헤더 방식
     // final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length()); // 헤더에서 토큰 파싱

@@ -40,10 +40,11 @@ public class JWTServiceImpl implements JWTService {
 
     logger.debug("{} 토큰 만료 시간 !!!!!!!! : {}", subject, new SimpleDateFormat(
         "yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis() + expTime));
-
+    logger.debug("토큰 만료 시간 (초) : {}", System.currentTimeMillis() + expTime);
     return Jwts.builder()
         .setSubject(subject) // access or refresh
         .claim("id", id)
+            .claim("expiration", System.currentTimeMillis() + expTime)
         .signWith(signinKey, signatureAlgorithm)
         .setExpiration(new Date(System.currentTimeMillis() + expTime))
         .compact();
