@@ -1,0 +1,12 @@
+version: "3"
+services:
+  frontend: # 이름은 어떤걸로 지정해도 상관없음
+    build:
+      dockerfile: Dockerfile # dockerfile이름
+      context: ./ # where is dockerfile
+    volumes:
+      - /app/node_modules #/app/node_modules는 not mapping.
+      - ./:/app # Mapping all file in local storage
+    ports:
+      - "3001:3001" # port mapping
+    stdin_open: true
