@@ -1,10 +1,13 @@
 package com.sccs.interceptor;
 
 import com.sccs.api.member.service.JWTService;
+import com.sccs.exception.ExpiredException;
 import com.sccs.exception.InterceptorException;
 import com.sccs.exception.InterceptorExceptionEnum;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.sccs.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,5 +50,6 @@ public class JwtInterceptor implements HandlerInterceptor {
     }
     logger.debug("토큰 사용 불가능");
     throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+    //throw new UnAuthorizedException();
   }
 }
