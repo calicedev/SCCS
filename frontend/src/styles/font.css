@@ -7,3 +7,9 @@
   font-family: 'handFont';
   src: url('assets/font/Nanum-Hand-Writing.ttf');
 }
+
+
+@font-face {
+  font-family: 'bigjohn';
+  src: url('assets/font/bigjohn.ttf');
+}
