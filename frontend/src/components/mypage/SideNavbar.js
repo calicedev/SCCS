@@ -37,7 +37,6 @@ const SideNav = styled.div`
 
 const NavStyle = styled(NavLink)`
   padding: 1rem 0rem 1rem 3rem;
-  font-family: 'NanumSquare_acB';
   background-image: url(${sideNavBlueBg});
   background-repeat: no-repeat;
   background-position: 350% 0%;

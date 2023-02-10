@@ -112,7 +112,7 @@ const Container = styled.div`
 
   max-width: 700px;
   width: 100%;
-
+  font-family: 'NanumSquareB';
   padding: 2rem;
 `
 

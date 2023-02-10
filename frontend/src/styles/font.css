@@ -15,27 +15,27 @@
 }
 
 @font-face {
-  font-family: 'GmarketSansTTFBold';
+  font-family: 'gmarket';
   src: url('assets/font/GmarketSansTTFBold.ttf');
 }
 
 @font-face {
-  font-family: 'GmarketSansTTFLight';
+  font-family: 'gmarketlight';
   src: url('assets/font/GmarketSansTTFLight.ttf');
 }
 
 @font-face {
-  font-family: 'GmarketSansTTFMedium';
+  font-family: 'gmarketmedium';
   src: url('assets/font/GmarketSansTTFMedium.ttf');
 }
 
 @font-face {
-  font-family: 'NanumSquare_acB';
+  font-family: 'NanumSquareB';
   src: url('assets/font/NanumSquare_acB.ttf');
 }
 
 @font-face {
-  font-family: 'NanumSquare_acEB';
+  font-family: 'NanumSquareEB';
   src: url('assets/font/NanumSquare_acEB.ttf');
 }
 
@@ -45,7 +45,7 @@
 }
 
 @font-face {
-  font-family: 'NanumOeHarMeoNiGeurSsi';
+  font-family: 'NanumHand';
   src: url('assets/font/NanumOeHarMeoNiGeurSsi.ttf');
 }
 

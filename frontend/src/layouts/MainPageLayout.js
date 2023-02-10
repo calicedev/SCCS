@@ -58,9 +58,7 @@ export default function MainPageLayout({ children }) {
   )
 }
 
-const StyledH1 = styled.h1`
+const StyledH1 = styled.h2`
   color: ${({ theme }) => theme.lightPrimaryColor};
   margin: 1rem 0rem 0rem;
-  font-family: 'bigjohn';
-
 `

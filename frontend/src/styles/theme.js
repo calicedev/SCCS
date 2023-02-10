@@ -36,6 +36,10 @@ const color = {
   grayFontColor: '#666666',
   passFontColor: '#1C6FBC',
   errorFontColor: '#EF0A0A',
+
+  // 스터디 방 관련 색상
+  codingTestBackgroundColor : '#98ABBE',
+  codingTestButtonColor: '#263747'
 }
 
 export const light = {

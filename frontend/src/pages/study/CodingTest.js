@@ -286,7 +286,6 @@ const Main = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-
   box-sizing: border-box;
   background-color: #263747;
 `
@@ -350,17 +349,20 @@ const ResultSection = styled.div`
   display: block;
 `
 
+// #98ABB
+
 const TopNavBar = styled.div`
-  background: grey;
+  background: ${({ theme }) => theme.codingTestBackgroundColor};
 `
 const Btn = styled.button`
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   color: white;
-  background-color: skyblue;
+  background-color: ${({ theme }) => theme.codingTestButtonColor};
   round: 1;
   border: solid 2px grey;
   border-radius: 12px;
-  padding: 5px;
+  padding: 6px;
+  margin : 10px;
 `
 const ColoredLine = ({ color }) => (
   <hr
