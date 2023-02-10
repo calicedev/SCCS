@@ -48,11 +48,16 @@ export default function StudyDetailPage() {
           />
           <Flexbox>
             <Pane>
-              <StyledDiv imgUrl={problems[problemIdx].problemFolder} />
+              <Wrapper>
+                <StyledImg
+                  src={problems[problemIdx].problemFolder}
+                  alt="문제이미지"
+                />
+              </Wrapper>
             </Pane>
             <Pane>
               <StudyDetailCodeList
-                codeList={problems[problemIdx].ParticipantWithCode}
+                codeList={problems[problemIdx].participantWithCode}
               />
             </Pane>
           </Flexbox>
@@ -67,22 +72,27 @@ export default function StudyDetailPage() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+
+  padding: 3rem;
 `
 const Flexbox = styled.div`
   display: flex;
   gap: 20px;
+
+  width: 100%;
 `
 const Pane = styled.div`
   flex: 1;
+  padding: 1rem;
+  border: 1px solid ${({ theme }) => theme.lightGrayColor};
+  border-radius: 1rem;
 `
-const StyledDiv = styled.div`
+// 스크롤바를 안쪽으로 옮기기 위해서 추가한 Wrapper
+const Wrapper = styled.div`
   overflow-y: auto;
+  height: 60vh;
+`
 
+const StyledImg = styled.img`
   width: 100%;
-  height: 70vh;
-
-  background-image: url(${({ imgUrl }) => imgUrl});
-  background-size: cover;
-  background-repeat: no-repeat;
 `

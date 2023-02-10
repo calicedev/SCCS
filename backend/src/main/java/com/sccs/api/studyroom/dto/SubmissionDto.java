@@ -14,7 +14,7 @@ public class SubmissionDto {
   private int id;
   private double runtime;
   private int memory;
-  private String result;
+  private Boolean result;
   private Timestamp submitDatetime;
   private int problemId;
   private String memberId;
