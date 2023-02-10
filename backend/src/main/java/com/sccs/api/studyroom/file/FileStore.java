@@ -43,6 +43,7 @@ public class FileStore {
     }
     String fileName = createStoreFileName(end);
     File f = new File(getFullPath(path, fileName));
+
     file.transferTo(f);
     FileItem fileItem = new DiskFileItem(fileName, Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
     InputStream input = new FileInputStream(f);
@@ -54,10 +55,10 @@ public class FileStore {
 
   public MultipartFile storeTextFile(SubmissionDto submissionDto, String problemFolder) throws IOException {
     MultipartFile file = submissionDto.getFormFile();
-    int languageId = submissionDto.getLanguageId();
     String path = problemFolder;
     String end = "txt";
     String fileName = file.getName()+end;
+    System.out.println(fileName);
     File f = new File(getFullPath(path, fileName));
     file.transferTo(f);
     FileItem fileItem = new DiskFileItem(fileName, Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
