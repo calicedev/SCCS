@@ -11,7 +11,7 @@ public interface MypageService {
 
   public List<HashMap<String, Object>> getProblems(String memberId);
 
-  public String getProblemUrl(int problemId);
+  public HashMap<String, Object> getProblemUrl(String memberId, int problemId);
 
-  public HashMap<String, Object> getProblemIdAndUrl(int submissionId);
+  public HashMap<String, Object> getProblemIdAndUrl(int problemId);
 }

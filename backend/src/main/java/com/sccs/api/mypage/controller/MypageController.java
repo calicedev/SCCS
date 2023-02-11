@@ -101,21 +101,27 @@ public class MypageController {
     }
   }
 
-  @GetMapping("/problem/solve/{problemId}")
-  @ApiOperation(value = "문제 URL 요청", notes = "해당 <strong>문제의 아이디</strong>를 받아서 URL을 제공한다.")
-  @ApiImplicitParam(name = "problemId", value = "문제 아이디", required = true)
-  public String getProblemUrl(@PathVariable int problemId) {
-    String filename = mypageService.getProblemUrl(problemId);
+  @GetMapping("/problem/{memberId}/solve/{problemId}")
+  public HashMap<String, Object> getProblemUrl(@PathVariable String memberId,
+      @PathVariable int problemId) {
+    HashMap<String, Object> targets = mypageService.getProblemUrl(memberId, problemId);
+    ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
+        "submissionInfo");
+    for (int i = 0; i < problems.size(); i++) {
+      String submissionFilename = (String) problems.get(i).get("submissionFile");
+      String path = "submission/" + submissionFilename;
+      problems.get(i).put("submissionFile", awsS3service.getTemporaryUrl(path));
+    }
+    String filename = (String) targets.get("problemUrl");
     String realPath = "problem/" + filename + ".jpg";
-    String tempUrl = awsS3service.getTemporaryUrl(realPath);
-    return tempUrl;
+    targets.put("problemUrl", awsS3service.getTemporaryUrl(realPath));
+
+    return targets;
   }
 
   @GetMapping("/problem/submission/{submissionId}")
-  @ApiOperation(value = "문제 ID와 문제 URL 요청", notes = "해당 <strong>제출한 아이디값</strong>을 받아서 URL과 문제 아이디를 제공한다.")
-  @ApiImplicitParam(name = "submissionId", value = "문제 아이디", required = true)
-  public HashMap<String, Object> getProblemIdAndUrl(@PathVariable int submissionId) {
-    HashMap<String, Object> targets = mypageService.getProblemIdAndUrl(submissionId);
+  public HashMap<String, Object> getProblemIdAndUrl(@PathVariable int problemId) {
+    HashMap<String, Object> targets = mypageService.getProblemIdAndUrl(problemId);
     String sUrl = (String) targets.get("sURL");
     String sRealPath = "submission/" + sUrl;
     targets.put("sURL", awsS3service.getTemporaryUrl(sRealPath));
