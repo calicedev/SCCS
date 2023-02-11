@@ -213,6 +213,7 @@
     SELECT * from problem where id=#{problemId}
   </select>
 
+  <!--스터디에 필요한 정보를 가져오는 쿼리, 각 회원들이 2개의 문제를 해결한 결과를 보여준다. -->
   <select id="getStudyInfo" parameterType="StudyroomDto" resultType="SubmissionDto">
     select
     *
@@ -238,4 +239,22 @@
   <select id="getHostnicknameByStudyroomInfo" parameterType="int" resultType="MemberDto">
     select id, nickname from member where id = (select host_id from studyroom where id=#{studyroomId});
   </select>
+
+  <select id="isSolvingByUser" parameterType="SubmissionDto" resultType="int">
+    select count(*) from submission where problem_id=#{problemId} and member_id=#{memberId};
+  </select>
+
+  <select id="getScoreByMember" parameterType="String" resultType="int">
+    select score from member where id=#{id};
+  </select>
+
+  <select id="getScoreByGrade" parameterType="map" resultType="int">
+    select score from tier where grade=#{grade} and difficulty=#{difficulty};
+  </select>
+
+  <update id="injectScore" parameterType="map">
+    UPDATE member
+    SET score=#{realscore}
+    WHERE id = #{id}
+  </update>
 </mapper>
