@@ -15,7 +15,7 @@ codeList =[
     memory: 메모리 사용
     runtime: 실행시간
     result: 통과여부
-    code: 코드 파일
+    fileUrl 코드 파일 url
   }
 ]
 */

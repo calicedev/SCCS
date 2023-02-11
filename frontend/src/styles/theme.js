@@ -32,10 +32,15 @@ const color = {
   primaryFontColor: '#1364D1',
   secondaryFontColor: '#6FABFD',
   tertiaryFontColor: '#596B84',
+  blackFontColor: '#111111',
   whiteFontColor: '#FFFFFF',
   grayFontColor: '#666666',
   passFontColor: '#1C6FBC',
   errorFontColor: '#EF0A0A',
+
+  // 스터디 방 관련 색상
+  codingTestBackgroundColor : '#98ABBE',
+  codingTestButtonColor: '#263747'
 }
 
 export const light = {
@@ -44,7 +49,7 @@ export const light = {
   bgColor: '#FFFFFF', // 컨텐츠 화면 배경색
   bluishBgColor: '#F6FAFF', // 사이드바 화면 배경색
 
-  fontColor: '#000000', // 폰트 색상
+  fontColor: '#111111', // 폰트 색상
   ...color,
 }
 

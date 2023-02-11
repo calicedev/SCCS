@@ -31,10 +31,10 @@ public class RedisService {
   public void setRefreshTokenWithRedis(String key, String value) {
     ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
     stringValueOperations.set(key, value);
-    int EXP_TIME = 5; // 분 단위
-    stringRedisTemplate.expire(key, EXP_TIME * 60, TimeUnit.SECONDS); // 유효기간 5분 (1주일로 변경 예정)
+    int EXP_TIME_MINUTE = 3 * 60; // 3분
+    stringRedisTemplate.expire(key, EXP_TIME_MINUTE, TimeUnit.SECONDS); // 유효기간 3분
     logger.debug("[setRefreshTokenWithRedis] key : {}, value : {}, 유효시간 : {}분", key, value,
-        EXP_TIME);
+        EXP_TIME_MINUTE);
   }
 
   /**

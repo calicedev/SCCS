@@ -41,7 +41,7 @@ const LowerPane = styled.div`
 
   @media screen and (min-width: 1024px) {
     min-width: 1000px;
-    width: 70%;
+    width: 75%;
   }
 `
 
@@ -52,15 +52,13 @@ export default function MainPageLayout({ children }) {
     <Container>
       <UpperPane>{Up}</UpperPane>
       <MiddlePane>{Middle}</MiddlePane>
-      <StyledH1>Find Your Match!</StyledH1>
+      <StyledH1>Find Your Match</StyledH1>
       <LowerPane>{Down}</LowerPane>
     </Container>
   )
 }
 
-const StyledH1 = styled.h1`
-  color: ${({ theme }) => theme.primaryFontColor};
+const StyledH1 = styled.h2`
+  color: ${({ theme }) => theme.lightPrimaryColor};
   margin: 1rem 0rem 0rem;
-  font-family: 'bigjohn';
-
 `

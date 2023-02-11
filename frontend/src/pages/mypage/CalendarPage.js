@@ -7,11 +7,11 @@ import { format } from 'date-fns'
 import StudyList from 'components/mypage/StudyList'
 import axios from 'libs/axios'
 import api from 'constants/api'
-import { useSelector } from 'react-redux'
+import useUser from 'hooks/useUser'
 
 export default function StudyCalendar() {
   // 리덕스 -> 유저 id 읽기
-  const id = useSelector((state) => state.user.id)
+  const id = useUser().id
 
   // useState
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -51,7 +51,7 @@ export default function StudyCalendar() {
   useEffect(() => {
     const year = format(currentDate, 'YYYY')
     const month = format(currentDate, 'MM')
-    const [url, method] = api('studyHistory', { id, year, month })
+    const [url, method] = api('studyHistory', { id: id, year, month })
     const config = { url, method }
     axios
       .request(config)
@@ -62,7 +62,7 @@ export default function StudyCalendar() {
         alert('스터디 내역을 불러오지 못했습니다.')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentDate])
+  }, [id, currentDate])
 
   // 날짜박스(DateBox) 클릭 시 현재 날짜 변경하는 함수
   // 달력(Calendar)컴포넌트의 잦은 재렌더링을 막기 위해, useCallback사용

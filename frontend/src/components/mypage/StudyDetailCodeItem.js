@@ -17,7 +17,7 @@ languageId: 언어 pk
 memory: 사용 메모리
 runtime: 실행 시간
 result: 통과여부
-code: 문제코드
+fileUrl: 문제코드 url
 */
 
 export default function StudyDetailCodeItem({
@@ -31,8 +31,12 @@ export default function StudyDetailCodeItem({
 }) {
   const [showModal, setShowModal] = useState(false)
 
+  // 이 부분을 완성해야함!
+  // 1. url로 요청을 보내서 file 을 가져옴 (txt 파일을 저장해야함.)
+  // 2. .java파일을 .txt파일로 변환
+  // 3. .txt 파일에서 string을 추출
   const code = useMemo(async () => {
-    const reader = new FileReader()
+    const reader = new FileReader() // 파일을 읽을 수 있는 객체 형성 (blob형태만 읽을 수 있음 - 아마 binary 데이터를 말할 것임)
     console.log(fileUrl)
     const response = await fetch({
       url: fileUrl,
@@ -43,9 +47,11 @@ export default function StudyDetailCodeItem({
     console.log(blob)
 
     reader.onload = function () {
+      // 이벤트 리스너처럼 리더가 읽으면 콘솔로그가 실행
+      // text 파일에서 string으로 추출하는 것
       console.log(reader.result)
     }
-    reader.readAsText(blob, /* optional */ 'euc-kr')
+    reader.readAsText(blob, /* optional */ 'euc-kr') // blob형태의 파일을 넣어주겠따.
   }, [fileUrl])
 
   return (
@@ -53,6 +59,7 @@ export default function StudyDetailCodeItem({
       {showModal ? (
         <Modal close={() => setShowModal(false)} content={code} />
       ) : null}
+      {/* {showModal ? <div></div> : null} */}
       <>
         <FlexBox
           onClick={() => {

@@ -120,15 +120,11 @@ public class MemberController {
       if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
         logger.debug("[logIn]로그인 성공");
 
-//        String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-//            (MINUTE * 1)); // 2분
-//        String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-//            (MINUTE * 2)); // 5분
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-                (MINUTE * 1)); // 2분
+                (MINUTE * 1));
         long exp = System.currentTimeMillis() + (MINUTE * 1);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-                (MINUTE * 2)); // 5분
+                (MINUTE * 3));
 
 //        resultmap.put("accessToken", accessToken);
 //        resultmap.put("refreshToken", refreshToken);

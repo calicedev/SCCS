@@ -7,6 +7,10 @@ import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from 'redux/themeSlice'
 import { deleteUserInfo } from 'redux/userSlice'
+import checkLogin from 'libs/checkLogin'
+import { setExpiration } from 'redux/expSlice'
+import axios from 'libs/axios'
+import api from 'constants/api'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -17,30 +21,37 @@ export default function Navbar() {
 
   // 리덕스 -> theme정보
   const theme = useSelector((state) => state.theme)
-  const user = useSelector((state) => state.user)
+  const isLogin = checkLogin()
+
   const dispatch = useDispatch()
 
   const logout = () => {
-    dispatch(deleteUserInfo())
     navigate('/')
+    dispatch(deleteUserInfo())
+    dispatch(setExpiration(null))
+    const [url, method] = api('logout')
+    const config = { url, method }
+    axios.request(config)
   }
 
   return (
     <Nav>
       <Flexbox>
         <Logo></Logo>
-        <IconButton
-          icon={theme === 'light' ? <BsCloudSun /> : <BsCloudMoon />}
-          type={theme === 'light' ? 'primary' : 'secondary'}
-          size={'medium'}
-          onClick={() => {
-            dispatch(toggleTheme())
-          }}
-        />
       </Flexbox>
       <NavContent>
+        <ButtonWrapper>
+          <IconButton
+            icon={theme === 'light' ? <BsCloudSun /> : <BsCloudMoon />}
+            type={theme === 'light' ? 'primary' : 'secondary'}
+            size={'medium'}
+            onClick={() => {
+              dispatch(toggleTheme())
+            }}
+          />
+        </ButtonWrapper>
         <NavStyle to="/">Home</NavStyle>
-        {user ? (
+        {isLogin ? (
           <>
             <NavStyle to="/mypage/study">MyPage</NavStyle>
             <StyledDiv onClick={logout}>Logout</StyledDiv>
@@ -56,7 +67,6 @@ const Nav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'bigjohn';
   margin: 1.5rem 0rem;
   padding: 0rem 2rem;
 `
@@ -68,14 +78,20 @@ const Flexbox = styled.div`
 const NavContent = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   min-width: 400px;
 `
 
-const NavStyle = styled(NavLink)`
-  padding: 1rem;
+const ButtonWrapper = styled.div`
+  margin: 0rem 2rem 0rem 0rem;
+`
 
-  font-size: 1.5rem;
+const NavStyle = styled(NavLink)`
+  margin: 1rem 0rem;
+  padding: 0rem 2rem 0rem 0rem;
+
+  font-size: 1.7rem;
   font-weight: 500;
   color: ${({ theme }) => theme.secondaryFontColor};
 
@@ -85,9 +101,12 @@ const NavStyle = styled(NavLink)`
   }
 `
 const StyledDiv = styled.div`
-  padding: 1rem;
+  margin: 1rem 0rem;
+  padding: 0rem 1rem 0rem 2rem;
 
-  font-size: 1.5rem;
+  border-left: 2px solid ${({ theme }) => theme.secondaryFontColor};
+
+  font-size: 1.7rem;
   font-weight: 500;
   color: ${({ theme }) => theme.secondaryFontColor};
 

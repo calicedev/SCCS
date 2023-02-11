@@ -37,9 +37,9 @@ public class FileStore {
       return null;
     }
     if (languageId == 1) {
-      end = "py";
+      end = "txt";
     } else if (languageId == 2) {
-      end = "java";
+      end = "txt";
     }
     String fileName = createStoreFileName(end);
     File f = new File(getFullPath(path, fileName));

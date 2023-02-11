@@ -127,7 +127,7 @@ const GlobalStyle = createGlobalStyle`
     font: inherit;
     vertical-align: baseline;
     box-sizing: border-box;
-    font-family: inherit;
+    font-family: 'bigjohn', 'NanumSquareB';
     color: inherit;
     outline: 0;
   }

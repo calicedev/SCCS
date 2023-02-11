@@ -89,17 +89,13 @@ const CalendarGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.2rem 0.2rem;
-
   width: 100%;
 `
 
 const WeekDays = styled.div`
   display: flex;
   justify-content: space-around;
-
   width: 100%;
-
-  font-family: 'cursiveFont';
 `
 // Memoized React Component
 const MemoizedCalendar = React.memo(Calendar)

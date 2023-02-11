@@ -1,6 +1,7 @@
 package com.sccs.api.socket.controller;
 
 
+import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.socket.dto.SocketDto;
 import com.sccs.api.studyroom.dto.StudyroomDto;
 import com.sccs.api.studyroom.service.StudyroomService;
@@ -55,12 +56,19 @@ public class MessageController {
     }
 
     else if(socketDto.getStatus().equals("exit")){
-      socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다");
-      StudyroomDto studyroomDto = new StudyroomDto();
-      studyroomDto.setId(socketDto.getStudyroomId());
-      studyroomService.decreaseStudyroomPersonnel(studyroomDto);
-      int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
-      socketDto.setPersonnel(temp2);
+      MemberDto memberDto = studyroomService.getHostnicknameByStudyroomInfo(socketDto.getStudyroomId());
+      //방장이 방을 나가면
+      if(socketDto.getNickname().equals(memberDto.getNickname())){
+        studyroomService.endStudyroomByOwner(socketDto.getStudyroomId());
+      }
+      else {
+        socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다");
+        StudyroomDto studyroomDto = new StudyroomDto();
+        studyroomDto.setId(socketDto.getStudyroomId());
+        studyroomService.decreaseStudyroomPersonnel(studyroomDto);
+        int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+        socketDto.setPersonnel(temp2);
+      }
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 

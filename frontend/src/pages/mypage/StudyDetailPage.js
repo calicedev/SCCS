@@ -17,6 +17,7 @@ export default function StudyDetailPage() {
   const [studyTitle, setStudyTitle] = useState(null)
   const [problems, setProblems] = useState(null) // 스터디에서 푼 문제 배열
   const [problemIdx, setProblemIdx] = useState(0) // 현재 보여지는 문제의 인덱스
+  const [problemId, setProblemId] = useState()
 
   // 마운트시 axios 요청으로 스터디 데이터(study) 요청
   useEffect(() => {
@@ -25,8 +26,11 @@ export default function StudyDetailPage() {
     axios
       .request(config)
       .then((res) => {
+        console.log(res.data)
         setStudyTitle(res.data.studyroomTitle)
+        // console.log(res.data.studyroomTitle)
         setProblems(res.data.studyroomWithProblems)
+        // console.log(res.data.studyroomWithProblems)
       })
       .catch((err) => {
         setStudyTitle('')
@@ -45,6 +49,7 @@ export default function StudyDetailPage() {
             numProblems={problems.length}
             problemIdx={problemIdx}
             setProblemIdx={setProblemIdx}
+            problemId={problems[problemIdx].problemId}
           />
           <Flexbox>
             <Pane>

@@ -5,9 +5,9 @@ const api = function (type, options = {}) {
     updateUserInfo: ['/api/member', 'patch'],
     withdrawl: ['/api/member', 'delete'],
     login: ['/api/member/login', 'post'],
+    logout: ['/api/member/refreshToken', 'delete'],
     resetPassword: ['/api/member/password', 'post'],
     updatePassword: ['/api/member/password', 'patch'],
-    logout: ['/api/member/logout', 'get'],
     findId: ['/api/member/id', 'post'],
     check_id: [`/api/unique/id/${options.id}`, 'get'],
     check_nickname: [`/api/unique/nickname/${options.nickname}`, 'get'],
@@ -29,7 +29,7 @@ const api = function (type, options = {}) {
     submitCode: ['/api/studyroom/codingtest/submission', 'post'],
     testCode: ['/api/studyroom/codingtest/test', 'post'],
     codingTest: ['/api/studyroom/codingtest', 'post'],
-    codeReview: [`/api/mypage/problem/codereview/${options.id}`, 'get'],
+    codeReview: [`/api/mypage/problem/solve/${options.id}`, 'get'],
 
     // 2.9 민혁 추가 (스터디 페이지 입장)
     study: ['api/studyroom/study', 'post'],

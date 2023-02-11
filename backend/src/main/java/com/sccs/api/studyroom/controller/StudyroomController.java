@@ -160,7 +160,7 @@ public class StudyroomController {
 
   /** 코딩 문제 제출 **/
   @PostMapping("/studyroom/codingtest/submission")
-  public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+  public  ResponseEntity<?> submitProblemInStudy(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
     return new ResponseEntity<>(studyroomService.submitProblem(submissionDto), HttpStatus.OK);
 
   }
@@ -172,6 +172,12 @@ public class StudyroomController {
     return new ResponseEntity<>(studyroomService.submitTest(submissionDto), HttpStatus.OK);
   }
 
+  /** 스터디 아닐때 코딩 문제 제출 **/
+  @PostMapping("/codingtest/submission")
+  public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+    return new ResponseEntity<>(studyroomService.submitProblem(submissionDto), HttpStatus.OK);
+
+  }
 
   /** 스터디 시작 **/
   @PostMapping("/studyroom/study")
@@ -195,9 +201,9 @@ public class StudyroomController {
    * 코딩 테스트 방장에 의해 끝내기
    **/
   @PatchMapping("/studyroom/codingtest")
-  public ResponseEntity<?> endStudyroomByOwner(@RequestBody StudyroomDto studyroomDto) {
+  public ResponseEntity<?> endStudyroomByOwner(@RequestBody int id) {
     //코딩 테스트 끝내기
-    return new ResponseEntity<>(studyroomService.endStudyroomByOwner(studyroomDto), HttpStatus.OK);
+    return new ResponseEntity<>(studyroomService.endStudyroomByOwner(id), HttpStatus.OK);
   }
 
 }
