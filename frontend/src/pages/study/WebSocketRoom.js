@@ -159,6 +159,11 @@ export default function WebSocketRoom() {
             setPersonnel(content.personnel)
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
+            console.log('방장 닉네임', roomInfo.hostNickname)
+            console.log('웹소켓 닉네임', content.nickname)
+            if (content.nickname === roomInfo.hostNickname) {
+              navigate('/')
+            }
           }
           if (content.status === 'ready') {
             // console.log('ready!!!!!!!!!!!!!!', content.message)
