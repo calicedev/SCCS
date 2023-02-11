@@ -290,15 +290,16 @@ public class StudyroomServiceImpl implements StudyroomService {
     @Override
     public List<Map<String, Object>> submitProblem(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
-        String slashProblemFolder = problemDto.getProblemFolder().replace("-", "/");
         //파일을 원하는 경로에 실제로 저장한다.
-        MultipartFile f = fileStore.storeFile(submissionDto, slashProblemFolder);
-        FileDto fileDto = awsS3service.upload(f, "submission");
+        MultipartFile f = fileStore.storeFile(submissionDto.getFormFile());
+        //aws에 실제로 제출한 파일 저장.
+        awsS3service.upload(f, "submission");
+
         // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
-        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(slashProblemFolder, f.getName()));
-
-        String tempNo = slashProblemFolder.substring(slashProblemFolder.lastIndexOf("/") + 1);
-
+        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(f.getName()));
+        // 채점 서버로 보내줄 정보 뽑아내기
+        String tempNo = problemDto.getProblemFolder().substring(problemDto.getProblemFolder().lastIndexOf("-") + 1);
+        // 채점 서버로 보낼 맵 생성하고, 거기에 필요한 정보를 담아서 보내준다.
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         HttpStatus httpStatus = HttpStatus.CREATED;
         map.add("mfile", resource);
@@ -319,40 +320,37 @@ public class StudyroomServiceImpl implements StudyroomService {
             url += "/solve/java/submission";
         }
 
+        //프록시 서버에서 채점 서버로 API 호출
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-//        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
         List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
 
+        // 문제를 풀었다는 정보를 문제 db에 저장하기 위해 problem에 담는다
+        Map<String, Object> p = new HashMap<>();
+        p.put("id", problemDto.getId());
         // 찬희님 한테서 가져온 정보를 확인해보고 마지막 5 배열이 맞았고 회원에서 한번도 풀린적이 없다면 점수를 더해준다.
         // 만약 맞았어. 한번도 안풀었어.
-        if ((Boolean) s.get(5).get("isAnswer") && studyroomMapper.isSolvingByUser(submissionDto) == 0) {
-            // 내 등급을 알기 위해 점수를 가져와
-            int score = studyroomMapper.getScoreByMember(submissionDto.getMemberId());
-            int grade = 0;
-            if (score >= 100000) {
-                grade = 4;
-            } else if (score >= 30000) {
-                grade = 3;
-            } else if (score >= 3000) {
-                grade = 2;
-            } else if (score >= 0) {
-                grade = 1;
+        if ((Boolean) s.get(5).get("isAnswer") ) {
+            if( studyroomMapper.isSolvingByUser(submissionDto) == 0) {
+                // 내 등급을 알기 위해 member에서 내 점수를 가져와
+                int score = studyroomMapper.getScoreByMember(submissionDto.getMemberId());
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("difficulty", problemDto.getDifficulty());
+                resultMap.put("id", submissionDto.getMemberId());
+                resultMap.put("memberScore", score);
+                studyroomMapper.injectScore(resultMap);
             }
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("difficulty", problemDto.getDifficulty());
-            resultMap.put("id", submissionDto.getMemberId());
-            resultMap.put("grade", grade);
-            int temps = studyroomMapper.getScoreByGrade(resultMap);
-            resultMap.put("realscore", temps);
-            studyroomMapper.injectScore(resultMap);
+            p.put("correct",1);
         }
+
+        // 문제 풀었다는 걸 db에 저장한다.
+        studyroomMapper.updateProblemInfo(p);
+
         //문제 제출 정보를 실제 디비에 저장한다.
         submissionDto.setFileName(f.getName());
         submissionDto.setResult((Boolean) s.get(5).get("isAnswer"));
         submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
         submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
         studyroomMapper.submitProblem(submissionDto);
-
         return s;
     }
 
@@ -361,17 +359,13 @@ public class StudyroomServiceImpl implements StudyroomService {
      */
     public List<Map<String, Object>> submitTest(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
-        String slashProblemFolder = problemDto.getProblemFolder().replace("-", "/");
         //파일을 원하는 경로에 실제로 저장한다.
-        MultipartFile f = fileStore.storeFile(submissionDto, slashProblemFolder);
-
-
+        MultipartFile f = fileStore.storeFile(submissionDto.getFormFile());
         // 폴더에서 채점 서버로 보낼 파일 가져와서 resource에 담기
-        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(slashProblemFolder, f.getName()));
-
-        FileDto fileDto = awsS3service.upload(f, "submission");
-        String tempNo = slashProblemFolder.substring(slashProblemFolder.lastIndexOf("/") + 1);
-        System.out.println(tempNo);
+        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(f.getName()));
+        // 채점 서버로 보내줄 정보 뽑아내기
+        String tempNo = problemDto.getProblemFolder().substring(problemDto.getProblemFolder().lastIndexOf("-") + 1);
+        // 채점 서버로 보낼 맵 생성하고, 거기에 필요한 정보를 담아서 보내준다.
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         HttpStatus httpStatus = HttpStatus.CREATED;
         map.add("mfile", resource);
@@ -387,15 +381,14 @@ public class StudyroomServiceImpl implements StudyroomService {
         //채점 서버 url
         String url = "https://sccs.kr";
         if (submissionDto.getLanguageId() == 1) {
-            url += "/solve/python/submission";
+            url += "/solve/python/test";
         } else if (submissionDto.getLanguageId() == 2) {
-            url += "/solve/java/submission";
+            url += "/solve/java/test";
         }
 
+        //프록시 서버에서 채점 서버로 API 호출
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-//        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
         List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
-
         return s;
     }
 
