@@ -47,4 +47,5 @@ public interface StudyroomService {
   public String getNicknameById(String id);
 
   public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
+
 }
