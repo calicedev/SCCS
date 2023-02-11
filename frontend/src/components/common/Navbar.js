@@ -9,6 +9,8 @@ import { toggleTheme } from 'redux/themeSlice'
 import { deleteUserInfo } from 'redux/userSlice'
 import checkLogin from 'libs/checkLogin'
 import { setExpiration } from 'redux/expSlice'
+import axios from 'libs/axios'
+import api from 'constants/api'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -24,9 +26,12 @@ export default function Navbar() {
   const dispatch = useDispatch()
 
   const logout = () => {
+    navigate('/')
     dispatch(deleteUserInfo())
     dispatch(setExpiration(null))
-    navigate('/')
+    const [url, method] = api('logout')
+    const config = { url, method }
+    axios.request(config)
   }
 
   return (

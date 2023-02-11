@@ -17,7 +17,7 @@ languageId: 언어 pk
 memory: 사용 메모리
 runtime: 실행 시간
 result: 통과여부
-code: 문제코드
+fileUrl: 문제코드 url
 */
 
 export default function StudyDetailCodeItem({
