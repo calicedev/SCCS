@@ -1,5 +1,6 @@
 package com.sccs.api.studyroom.mapper;
 
+import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.studyroom.dto.ProblemDto;
 import com.sccs.api.studyroom.dto.StudyroomAlgoDto;
 import com.sccs.api.studyroom.dto.StudyroomDto;
@@ -44,7 +45,7 @@ public interface StudyroomMapper {
 
   public void changeStudyroomSolvingStatus(StudyroomDto studyroomDto);
 
-  public int endStudyroomByOwner(StudyroomDto studyroomDto);
+  public int endStudyroomByOwner(int id);
 
   public ProblemDto getProblemInfo(int problemId);
 
@@ -59,5 +60,8 @@ public interface StudyroomMapper {
   public boolean isExistStudyroom(int id);
 
   public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
+
   public String getNicknameById(String id);
+
+  public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
 }
