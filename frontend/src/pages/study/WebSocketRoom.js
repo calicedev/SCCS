@@ -95,7 +95,9 @@ export default function WebSocketRoom() {
         setRoomInfo(res.data)
       })
       .catch((err) => {
+        console.log('무슨에러일까?', err)
         alert('대기방 정보를 불러오지 못했습니다.')
+        navigate('/')
       })
   }, [])
 
@@ -159,6 +161,11 @@ export default function WebSocketRoom() {
             setPersonnel(content.personnel)
             // console.log(exitMsg.message)
             // stomp.unsubscribe(chatDto.body.nickname)
+            console.log('방장 닉네임', roomInfo.hostNickname)
+            console.log('웹소켓 닉네임', content.nickname)
+            if (content.nickname === roomInfo.hostNickname) {
+              navigate('/')
+            }
           }
           if (content.status === 'ready') {
             // console.log('ready!!!!!!!!!!!!!!', content.message)
