@@ -131,6 +131,9 @@ public class StudyroomController {
       Map<String, Object> s = studyroomService.enterStudyroom(id);
       if (!s.containsKey("result")) {
         return new ResponseEntity<>(s, HttpStatus.OK);
+      } else if (s.get("result").equals("isSolving")) {
+        resultMap.put("message", "이미 문제를 풀고 있는 방입니다.");
+        return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST);
       } else if (s.get("result").equals("full")) {
         resultMap.put("message", "입장 인원을 초과했기에 입장 불가합니다.");
         return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST);
@@ -160,7 +163,7 @@ public class StudyroomController {
 
   /** 코딩 문제 제출 **/
   @PostMapping("/studyroom/codingtest/submission")
-  public  ResponseEntity<?> submitProblemInStudy(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
+  public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
     return new ResponseEntity<>(studyroomService.submitProblem(submissionDto), HttpStatus.OK);
 
   }
@@ -170,13 +173,6 @@ public class StudyroomController {
   @PostMapping("/studyroom/codingtest/test")
   public  ResponseEntity<?> testProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
     return new ResponseEntity<>(studyroomService.submitTest(submissionDto), HttpStatus.OK);
-  }
-
-  /** 스터디 아닐때 코딩 문제 제출 **/
-  @PostMapping("/codingtest/submission")
-  public  ResponseEntity<?> submitProblem(@ModelAttribute SubmissionDto submissionDto)  throws IOException{
-    return new ResponseEntity<>(studyroomService.submitProblem(submissionDto), HttpStatus.OK);
-
   }
 
   /** 스터디 시작 **/

@@ -234,7 +234,11 @@ public class StudyroomServiceImpl implements StudyroomService {
     StudyroomDto s = studyroomMapper.enterStudyroom(id);
     String hostNickname = studyroomMapper.getNicknameById(s.getHostId());
     Map<String, Object> resultMap = null;
-    if (s.getPersonnel() < 6) {
+    if(s.getIsSolving()){
+      resultMap = new HashMap<>();
+      resultMap.put("result", "isSolving");
+    }
+    else if (s.getPersonnel() < 6) {
       resultMap = new HashMap<>();
       resultMap.put("languageIds", s.getLanguageIds());
       resultMap.put("algoIds", s.getAlgoIds());
@@ -376,13 +380,6 @@ public class StudyroomServiceImpl implements StudyroomService {
 //        ResponseEntity<Object> s = REST_TEMPLATE.exchange(url, HttpMethod.POST, requestEntity, Object.class);
     List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
 
-    //문제 제출 정보를 실제 디비에 저장한다.
-    submissionDto.setFileName(f.getName());
-    submissionDto.setResult((Boolean) s.get(5).get("isAnswer"));
-    submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
-    submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
-    studyroomMapper.submitProblem(submissionDto);
-
     return s;
   }
 
@@ -447,6 +444,8 @@ public class StudyroomServiceImpl implements StudyroomService {
   public MemberDto getHostnicknameByStudyroomInfo(int studyroomId) {
     return studyroomMapper.getHostnicknameByStudyroomInfo(studyroomId);
   }
+
+
 
   private static boolean checkout(int n[], int index) {
     for (int i = 0; i < n.length; i++) {
