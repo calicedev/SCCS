@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import getUserInfo from 'libs/getUserInfo'
 import { setExpiration } from 'redux/expSlice'
+import { useDispatch } from 'react-redux'
 import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
@@ -12,6 +13,7 @@ import api from 'constants/api'
 export default function LoginForm() {
   // 라액트 훅 관련 함수 정의
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // useState
   const [id, setId] = useState('')
@@ -39,7 +41,7 @@ export default function LoginForm() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
-        setExpiration(res.data.expiration)
+        dispatch(setExpiration(res.data.expiration))
         getUserInfo(id)
         navigate('/')
       })

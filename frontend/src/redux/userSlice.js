@@ -10,7 +10,6 @@ const userSlice = createSlice({
       return action.payload
     },
     deleteUserInfo: (state, action) => {
-      console.log(1)
       return null
     },
   },

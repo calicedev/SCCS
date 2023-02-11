@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from 'redux/themeSlice'
 import { deleteUserInfo } from 'redux/userSlice'
 import checkLogin from 'libs/checkLogin'
+import { setExpiration } from 'redux/expSlice'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -24,6 +25,7 @@ export default function Navbar() {
 
   const logout = () => {
     dispatch(deleteUserInfo())
+    dispatch(setExpiration(null))
     navigate('/')
   }
 
