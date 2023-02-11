@@ -77,10 +77,11 @@ export default function WebSocketRoom() {
   // 브라우저에서 뒤로가기 누를 시 (대기방) 인원수 -1 기능
   // 코테방, 스터디 방에서 뒤로가기 누를 시에는 메인페이지로 가지지만 인원수 count가 안됨. 추후 수정해보자 (2.10 민혁)
   // 그러기 위해서는 코테/스터디 페이지에서는 아예 뒤로가기 기능을 막아야할듯? (찾아보자)
+  // 일단 뒤로가기 누르면 어느 페이지에서든 카운트 -1 되게 설정 (2.11 민혁)
   window.onpopstate = (event) => {
-    if (waitingRoom) {
-      disconnect(stomp)
-    }
+    // if (waitingRoom) {
+    disconnect(stomp)
+    // }
   }
 
   // 채팅방 관련 정보 axios 요청
