@@ -90,14 +90,39 @@
   </resultMap>
 
   <select id="getProblems" parameterType="hashmap" resultMap="submissionWithProblemAboutUser">
-    SELECT s.id, p.name ,format(p.accepted_number/p.submission_number*100,2) as 'answerRate'
-    ,DATE_FORMAT(submit_datetime,'%y-%m-%d') as 'date',p.difficulty,s.language_id
+    SELECT
+    *
+    FROM(
+    SELECT s.id as submissionID, p.name as problemName
+    ,format(p.accepted_number/p.submission_number*100,2)
+    as
+    'answerRate'
+    ,DATE_FORMAT(submit_datetime,'%y-%m-%d') as 'date',p.difficulty as
+    problemDifficulty,s.language_id as languageID
     FROM problem p, submission s
-    WHERE p.id = s.problem_id AND s.member_id = #{memberId};
+    WHERE p.id = s.problem_id AND s.member_id = #{memberId}
+    order by date desc
+    LIMIT 18446744073709551615
+    ) as a group by problemName;
   </select>
 
-  <select id="getProblemUrl" parameterType="int" resultType="String">
-    SELECT problem_folder FROM problem WHERE id=#{problemId}
+  <resultMap id="problemIdFromSubmission" type="hashmap">
+    <result column="problemUrl" property="problemUrl"></result>
+    <collection property="submissionInfo" javaType="list"
+      resultMap="submissionInfo"></collection>
+  </resultMap>
+
+  <resultMap id="submissionInfo" type="hashmap">
+    <result column="submissionId" property="submissionID"></result>
+    <result column="submissionLanguageId" property="submissionLID"></result>
+    <result column="submissionFileName" property="submissionFile"></result>
+  </resultMap>
+
+
+  <select id="getProblemUrl" parameterType="hashmap" resultMap="problemIdFromSubmission">
+    SELECT p.problem_folder as problemUrl, s.id as submissionId, s.language_id as
+    submissionLanguageId, s.file_name as submissionFileName FROM problem p, submission s WHERE
+    p.id=#{problemId} and s.problem_id=p.id;
   </select>
 
   <resultMap id="submissionFromProblem" type="hashmap">

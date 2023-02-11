@@ -34,12 +34,12 @@ public class MypageServiceImpl implements MypageService {
   }
 
   @Override
-  public String getProblemUrl(int problemId) {
-    return mypageMapper.getProblemUrl(problemId);
+  public HashMap<String, Object> getProblemUrl(String memberId, int problemId) {
+    return mypageMapper.getProblemUrl(memberId, problemId);
   }
 
   @Override
-  public HashMap<String, Object> getProblemIdAndUrl(int submissionId) {
-    return mypageMapper.getProblemIdAndUrl(submissionId);
+  public HashMap<String, Object> getProblemIdAndUrl(int problemId) {
+    return mypageMapper.getProblemIdAndUrl(problemId);
   }
 }
