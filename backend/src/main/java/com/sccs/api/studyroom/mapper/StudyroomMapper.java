@@ -9,6 +9,8 @@ import com.sccs.api.studyroom.dto.StudyroomMemberDto;
 import com.sccs.api.studyroom.dto.StudyroomProblemDto;
 import com.sccs.api.studyroom.dto.SubmissionDto;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -64,4 +66,12 @@ public interface StudyroomMapper {
   public String getNicknameById(String id);
 
   public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
+
+  public int isSolvingByUser(SubmissionDto submissionDto);
+
+  public int getScoreByGrade(Map<String, Object> resultMap);
+
+  public int getScoreByMember(String id);
+
+  public void injectScore(Map<String, Object> resultMap);
 }

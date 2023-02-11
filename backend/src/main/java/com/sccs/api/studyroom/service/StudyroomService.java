@@ -48,4 +48,5 @@ public interface StudyroomService {
 
   public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
 
+  public Map<String, Object> startStudy(StudyroomDto studyroomDto);
 }
