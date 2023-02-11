@@ -7,7 +7,7 @@ import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from 'redux/themeSlice'
 import { deleteUserInfo } from 'redux/userSlice'
-import getLogin from 'libs/getLogin'
+import checkLogin from 'libs/checkLogin'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -18,7 +18,7 @@ export default function Navbar() {
 
   // 리덕스 -> theme정보
   const theme = useSelector((state) => state.theme)
-  const isLogin = getLogin()
+  const isLogin = checkLogin()
 
   const dispatch = useDispatch()
 

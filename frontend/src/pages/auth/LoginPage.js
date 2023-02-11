@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Button from 'components/common/Button'
 import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
-import requestUserInfo from 'libs/requestUserInfo'
+import getUserInfo from 'libs/getUserInfo'
 import { setExpiration } from 'redux/expSlice'
 import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
@@ -40,7 +40,7 @@ export default function LoginForm() {
     axios(config)
       .then((res) => {
         setExpiration(res.data.expiration)
-        requestUserInfo(id)
+        getUserInfo(id)
         navigate('/')
       })
       .catch((err) => {
