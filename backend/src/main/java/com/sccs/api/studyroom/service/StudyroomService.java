@@ -1,5 +1,6 @@
 package com.sccs.api.studyroom.service;
 
+import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.studyroom.dto.ProblemDto;
 import com.sccs.api.studyroom.dto.StudyroomDto;
 import com.sccs.api.studyroom.dto.SubmissionDto;
@@ -29,7 +30,8 @@ public interface StudyroomService {
   public List<Map<String, Object>> submitProblem(SubmissionDto submissionDto) throws IOException;
 
   public List<Map<String, Object>> submitTest(SubmissionDto submissionDto) throws IOException;
-  public String endStudyroomByOwner(StudyroomDto studyroomDto);
+
+  public String endStudyroomByOwner(int id);
 
   public ProblemDto getProblemInfo(int problemId);
 
@@ -42,6 +44,7 @@ public interface StudyroomService {
   public boolean isExistStudyroom(int id);
 
   public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
+  public String getNicknameById(String id);
 
-
+  public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
 }

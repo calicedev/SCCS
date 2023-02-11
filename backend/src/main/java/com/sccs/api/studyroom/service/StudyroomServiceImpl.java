@@ -2,6 +2,7 @@ package com.sccs.api.studyroom.service;
 
 import com.sccs.api.aws.dto.FileDto;
 import com.sccs.api.aws.service.AwsS3Service;
+import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.studyroom.dto.ProblemDto;
 import com.sccs.api.studyroom.dto.StudyroomAlgoDto;
 import com.sccs.api.studyroom.dto.StudyroomDto;
@@ -389,9 +390,9 @@ public class StudyroomServiceImpl implements StudyroomService {
    * 코딩 테스트 방장에 의해 끝내기
    **/
   @Override
-  public String endStudyroomByOwner(StudyroomDto studyroomDto) {
+  public String endStudyroomByOwner(int id) {
     try {
-      if (studyroomMapper.endStudyroomByOwner(studyroomDto) == 1) {
+      if (studyroomMapper.endStudyroomByOwner(id) == 1) {
         return SUCCESS;
       } else {
         return FAIL;
@@ -438,7 +439,14 @@ public class StudyroomServiceImpl implements StudyroomService {
     return s;
   }
 
+  public String getNicknameById(String id) {
+    return studyroomMapper.getNicknameById(id);
+  }
 
+  @Override
+  public MemberDto getHostnicknameByStudyroomInfo(int studyroomId) {
+    return studyroomMapper.getHostnicknameByStudyroomInfo(studyroomId);
+  }
 
   private static boolean checkout(int n[], int index) {
     for (int i = 0; i < n.length; i++) {
