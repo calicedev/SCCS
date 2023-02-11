@@ -69,9 +69,9 @@ public interface StudyroomMapper {
 
   public int isSolvingByUser(SubmissionDto submissionDto);
 
-  public int getScoreByGrade(Map<String, Object> resultMap);
-
   public int getScoreByMember(String id);
 
   public void injectScore(Map<String, Object> resultMap);
+
+  public void updateProblemInfo(Map<String, Object> p);
 }

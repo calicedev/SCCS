@@ -240,21 +240,45 @@
     select id, nickname from member where id = (select host_id from studyroom where id=#{studyroomId});
   </select>
 
+  <!--회원이 이 문제를 풀었는지 확인하고 싶을 때-->
   <select id="isSolvingByUser" parameterType="SubmissionDto" resultType="int">
-    select count(*) from submission where problem_id=#{problemId} and member_id=#{memberId};
+    select count(*) from submission where problem_id=#{problemId} and member_id=#{memberId}
   </select>
 
   <select id="getScoreByMember" parameterType="String" resultType="int">
-    select score from member where id=#{id};
-  </select>
-
-  <select id="getScoreByGrade" parameterType="map" resultType="int">
-    select score from tier where grade=#{grade} and difficulty=#{difficulty};
+    select score from member where id=#{id}
   </select>
 
   <update id="injectScore" parameterType="map">
     UPDATE member
-    SET score=#{realscore}
-    WHERE id = #{id}
+    SET score = score + (
+      select score from tier where
+      <choose>
+        <when test="memberScore>=100000">
+          grade=1 and
+        </when>
+        <when test="100000>memberScore>=30000">
+          grade=2 and
+        </when>
+        <when test="30000>memberScore>=3000">
+          grade=3 and
+        </when>
+        <when test="3000>memberScore>=0">
+          grade=4 and
+        </when>
+      </choose>
+      difficulty=#{difficulty}
+    )
+    WHERE id =#{id}
   </update>
+
+  <update id="updateProblemInfo" parameterType="map">
+    UPDATE problem
+    SET submission_number = submission_number+1
+    <if test="correct==1">
+      , accepted_number = accepted_number+1
+    </if>
+    where id=#{id}
+  </update>
+
 </mapper>
