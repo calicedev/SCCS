@@ -16,6 +16,7 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.6.0",
     "face-api.js": "^0.22.2",
+    "file-saver": "^2.0.5",
     "jquery": "^3.6.3",
     "material-ui": "^0.20.2",
     "net": "^1.0.2",

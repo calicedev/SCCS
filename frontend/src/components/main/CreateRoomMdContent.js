@@ -111,7 +111,7 @@ export default function CreateRoomMdContent() {
       return
     }
     // 알고리즘 선택 조건 체크
-    if (algoIds.length > 2 || algoIds.length < 1) {
+    if (2 < algoIds.length < 7 || algoIds.length < 1) {
       const newMsg = { ...message }
       newMsg.text = '알고리즘은 하나 이상 두개 이하 선택가능합니다.'
       newMsg.isValid = false
