@@ -8,10 +8,11 @@ import StudyList from 'components/mypage/StudyList'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import { useSelector } from 'react-redux'
+import getUserInfo from 'libs/getUserInfo'
 
 export default function StudyCalendar() {
   // 리덕스 -> 유저 id 읽기
-  const id = useSelector((state) => state.user.id)
+  const id = getUserInfo().id
 
   // useState
   const [currentDate, setCurrentDate] = useState(new Date())

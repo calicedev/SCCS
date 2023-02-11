@@ -3,6 +3,7 @@ import Button from 'components/common/Button'
 import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import getUserInfo from 'libs/getUserInfo'
+import { setExpiration } from 'redux/expSlice'
 import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
 import axios from 'libs/axios'
@@ -38,6 +39,7 @@ export default function LoginForm() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {
+        setExpiration(res.data.expiration)
         getUserInfo(id)
         navigate('/')
       })
