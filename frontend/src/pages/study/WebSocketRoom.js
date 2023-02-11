@@ -54,6 +54,8 @@ export default function WebSocketRoom() {
   const [readyForStudyArray, setReadyForStudyArray] = useState([])
   // 코테 페이지에서 axios로 가져온 정보를 study 페이지로 내려주기 위해 선언하는 state
   const [dataForStudy, setDataForStudy] = useState([])
+  // 발표자 선정
+  const [presenter, setPresenter] = useState('방장') // roomInfo.hostNickname
 
   const justMounted = useRef(true)
 
@@ -224,6 +226,10 @@ export default function WebSocketRoom() {
               setStudy(true)
             }
           }
+          // 발표자 선정
+          if (content.status === 'present') {
+            setPresenter(presenter)
+          }
         },
       )
     })
@@ -318,6 +324,20 @@ export default function WebSocketRoom() {
     )
   }
 
+  // 발표자 변경 (study 페이지)
+  const changePresenter = (presenterNickname) => {
+    setPresenter(presenterNickname)
+    stomp.send(
+      '/pub/studyroom',
+      {},
+      JSON.stringify({
+        studyroomId: studyroomId,
+        nickname: nickname,
+        status: 'present',
+        presenter: presenterNickname,
+      }),
+    )
+  }
   return (
     <>
       {connected && (
@@ -361,6 +381,8 @@ export default function WebSocketRoom() {
               startStudy={startStudy}
               id={id}
               nickname={nickname}
+              dataForStudy={dataForStudy}
+              setDataForStudy={setDataForStudy}
             />
           ) : null}
           {study ? (
@@ -369,6 +391,11 @@ export default function WebSocketRoom() {
               studyroomId={studyroomId}
               personnel={personnel}
               dataForStudy={dataForStudy}
+              readyForStudyArray={readyForStudyArray}
+              presenter={presenter}
+              setPresenter={setPresenter}
+              id={id}
+              changePresenter={changePresenter}
             />
           ) : null}
         </>

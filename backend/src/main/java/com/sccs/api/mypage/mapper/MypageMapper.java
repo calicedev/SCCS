@@ -15,4 +15,6 @@ public interface MypageMapper {
 
   public String getProblemUrl(int problemId);
 
+  public HashMap<String, Object> getProblemIdAndUrl(int submissionId);
+
 }

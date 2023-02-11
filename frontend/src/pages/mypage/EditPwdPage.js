@@ -7,7 +7,8 @@ import ProfileImg from 'components/common/ProfileImg'
 import { useNavigate } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
-import { useSelector } from 'react-redux'
+import useUser from 'hooks/useUser'
+// import { useSelector } from 'react-redux'
 import axios from 'libs/axios'
 import api from 'constants/api'
 
@@ -16,7 +17,8 @@ export default function PasswordEdit() {
   const navigate = useNavigate()
 
   // 리덕스 -> 사용자 정보 읽어오기
-  const user = useSelector((state) => state.user)
+  // const user = useSelector((state) => state.user)
+  const user = useUser()
 
   // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [password, setPassword] = useAuthInput('password', '')

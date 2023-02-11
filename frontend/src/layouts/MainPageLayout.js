@@ -41,7 +41,7 @@ const LowerPane = styled.div`
 
   @media screen and (min-width: 1024px) {
     min-width: 1000px;
-    width: 70%;
+    width: 75%;
   }
 `
 

@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -100,12 +101,11 @@ public class MemberController {
 
   /**
    * 로그인 : id, password 일치시 토큰 생성
-   * Auth
    **/
   @PostMapping("/member/login")
   public ResponseEntity<?> logIn(@RequestBody Map<String, String> paramMap,
       HttpServletResponse response) {
-    Map<String, String> resultmap = new HashMap<>();
+    Map<String, Object> resultmap = new HashMap<>();
 
     try {
       MemberDto memberDto = memberService.memberInfo(paramMap.get("id")); // memberDto를 DB에서 조회
@@ -121,9 +121,10 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-            (MINUTE * 1)); // 2분
+                (MINUTE * 20)); // 20분
+        long exp = System.currentTimeMillis() + (MINUTE * 20);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-            (MINUTE * 2)); // 5분
+                (HOUR * 10)); // 10시간
 
 //        resultmap.put("accessToken", accessToken);
 //        resultmap.put("refreshToken", refreshToken);
@@ -144,8 +145,12 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
+//        Claims claims = jwtService.getToken(accessToken);
+//        String exp = (String) jwtService.getToken(accessToken).get("expiration");
+
         logger.debug("[login]로그인 성공");
         resultmap.put("message", "성공");
+        resultmap.put("expiration", exp);
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
         logger.debug("[logIn]비밀번호 불일치");
@@ -164,8 +169,14 @@ public class MemberController {
    * Auth
    **/
   @GetMapping("/member")
-  public ResponseEntity<?> memberInfo(@CookieValue String accessToken /** HttpServletRequest request **/ ) {
+  public ResponseEntity<?> memberInfo(HttpServletRequest request) { // @CookieValue String accessToken
     Map<String, Object> resultMap = new HashMap<>();
+
+
+    logger.info("회원정보 조회 컨트롤러 입장 !!");
+    Cookie[] cookies = request.getCookies();
+    logger.debug("쿠키에서 값 가져오기 1!!! : {}", cookies[0].getName());
+    String accessToken = cookies[0].getValue();
 
     // 헤더 방식
     // final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length()); // 헤더에서 토큰 파싱
@@ -369,7 +380,9 @@ public class MemberController {
       logger.debug("[refreshToken]토큰 인증 성공");
       if (id.equals(redisService.getRefreshTokenWithRedis(refreshToken))) {
         logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
-        String newAccessToken = jwtService.createToken(id, "accessToken", 30 * MINUTE);
+        String newAccessToken = jwtService.createToken(id, "accessToken", 20 * MINUTE);
+
+        long exp = System.currentTimeMillis() + (MINUTE * 20);
 
         // 토큰 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);
@@ -378,10 +391,11 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
 
         resultMap.put("message", SUCCESS);
+        resultMap.put("expiration", exp);
       }
     } else {
       logger.debug("리프레쉬 토큰 사용 불가");
-      resultMap.put("message", "로그인 페이지로 이동하세요");
+      resultMap.put("message", "리프레쉬 토큰 사용 불가 \n 로그인 페이지로 이동하세요");
       status = HttpStatus.UNAUTHORIZED;
     }
     return new ResponseEntity<>(resultMap, status);
@@ -406,8 +420,22 @@ public class MemberController {
   }
 
 
-
-
+  /**
+   * 레디스 특정 키 값 삭제
+   */
+  @DeleteMapping ("/member/refreshToken")
+  public ResponseEntity<?> deleteRefreshToken(@CookieValue String refreshToken) {
+    HashMap<String, String> resultMap = new HashMap<>();
+    if (redisService.deleteKey(refreshToken) == SUCCESS) {
+      logger.debug("deleteRefreshToken레디스 값 삭제 성공");
+      resultMap.put("message", "성공");
+      return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    } else {
+      logger.debug("[deleteRefreshToken]레디스 값 삭제 실패");
+      resultMap.put("message", "실패");
+      return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
+    }
+  }
 
   /**
    * 레디스 전체 키 개수 조회

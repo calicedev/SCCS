@@ -1,15 +1,13 @@
 package com.sccs.api.member.controller;
 
 import com.sccs.api.member.util.RedisService;
+
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 // Redis에 값을 저장, 조회하기 위한 테스트용 컨트롤러
 @RestController
@@ -29,10 +27,15 @@ public class RedisSampleController {
   }
 
   // 토큰 가져오기 테스트 컨트롤러 (실제 서비스랑 관련 없음)
-  @GetMapping("/redis/token")
-  public ResponseEntity<?> testGetTokenWithRedis(@RequestParam String memberId) {
-    String refreshTokenKey = "refreshToken:" + memberId;
-    redisService.getRefreshTokenWithRedis(refreshTokenKey);
-    return new ResponseEntity<String>("토큰 가져오기 통신 성공", HttpStatus.OK);
+  @GetMapping("api/redis/token")
+  public ResponseEntity<?> testGetTokenWithRedis(@CookieValue String refreshToken) {
+
+    String value = redisService.getRefreshTokenWithRedis(refreshToken);
+    HashMap<String, String> resultMap = new HashMap<>();
+    resultMap.put("message", "성공");
+    resultMap.put("key", refreshToken);
+    resultMap.put("value", value);
+    return new ResponseEntity<>(resultMap, HttpStatus.OK);
   }
+
 }
