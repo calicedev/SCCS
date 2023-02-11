@@ -95,7 +95,9 @@ export default function WebSocketRoom() {
         setRoomInfo(res.data)
       })
       .catch((err) => {
+        console.log('무슨에러일까?', err)
         alert('대기방 정보를 불러오지 못했습니다.')
+        navigate('/')
       })
   }, [])
 
