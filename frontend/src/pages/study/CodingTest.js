@@ -49,6 +49,8 @@ export default function CodingTest({
       .then((res) => {
         setCodingTestData(res.data)
         console.log(res.data.problems[0].id, res.data.problems[1].id)
+        // 첫번째 문제현재 선택된 문제로 지정해서 제출 시에 넘어갈 수 있게 해줌
+        setOnProblem(res.data.problems[0].id)
         setProblemArray([
           ...problemArray,
           res.data.problems[0].id,
@@ -59,8 +61,6 @@ export default function CodingTest({
           res.data.problems[0].id,
           res.data.problems[1].id,
         ])
-        // 0번 인덱스의 문제 pk를 onProblem에 넣어줌
-        setOnProblem(problemArray[0])
       })
       .catch((err) => {})
   }, [])
@@ -96,8 +96,8 @@ export default function CodingTest({
     formData.append('studyroomId', studyroomId)
     console.log(onProblem)
     // 지금은 채점 서버에 1번 문제밖에 없어서 이렇게 하지만 더 들어오면 OnProblem으로 해야함 (2.10 민혁)
-    formData.append('problemId', 1)
-    // formData.append('problemId', onProblem)
+    // formData.append('problemId', 1)
+    formData.append('problemId', onProblem)
     // 지금은 Java(2)로 고정하지만 나중에는 파이썬 or 파이썬+자바의 경우도 넣어줘야함 (2.10 민혁)
     formData.append('languageId', 2)
 
@@ -127,8 +127,8 @@ export default function CodingTest({
     formData.append('studyroomId', studyroomId)
     console.log(onProblem)
     // 지금은 채점 서버에 1번 문제밖에 없어서 이렇게 하지만 더 들어오면 OnProblem으로 해야함 (2.10 민혁)
-    formData.append('problemId', 1)
-    // formData.append('problemId', onProblem)
+    // formData.append('problemId', 1)
+    formData.append('problemId', onProblem)
     // 지금은 Java(2)로 고정하지만 나중에는 파이썬 or 파이썬+자바의 경우도 넣어줘야함 (2.10 민혁)
     formData.append('languageId', 2)
 
@@ -375,7 +375,7 @@ const Btn = styled.button`
   border: solid 2px grey;
   border-radius: 12px;
   padding: 6px;
-  margin : 10px;
+  margin: 10px;
 `
 const ColoredLine = ({ color }) => (
   <hr

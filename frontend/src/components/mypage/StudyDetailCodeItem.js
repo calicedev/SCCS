@@ -39,11 +39,12 @@ export default function StudyDetailCodeItem({
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch({
-        fileUrl,
+        url: fileUrl,
+        mode: 'no-cors',
       })
         .then((response) => response.text())
         .then((text) => {
-          console.log(text)
+          console.log('텍스트다', text)
           setCode(text)
           // Use the javaCode variable here to store or manipulate the contents of the .java file
         })
