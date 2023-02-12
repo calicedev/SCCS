@@ -69,7 +69,7 @@ public class StudyroomController {
         if (studyroomId != 0) {
             resultMap.put("studyroomId", studyroomId);
             return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
-            
+
         } else {
 
             resultMap.put("message", "방 생성 실패");

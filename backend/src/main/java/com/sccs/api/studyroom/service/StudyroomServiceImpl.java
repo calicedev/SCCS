@@ -1,6 +1,5 @@
 package com.sccs.api.studyroom.service;
 
-import com.sccs.api.aws.dto.FileDto;
 import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.studyroom.dto.ProblemDto;
@@ -14,10 +13,7 @@ import com.sccs.api.studyroom.file.FileStore;
 import com.sccs.api.studyroom.mapper.StudyroomMapper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -288,7 +284,7 @@ public class StudyroomServiceImpl implements StudyroomService {
      * 코딩 테스트 문제 제출
      **/
     @Override
-    public List<Map<String, Object>> submitProblem(SubmissionDto submissionDto) throws IOException {
+        public Map<String, Object> submitProblem(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
         //파일을 원하는 경로에 실제로 저장한다.
         MultipartFile f = fileStore.storeFile(submissionDto.getFormFile());
@@ -322,14 +318,17 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         //프록시 서버에서 채점 서버로 API 호출
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+        Map<String, Object> s = REST_TEMPLATE.postForObject(url, requestEntity, Map.class);
+
+
+        System.out.println((Boolean) s.get("isAnswer"));
 
         // 문제를 풀었다는 정보를 문제 db에 저장하기 위해 problem에 담는다
         Map<String, Object> p = new HashMap<>();
         p.put("id", problemDto.getId());
         // 찬희님 한테서 가져온 정보를 확인해보고 마지막 5 배열이 맞았고 회원에서 한번도 풀린적이 없다면 점수를 더해준다.
         // 만약 맞았어. 한번도 안풀었어.
-        if ((Boolean) s.get(5).get("isAnswer") ) {
+        if ((Boolean) s.get("isAnswer") ) {
             if( studyroomMapper.isSolvingByUser(submissionDto) == 0) {
                 // 내 등급을 알기 위해 member에서 내 점수를 가져와
                 int score = studyroomMapper.getScoreByMember(submissionDto.getMemberId());
@@ -347,9 +346,9 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         //문제 제출 정보를 실제 디비에 저장한다.
         submissionDto.setFileName(f.getName());
-        submissionDto.setResult((Boolean) s.get(5).get("isAnswer"));
-        submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
-        submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
+        submissionDto.setResult((Boolean) s.get("isAnswer"));
+        submissionDto.setMemory((Integer) s.get("avgMemory"));
+        submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get("avgRuntime"))));
         studyroomMapper.submitProblem(submissionDto);
         return s;
     }
@@ -357,7 +356,7 @@ public class StudyroomServiceImpl implements StudyroomService {
     /**
      * 코딩 테스트 테스트 코드 제출
      */
-    public List<Map<String, Object>> submitTest(SubmissionDto submissionDto) throws IOException {
+    public Map<String, Object> submitTest(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
         //파일을 원하는 경로에 실제로 저장한다.
         MultipartFile f = fileStore.storeFile(submissionDto.getFormFile());
@@ -388,7 +387,7 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         //프록시 서버에서 채점 서버로 API 호출
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+        Map<String, Object> s = REST_TEMPLATE.postForObject(url, requestEntity, Map.class);
         return s;
     }
 
