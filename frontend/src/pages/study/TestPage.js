@@ -52,7 +52,7 @@ export default function TestPage() {
   // 남은 시간 표시하기 위한 state
   const [timer, setTimer] = useState(2 * 60 * 60)
 
-  const [testResult, setTestResult] = useState([])
+  const [testResult, setTestResult] = useState(null)
 
   // 코딩테스트 페이지 입장 시 axios 요청
   useEffect(() => {
