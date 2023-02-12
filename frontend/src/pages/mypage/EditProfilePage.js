@@ -30,7 +30,11 @@ export default function ProfileEdit() {
   const [img, setImg] = useState(user.profileImage)
 
   // 서버에서 받은 정보는 img url이 string값 그대로지만, edit시에는 파일이 업로드 됨으로 url 주소를 추출
+  console.log(user)
   const imgUrl = useMemo(() => {
+    if (!img) {
+      return img
+    }
     if (typeof img === 'string') {
       return img
     }

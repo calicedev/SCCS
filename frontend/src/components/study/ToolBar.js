@@ -6,7 +6,7 @@ import {
   BsFillCameraVideoOffFill,
   BsMicFill,
   BsMicMuteFill,
-} from 'react-icons'
+} from 'react-icons/bs'
 import IconButton from 'components/common/IconButton'
 import Button from 'components/common/Button'
 
@@ -17,7 +17,7 @@ toggleCamera: 카메라 상태를 토글하는 함수
 toggleMic: 마이크 상태를 토글하는 함수
 isCameraOn: 현재 카메라의 On 여부
 isMicOn: 현재 마이크의 On 여부
-exit: 스터디룸을 나가는 함수
+leaveSession: 스터디룸을 나가는 함수
 */
 
 export default function ToolBar({
@@ -29,19 +29,25 @@ export default function ToolBar({
 }) {
   return (
     <Container>
-      <IconButton
-        icon={isMicOn ? <BsMicFill /> : <BsMicMuteFill />}
-        type="white"
-        onClick={toggleCamera}
-      />
-      <IconButton
-        icon={
-          isCameraOn ? <BsFillCameraVideoFill /> : <BsFillCameraVideoOffFill />
-        }
-        type="white"
-        onClick={toggleMic}
-      />
-      <Button type="danger" value="Exit" onClick={exit} />
+      <Wrapper>
+        <IconButton
+          icon={
+            isCameraOn ? (
+              <BsFillCameraVideoFill />
+            ) : (
+              <BsFillCameraVideoOffFill />
+            )
+          }
+          type="white"
+          onClick={toggleCamera}
+        />
+        <IconButton
+          icon={isMicOn ? <BsMicFill /> : <BsMicMuteFill />}
+          type="white"
+          onClick={toggleMic}
+        />
+      </Wrapper>
+      <Button size="small" type="danger" value="Exit" onClick={exit} />
     </Container>
   )
 }
@@ -51,7 +57,7 @@ ToolBar.propTypes = {
   toggleMic: PropTypes.func,
   isCameraOn: PropTypes.bool.isRequired,
   isMicOn: PropTypes.bool.isRequired,
-  exit: PropTypes.func,
+  leaveSession: PropTypes.func,
 }
 
 ToolBar.defaultProps = {
@@ -62,10 +68,22 @@ ToolBar.defaultProps = {
 
 const Container = styled.div`
   display: flex;
+  justify-content: end;
+  align-items: center;
+
+  width: 100vw;
+  height: 3rem;
+
+  padding: 1rem 2rem;
+
+  background-color: ${({ theme }) => theme.blackColor};
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  gap: 40px;
 
   position: absolute;
-  bottom: 0;
-
-  width: 100%;
-  height: 5rem;
+  left: 50%;
+  transform: translate(-50%, 0);
 `
