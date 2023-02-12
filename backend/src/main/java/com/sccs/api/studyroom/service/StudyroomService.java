@@ -27,9 +27,9 @@ public interface StudyroomService {
   public Map<String, Object> startCodingTest(StudyroomDto studyroomDto)
       throws IOException;
 
-  public List<Map<String, Object>> submitProblem(SubmissionDto submissionDto) throws IOException;
+  public Map<String, Object> submitProblem(SubmissionDto submissionDto) throws IOException;
 
-  public List<Map<String, Object>> submitTest(SubmissionDto submissionDto) throws IOException;
+  public Map<String, Object> submitTest(SubmissionDto submissionDto) throws IOException;
 
   public String endStudyroomByOwner(int id);
 
