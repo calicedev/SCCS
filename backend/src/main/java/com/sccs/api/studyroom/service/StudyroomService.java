@@ -10,41 +10,48 @@ import java.util.Map;
 
 public interface StudyroomService {
 
-
   /** 방 생성 로직  **/
   public int createStudyroom(StudyroomDto studyroomDto);
 
-  /** 메인 페이지를 위한 모든 방 정보 가져오기 **/
+  /** 메인 페이지에서 전체 방 조회 **/
   public List<Map<String, Object>> selectAllStudyroom();
 
-  /** 검색 조건에 맞는 방 정보 가져오기  **/
+  /** 메인 페이지에서 전체 조건별 조회 **/
   public List<Map<String, Object>> selectStudyroom(StudyroomDto studyroomDto);
 
-  public Map<String, Object> enterStudyroom(int id);
-
+  /** 방 입장시 비밀번호 체크 **/
   public String checkStudyroomPassword(StudyroomDto studyroomDto);
 
-  public Map<String, Object> startCodingTest(StudyroomDto studyroomDto)
-      throws IOException;
+  /** 특정 스터디 방으로 입장 : 대기방으로 입장 **/
+  public Map<String, Object> enterStudyroom(int id);
 
+  /** 코딩 테스트 시작하기 **/
+  public Map<String, Object> startCodingTest(StudyroomDto studyroomDto) throws IOException;
+
+  /** 코딩 테스트 코드 제출 **/
   public Map<String, Object> submitProblem(SubmissionDto submissionDto) throws IOException;
 
+  /** 코딩 테스트 테스트 코드 제출 **/
   public Map<String, Object> submitTest(SubmissionDto submissionDto) throws IOException;
 
+  /** 코딩 테스트 방장에 의해 끝내기 **/
   public String endStudyroomByOwner(int id);
 
+  /** 소켓 통신 인원 조회 **/
   public int getStudyroomPersonnel(int id);
 
-  public int increaseStudyroomPersonnel(StudyroomDto studyroomDto);
+  /** 소켓 통신 처음에 들어오는 사람 increase **/
+  public int increaseStudyroomPersonnel(int id);
 
-  public int decreaseStudyroomPersonnel(StudyroomDto studyroomDto);
+  /** 소켓 통신 처음에 들어오는 사람 decrease **/
+  public int decreaseStudyroomPersonnel(int id);
 
+  /** 메인 화면에서 입장할 때 존재하는 방인지 체크하는 로직 **/
   public boolean isExistStudyroom(int id);
 
-
-  public String getNicknameById(String id);
-
+  /** 스터디룸 조회하면 호스트 닉네임 반환. id랑 nickname이랑 꼬여서 만든 로직. **/
   public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
 
+  /** 스터디 시작하기 **/
   public List startStudy(StudyroomDto studyroomDto);
 }
