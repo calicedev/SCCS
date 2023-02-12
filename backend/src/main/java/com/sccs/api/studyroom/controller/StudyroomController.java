@@ -183,7 +183,7 @@ public class StudyroomController {
      **/
     @PostMapping("/studyroom/study")
     public ResponseEntity<?> startStudy(@RequestBody StudyroomDto studyroomDto) throws IOException {
-        Map<String, Object> resultMap = studyroomService.startStudy(studyroomDto);
+        List resultMap = studyroomService.startStudy(studyroomDto);
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
