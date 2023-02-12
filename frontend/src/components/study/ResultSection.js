@@ -11,7 +11,7 @@ opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 �
 onChange: 클릭 시 동작할 함수
 */
 
-export default function TestResult({
+export default function ResultSection({
   results,
   isFinished,
   finish,

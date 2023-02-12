@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { algorithmPk } from 'constants/pk'
 import { FaLock, FaPython, FaJava } from 'react-icons/fa'
 import IconButton from 'components/common/IconButton'
+import checkLogin from 'libs/checkLogin'
 import Modal from 'components/common/Modal'
 import PwdModalContent from 'components/main/PwdModalContent'
 import { useNavigate } from 'react-router-dom'
@@ -31,6 +32,7 @@ export default function Room({
 }) {
   // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
+  const isLogin = checkLogin()
 
   // useState
   const [showModal, setShowModal] = useState(false) // 비밀방의 모달창 표시 여부를 정하는 State
@@ -59,6 +61,10 @@ export default function Room({
 
   // 방을 입장하는 함수
   const enterRoom = () => {
+    if (!isLogin) {
+      alert('로그인 후 이용해주세요')
+      return
+    }
     if (isSolving) return
     // 비밀방일 경우 모달창 띄우기
     if (isPrivate) {
@@ -103,7 +109,7 @@ export default function Room({
                 icon={<FaLock />}
                 size="tiny"
                 disabled={true}
-                type={isSolving ? 'tertiary' : 'solving'}
+                type={isSolving ? 'tertiary' : 'secondary'}
               />
             )}
             {title}
