@@ -32,13 +32,6 @@ export default function VideoComponent({ streamManager }) {
         <Container>
           <Video autoPlay={true} ref={videoRef} />
           <StyledP>{getNicknameTag}</StyledP>
-          {streamManager instanceof Publisher && (
-            <PublisherVideo
-              id={'publisher-video'}
-              autoPlay
-              muted
-            ></PublisherVideo>
-          )}
         </Container>
       ) : null}
     </>
@@ -46,11 +39,13 @@ export default function VideoComponent({ streamManager }) {
 }
 
 const Container = styled.div`
+  width: 100%;
+  height: 100%;
   position: relative;
 `
 const Video = styled.video`
-  width: 280px;
-  height: 160px;
+  width: 100%;
+  height: 100%;
   border-radius: 0.5rem;
 `
 const StyledP = styled.p`
@@ -66,13 +61,4 @@ const StyledP = styled.p`
   color: ${({ theme }) => theme.grayFontColor};
 
   background-color: #ffffff50;
-`
-// 얼굴인식 이미지를 띄울 시, 이미지 뒤에서 재생되는 비디오 태그
-const PublisherVideo = styled.video`
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 280px;
-  height: 160px;
 `

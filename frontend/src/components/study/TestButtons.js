@@ -18,7 +18,7 @@ export default function ButtonDropdown({ isFinished, finish, test, submit }) {
   return (
     <Container>
       <OutlineButton
-        value={isFinished ? 'Already Finished' : 'Finish'}
+        value={isFinished ? 'Finished' : 'Finish'}
         type="danger"
         size="small"
         disabled={isFinished ? true : false}

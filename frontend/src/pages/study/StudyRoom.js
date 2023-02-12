@@ -99,9 +99,8 @@ export default function StudyRoom() {
     OV.current = null
     setSession(undefined)
     setSubscribers([])
-    setMainStreamManager(undefined)
     setPublisher(undefined)
-
+    // setMainStreamManager(undefined)
     navigate('/')
   }
 
@@ -132,6 +131,7 @@ export default function StudyRoom() {
           return
         }
         if (content.status === 'exit') {
+          checkHostExit(content.nickname)
           setRoomInfo((roomInfo) => {
             const newRoomInfo = { ...roomInfo }
             newRoomInfo.personnel = content.personnel
@@ -188,22 +188,22 @@ export default function StudyRoom() {
     setMessage('')
   }
 
+  const checkHostExit = (nickname) => {
+    if (nickname === roomInfo.hostNickname) {
+      exit()
+    }
+  }
   ////////////////////////////Open Vidu////////////////////////////
   const [session, setSession] = useState(undefined)
-  const [mainStreamManager, setMainStreamManager] = useState(undefined)
   const [publisher, setPublisher] = useState(undefined)
   const [subscribers, setSubscribers] = useState([])
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
+  // const [mainStreamManager, setMainStreamManager] = useState(undefined)
   const OV = useRef(null)
 
   const [isMicOn, setIsMicOn] = useState(true)
   const [isScreen, setIsScreen] = useState(false)
   const [isCameraOn, setIsCameraOn] = useState(true)
-
-  const handleMainVideoStream = (stream) => {
-    if (mainStreamManager === stream) return
-    setMainStreamManager(stream)
-  }
 
   const deleteSubscriber = (streamManager) => {
     // 진짜 이유는 모르겠는데 newSubscribers = [...subscribers] 로 불러오면 안됨!!! 모두 처리해준 다음에 마지막 대입 전에 전개
@@ -260,7 +260,6 @@ export default function StudyRoom() {
 
     // Get a token from the OpenVidu deployment
     getToken().then((token) => {
-      console.log('token', token)
       // First param is the token got from the OpenVidu deployment. Second param can be retrieved by every user on event
       // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
       session
@@ -299,7 +298,7 @@ export default function StudyRoom() {
 
           // Set the main video in the page to display our webcam and store our Publisher
           setCurrentVideoDevice(currentVideoDevice)
-          setMainStreamManager(publisher)
+          // setMainStreamManager(publisher)
           setPublisher(publisher)
         })
         .catch((error) => {
@@ -323,7 +322,7 @@ export default function StudyRoom() {
     OV.current = null
     setSession(undefined)
     setSubscribers([])
-    setMainStreamManager(undefined)
+    // setMainStreamManager(undefined)
     setPublisher(undefined)
   }
 
@@ -345,11 +344,11 @@ export default function StudyRoom() {
         mirror: false,
       })
 
-      await session.unpublish(mainStreamManager)
+      // await session.unpublish(mainStreamManager)
       await session.publish(newPublisher)
 
-      setMainStreamManager(newPublisher)
       setPublisher(newPublisher)
+      // setMainStreamManager(newPublisher)
       setIsCameraOn(!isCameraOn)
       return
     }
@@ -494,25 +493,25 @@ export default function StudyRoom() {
               chatList,
               sendChat,
               disconnect,
+              OV,
+              session,
+              publisher,
+              setPublisher,
+              subscribers,
+              // mainStreamManager,
+              // setMainStreamManager,
             }}
           />
 
           {location.pathname.slice(-4) !== 'test' && (
             <VideoContainer>
               {publisher && (
-                <div
-                  className="stream-container"
-                  onClick={() => handleMainVideoStream(publisher)}
-                >
+                <div className="stream-container">
                   <VideoComponent streamManager={publisher} />
                 </div>
               )}
               {subscribers.map((sub, i) => (
-                <div
-                  key={`${sub.id}-${i}`}
-                  className="stream-container"
-                  onClick={() => handleMainVideoStream(sub)}
-                >
+                <div key={`${sub.id}-${i}`} className="stream-container">
                   <VideoComponent streamManager={sub} />
                 </div>
               ))}

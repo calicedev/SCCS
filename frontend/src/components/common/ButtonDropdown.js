@@ -20,9 +20,9 @@ export default function ButtonDropdown({
 }) {
   const [showOptions, setShowOptions] = useState(false)
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     setShowOptions(false)
-    onClick()
+    onClick(e)
   }
 
   return (
@@ -36,8 +36,8 @@ export default function ButtonDropdown({
       <OptionWrapper display={showOptions ? 'flex' : 'none'}>
         {Object.keys(options).map((key) => (
           <Button
-            key={key + options[key].toString()}
-            id={key + options[key].toString()}
+            key={key + '-' + options[key].toString()}
+            id={key + '-' + options[key].toString()}
             size={size}
             type={type}
             value={options[key]}

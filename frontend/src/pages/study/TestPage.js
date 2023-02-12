@@ -58,6 +58,7 @@ export default function TestPage() {
   useEffect(() => {
     const data = {
       id: studyroomId,
+      nickname: user.nickname,
       memberIds: members,
     }
     const [url, method] = api('codingTest')
@@ -87,6 +88,7 @@ export default function TestPage() {
         nickname: user.nickname,
       }),
     )
+    setFinished(true)
   }
 
   // 웹 소켓 subscribe
@@ -106,6 +108,12 @@ export default function TestPage() {
 
   // 타이머
   useInterval(() => setTimer((timer) => timer - 1), 1000)
+
+  useEffect(() => {
+    if (timer <= 0) {
+      navigate(`/room/${studyroomId}/study`)
+    }
+  }, [timer])
 
   // 코드 제출
   const submitCode = (type) => {
