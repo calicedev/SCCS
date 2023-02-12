@@ -17,15 +17,13 @@ isMine: 내가 보낸 메시지인지 판별
 
 export default function ChatItem({ nickname, profileImage, message, isMine }) {
   return (
-    <div>
-      <Container isMine={isMine}>
-        <ProfileImg imgUrl={profileImage} type="chat" />
-        <FlexBox>
-          <p className="bold">{nickname}</p>
-          <StyledDiv isMine={isMine}>{message}</StyledDiv>
-        </FlexBox>
-      </Container>
-    </div>
+    <Container isMine={isMine}>
+      <ProfileImg imgUrl={profileImage} type="chat" />
+      <FlexBox>
+        <p className="bold">{nickname}</p>
+        <StyledDiv isMine={isMine}>{message}</StyledDiv>
+      </FlexBox>
+    </Container>
   )
 }
 
@@ -45,7 +43,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: ${({ isMine }) => (isMine ? 'row-reverse' : 'row')};
   gap: 10px;
-  width: 20rem;
+  width: 100%;
+  margin: 0.4rem 0rem;
 `
 
 const FlexBox = styled.div`
@@ -61,4 +60,5 @@ const StyledDiv = styled.div`
   color: ${({ theme }) => theme.blackFontColor};
   background-color: ${({ isMine, theme }) =>
     isMine ? theme.lightSecondaryColor : '#FFFFFF80'};
+  max-width: 20rem;
 `

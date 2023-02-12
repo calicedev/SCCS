@@ -19,6 +19,7 @@ public class SocketDto {
   private int personnel;
   private boolean ready;
   private String presenter;
+  private String profileImage;
 
   private List<String> membersNickname;
   private List<String> readyForStudyArray;

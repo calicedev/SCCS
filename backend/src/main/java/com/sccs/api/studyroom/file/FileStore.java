@@ -24,44 +24,24 @@ public class FileStore {
   @Value("${file.dir}")
   private String fileDir;
   private final AwsS3Service awsS3service;
-  public String getFullPath(String path, String filename) {
-    return fileDir + path + "/" + filename;
+  public String getFullPath(String filename) {
+    return fileDir + filename;
   }
 
-  public MultipartFile storeFile(SubmissionDto submissionDto, String problemFolder) throws IOException {
-    MultipartFile file = submissionDto.getFormFile();
-    int languageId = submissionDto.getLanguageId();
-    String path = problemFolder;
-    String end = null;
+  public MultipartFile storeFile(MultipartFile file) throws IOException {
+    String end = "txt";
     if (file.isEmpty()) {
       return null;
     }
-    if (languageId == 1) {
-      end = "txt";
-    } else if (languageId == 2) {
-      end = "txt";
-    }
-    String fileName = createStoreFileName(end);
-    File f = new File(getFullPath(path, fileName));
 
+    // 랜덤 파일명을 정한다.
+    String randomName = createStoreFileName(end);
+    // 위에서 정한 랜덤 파일명으로 새로운 파일을 생성한다.
+    File f = new File(getFullPath(randomName));
     file.transferTo(f);
-    FileItem fileItem = new DiskFileItem(fileName, Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
-    InputStream input = new FileInputStream(f);
-    OutputStream os = fileItem.getOutputStream();
-    IOUtils.copy(input, os);
-    MultipartFile mFile = new CommonsMultipartFile(fileItem);
-    return mFile;
-  }
 
-  public MultipartFile storeTextFile(SubmissionDto submissionDto, String problemFolder) throws IOException {
-    MultipartFile file = submissionDto.getFormFile();
-    String path = problemFolder;
-    String end = "txt";
-    String fileName = file.getName()+end;
-    System.out.println(fileName);
-    File f = new File(getFullPath(path, fileName));
-    file.transferTo(f);
-    FileItem fileItem = new DiskFileItem(fileName, Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
+    //MultipartFile 파일로 바꿔주는 과정
+    FileItem fileItem = new DiskFileItem(randomName, Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
     InputStream input = new FileInputStream(f);
     OutputStream os = fileItem.getOutputStream();
     IOUtils.copy(input, os);

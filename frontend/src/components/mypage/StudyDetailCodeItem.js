@@ -1,12 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaPython, FaJava } from 'react-icons/fa'
 import Modal from 'components/common/Modal'
 import IconButton from 'components/common/IconButton'
 import { useMemo } from 'react'
-
 /*
 코드 제출 내역 정보를 받아 "유저아이디, 언어, 메모리 시간, 런타임, 결과"를 테이블 형식으로 출력
 클릭 시에는 모달창으로 코드를 보여주는 컴포넌트
@@ -30,36 +29,30 @@ export default function StudyDetailCodeItem({
   fileUrl,
 }) {
   const [showModal, setShowModal] = useState(false)
+  const [code, setCode] = useState('')
 
-  // 이 부분을 완성해야함!
-  // 1. url로 요청을 보내서 file 을 가져옴 (txt 파일을 저장해야함.)
-  // 2. .java파일을 .txt파일로 변환
-  // 3. .txt 파일에서 string을 추출
-  const code = useMemo(async () => {
-    const reader = new FileReader() // 파일을 읽을 수 있는 객체 형성 (blob형태만 읽을 수 있음 - 아마 binary 데이터를 말할 것임)
-    console.log(fileUrl)
-    const response = await fetch({
-      url: fileUrl,
-      mode: 'no-cors',
-    })
-    console.log(response)
-    const blob = await response.blob()
-    console.log(blob)
-
-    reader.onload = function () {
-      // 이벤트 리스너처럼 리더가 읽으면 콘솔로그가 실행
-      // text 파일에서 string으로 추출하는 것
-      console.log(reader.result)
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(fileUrl)
+        .then((res) => {
+          console.log('res', res)
+          return res.text()
+        })
+        .then((code) => {
+          console.log('code', code)
+          setCode(code)
+        })
     }
-    reader.readAsText(blob, /* optional */ 'euc-kr') // blob형태의 파일을 넣어주겠따.
-  }, [fileUrl])
+    fetchData()
+  }, [])
 
   return (
     <>
       {showModal ? (
         <Modal close={() => setShowModal(false)} content={code} />
       ) : null}
-      {/* {showModal ? <div></div> : null} */}
+      {/* {showModal ? <div>{code}</div> : null} */}
+
       <>
         <FlexBox
           onClick={() => {

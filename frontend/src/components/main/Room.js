@@ -45,7 +45,7 @@ export default function Room({
 
   // 선택된 언어 유형을 아이콘으로 표현
   // Ex. [1, 2] => [<FaPython/>, <FaJava />]
-  let languages = []
+  const languages = []
   languageIds.forEach((pk) => {
     languages.push(
       <IconButton
@@ -59,6 +59,7 @@ export default function Room({
 
   // 방을 입장하는 함수
   const enterRoom = () => {
+    if (isSolving) return
     // 비밀방일 경우 모달창 띄우기
     if (isPrivate) {
       setShowModal(true)

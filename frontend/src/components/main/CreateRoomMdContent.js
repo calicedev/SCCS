@@ -8,6 +8,7 @@ import { algorithmPk, languagePk } from 'constants/pk'
 import styled from 'styled-components'
 import Button from 'components/common/Button'
 import checkReg from 'libs/regExp'
+import useUser from 'hooks/useUser'
 
 /*
 방 생성하는 모달의 실제 컨텐츠 컴포넌트
@@ -66,7 +67,9 @@ export default function CreateRoomMdContent() {
           }
         })
         // AlgoIds에 모든 항목을 셋팅
+
         setAlgoIds([1, 2, 3, 4, 5, 6, 7])
+
         return
       }
       // 랜덤 항목을 해제한 경우
@@ -110,9 +113,16 @@ export default function CreateRoomMdContent() {
       setMessage(newMsg)
       return
     }
+
+    // console.log('확인로직', algoIds.length)
     // 알고리즘 선택 조건 체크
-    if (algoIds.length > 2 || algoIds.length < 1) {
+    if (
+      (algoIds.length !== 7) &
+      (algoIds.length !== 1) &
+      (algoIds.length !== 2)
+    ) {
       const newMsg = { ...message }
+      console.log(algoIds.length)
       newMsg.text = '알고리즘은 하나 이상 두개 이하 선택가능합니다.'
       newMsg.isValid = false
       setMessage(newMsg)
