@@ -83,7 +83,6 @@ export default function Profile() {
           value={user.email}
           disabled={true}
         ></ProfileInput>
-        <h4>등급 : {grade}</h4>
       </InputContainer>
 
       <ButtonWrapper>
