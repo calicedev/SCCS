@@ -21,11 +21,35 @@ export default function TestResult({
   return (
     <Container>
       <ResultsWrapper>
-        {results.map((result, index) => (
-          <p key={result.problemNo}>
-            {index + 1}번. {result.result} {result.memory}kb {result.runtime}ms
-          </p>
-        ))}
+        {results && (
+          <>
+            {results.resultList.map((problem, index) => (
+              <p
+                className={problem.result ? 'pass' : 'error'}
+                key={`${index}-problem-result`}
+              >
+                {index + 1}번{') '} {problem.message} : {problem.memory}kb
+                {' / '}
+                {problem.runtime}ms
+              </p>
+            ))}
+            {results.isAnswer ? (
+              <p className="pass">
+                <br />
+                통과했습니다~~~!!!
+                <br /> 런타임 평균: {results.avgRuntime}ms 메모리 평균:{' '}
+                {results.avgMemory}kb
+              </p>
+            ) : (
+              <p className="error">
+                <br />
+                틀렸습니다ㅜㅜ
+                <br /> 런타임 평균: {results.avgRuntime}ms 메모리 평균:{' '}
+                {results.avgMemory}kb
+              </p>
+            )}
+          </>
+        )}
       </ResultsWrapper>
       <TestButtons
         isFinished={isFinished}
@@ -48,6 +72,8 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.studyBgColor};
 `
 const ResultsWrapper = styled.div`
+  border-radius: 0.5rem;
+  padding: 0.5rem;
   margin: 1rem;
   background-color: ${({ theme }) => theme.deepStudyBgColor};
 `
