@@ -410,7 +410,7 @@ public class StudyroomServiceImpl implements StudyroomService {
             ProblemDto p = studyroomMapper.getProblemInfo(problemId);
             String url = awsS3service.getTemporaryUrl("problem/" + p.getProblemFolder() + ".jpg");
             problem.put("problemImgUrl", url);
-            
+
             // 제출 코드 리스트에 담기
             if(s.size()!=0) {
                 problem.put("codeList", s);
