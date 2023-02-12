@@ -394,11 +394,13 @@ public class StudyroomServiceImpl implements StudyroomService {
 
     public List startStudy(StudyroomDto studyroomDto) {
         List resultMap = new ArrayList();
-        Map<String, Object> problem = new HashMap<>();
+
         for (int i = 0; i < 2; i++) {
+            Map<String, Object> problem = new HashMap<>();
             int problemId = studyroomDto.getProblemIds().get(i);
             studyroomDto.setProblemId(problemId);
             List<SubmissionDto> s = studyroomMapper.getStudyInfo(studyroomDto);
+
             if(s.size()!=0) {
                 problem.put("problemId", s.get(0).getProblemId());
                 problem.put("codeList", s);
