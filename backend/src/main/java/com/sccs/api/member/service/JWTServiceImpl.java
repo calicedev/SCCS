@@ -2,6 +2,7 @@ package com.sccs.api.member.service;
 
 import com.sccs.exception.InterceptorException;
 import com.sccs.exception.InterceptorExceptionEnum;
+import com.sccs.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -24,7 +25,6 @@ public class JWTServiceImpl implements JWTService {
 
   private static final Logger logger = LoggerFactory.getLogger(JWTServiceImpl.class);
 
-  //private static final String SECRET_KEY = "Vecx3vjPvfdOdvvnQWfd30vrfo0zEVSD39vZed0k4jfdosvdf33dVRFidczjjfdijvodivjsognsjvbdabEFSDvidjvVDseoivjosfj";
   @Value("${jwt.secret}")
   private String SECRET_KEY;
   private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -38,8 +38,6 @@ public class JWTServiceImpl implements JWTService {
     byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
     Key signinKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
 
-    //logger.debug("{} 토큰 만료 시간 !!!!!!!! : {}", subject, new SimpleDateFormat(
-    //    "yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis() + expTime));
     logger.debug("토큰 만료 시간 (초) : {}", System.currentTimeMillis() + expTime);
     return Jwts.builder()
         .setSubject(subject) // access or refresh
@@ -64,10 +62,12 @@ public class JWTServiceImpl implements JWTService {
     } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
       logger.debug("토큰 만료");
       //throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "token expired");
-      throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+      //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+      throw new UnAuthorizedException();
     } catch (Exception e) {
       logger.debug("토큰 검증 에러");
-      throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+      throw new UnAuthorizedException();
+      //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
     }
   }
 

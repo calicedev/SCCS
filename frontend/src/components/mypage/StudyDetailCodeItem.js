@@ -6,8 +6,6 @@ import { FaPython, FaJava } from 'react-icons/fa'
 import Modal from 'components/common/Modal'
 import IconButton from 'components/common/IconButton'
 import { useMemo } from 'react'
-
-import requests from 'requests'
 /*
 코드 제출 내역 정보를 받아 "유저아이디, 언어, 메모리 시간, 런타임, 결과"를 테이블 형식으로 출력
 클릭 시에는 모달창으로 코드를 보여주는 컴포넌트
@@ -31,9 +29,6 @@ export default function StudyDetailCodeItem({
   fileUrl,
 }) {
   const [showModal, setShowModal] = useState(false)
-
-  // 민혁 추가 (2.11 - 이거 안 되는 코드임.. 넘므 어렵다.)
-
   const [code, setCode] = useState('')
 
   useEffect(() => {
