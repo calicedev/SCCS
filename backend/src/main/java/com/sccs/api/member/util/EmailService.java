@@ -32,7 +32,7 @@ public class EmailService {
       String raw = RandomStringUtils.randomAlphanumeric(8); // 8자리 랜덤 비밀번호 생성
 
       String title = "[SCCS] - 임시 비밀번호 발급";
-      String contents = id + "님의 임시 비밀번호는 : '" + raw + "'입니다";
+      String contents = "안녕하세요 SCCS 입니다. :)"  + "\n" +id + "님의 임시 비밀번호는 : '" + raw + "'입니다";
 
       memberDto.setPassword(raw);
       memberService.modifyPassword(memberDto);
