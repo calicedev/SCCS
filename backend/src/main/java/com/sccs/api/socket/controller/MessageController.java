@@ -55,6 +55,11 @@ public class MessageController {
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 
+    else if(socketDto.getStatus().equals("problem")){
+      socketDto.setMessage(socketDto.getMessage());
+      template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+    }
+
     else if(socketDto.getStatus().equals("exit")){
       MemberDto memberDto = studyroomService.getHostnicknameByStudyroomInfo(socketDto.getStudyroomId());
       //방장이 방을 나가면
