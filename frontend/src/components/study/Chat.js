@@ -26,6 +26,11 @@ export default function WaitingPage({
       <StyledDiv>
         <StyledInput
           value={message}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+              sendChat()
+            }
+          }}
           onChange={onChangeMsg}
           placeholder="메시지를 입력하세요"
         />
@@ -56,11 +61,11 @@ const Header = styled.div`
 `
 
 const ChatContainer = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column-reverse;
   overflow-y: auto;
   width: 100%;
+  max-height: 55vh;
   padding: 1rem;
 `
 const StyledDiv = styled.div`

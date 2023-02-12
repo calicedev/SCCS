@@ -157,7 +157,7 @@ const FlexBox = styled.div`
 `
 
 const FlexBox2 = styled.div`
-  flex: 1;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   gap: 10px;
