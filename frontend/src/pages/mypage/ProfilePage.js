@@ -4,13 +4,14 @@ import ProfileInput from 'components/mypage/ProfileInput'
 import Button from 'components/common/Button'
 import ProfileImg from 'components/common/ProfileImg'
 import { useNavigate } from 'react-router-dom'
-import useUser from 'hooks/useUser'
+// import useUser from 'hooks/useUser'
+import { useSelector } from 'react-redux'
 // import { useSelector } from 'react-redux'
 
 export default function Profile() {
   // 리덕스 -> 사용자 정보 읽어오기
-  const user = useUser()
-
+  // const user = useUser()
+  const user = useSelector((state) => state.user)
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
 

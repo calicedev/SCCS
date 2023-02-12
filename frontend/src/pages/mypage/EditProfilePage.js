@@ -6,17 +6,19 @@ import OutlineButton from 'components/common/OutlineButton'
 import ProfileImgInput from 'components/mypage/ProfileImgInput'
 import { useNavigate } from 'react-router-dom'
 import { useProfileInput } from 'hooks/useProfileInput'
-import useUser from 'hooks/useUser'
+// import useUser from 'hooks/useUser'
 import getUserInfo from 'libs/getUserInfo'
 import axios from 'libs/axios'
 import api from 'constants/api'
+import { useSelector } from 'react-redux'
 
 export default function ProfileEdit() {
   // 리액트 훅관련 함수 정의
   const navigate = useNavigate()
+  const user = useSelector((state) => state.user)
 
   // 리덕스 -> 사용자 정보 읽어오기
-  const user = useUser()
+  // const user = useUser()
 
   // 커스텀 훅 useProfileInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [nickname, setNickname, nicknameMsg, nicknameIsChanged] =

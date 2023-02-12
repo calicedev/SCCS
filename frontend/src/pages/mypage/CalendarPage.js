@@ -7,15 +7,17 @@ import { format } from 'date-fns'
 import StudyList from 'components/mypage/StudyList'
 import axios from 'libs/axios'
 import api from 'constants/api'
-import useUser from 'hooks/useUser'
-import getUser from 'libs/getUser'
+// import useUser from 'hooks/useUser'
+// import getUser from 'libs/getUser'
+import { useSelector } from 'react-redux'
 
 export default function StudyCalendar() {
   // 리덕스 -> 유저 id 읽기
   // const id = useUser().id
-  const user = getUser()
-  const id = user.id
-  console.log('calendar', user)
+  // const user = getUser()
+  // const id = user.id
+  // console.log('calendar', user)
+  const id = useSelector((state)=> state.user.id) 
 
   // useState
   const [currentDate, setCurrentDate] = useState(new Date())
