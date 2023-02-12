@@ -6,6 +6,8 @@ import {
   BsFillCameraVideoOffFill,
   BsMicFill,
   BsMicMuteFill,
+  BsSunFill,
+  BsMoonFill,
 } from 'react-icons/bs'
 import IconButton from 'components/common/IconButton'
 import Button from 'components/common/Button'
@@ -26,6 +28,8 @@ export default function ToolBar({
   isCameraOn,
   isMicOn,
   exit,
+  theme,
+  toggleTheme,
 }) {
   return (
     <Container>
@@ -45,6 +49,11 @@ export default function ToolBar({
           icon={isMicOn ? <BsMicFill /> : <BsMicMuteFill />}
           type="white"
           onClick={toggleMic}
+        />
+        <IconButton
+          icon={theme === 'light' ? <BsSunFill /> : <BsMoonFill />}
+          type="white"
+          onClick={toggleTheme}
         />
       </Wrapper>
       <Button size="small" type="danger" value="Exit" onClick={exit} />

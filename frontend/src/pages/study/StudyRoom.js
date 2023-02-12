@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate, Outlet } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import styled from 'styled-components'
@@ -8,6 +8,8 @@ import sockjs from 'sockjs-client'
 import stompjs from 'stompjs'
 import Loading from 'components/common/Loading'
 import ToolBar from 'components/study/ToolBar'
+
+import { toggleTheme } from 'redux/themeSlice'
 
 import { OpenVidu, VideoInsertMode } from 'openvidu-browser'
 import axiosOriginal from 'axios'
@@ -22,13 +24,19 @@ const APPLICATION_SERVER_URL = 'https://i8a301.p.ssafy.io/'
 
 export default function StudyRoom() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const location = useLocation()
+
+  console.log(location)
+
+  const theme = useSelector((state) => state.theme)
 
   // 기본정보
   const user = useSelector((state) => state.user)
   const { studyroomId } = useParams()
   const [roomInfo, setRoomInfo] = useState(null)
   const [members, setMembers] = useState([])
-  const [problems, setProblems] = useState([])
+  const [problems, setProblems] = useState(null)
 
   // 웹소켓 useState
   const [stomp, setStomp] = useState(null)
@@ -465,55 +473,63 @@ export default function StudyRoom() {
   }
   /////////////////////////////////////////////////////////////////
 
+  console.log(location.pathname.slice(-4))
   return (
     <Container>
       {connected ? (
-        <Outlet
-          context={{
-            user,
-            studyroomId,
-            roomInfo,
-            stomp,
-            connected,
-            members,
-            setMembers,
-            problems,
-            setProblems,
-            message,
-            setMessage,
-            chatList,
-            sendChat,
-            disconnect,
-          }}
-        />
+        <>
+          <Outlet
+            context={{
+              user,
+              studyroomId,
+              roomInfo,
+              stomp,
+              connected,
+              members,
+              setMembers,
+              problems,
+              setProblems,
+              message,
+              setMessage,
+              chatList,
+              sendChat,
+              disconnect,
+            }}
+          />
+
+          {location.pathname.slice(-4) !== 'test' && (
+            <VideoContainer>
+              {publisher && (
+                <div
+                  className="stream-container"
+                  onClick={() => handleMainVideoStream(publisher)}
+                >
+                  <VideoComponent streamManager={publisher} />
+                </div>
+              )}
+              {subscribers.map((sub, i) => (
+                <div
+                  key={`${sub.id}-${i}`}
+                  className="stream-container"
+                  onClick={() => handleMainVideoStream(sub)}
+                >
+                  <VideoComponent streamManager={sub} />
+                </div>
+              ))}
+            </VideoContainer>
+          )}
+        </>
       ) : (
         <Loading height="30rem" />
       )}
-      <VideoContainer>
-        {publisher && (
-          <div
-            className="stream-container"
-            onClick={() => handleMainVideoStream(publisher)}
-          >
-            <VideoComponent streamManager={publisher} />
-          </div>
-        )}
-        {subscribers.map((sub, i) => (
-          <div
-            key={`${sub.id}-${i}`}
-            className="stream-container"
-            onClick={() => handleMainVideoStream(sub)}
-          >
-            <VideoComponent streamManager={sub} />
-          </div>
-        ))}
-      </VideoContainer>
       <ToolBar
         toggleCamera={toggleCamera}
         toggleMic={toggleMic}
         isCameraOn={isCameraOn}
         isMicOn={isMicOn}
         exit={exit}
+        theme={theme}
+        toggleTheme={() => dispatch(toggleTheme())}
       />
     </Container>
   )
