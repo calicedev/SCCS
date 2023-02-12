@@ -355,7 +355,7 @@ public class StudyroomServiceImpl implements StudyroomService {
 
     /**
      * 코딩 테스트 테스트 코드 제출
-     */
+     **/
     public Map<String, Object> submitTest(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
         //파일을 원하는 경로에 실제로 저장한다.
