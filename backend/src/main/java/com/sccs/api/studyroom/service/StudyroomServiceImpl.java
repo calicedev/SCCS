@@ -418,7 +418,7 @@ public class StudyroomServiceImpl implements StudyroomService {
 
     /**
      * 코딩 테스트 방장에 의해 끝내기
-     **/
+     */
     @Override
     public String endStudyroomByOwner(int id) {
         try {
