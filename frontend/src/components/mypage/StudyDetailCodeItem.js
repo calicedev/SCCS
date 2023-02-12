@@ -51,7 +51,6 @@ export default function StudyDetailCodeItem({
       {showModal ? (
         <Modal close={() => setShowModal(false)} content={code} />
       ) : null}
-      {/* {showModal ? <div>{code}</div> : null} */}
 
       <>
         <FlexBox
