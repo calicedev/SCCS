@@ -8,10 +8,14 @@ import StudyList from 'components/mypage/StudyList'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import useUser from 'hooks/useUser'
+import getUser from 'libs/getUser'
 
 export default function StudyCalendar() {
   // 리덕스 -> 유저 id 읽기
-  const id = useUser().id
+  // const id = useUser().id
+  const user = getUser()
+  const id = user.id
+  console.log('calendar', user)
 
   // useState
   const [currentDate, setCurrentDate] = useState(new Date())

@@ -37,10 +37,6 @@ const color = {
   grayFontColor: '#666666',
   passFontColor: '#1C6FBC',
   errorFontColor: '#EF0A0A',
-
-  // 스터디 방 관련 색상
-  codingTestBackgroundColor : '#98ABBE',
-  codingTestButtonColor: '#263747'
 }
 
 export const light = {
@@ -48,6 +44,12 @@ export const light = {
   baseBgColor: '#FFFFFF', // 최하단 화면 배경색
   bgColor: '#FFFFFF', // 컨텐츠 화면 배경색
   bluishBgColor: '#F6FAFF', // 사이드바 화면 배경색
+
+  studyBaseBgColor: '#98ABBE',
+  studyBgColor: '#F9FCFF',
+  deepStudyBgColor: '#D8EBFF',
+  chatBgColor: '#BFD1EA',
+  chatTabColor: '#D8EBFF',
 
   fontColor: '#111111', // 폰트 색상
   ...color,
@@ -58,6 +60,12 @@ export const dark = {
   baseBgColor: '#34424E', // 최하단 화면 배경색
   bgColor: '#46535F', // 컨텐츠 화면 배경색
   bluishBgColor: '#5F738C', // 사이드바 화면 배경색
+
+  studyBaseBgColor: '#98ABBE',
+  studyBgColor: '#263747',
+  deepStudyBgColor: '#0F2132',
+  chatBgColor: '#BFD1EA',
+  chatTabColor: '#264064',
 
   fontColor: '#FFFFFF', // 폰트 색상
   ...color,

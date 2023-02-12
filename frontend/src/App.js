@@ -27,12 +27,12 @@ import { light, dark } from './styles/theme'
 import { useSelector } from 'react-redux'
 
 // import VideoRoomComponent from './components/VideoRoomComponent'
+import StudyRoom from './pages/study/StudyRoom'
 import WaitingPage from './pages/study/WaitingPage'
-import WebSocketRoom from './pages/study/WebSocketRoom'
-import axios from 'axios'
+import TestPage from './pages/study/TestPage'
+import StudyPage from './pages/study/StudyPage'
 
 function App() {
-  axios.defaults.withCredentials = true
   const theme = useSelector((state) => state.theme)
 
   return (
@@ -60,15 +60,14 @@ function App() {
           </Route>
         </Route>
         <Route path="/problem/:id" element={<CodeReview />}></Route>
+        <Route path="/room/:studyroomId" element={<StudyRoom />}>
+          <Route path="waiting" element={<WaitingPage />}></Route>
+          <Route path="test" element={<TestPage />}></Route>
+          <Route path="study" element={<StudyPage />}></Route>
+        </Route>
         <Route path="/ov" element={<WaitingPage />}></Route>
         <Route path="/study" element={<Study />}></Route>
         <Route path="/codingtest" element={<CodingTest />}></Route>
-
-        {/* 대기방 2.4 민혁 생성 */}
-        <Route
-          path="/room/:studyroomId/waiting"
-          element={<WebSocketRoom />}
-        ></Route>
       </Routes>
     </ThemeProvider>
   )
