@@ -119,18 +119,13 @@ public class MypageController {
     return targets;
   }
 
-  @GetMapping("/problem/submission/{submissionId}")
-  public HashMap<String, Object> getProblemIdAndUrl(@PathVariable int problemId) {
-    HashMap<String, Object> targets = mypageService.getProblemIdAndUrl(problemId);
-    String sUrl = (String) targets.get("sURL");
-    String sRealPath = "submission/" + sUrl;
-    targets.put("sURL", awsS3service.getTemporaryUrl(sRealPath));
-
-    String pUrl = (String) targets.get("pURL");
+  @GetMapping("/problem/solve/{problemId}")
+  public String getProblemUrlOnly(@PathVariable int problemId) {
+    String pUrl = mypageService.getProblemUrlOnly(problemId);
     String pRealPath = "problem/" + pUrl + ".jpg";
-    targets.put("pURL", awsS3service.getTemporaryUrl(pRealPath));
+    pUrl = awsS3service.getTemporaryUrl(pRealPath);
 
-    return targets;
+    return pUrl;
   }
 
 
