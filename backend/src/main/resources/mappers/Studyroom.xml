@@ -220,7 +220,7 @@
     s.studyroom_id as studyroom_id, s.file_name as file_name FROM (select * from submission
     where (member_id, submit_datetime) in (
     select member_id, max(submit_datetime) as submit_datetime
-    from submission where studyroom_id=#{id} and problem_id=#{problemId}  and result =1 group by member_id
+    from submission where studyroom_id=#{id} and problem_id=#{problemId} group by member_id
     ) order by submit_datetime desc)s
     LEFT JOIN member m ON m.id=s.member_id;
   </select>
