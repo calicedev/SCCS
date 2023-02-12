@@ -125,16 +125,9 @@
     p.id=#{problemId} and s.problem_id=p.id;
   </select>
 
-  <resultMap id="submissionFromProblem" type="hashmap">
-    <result column="problemId" property="pId"></result>
-    <result column="submissionUrl" property="sURL"></result>
-    <result column="problemUrl" property="pURL"></result>
-  </resultMap>
-  <select id="getProblemIdAndUrl" parameterType="hashmap"
-    resultMap="submissionFromProblem">
-    SELECT s.problem_id as problemId, s.file_name as submissionUrl, p.problem_folder as problemUrl
-    FROM submission s, problem p WHERE
-    s.id=#{submissionId} and problem_id = p.id;
+  <select id="getProblemUrlOnly" resultType="String">
+    SELECT problem_folder from problem
+    WHERE id = #{problemId};
   </select>
 
 

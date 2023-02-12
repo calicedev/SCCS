@@ -15,6 +15,6 @@ public interface MypageMapper {
 
   public HashMap<String, Object> getProblemUrl(String memberId, int problemId);
 
-  public HashMap<String, Object> getProblemIdAndUrl(int problemId);
+  public String getProblemUrlOnly(int problemId);
 
 }
