@@ -397,22 +397,33 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         for (int i = 0; i < 2; i++) {
             Map<String, Object> problem = new HashMap<>();
+
+            // 스터디 정보 가져오기
             int problemId = studyroomDto.getProblemIds().get(i);
             studyroomDto.setProblemId(problemId);
             List<SubmissionDto> s = studyroomMapper.getStudyInfo(studyroomDto);
 
+            // 문제 아이디 넣어주기
+            problem.put("problemId", problemId);
+
+            // AWS에서 문제 사진 가져오기
+            ProblemDto p = studyroomMapper.getProblemInfo(problemId);
+            String url = awsS3service.getTemporaryUrl("problem/" + p.getProblemFolder() + ".jpg");
+            problem.put("problemImgUrl", url);
+            
+            // 제출 코드 리스트에 담기
             if(s.size()!=0) {
-                problem.put("problemId", s.get(0).getProblemId());
                 problem.put("codeList", s);
                 //문제 이미지 담기
-                ProblemDto p = studyroomMapper.getProblemInfo(problemId);
-                String url = awsS3service.getTemporaryUrl("problem/" + p.getProblemFolder() + ".jpg");
-                problem.put("problemImgUrl", url);
                 for (int j = 0; j < s.size(); j++) {
                     s.get(j).setFileUrl(awsS3service.getTemporaryUrl("submission/" + s.get(j).getFileName()));
                 }
-                resultMap.add(problem);
             }
+            else{
+                List<String> emptyList = Collections.emptyList();
+                problem.put("codeList",emptyList);
+            }
+            resultMap.add(problem);
         }
         return resultMap;
     }
