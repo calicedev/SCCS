@@ -392,18 +392,25 @@ public class StudyroomServiceImpl implements StudyroomService {
     }
 
 
-    public Map<String, Object> startStudy(StudyroomDto studyroomDto) {
-        Map<String, Object> resultMap = new HashMap<>();
+    public List startStudy(StudyroomDto studyroomDto) {
+        List resultMap = new ArrayList();
+        Map<String, Object> problem = new HashMap<>();
         for (int i = 0; i < 2; i++) {
             int problemId = studyroomDto.getProblemIds().get(i);
             studyroomDto.setProblemId(problemId);
             List<SubmissionDto> s = studyroomMapper.getStudyInfo(studyroomDto);
-            resultMap.put("problemResult" + problemId, s);
-
-            //문제 이미지 담기
-            ProblemDto p = studyroomMapper.getProblemInfo(problemId);
-            String url = awsS3service.getTemporaryUrl("problem/" + p.getProblemFolder() + ".jpg");
-            resultMap.put("problem" + problemId, url);
+            if(s.size()!=0) {
+                problem.put("problemId", s.get(0).getProblemId());
+                problem.put("codeList", s);
+                //문제 이미지 담기
+                ProblemDto p = studyroomMapper.getProblemInfo(problemId);
+                String url = awsS3service.getTemporaryUrl("problem/" + p.getProblemFolder() + ".jpg");
+                problem.put("problemImgUrl", url);
+                for (int j = 0; j < s.size(); j++) {
+                    s.get(j).setFileUrl(awsS3service.getTemporaryUrl("submission/" + s.get(j).getFileName()));
+                }
+                resultMap.add(problem);
+            }
         }
         return resultMap;
     }
@@ -451,15 +458,6 @@ public class StudyroomServiceImpl implements StudyroomService {
     public boolean isExistStudyroom(int id) {
         boolean isExist = studyroomMapper.isExistStudyroom(id);
         return isExist;
-    }
-
-    @Override
-    public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto) {
-        List<SubmissionDto> s = studyroomMapper.getStudyInfo(studyroomDto);
-        for (int i = 0; i < s.size(); i++) {
-            s.get(i).setFileUrl(awsS3service.getTemporaryUrl("submission/" + s.get(i).getFileName()));
-        }
-        return s;
     }
 
     public String getNicknameById(String id) {

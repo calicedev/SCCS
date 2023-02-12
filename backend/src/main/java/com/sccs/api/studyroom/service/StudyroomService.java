@@ -33,8 +33,6 @@ public interface StudyroomService {
 
   public String endStudyroomByOwner(int id);
 
-  public ProblemDto getProblemInfo(int problemId);
-
   public int getStudyroomPersonnel(int id);
 
   public int increaseStudyroomPersonnel(StudyroomDto studyroomDto);
@@ -43,10 +41,10 @@ public interface StudyroomService {
 
   public boolean isExistStudyroom(int id);
 
-  public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto);
+
   public String getNicknameById(String id);
 
   public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
 
-  public Map<String, Object> startStudy(StudyroomDto studyroomDto);
+  public List startStudy(StudyroomDto studyroomDto);
 }
