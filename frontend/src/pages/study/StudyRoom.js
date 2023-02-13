@@ -109,15 +109,6 @@ export default function StudyRoom() {
     setStomp(stomp)
     stomp.connect({}, () => {
       setConnected(true)
-      stomp.send(
-        '/pub/studyroom',
-        {},
-        JSON.stringify({
-          status: 'enter',
-          studyroomId: studyroomId,
-          nickname: user.nickname,
-        }),
-      )
       stomp.subscribe('/sub/studyroom/' + studyroomId, (chatDto) => {
         const content = JSON.parse(chatDto.body)
         if (content.status === 'enter') {
@@ -146,6 +137,15 @@ export default function StudyRoom() {
           return
         }
       })
+      stomp.send(
+        '/pub/studyroom',
+        {},
+        JSON.stringify({
+          status: 'enter',
+          studyroomId: studyroomId,
+          nickname: user.nickname,
+        }),
+      )
     })
   }
 

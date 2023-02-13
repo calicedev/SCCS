@@ -15,9 +15,10 @@ import { useSelector } from 'react-redux'
 export default function ProfileEdit() {
   // 리액트 훅관련 함수 정의
   const navigate = useNavigate()
+  const user = useSelector((state) => state.user)
 
   // 리덕스 -> 사용자 정보 읽어오기
-  const user = useSelector((state) => state.user)
+  // const user = useUser()
 
   // 커스텀 훅 useProfileInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [nickname, setNickname, nicknameMsg, nicknameIsChanged] =

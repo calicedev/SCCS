@@ -16,7 +16,8 @@ import RoomInfo from 'components/study/RoomInfo'
 import Loading from 'components/common/Loading'
 import ShareSection from 'components/study/ShareSection'
 import ScreenVideoComponent from 'components/study/ScreenVideoComponent'
-import { GiCondorEmblem } from 'react-icons/gi'
+import Modal from 'components/common/Modal'
+import Code from 'components/study/Code'
 
 export default function StudyPage() {
   const {
@@ -50,7 +51,11 @@ export default function StudyPage() {
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
   const [mainStreamManager, setMainStreamManager] = useState(undefined)
 
-  const [screenContent, setScreenContent] = useState(null)
+  // 민혁 추가 부분
+  const [showModal, setShowModal] = useState(false)
+  // 버튼 클릭 시에 해당 코드를 불러오는 fetch 요청
+  const [code, setCode] = useState('')
+  const [codeLanguageId, setCodeLanguageId] = useState(1)
 
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager === stream) return
@@ -216,46 +221,56 @@ export default function StudyPage() {
     return tempObject
   }, [members])
 
-  // 발표자 선택 시, 스크린 컨텐츠 형성
-  const getScreenContent = async () => {
-    const selectedCodeList = codeProblems[codeProblemIdx].codeList
-    let myCode = null // 내 코드 객체
-
-    console.log('selectedCodeList', selectedCodeList)
-    selectedCodeList.forEach((code) => {
-      if (code.memberId === user.id) {
-        myCode = code
+  // 제출한 코드 목록 (2.13 민혁 추가)
+  const codesObject = useMemo(() => {
+    if (!codeProblems) return {}
+    const tempObject = {}
+    codeProblems[codeProblemIdx].codeList.forEach((code) => {
+      if (code.result === true) {
+        tempObject[
+          code.memberNickname
+        ] = `${code.memberNickname} : ${code.runtime}` // pass 시에는0 runtime을 띄움
+      } else {
+        tempObject[code.memberNickname] = `${code.memberNickname} : fail` // fail 시에는 그냥 fail을 띄움
       }
     })
+    return tempObject
+  }, [codeProblems, codeProblemIdx])
 
-    console.log('myCode', myCode)
-
-    let screenContent = [] //내 코드 스트링 or Img Url
-    if (myCode) {
-      screenContent = await fetch(myCode.fileUrl)
-        .then((res) => {
-          console.log('res!!!!!!!', res)
-          console.log('res.text!!!!!!!', res.text())
-
-          return ['code', res.text()]
-          return res.text()
-        })
-        .then((res) => {
-          console.log('after then', res)
-        })
-        .catch((err) => {
-          console.log('code', err)
-        })
-    } else {
-      screenContent = ['img', codeProblems[codeProblemIdx].problemImgUrl]
-    }
-
-    console.log('screenContent', screenContent)
-    return screenContent
+  // 선택한 코드를 불러와서 화면에 띄워주기
+  const fetchData = async (nickname) => {
+    let idx = 0
+    codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
+      if (code.memberNickname === nickname) {
+        idx = index
+        setCodeLanguageId(code.languageId)
+      }
+    })
+    fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
+      .then((res) => {
+        console.log('res', res)
+        return res.text()
+      })
+      .then((code) => {
+        console.log('code', code)
+        setCode(code)
+      })
   }
 
   return (
     <>
+      {showModal && (
+        <Modal
+          close={() => setShowModal(false)}
+          content={
+            <img
+              src={codeProblems[codeProblemIdx].problemImgUrl}
+              alt="문제 이미지"
+              width="500px"
+            ></img>
+          }
+        />
+      )}
       {codeProblems ? (
         <Container>
           <FlexBox>
@@ -267,20 +282,33 @@ export default function StudyPage() {
               hostNickname={roomInfo.hostNickname}
               personnel={roomInfo.personnel}
             />
-            {[...Array(codeProblems.length).keys()].map((idx) => {
-              return (
-                <Button
-                  key={`${idx}-code-problem`}
-                  size="medium"
-                  value={idx + 1}
-                  disabled={roomInfo.hostId === user.id ? false : true}
-                  type={codeProblemIdx === idx ? 'primary' : 'secondary'}
-                  onClick={() => changeProblem(idx)}
-                />
-              )
-            })}
+            <Button
+              size="medium"
+              value="문제 보기"
+              type="primary"
+              onClick={() => setShowModal(true)}
+            />
+            <ButtonDropdown
+              title="다른 사람 코드"
+              size="small"
+              type="primary"
+              options={codesObject}
+              onClick={(e) => fetchData(e.target.id.split('-')[0])}
+            />
             {roomInfo.hostId === user.id && (
               <>
+                {[...Array(codeProblems.length).keys()].map((idx) => {
+                  return (
+                    <Button
+                      key={`${idx}-code-problem`}
+                      size="medium"
+                      value={idx + 1}
+                      type={codeProblemIdx === idx ? 'primary' : 'secondary'}
+                      onClick={() => changeProblem(idx)}
+                    />
+                  )
+                })}
+
                 <ButtonDropdown
                   title="발표자 선택"
                   size="small"
@@ -301,13 +329,16 @@ export default function StudyPage() {
                 )
               )}
             </StyledDiv>
-            <Chat
-              chatList={chatList}
-              message={message}
-              onChangeMsg={(e) => setMessage(e.target.value)}
-              sendChat={sendChat}
-              user={user}
-            />
+            <ColumnBox>
+              <Code languageId={codeLanguageId} value={code} />
+              <Chat
+                chatList={chatList}
+                message={message}
+                onChangeMsg={(e) => setMessage(e.target.value)}
+                sendChat={sendChat}
+                user={user}
+              />
+            </ColumnBox>
           </FlexBox2>
         </Container>
       ) : (
@@ -336,6 +367,11 @@ const FlexBox2 = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 10px;
+`
+
+const ColumnBox = styled.div`
+display: flex
+flex-direction: column;
 `
 const StyledDiv = styled.div`
   flex: 1;

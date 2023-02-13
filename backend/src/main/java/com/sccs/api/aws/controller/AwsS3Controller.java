@@ -6,12 +6,14 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class AwsS3Controller {
 
   private final AwsS3Service awsS3service;
@@ -26,7 +28,7 @@ public class AwsS3Controller {
 
   @PostMapping("/uploadProblem")
   public FileDto uploadProblem(@RequestParam(value = "file") MultipartFile multipartFile)
-          throws IOException {
+      throws IOException {
     return awsS3service.upload(multipartFile, "problem");
   }
 
