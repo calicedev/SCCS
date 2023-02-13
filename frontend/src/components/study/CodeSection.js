@@ -31,14 +31,6 @@ export default function CodeSection({
     return tempObject
   }, [languageIds])
 
-  const highLightByLanguage = (code) => {
-    if (languageId === 1) {
-      hightlightWithLineNumbers(code, languages.py)
-      return
-    }
-    hightlightWithLineNumbers(code, languages.java)
-  }
-
   return (
     <Container>
       <FlexBox>
@@ -52,12 +44,6 @@ export default function CodeSection({
         />
       </FlexBox>
       <StyledEditor
-        // value = {
-        //   languageId === 1
-        //     ? `python`
-        //     : `java`
-        // }
-        
         value={value}
         onValueChange={(code) => setValue(code)}
         highlight={

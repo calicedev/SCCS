@@ -56,6 +56,8 @@ export default function StudyPage() {
   // 버튼 클릭 시에 해당 코드를 불러오는 fetch 요청
   const [code, setCode] = useState('')
   const [codeLanguageId, setCodeLanguageId] = useState(1)
+  const [myCode, setMyCode] = useState('')
+  const [myCodeLanguageId, setMyCodeLanguageId] = useState(1)
 
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager === stream) return
@@ -137,57 +139,55 @@ export default function StudyPage() {
   }, [])
 
   useEffect(() => {
+    // myCode, myLnaguageId 셋팅
+    fetchMyData(user.nickname)
     changeScreen()
   }, [presenter])
+
+  // 선택한 코드를 불러와서 화면에 띄워주기
+  const fetchMyData = async (nickname) => {
+    let idx = 0
+    codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
+      if (code.memberNickname === nickname) {
+        idx = index
+        setMyCodeLanguageId(code.languageId)
+      }
+    })
+    fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
+      .then((res) => {
+        console.log('res', res)
+        return res.text()
+      })
+      .then((code) => {
+        console.log('code', code)
+        setMyCode(code)
+      })
+  }
 
   // 오픈비두 스크린 쉐어
   const changeScreen = async () => {
     // 내가 발표자일 경우
     if (presenter === user.nickname) {
-      const canvas = document.querySelector('#code-with-drawing')
-      const rect = canvas.getBoundingClientRect()
+      const newPublisher = OV.initPublisher('html-element-id', {
+        videoSource: 'screen',
+        publishAudio: true,
+      })
+      newPublisher.once('accessAllowed', async (event) => {
+        newPublisher.stream
+          .getMediaStream()
+          .getVideoTracks()[0]
+          .addEventListener('ended', () => {
+            console.log('User pressed the "Stop sharing" button')
+          })
+        await session.unpublish(publisher)
+        await session.publish(newPublisher)
 
-      const x = rect.left
-      const y = rect.top
-      const width = rect.width
-      const height = rect.height
-      console.log(x, y, width, height)
+        setIsScreenShare(true)
+      })
 
-      const track = await navigator.mediaDevices
-        .getDisplayMedia({
-          displaySurface: 'screen',
-          captureArea: {
-            x: x,
-            y: y,
-            width: width,
-            height: height,
-          },
-        })
-        .then(function (stream) {
-          return stream.getVideoTracks()[0]
-          // do something with the stream
-        })
-      publisher.replaceTrack(track)
-      setIsScreenShare(true)
-      // const ctx = canvas.getContext('2d')
-      // const [type, content] = await getScreenContent()
-      // setScreenContent([type, content])
-      // ctx.fillStyle = 'white'
-      // ctx.fillRect(0, 0, canvas.width, canvas.height)
-      // if (type === 'code') {
-      //   ctx.lineWidth = '0.1px'
-      //   ctx.strokeStyle = 'black'
-      //   ctx.font = '1rem serif'
-      //   ctx.strokeText(content, 10, 10)
-      // } else {
-      //   const problemImage = new Image(canvas.width, canvas.height)
-      //   problemImage.src = content
-      //   console.log('content', problemImage)
-      //   ctx.drawImage(problemImage, 0, 0)
-      // }
-      // const track = canvas.captureStream(10).getVideoTracks()[0]
-      // publisher.replaceTrack(track)
-      // setIsScreenShare(true)
+      newPublisher.once('accessDenied', (event) => {
+        console.warn('ScreenShare: Access Denied')
+      })
     }
 
     // 내가 이전에 발표자였을 경우
@@ -313,32 +313,34 @@ export default function StudyPage() {
                   title="발표자 선택"
                   size="small"
                   type="primary"
-                  options={candidatesObject}
+                  options={codesObject}
                   onClick={(e) => changePresenter(e.target.id.split('-')[0])}
                 />
               </>
             )}
           </FlexBox>
           <FlexBox2>
-            <StyledDiv>
-              {presenter === user.nickname ? (
-                <ShareSection screenContent={screenContent} />
-              ) : (
-                mainStreamManager && (
-                  <ScreenVideoComponent streamManager={mainStreamManager} />
-                )
-              )}
-            </StyledDiv>
-            <ColumnBox>
-              <Code languageId={codeLanguageId} value={code} />
-              <Chat
-                chatList={chatList}
-                message={message}
-                onChangeMsg={(e) => setMessage(e.target.value)}
-                sendChat={sendChat}
-                user={user}
-              />
-            </ColumnBox>
+            {presenter === user.nickname ? (
+              <ShareSection code={myCode} languageId={myCodeLanguageId} />
+            ) : (
+              <>
+                {mainStreamManager && (
+                  <StyledDiv>
+                    <ScreenVideoComponent streamManager={mainStreamManager} />
+                  </StyledDiv>
+                )}
+                <ColumnBox>
+                  <Code languageId={codeLanguageId} value={code} />
+                  <Chat
+                    chatList={chatList}
+                    message={message}
+                    onChangeMsg={(e) => setMessage(e.target.value)}
+                    sendChat={sendChat}
+                    user={user}
+                  />
+                </ColumnBox>
+              </>
+            )}
           </FlexBox2>
         </Container>
       ) : (
