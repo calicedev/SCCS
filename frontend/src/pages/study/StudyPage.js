@@ -55,6 +55,7 @@ export default function StudyPage() {
   const [showModal, setShowModal] = useState(false)
   // 버튼 클릭 시에 해당 코드를 불러오는 fetch 요청
   const [code, setCode] = useState('')
+  const [codeLanguageId, setCodeLanguageId] = useState(1)
 
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager === stream) return
@@ -202,11 +203,15 @@ export default function StudyPage() {
   }, [codeProblems, codeProblemIdx])
 
   // 선택한 코드를 불러와서 화면에 띄워주기
-
-  const fetchData = async () => {
-    const response = await fetch(
-      codeProblems[codeProblemIdx].codeList[0].fileUrl,
-    )
+  const fetchData = async (nickname) => {
+    let idx = 0
+    codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
+      if (code.memberNickname === nickname) {
+        idx = index
+        setCodeLanguageId(code.languageId)
+      }
+    })
+    fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
       .then((res) => {
         console.log('res', res)
         return res.text()
@@ -253,7 +258,7 @@ export default function StudyPage() {
               size="small"
               type="primary"
               options={codesObject}
-              // onClick={(e) => changePresenter(e.target.id.split('-')[0])}
+              onClick={(e) => fetchData(e.target.id.split('-')[0])}
             />
             {roomInfo.hostId === user.id && (
               <>
@@ -290,9 +295,7 @@ export default function StudyPage() {
               )}
             </StyledDiv>
             <ColumnBox>
-              {/* <Code /> */}
-              {code ? <pre>{code}</pre> : null}
-              <h1 onClick={fetchData}>안뇽</h1>
+              <Code languageId={codeLanguageId} value={code} />
               <Chat
                 chatList={chatList}
                 message={message}
