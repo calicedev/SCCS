@@ -259,10 +259,10 @@ public class MemberController {
       logger.info("[modify]파일경로 : {}", fileDto.getUrl());
       memberDto.setProfileImage(fileDto.getUrl());
     }
-      if (nickname != null || !nickname.equals("")) {
+      if (nickname != null) {
           memberDto.setNickname(nickname);
       }
-      if (email != null || !email.equals("")) {
+      if (email != null) {
           memberDto.setEmail(email);
       }
     logger.debug("[modify]회원정보 수정 후 : {}", memberDto);
