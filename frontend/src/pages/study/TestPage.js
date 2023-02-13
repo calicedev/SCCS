@@ -49,6 +49,12 @@ export default function TestPage() {
 
   const [code, setCode] = useState('')
 
+  if (languageId === 1) {
+    [code, setCode] = useState('python')
+  } else {
+    [code, setCode] = useState('java')
+  }
+
   // 남은 시간 표시하기 위한 state
   const [timer, setTimer] = useState(2 * 60 * 60)
 
