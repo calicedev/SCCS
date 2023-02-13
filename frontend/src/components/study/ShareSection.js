@@ -189,6 +189,9 @@ const CanvasContainer = styled.div`
 const BackgroundCode = styled(Code)`
   position: absolute;
 
+  top: 0rem;
+  left: 0rem;
+
   width: 100%;
   height: 100%;
 
