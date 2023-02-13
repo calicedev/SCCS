@@ -39,12 +39,21 @@ export default function VideoComponent({ streamManager }) {
 }
 
 const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  overflow: hidden;
+
+  position: relative;
   width: 100%;
   height: 100%;
-  position: relative;
+  min-width: 700px;
+
+  border-radius: 0.5rem;
 `
 const Video = styled.video`
-  width: 100%;
+  width: auto;
   height: 100%;
   border-radius: 0.5rem;
 `

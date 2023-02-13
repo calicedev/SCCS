@@ -53,7 +53,7 @@ const typeObj = {
   },
 }
 
-export default function AuthInput({ type, value, onChange, message }) {
+export default function AuthInput({ type, value, onChange, onKeyUp, message }) {
   return (
     <Container>
       <Label htmlFor={type}>{typeObj[type].label}</Label>
@@ -65,6 +65,7 @@ export default function AuthInput({ type, value, onChange, message }) {
           placeholder={typeObj[type].placeholder}
           value={value}
           onChange={onChange}
+          onKeyUp={onKeyUp}
         />
       </FlexBox>
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
@@ -103,6 +104,7 @@ const FlexBox = styled.div`
   padding: 0.3rem 0rem;
 
   border-bottom: 1px solid gray;
+  margin-btoom: 0.2rem;
 `
 const Label = styled.label`
   margin-top: 1rem;

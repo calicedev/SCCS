@@ -44,6 +44,9 @@ export default function StudyRoom() {
   const [message, setMessage] = useState('')
   const [chatList, setChatList] = useState([])
 
+  // 비디오 on/off를 위해서 여기에 선언
+  const [presenter, setPresenter] = useState(null)
+
   // 스터디룸 정보 axios 요청
   useEffect(() => {
     const [url, method] = api('enterRoom', { studyroomId })
@@ -187,10 +190,12 @@ export default function StudyRoom() {
   }
 
   const checkHostExit = (nickname) => {
+    console.log(roomInfo)
     if (nickname === roomInfo.hostNickname) {
       exit()
     }
   }
+
   ////////////////////////////Open Vidu////////////////////////////
   const [session, setSession] = useState(undefined)
   const [publisher, setPublisher] = useState(undefined)
@@ -495,25 +500,26 @@ export default function StudyRoom() {
               publisher,
               setPublisher,
               subscribers,
-              // mainStreamManager,
-              // setMainStreamManager,
+              presenter,
+              setPresenter,
             }}
           />
 
-          {location.pathname.slice(-4) !== 'test' && (
-            <VideoContainer>
-              {publisher && (
-                <div className="stream-container">
-                  <VideoComponent streamManager={publisher} />
-                </div>
-              )}
-              {subscribers.map((sub, i) => (
-                <div key={`${sub.id}-${i}`} className="stream-container">
-                  <VideoComponent streamManager={sub} />
-                </div>
-              ))}
-            </VideoContainer>
-          )}
+          {location.pathname.slice(-4) !== 'test' &&
+            presenter !== user.nickname && (
+              <VideoContainer>
+                {publisher && (
+                  <div className="stream-container">
+                    <VideoComponent streamManager={publisher} />
+                  </div>
+                )}
+                {subscribers.map((sub, i) => (
+                  <div key={`${sub.id}-${i}`} className="stream-container">
+                    <VideoComponent streamManager={sub} />
+                  </div>
+                ))}
+              </VideoContainer>
+            )}
         </>
       ) : (
         <Loading height="30rem" />
@@ -536,9 +542,10 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
+  overflow: hidden;
+
   width: 100vw;
   height: 100vh;
-  max-height: 100vh;
   background-color: ${({ theme }) => theme.studyBaseBgColor};
 `
 const VideoContainer = styled.div`

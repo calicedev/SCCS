@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FaEraser } from 'react-icons/fa'
 import IconButton from 'components/common/IconButton'
@@ -19,6 +19,21 @@ export default function ShareSection({ code, languageId }) {
   const colorPickRefs = useRef([])
 
   const resetRef = useRef()
+
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  useEffect(() => {
+    const updateMaxHeight = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', updateMaxHeight)
+    updateMaxHeight()
+
+    return () => {
+      window.removeEventListener('resize', updateMaxHeight)
+    }
+  }, [])
 
   // 색 버튼
   const colors = [
@@ -66,7 +81,7 @@ export default function ShareSection({ code, languageId }) {
       if (colorPickRefs.current) {
         colorPickRefs.current.map((element) =>
           element.addEventListener('click', (e) => {
-            lineWidth = 4
+            lineWidth = 3
             if (e.target) {
               pickedColor = e.target.id
             }
@@ -140,9 +155,10 @@ export default function ShareSection({ code, languageId }) {
     }
 
     makeCanvas()
-  }, [])
+  }, [windowHeight])
+
   return (
-    <Container>
+    <Container windowHeight={windowHeight}>
       <CanvasContainer ref={cavasContainerRef}>
         <CanvasBoard ref={canvasBoardRef} id="code-with-drawing"></CanvasBoard>
         <ColorsPickBox>
@@ -175,15 +191,15 @@ export default function ShareSection({ code, languageId }) {
 const Container = styled.div`
   position: relative;
 
-  overflow: auto;
-  height: 100%;
   width: 100%;
+  height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
   border-radius: 0.5rem;
 `
 const CanvasContainer = styled.div`
   position: relative;
 
-  overflow: auto;
+  width: 100%;
+  height: 100%;
 
   border: 1px solid rgba(0, 0, 0, 0.1);
   z-index: 3;
@@ -208,21 +224,23 @@ const CanvasBoard = styled.canvas`
 `
 
 const ColorsPickBox = styled.div`
-  position: absolute;
-  right: 0rem;
-  bottom: 0.5rem;
   display: flex;
   align-items: right;
   justify-content: right;
+
+  position: absolute;
+  right: 0rem;
+  bottom: 0.5rem;
+
   gap: 10px;
 `
 const ColorPick = styled.div`
-  cursor: pointer;
+  z-index: 5;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  z-index: 5;
   background-color: ${(props) => props.color};
+  cursor: pointer;
 `
 
 const Reset = styled.div`

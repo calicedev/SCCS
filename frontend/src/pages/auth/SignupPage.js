@@ -102,6 +102,11 @@ export default function SignupForm() {
           type="confirmPassword"
           value={confirmPwd}
           onChange={(e) => setConfirmPwd(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              signup()
+            }
+          }}
           message={confirmPwdMsg}
         ></AuthInput>
       </Form>

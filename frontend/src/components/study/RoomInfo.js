@@ -44,8 +44,7 @@ export default function RoomInfo({
   return (
     <Container>
       <StyledDiv>
-        {languages}
-        {id}. {title}
+        {languages} {id}. {title}
       </StyledDiv>
       <StyledDiv>{algorithms}</StyledDiv>
       <StyledDiv>방장: {hostNickname}</StyledDiv>
@@ -62,9 +61,9 @@ const Container = styled.div`
 const StyledDiv = styled.div`
   display: flex;
   align-items: center;
-  padding: 0.2rem 0.7rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   background-color: ${({ theme }) => theme.studyBgColor};
 `
