@@ -66,7 +66,7 @@ export default function ProblemList() {
                   answerRate={problem.answerRate}
                   submitDatetime={problem.date}
                   difficulty={problem.difficulty}
-                  onClick={() => navigate(`/problem/${problem.id}`)}
+                  onClick={() => navigate(`/problem/${problem.problemID}`)}
                   key={i}
                 />
               )
