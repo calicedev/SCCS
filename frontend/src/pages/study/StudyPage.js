@@ -168,7 +168,7 @@ export default function StudyPage() {
   const changeScreen = async () => {
     // 내가 발표자일 경우
     if (presenter === user.nickname) {
-      const newPublisher = OV.initPublisher('html-element-id', {
+      const newPublisher = OV.current.initPublisher('html-element-id', {
         videoSource: 'screen',
         publishAudio: true,
       })

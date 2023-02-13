@@ -50,6 +50,7 @@ export default function ProfileEdit() {
       email: emailIsChanged ? email : null,
       mfile: typeof img === 'string' || img === null ? null : img[0],
     }
+    console.log(data)
     const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api('updateUserInfo')
     const config = { url, method, data, headers }
