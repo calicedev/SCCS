@@ -168,26 +168,31 @@ export default function StudyPage() {
   const changeScreen = async () => {
     // 내가 발표자일 경우
     if (presenter === user.nickname) {
-      const newPublisher = OV.current.initPublisher('html-element-id', {
-        videoSource: 'screen',
-        publishAudio: true,
-      })
-      newPublisher.once('accessAllowed', async (event) => {
-        newPublisher.stream
-          .getMediaStream()
-          .getVideoTracks()[0]
-          .addEventListener('ended', () => {
-            console.log('User pressed the "Stop sharing" button')
-          })
-        await session.unpublish(publisher)
-        await session.publish(newPublisher)
+      const canvas = document.querySelector('#code-with-drawing')
+      const rect = canvas.getBoundingClientRect()
 
-        setIsScreenShare(true)
-      })
+      const x = rect.left
+      const y = rect.top
+      const width = rect.width
+      const height = rect.height
+      console.log(x, y, width, height)
 
-      newPublisher.once('accessDenied', (event) => {
-        console.warn('ScreenShare: Access Denied')
-      })
+      const track = await navigator.mediaDevices
+        .getDisplayMedia({
+          displaySurface: 'window',
+          captureArea: {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+          },
+        })
+        .then(function (stream) {
+          return stream.getVideoTracks()[0]
+          // do something with the stream
+        })
+      publisher.replaceTrack(track)
+      setIsScreenShare(true)
     }
 
     // 내가 이전에 발표자였을 경우
