@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FaEraser } from 'react-icons/fa'
 import IconButton from 'components/common/IconButton'
@@ -20,6 +20,21 @@ export default function ShareSection({ code, languageId }) {
 
   const resetRef = useRef()
 
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  useEffect(() => {
+    const updateMaxHeight = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', updateMaxHeight)
+    updateMaxHeight()
+
+    return () => {
+      window.removeEventListener('resize', updateMaxHeight)
+    }
+  }, [])
+
   // 색 버튼
   const colors = [
     '#c0392b',
@@ -37,7 +52,7 @@ export default function ShareSection({ code, languageId }) {
     let context
     let painting = false
     let pickedColor = '#2c3e50'
-    let lineWidth = 4
+    let lineWidth = 3
 
     // 그림판 생성
     const makeCanvas = () => {
@@ -66,7 +81,7 @@ export default function ShareSection({ code, languageId }) {
       if (colorPickRefs.current) {
         colorPickRefs.current.map((element) =>
           element.addEventListener('click', (e) => {
-            lineWidth = 4
+            lineWidth = 3
             if (e.target) {
               pickedColor = e.target.id
             }
@@ -78,13 +93,6 @@ export default function ShareSection({ code, languageId }) {
       if (resetRef.current) {
         resetRef.current.onclick = () => {
           context.clearRect(
-            0,
-            0,
-            canvasBoardRef.current.width,
-            canvasBoardRef.current.height,
-          )
-          context.fillStyle = 'white'
-          context.fillRect(
             0,
             0,
             canvasBoardRef.current.width,
@@ -147,46 +155,56 @@ export default function ShareSection({ code, languageId }) {
     }
 
     makeCanvas()
-  }, [])
+  }, [windowHeight])
+
   return (
-    <CanvasContainer ref={cavasContainerRef}>
-      <CanvasBoard ref={canvasBoardRef} id="code-with-drawing"></CanvasBoard>
-      <ColorsPickBox>
-        {colors.map((color, i) => {
-          return (
-            <ColorPick
-              id={color}
-              key={i}
-              color={color}
-              ref={(element) => {
-                if (element) {
-                  colorPickRefs.current[i] = element
-                }
-              }}
-            />
-          )
-        })}
-        <Reset ref={resetRef}>
-          <IconButton icon={<FaEraser />} />
-        </Reset>
-      </ColorsPickBox>
-      <BackgroundCode languageId={languageId} value={code} />
-    </CanvasContainer>
+    <Container windowHeight={windowHeight}>
+      <CanvasContainer ref={cavasContainerRef}>
+        <CanvasBoard ref={canvasBoardRef} id="code-with-drawing"></CanvasBoard>
+        <ColorsPickBox>
+          {colors.map((color, i) => {
+            return (
+              <ColorPick
+                id={color}
+                key={i}
+                color={color}
+                ref={(element) => {
+                  if (element) {
+                    colorPickRefs.current[i] = element
+                  }
+                }}
+              />
+            )
+          })}
+          <Reset ref={resetRef}>
+            <IconButton icon={<FaEraser />} />
+          </Reset>
+        </ColorsPickBox>
+      </CanvasContainer>
+      <CodeWrapper>
+        <Code languageId={languageId} value={code} />
+      </CodeWrapper>
+    </Container>
   )
 }
 
+const Container = styled.div`
+  position: relative;
+
+  width: 100%;
+  height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
+  border-radius: 0.5rem;
+`
 const CanvasContainer = styled.div`
   position: relative;
 
-  overflow: auto;
+  width: 100%;
+  height: 100%;
 
   border: 1px solid rgba(0, 0, 0, 0.1);
-
-  height: 100%;
-  width: 100%;
-  border-radius: 0.5rem;
+  z-index: 3;
 `
-const BackgroundCode = styled(Code)`
+const CodeWrapper = styled.div`
   position: absolute;
 
   top: 0rem;
@@ -202,43 +220,32 @@ const CanvasBoard = styled.canvas`
   height: 100%;
   width: 100%;
 
-  z-index: 3;
+  z-index: 4;
 `
 
 const ColorsPickBox = styled.div`
-  position: absolute;
-  right: 0rem;
-  bottom: 0.5rem;
   display: flex;
   align-items: right;
   justify-content: right;
+
+  position: absolute;
+  right: 0rem;
+  bottom: 0.5rem;
+
   gap: 10px;
 `
 const ColorPick = styled.div`
-  cursor: pointer;
+  z-index: 5;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  z-index: 4;
   background-color: ${(props) => props.color};
+  cursor: pointer;
 `
 
-const Eraser = styled.div`
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: -5px;
-`
 const Reset = styled.div`
   cursor: pointer;
   width: 30px;
   height: 30px;
-`
-const Img = styled.img`
-  width: 100%;
-  height: 100%;
+  z-index: 5;
 `

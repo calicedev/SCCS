@@ -20,6 +20,18 @@ import RoomInfo from 'components/study/RoomInfo'
 import ResultSection from 'components/study/ResultSection'
 import Loading from 'components/common/Loading'
 
+const initialCode = {
+  1: `class Solution:
+  print("sccs")
+`,
+  2: `class Solution{
+  public static void main(String[] args) {
+    System.out.println("sccs");
+  }
+}
+`,
+}
+
 export default function TestPage() {
   const {
     user,
@@ -47,30 +59,7 @@ export default function TestPage() {
   const [finishedList, setFinishedList] = useState([])
   const [languageId, setLanguageId] = useState(roomInfo.languageIds[0])
 
-  // 파이썬, 자바 기본 코드 (2.14 민혁 추가)
-  const python = `class Solution:
-  print("sccs")
-`
-  const java = `class Solution{
-    public static void main(String[] args) {
-      System.out.println("sccs");
-    }
-  }
-  `
-
-  // 문제 번호나, 언어 변경 시 초기화 (2.14 민혁 추가)
-  useEffect(() => {
-    if (languageId === 1) {
-      setCode(python)
-      setTestResult(null)
-    } else {
-      setCode(java)
-      setTestResult(null)
-    }
-  }, [problemIdx, languageId])
-
-  const [code, setCode] = useState('')
-  //const [code, setCode] = useState('')
+  const [code, setCode] = useState(initialCode[languageId])
 
   // 남은 시간 표시하기 위한 state
   const [timer, setTimer] = useState(2 * 60 * 60)
@@ -92,6 +81,12 @@ export default function TestPage() {
       })
       .catch(() => {})
   }, [])
+
+  // 문제 번호나, 언어 변경 시 초기화
+  useEffect(() => {
+    setCode(initialCode[languageId])
+    setTestResult(null)
+  }, [problemIdx, languageId])
 
   // 모두 시험을 종료하면 테스트 페이지로 이동
   useEffect(() => {
@@ -160,37 +155,54 @@ export default function TestPage() {
       .catch(() => {})
   }
 
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  useEffect(() => {
+    const updateMaxHeight = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', updateMaxHeight)
+    updateMaxHeight()
+
+    return () => {
+      window.removeEventListener('resize', updateMaxHeight)
+    }
+  }, [])
+
   return (
     <>
       {problems ? (
         <Container>
           <FlexBox>
-            <RoomInfo
-              id={roomInfo.id}
-              title={roomInfo.title}
-              languageIds={roomInfo.languageIds}
-              algoIds={roomInfo.algoIds}
-              hostNickname={roomInfo.hostNickname}
-              personnel={roomInfo.personnel}
-            />
-            {[...Array(problems.length).keys()].map((idx) => {
-              return (
-                <Button
-                  key={`${idx}-problem`}
-                  size="medium"
-                  value={idx + 1}
-                  type={problemIdx === idx ? 'primary' : 'secondary'}
-                  onClick={() => setProblemIdx(idx)}
-                />
-              )
-            })}
+            <ButtonWrapper>
+              <RoomInfo
+                id={roomInfo.id}
+                title={roomInfo.title}
+                languageIds={roomInfo.languageIds}
+                algoIds={roomInfo.algoIds}
+                hostNickname={roomInfo.hostNickname}
+                personnel={roomInfo.personnel}
+              />
+              {[...Array(problems.length).keys()].map((idx) => {
+                return (
+                  <Button
+                    key={`${idx}-problem`}
+                    size="small"
+                    value={idx + 1}
+                    type={problemIdx === idx ? 'primary' : 'secondary'}
+                    onClick={() => setProblemIdx(idx)}
+                  />
+                )
+              })}
+            </ButtonWrapper>
             <StyledDiv>
               {parseInt(timer / (60 * 60))}:{parseInt((timer / 60) % 60)}:
               {parseInt(timer % 60)}
             </StyledDiv>
           </FlexBox>
           <FlexBox2>
-            <ImageWrapper>
+            <ImageWrapper windowHeight={windowHeight}>
               <ProblemImage imgUrl={problems[problemIdx].problemImageUrl} />
             </ImageWrapper>
             <Resizable
@@ -208,7 +220,7 @@ export default function TestPage() {
                 topLeft: false,
               }}
             >
-              <FlexColumn>
+              <FlexColumn windowHeight={windowHeight}>
                 <CodeSection
                   value={code}
                   setValue={setCode}
@@ -217,7 +229,7 @@ export default function TestPage() {
                   setLanguageId={setLanguageId}
                 />
                 <Resizable
-                  defaultSize={{ width: '100%', height: '37%' }}
+                  defaultSize={{ width: '100%', height: '40%' }}
                   minHeight={'20%'}
                   maxHeight={'80%'}
                   enable={{
@@ -269,24 +281,33 @@ const FlexBox = styled.div`
 const FlexBox2 = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 100%;
+  gap: 5px;
 `
 
 const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  gap: 5px;
+  height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
 `
 const ImageWrapper = styled.div`
-  height: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
+  background-color: ${({ theme }) => theme.whiteColor};
 `
 
 const StyledDiv = styled.div`
   display: flex;
   align-items: center;
-  padding: 0.2rem 0.7rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   background-color: ${({ theme }) => theme.studyBgColor};
+`
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
 `
