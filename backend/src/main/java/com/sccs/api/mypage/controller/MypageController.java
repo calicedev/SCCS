@@ -7,8 +7,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +33,6 @@ public class MypageController {
 
   @GetMapping("/history/{memberId}/{year}/{month}")
   @ApiOperation(value = "스터디 기록 조회", notes = "<strong>날짜</strong>와 로그인하고있는 <strong>아이디</strong>를 받아서 해당 아이디의 스터디 기록을 조회한다.")
-  @ApiResponses({
-      @ApiResponse(code = 200, message = "스터디 기록 조회 완료!! 결과가 없다면 공부를 안했다는거야"),
-      @ApiResponse(code = 404, message = "제대로 알고 보낸거야?"),
-      @ApiResponse(code = 500, message = "아무튼 서버 잘못임 ㄹㅇㅋㅋ")
-  })
   @ApiImplicitParams({
       @ApiImplicitParam(name = "memberId", value = "로그인하고있는 아이디", required = true),
       @ApiImplicitParam(name = "year", value = "조회하고싶은 연도", required = true),
