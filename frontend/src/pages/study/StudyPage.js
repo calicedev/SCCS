@@ -16,6 +16,8 @@ import RoomInfo from 'components/study/RoomInfo'
 import Loading from 'components/common/Loading'
 import ShareSection from 'components/study/ShareSection'
 import ScreenVideoComponent from 'components/study/ScreenVideoComponent'
+import Modal from 'components/common/Modal'
+import Code from 'components/study/Code'
 
 export default function StudyPage() {
   const {
@@ -48,6 +50,11 @@ export default function StudyPage() {
   const [codeProblems, setCodeProblems] = useState(null)
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
   const [mainStreamManager, setMainStreamManager] = useState(undefined)
+
+  // 민혁 추가 부분
+  const [showModal, setShowModal] = useState(false)
+  // 버튼 클릭 시에 해당 코드를 불러오는 fetch 요청
+  const [code, setCode] = useState('')
 
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager === stream) return
@@ -176,10 +183,54 @@ export default function StudyPage() {
       tempObject[member] = member
     })
     return tempObject
-  }, members)
+  }, [members])
+
+  // 제출한 코드 목록 (2.13 민혁 추가)
+  const codesObject = useMemo(() => {
+    if (!codeProblems) return {}
+    const tempObject = {}
+    codeProblems[codeProblemIdx].codeList.forEach((code) => {
+      if (code.result === true) {
+        tempObject[
+          code.memberNickname
+        ] = `${code.memberNickname} : ${code.runtime}` // pass 시에는0 runtime을 띄움
+      } else {
+        tempObject[code.memberNickname] = `${code.memberNickname} : fail` // fail 시에는 그냥 fail을 띄움
+      }
+    })
+    return tempObject
+  }, [codeProblems, codeProblemIdx])
+
+  // 선택한 코드를 불러와서 화면에 띄워주기
+
+  const fetchData = async () => {
+    const response = await fetch(
+      codeProblems[codeProblemIdx].codeList[0].fileUrl,
+    )
+      .then((res) => {
+        console.log('res', res)
+        return res.text()
+      })
+      .then((code) => {
+        console.log('code', code)
+        setCode(code)
+      })
+  }
 
   return (
     <>
+      {showModal && (
+        <Modal
+          close={() => setShowModal(false)}
+          content={
+            <img
+              src={codeProblems[codeProblemIdx].problemImgUrl}
+              alt="문제 이미지"
+              width="500px"
+            ></img>
+          }
+        />
+      )}
       {codeProblems ? (
         <Container>
           <FlexBox>
@@ -190,6 +241,19 @@ export default function StudyPage() {
               algoIds={roomInfo.algoIds}
               hostNickname={roomInfo.hostNickname}
               personnel={roomInfo.personnel}
+            />
+            <Button
+              size="medium"
+              value="문제 보기"
+              type="primary"
+              onClick={() => setShowModal(true)}
+            />
+            <ButtonDropdown
+              title="다른 사람 코드"
+              size="small"
+              type="primary"
+              options={codesObject}
+              // onClick={(e) => changePresenter(e.target.id.split('-')[0])}
             />
             {roomInfo.hostId === user.id && (
               <>
@@ -204,6 +268,7 @@ export default function StudyPage() {
                     />
                   )
                 })}
+
                 <ButtonDropdown
                   title="발표자 선택"
                   size="small"
@@ -224,13 +289,18 @@ export default function StudyPage() {
                 )
               )}
             </StyledDiv>
-            <Chat
-              chatList={chatList}
-              message={message}
-              onChangeMsg={(e) => setMessage(e.target.value)}
-              sendChat={sendChat}
-              user={user}
-            />
+            <ColumnBox>
+              {/* <Code /> */}
+              {code ? <pre>{code}</pre> : null}
+              <h1 onClick={fetchData}>안뇽</h1>
+              <Chat
+                chatList={chatList}
+                message={message}
+                onChangeMsg={(e) => setMessage(e.target.value)}
+                sendChat={sendChat}
+                user={user}
+              />
+            </ColumnBox>
           </FlexBox2>
         </Container>
       ) : (
@@ -259,6 +329,11 @@ const FlexBox2 = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 10px;
+`
+
+const ColumnBox = styled.div`
+display: flex
+flex-direction: column;
 `
 const StyledDiv = styled.div`
   flex: 1;
