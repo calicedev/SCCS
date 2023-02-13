@@ -47,7 +47,8 @@ export default function TestPage() {
   const [finishedList, setFinishedList] = useState([])
   const [languageId, setLanguageId] = useState(roomInfo.languageIds[0])
 
-  const [code, setCode] = useState('')
+  //const [code, setCode] = useState('')
+  let [code, setCode] = useState('')
 
   if (languageId === 1) {
     [code, setCode] = useState('python')
