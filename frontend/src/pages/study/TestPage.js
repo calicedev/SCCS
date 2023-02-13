@@ -123,10 +123,10 @@ export default function TestPage() {
     formData.append('formFile', new Blob([codeString], { type: 'text/plain' }))
     formData.append('memberId', user.id)
     formData.append('studyroomId', studyroomId)
-    // formData.append('problemId', problems[problemIdx].id)
-    // formData.append('languageId', languageId)
-    formData.append('problemId', 16)
-    formData.append('languageId', 2)
+    formData.append('problemId', problems[problemIdx].id)
+    formData.append('languageId', languageId)
+    // formData.append('problemId', 16)
+    // formData.append('languageId', 2)
     const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api(apiKey)
     const config = { url, method, data: formData, headers }
