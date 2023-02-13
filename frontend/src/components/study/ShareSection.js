@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { FaEraser } from 'react-icons/fa'
 import IconButton from 'components/common/IconButton'
+import Code from 'components/study/Code'
 
 /*
 Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
@@ -11,7 +12,7 @@ opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 �
 onChange: 클릭 시 동작할 함수
 */
 
-export default function ShareSection({ screenContent }) {
+export default function ShareSection({ code, languageId }) {
   // canvas
   const canvasBoardRef = useRef()
   const cavasContainerRef = useRef()
@@ -89,20 +90,6 @@ export default function ShareSection({ screenContent }) {
             canvasBoardRef.current.width,
             canvasBoardRef.current.height,
           )
-          const [type, content] = screenContent
-          if (type === 'code') {
-            context.lineWidth = '0.1px'
-            context.strokeStyle = 'black'
-            context.font = '1rem serif'
-            context.strokeText(content, 10, 10)
-          } else {
-            const problemImage = new Image(
-              canvasBoardRef.current.width,
-              canvasBoardRef.current.height,
-            )
-            problemImage.src = content
-            context.drawImage(problemImage, 0, 0)
-          }
         }
       }
     }
@@ -160,7 +147,7 @@ export default function ShareSection({ screenContent }) {
     }
 
     makeCanvas()
-  }, [screenContent])
+  }, [])
   return (
     <CanvasContainer ref={cavasContainerRef}>
       <CanvasBoard ref={canvasBoardRef} id="code-with-drawing"></CanvasBoard>
@@ -183,6 +170,7 @@ export default function ShareSection({ screenContent }) {
           <IconButton icon={<FaEraser />} />
         </Reset>
       </ColorsPickBox>
+      <BackgroundCode languageId={languageId} value={code} />
     </CanvasContainer>
   )
 }
@@ -198,15 +186,20 @@ const CanvasContainer = styled.div`
   width: 100%;
   border-radius: 0.5rem;
 `
-const CodeWrapper = styled.div`
+const BackgroundCode = styled(Code)`
   position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 2;
 `
 
 const CanvasBoard = styled.canvas`
   height: 100%;
   width: 100%;
 
-  background-color: ${({ theme }) => theme.studyBgColor};
+  z-index: 3;
 `
 
 const ColorsPickBox = styled.div`
@@ -223,7 +216,7 @@ const ColorPick = styled.div`
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  z-index: 5;
+  z-index: 4;
   background-color: ${(props) => props.color};
 `
 
