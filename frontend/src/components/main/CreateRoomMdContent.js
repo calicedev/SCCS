@@ -68,7 +68,7 @@ export default function CreateRoomMdContent() {
         })
         // AlgoIds에 모든 항목을 셋팅
 
-        setAlgoIds([1, 2, 3, 4, 5, 6, 7])
+        setAlgoIds([0])
 
         return
       }
@@ -116,11 +116,7 @@ export default function CreateRoomMdContent() {
 
     // console.log('확인로직', algoIds.length)
     // 알고리즘 선택 조건 체크
-    if (
-      (algoIds.length !== 7) &
-      (algoIds.length !== 1) &
-      (algoIds.length !== 2)
-    ) {
+    if ((algoIds.length !== 1) & (algoIds.length !== 2)) {
       const newMsg = { ...message }
       console.log(algoIds.length)
       newMsg.text = '알고리즘은 하나 이상 두개 이하 선택가능합니다.'
