@@ -37,7 +37,7 @@ export default function Textarea(props) {
   console.log(props.lanuagePk);
   console.log("javaCode", javaCode);
 
-  const [codeValue, setCodeValue] = useState('javaCode')
+  const [codeValue, setCodeValue] = useState("aaaaaa")
 
   return (
     <StyledEditor
