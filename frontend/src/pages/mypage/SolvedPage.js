@@ -62,7 +62,7 @@ export default function ProblemList() {
             .map((problem, i) => {
               return (
                 <ProblemItem
-                  problemName={problem.name}
+                  problemName={problem.problemName}
                   answerRate={problem.answerRate}
                   submitDatetime={problem.date}
                   difficulty={problem.difficulty}
