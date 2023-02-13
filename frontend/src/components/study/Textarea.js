@@ -25,8 +25,8 @@ export default function Textarea() {
   // // Returns a highlighted HTML string
   // const html = Prism.highlight(code, Prism.languages.py, 'python');
 
-  const [codeValue, setCodeValue] = useState('나는 파이썬이 좋더라')
-
+  const [codeValue, setCodeValue] = useState('')
+  
   return (
     <StyledEditor
       value={codeValue}
