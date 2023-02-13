@@ -47,18 +47,29 @@ export default function TestPage() {
   const [finishedList, setFinishedList] = useState([])
   const [languageId, setLanguageId] = useState(roomInfo.languageIds[0])
 
-  const initialCode =
-    languageId === 1
-      ? `class Solution:
-      print("sccs")
-    `
-      : `class Solution{
-      public static void main(String[] args) {
-        System.out.println("sccs");
-      }
+  // 파이썬, 자바 기본 코드 (2.14 민혁 추가)
+  const python = `class Solution:
+  print("sccs")
+`
+  const java = `class Solution{
+    public static void main(String[] args) {
+      System.out.println("sccs");
     }
-    `
-  const [code, setCode] = useState(initialCode)
+  }
+  `
+
+  // 문제 번호나, 언어 변경 시 초기화 (2.14 민혁 추가)
+  useEffect(() => {
+    if (languageId === 1) {
+      setCode(python)
+      setTestResult(null)
+    } else {
+      setCode(java)
+      setTestResult(null)
+    }
+  }, [problemIdx, languageId])
+
+  const [code, setCode] = useState('')
   //const [code, setCode] = useState('')
 
   // 남은 시간 표시하기 위한 state
