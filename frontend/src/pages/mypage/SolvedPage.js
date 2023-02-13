@@ -14,7 +14,7 @@ const BUTTON_PER_PAGINATION = 5 // 페이네이션에 표시할 버튼 수
 
 export default function ProblemList() {
   // 리액트 훅 관련 함수 정의
-  const navigate = { useNavigate }
+  const navigate = useNavigate()
 
   // 리덕스 -> 유저의 id 읽어오기
   // const id = useSelector((state) => state.user.id)
