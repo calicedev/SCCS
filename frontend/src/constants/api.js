@@ -30,9 +30,9 @@ const api = function (type, options = {}) {
     testCode: ['/api/studyroom/codingtest/test', 'post'],
     codingTest: ['/api/studyroom/codingtest', 'post'],
 
-    solveProblem: [`/api/mypage/problem/${options.memberId}/solve/${options.check_idproblemId}`, 'get'],
+    solveProblem: [`/api/mypage/problem/${options.memberId}/solve/${options.problemId}`, 'get'],
     codeReview: [`/api/mypage/problem/solve/${options.id}`, 'get'],
-    submitReview: [`/api/mypage/problem/solve/${options.id}`, 'get'], // post로 하면 405error
+    submitReview: [`/api/mypage/problem/solve/${options.problemId}`, 'get'], // post로 하면 405error
     // 2.9 민혁 추가 (스터디 페이지 입장)
     study: ['api/studyroom/study', 'post'],
 
