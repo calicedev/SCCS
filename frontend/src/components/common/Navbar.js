@@ -57,7 +57,12 @@ export default function Navbar() {
             <StyledDiv onClick={logout}>Logout</StyledDiv>
           </>
         ) : (
-          <StyledDiv onClick={() => navigate('/auth/login')}>Login</StyledDiv>
+          <>
+            <StyledDiv onClick={() => navigate('/auth/login')}>Login</StyledDiv>
+            <StyledDiv2 onClick={() => navigate('/auth/signup')}>
+              Signup
+            </StyledDiv2>
+          </>
         )}
       </NavContent>
     </Nav>
@@ -105,6 +110,17 @@ const StyledDiv = styled.div`
   padding: 0rem 1rem 0rem 2rem;
 
   border-left: 2px solid ${({ theme }) => theme.secondaryFontColor};
+
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.secondaryFontColor};
+
+  cursor: pointer;
+`
+
+const StyledDiv2 = styled.div`
+  margin: 1rem 0rem;
+  padding: 0rem 1rem 0rem 1rem;
 
   font-size: 1.7rem;
   font-weight: 500;

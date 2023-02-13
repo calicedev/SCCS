@@ -37,6 +37,8 @@ export default function VideoComponent({ streamManager }) {
               id={'publisher-video'}
               autoPlay
               muted
+              width="280px"
+              height="160px"
             ></PublisherVideo>
           )}
         </Container>

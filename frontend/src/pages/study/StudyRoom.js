@@ -27,8 +27,6 @@ export default function StudyRoom() {
   const dispatch = useDispatch()
   const location = useLocation()
 
-  console.log(location)
-
   const theme = useSelector((state) => state.theme)
 
   // 기본정보
@@ -205,6 +203,8 @@ export default function StudyRoom() {
   const [isScreen, setIsScreen] = useState(false)
   const [isCameraOn, setIsCameraOn] = useState(true)
 
+  const faceInterval = useRef(null)
+
   const deleteSubscriber = (streamManager) => {
     // 진짜 이유는 모르겠는데 newSubscribers = [...subscribers] 로 불러오면 안됨!!! 모두 처리해준 다음에 마지막 대입 전에 전개
     const newSubscribers = subscribers
@@ -332,6 +332,10 @@ export default function StudyRoom() {
     if (!isCameraOn) {
       const video = document.getElementById('publisher-video')
       video.srcObject = undefined
+      if (faceInterval.current) {
+        clearInterval(faceInterval.current)
+        faceInterval.current = null
+      }
       const devices = await OV.current.getDevices()
       // videoDevice 배열 추출
       const videoDevices = devices.filter(
@@ -343,8 +347,7 @@ export default function StudyRoom() {
         publishVideo: true,
         mirror: false,
       })
-
-      // await session.unpublish(mainStreamManager)
+      await session.unpublish(publisher)
       await session.publish(newPublisher)
 
       setPublisher(newPublisher)
@@ -368,11 +371,9 @@ export default function StudyRoom() {
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => {
-          console.log('start video')
           video.srcObject = stream
         })
         .catch((err) => {
-          console.log('error')
           console.log(err)
         })
     }
@@ -387,12 +388,9 @@ export default function StudyRoom() {
       faceapi.matchDimensions(canvas, displaySize)
 
       // 이미지 선언
-      const img = document.createElement('img')
-      img.style.objectFit = 'contain'
-      img.width = 30
-      img.height = 20
+      const img = new Image(canvas.width, canvas.height)
 
-      setInterval(async () => {
+      faceInterval.current = setInterval(async () => {
         const detections = await faceapi.detectSingleFace(
           video,
           new faceapi.TinyFaceDetectorOptions(),
@@ -472,7 +470,6 @@ export default function StudyRoom() {
   }
   /////////////////////////////////////////////////////////////////
 
-  console.log(location.pathname.slice(-4))
   return (
     <Container>
       {connected ? (
@@ -541,6 +538,7 @@ const Container = styled.div`
 
   width: 100vw;
   height: 100vh;
+  max-height: 100vh;
   background-color: ${({ theme }) => theme.studyBaseBgColor};
 `
 const VideoContainer = styled.div`

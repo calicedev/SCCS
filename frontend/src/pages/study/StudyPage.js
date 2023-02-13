@@ -145,14 +145,49 @@ export default function StudyPage() {
     // 내가 발표자일 경우
     if (presenter === user.nickname) {
       const canvas = document.querySelector('#code-with-drawing')
-      const ctx = canvas.getContext('2d')
-      ctx.fillStyle = 'white'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.font = '10px serif'
-      ctx.strokeText('codsdfsdfe', 10, 10)
-      const track = canvas.captureStream(10).getVideoTracks()[0]
+      const rect = canvas.getBoundingClientRect()
+
+      const x = rect.left
+      const y = rect.top
+      const width = rect.width
+      const height = rect.height
+      console.log(x, y, width, height)
+
+      const track = await navigator.mediaDevices
+        .getDisplayMedia({
+          displaySurface: 'screen',
+          captureArea: {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+          },
+        })
+        .then(function (stream) {
+          return stream.getVideoTracks()[0]
+          // do something with the stream
+        })
       publisher.replaceTrack(track)
       setIsScreenShare(true)
+      // const ctx = canvas.getContext('2d')
+      // const [type, content] = await getScreenContent()
+      // setScreenContent([type, content])
+      // ctx.fillStyle = 'white'
+      // ctx.fillRect(0, 0, canvas.width, canvas.height)
+      // if (type === 'code') {
+      //   ctx.lineWidth = '0.1px'
+      //   ctx.strokeStyle = 'black'
+      //   ctx.font = '1rem serif'
+      //   ctx.strokeText(content, 10, 10)
+      // } else {
+      //   const problemImage = new Image(canvas.width, canvas.height)
+      //   problemImage.src = content
+      //   console.log('content', problemImage)
+      //   ctx.drawImage(problemImage, 0, 0)
+      // }
+      // const track = canvas.captureStream(10).getVideoTracks()[0]
+      // publisher.replaceTrack(track)
+      // setIsScreenShare(true)
     }
 
     // 내가 이전에 발표자였을 경우
@@ -177,7 +212,7 @@ export default function StudyPage() {
     }
   }
 
-  // 멤버로 발표후보자 객체 생성
+  // 멤버로 발표 후보자 객체 생성
   const candidatesObject = useMemo(() => {
     const tempObject = {}
     members.forEach((member) => {
@@ -287,7 +322,7 @@ export default function StudyPage() {
           <FlexBox2>
             <StyledDiv>
               {presenter === user.nickname ? (
-                <ShareSection />
+                <ShareSection screenContent={screenContent} />
               ) : (
                 mainStreamManager && (
                   <ScreenVideoComponent streamManager={mainStreamManager} />
