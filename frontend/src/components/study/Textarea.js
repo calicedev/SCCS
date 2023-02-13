@@ -16,7 +16,15 @@ const hightlightWithLineNumbers = (input, language) =>
     .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
     .join('\n')
 
-export default function Textarea() {
+
+const javaCode = `class Solution {
+  public static void main(String[] args) {
+    System.out.println("hello world");
+  }
+}
+`
+
+export default function Textarea(props) {
   // loadLanguages(['pythnm', 'java']);
 
   // // The code snippet you want to highlight, as a string
@@ -25,7 +33,11 @@ export default function Textarea() {
   // // Returns a highlighted HTML string
   // const html = Prism.highlight(code, Prism.languages.py, 'python');
 
-  const [codeValue, setCodeValue] = useState('나는 파이썬이 좋더라')
+  console.log(props);
+  console.log(props.lanuagePk);
+  console.log("javaCode", javaCode);
+
+  const [codeValue, setCodeValue] = useState('javaCode')
 
   return (
     <StyledEditor
