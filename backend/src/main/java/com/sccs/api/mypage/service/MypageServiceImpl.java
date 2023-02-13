@@ -39,7 +39,7 @@ public class MypageServiceImpl implements MypageService {
   }
 
   @Override
-  public HashMap<String, Object> getProblemIdAndUrl(int problemId) {
-    return mypageMapper.getProblemIdAndUrl(problemId);
+  public String getProblemUrlOnly(int problemId) {
+    return mypageMapper.getProblemUrlOnly(problemId);
   }
 }

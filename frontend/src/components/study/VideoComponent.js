@@ -37,8 +37,6 @@ export default function VideoComponent({ streamManager }) {
               id={'publisher-video'}
               autoPlay
               muted
-              width="300px"
-              height="200px"
             ></PublisherVideo>
           )}
         </Container>
@@ -51,6 +49,7 @@ const Container = styled.div`
   position: relative;
 `
 const Video = styled.video`
+  width: 280px;
   height: 160px;
   border-radius: 0.5rem;
 `
@@ -74,5 +73,6 @@ const PublisherVideo = styled.video`
   top: 0;
   left: 0;
   z-index: -1;
+  width: 280px;
   height: 160px;
 `

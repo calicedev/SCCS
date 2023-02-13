@@ -52,6 +52,7 @@ export const light = {
   chatTabColor: '#D8EBFF',
 
   fontColor: '#111111', // 폰트 색상
+  codeFontColor: '#222222',
   ...color,
 }
 
@@ -68,5 +69,6 @@ export const dark = {
   chatTabColor: '#264064',
 
   fontColor: '#FFFFFF', // 폰트 색상
+  codeFontColor: '#DDDDDD',
   ...color,
 }

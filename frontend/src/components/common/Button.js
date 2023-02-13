@@ -12,7 +12,7 @@ value: 버튼 안 글자
 disabled: 버튼 클릭 가능 여부
 */
 
-export default function Button({ size, type, onClick, value, disabled }) {
+export default function Button({ id, size, type, onClick, value, disabled }) {
   const sizeClass =
     size === 'tiny'
       ? 'xs-btn'
@@ -24,10 +24,11 @@ export default function Button({ size, type, onClick, value, disabled }) {
 
   return (
     <BtnWrapper
+      id={id}
       className={`${sizeClass}`}
       type={type}
       disabled={disabled}
-      onClick={() => (disabled ? null : onClick())}
+      onClick={(e) => (disabled ? null : onClick(e))}
     >
       {value}
     </BtnWrapper>

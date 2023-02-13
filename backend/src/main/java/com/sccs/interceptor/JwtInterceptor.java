@@ -1,9 +1,8 @@
 package com.sccs.interceptor;
 
 import com.sccs.api.member.service.JWTService;
-import com.sccs.exception.ExpiredException;
-import com.sccs.exception.InterceptorException;
-import com.sccs.exception.InterceptorExceptionEnum;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,19 +16,17 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @RequiredArgsConstructor
 public class JwtInterceptor implements HandlerInterceptor {
-
   public static final Logger logger = LoggerFactory.getLogger(JwtInterceptor.class);
-  private static final String HEADER_AUTH = "authorization";
   public final JWTService jwtService;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
-    logger.debug("인터셉터 들어옴 !!!!");
+    logger.debug("[preHandle]Interceptor start");
     String method = request.getMethod();
-    logger.debug("WHAT IS METHOD : {}", method);
+    //logger.debug("WHAT IS METHOD : {}", method);
     String uri = request.getRequestURI();
-    logger.debug("요청 URI : {}", uri);
+    //logger.debug("요청 URI : {}", uri);
 
     if (uri.equals("/api/member") && method.equals("POST")) { // 회원가입인 경우
       logger.debug("회원가입임 ! 인터셉터 동작 안함");
@@ -41,15 +38,40 @@ public class JwtInterceptor implements HandlerInterceptor {
       return true;
     }
 
-    final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
-    logger.debug("헤더 토큰 파싱 : {}", token);
+    // 쿠키 방식
+    Cookie[] cookies = request.getCookies();
+    String accessToken = "";
 
-    if (jwtService.checkToken(token)) {
-      logger.info("토큰 사용 가능 : {}", token);
+    if (cookies != null) {
+      for (int i=0; i<cookies.length; i++) {
+        if (cookies[i].getName().equals("accessToken")) {
+          accessToken = cookies[i].getValue();
+        }
+      }
+    }
+
+    if (jwtService.checkToken(accessToken)) {
+      logger.debug("accessToken parsing success");
       return true;
     }
+
+    // 헤더 방식
+//    String token = "";
+//    try {
+//      token = request.getHeader(HEADER_AUTH).substring("Bearer ".length());
+//      logger.debug("헤더 토큰 파싱 : {}", token);
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
+
+
+//    if (jwtService.checkToken(token)) {
+//      logger.info("토큰 사용 가능 : {}", token);
+//      return true;
+//    }
     logger.debug("토큰 사용 불가능");
-    throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-    //throw new UnAuthorizedException();
+    //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+    throw new UnAuthorizedException(); // accessToken 사용 불가능, accessToken 재발급 로직으로 이동해야 함
+    // (그곳에서 refreshToken 검증) (refreshToken검증에 실패한다면 로그인 로직으로 이동) (검증 성공시에는 accessToken이 발급됨)
   }
 }

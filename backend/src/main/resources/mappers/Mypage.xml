@@ -86,19 +86,18 @@
     <result column="problem_answerRate" property="problemAnswerRate"></result>
     <result column="submit_datetime" property="submitDatetime"></result>
     <result column="difficulty" property="difficulty"></result>
-    <result column="language_id" property="languageId"></result>
   </resultMap>
 
   <select id="getProblems" parameterType="hashmap" resultMap="submissionWithProblemAboutUser">
     SELECT
     *
     FROM(
-    SELECT s.id as submissionID, p.name as problemName
+    SELECT p.id as problemID, p.name as problemName
     ,format(p.accepted_number/p.submission_number*100,2)
     as
     'answerRate'
     ,DATE_FORMAT(submit_datetime,'%y-%m-%d') as 'date',p.difficulty as
-    problemDifficulty,s.language_id as languageID
+    problemDifficulty
     FROM problem p, submission s
     WHERE p.id = s.problem_id AND s.member_id = #{memberId}
     order by date desc
@@ -125,16 +124,9 @@
     p.id=#{problemId} and s.problem_id=p.id;
   </select>
 
-  <resultMap id="submissionFromProblem" type="hashmap">
-    <result column="problemId" property="pId"></result>
-    <result column="submissionUrl" property="sURL"></result>
-    <result column="problemUrl" property="pURL"></result>
-  </resultMap>
-  <select id="getProblemIdAndUrl" parameterType="hashmap"
-    resultMap="submissionFromProblem">
-    SELECT s.problem_id as problemId, s.file_name as submissionUrl, p.problem_folder as problemUrl
-    FROM submission s, problem p WHERE
-    s.id=#{submissionId} and problem_id = p.id;
+  <select id="getProblemUrlOnly" resultType="String">
+    SELECT problem_folder from problem
+    WHERE id = #{problemId};
   </select>
 
 

@@ -12,9 +12,8 @@ import com.sccs.api.member.util.EmailService;
 import com.sccs.api.member.util.EncryptService;
 import com.sccs.api.member.util.RedisService;
 import io.jsonwebtoken.Claims;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,6 +30,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -77,6 +77,18 @@ public class MemberController {
    * 회원 가입
    **/
   @PostMapping("/member")
+  @ApiOperation(value = "회원 가입", notes = "아이디, 이름, 닉네임, 이메일, 비밀번호를 매개변수로 받습니다.")
+  @ApiResponses({
+          @ApiResponse(code = 200, message = "회원 가입 성공"),
+          @ApiResponse(code = 401, message = "회원 가입 실패")
+  })
+//  @ApiImplicitParams({
+//          @ApiImplicitParam(name = "id", value = "아이디", required = true),
+//          @ApiImplicitParam(name = "name", value = "이름", required = true),
+//          @ApiImplicitParam(name = "nickname", value = "닉네임", required = true),
+//          @ApiImplicitParam(name = "email", value = "이메일", required = true),
+//          @ApiImplicitParam(name = "password", value = "비밀번호", required = true),
+//  })
   public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto)
       throws NoSuchAlgorithmException {
     Map<String, String> resultMap = new HashMap<>();
@@ -121,8 +133,8 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-                (MINUTE * 20));
-        long exp = System.currentTimeMillis() + (MINUTE * 20);
+                (HOUR * 9));
+        long exp = System.currentTimeMillis() + (HOUR * 9);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
                 (HOUR * 10));
 
@@ -235,25 +247,22 @@ public class MemberController {
     String id = (String) claims.get("id");              // accessToken에서 회원 id 파싱
 
     MemberDto memberDto = memberService.memberInfo(id);
-    //String result = awsS3Service.getTemporaryUrl("aa"+mfile.getOriginalFilename());
 
     FileDto fileDto = null;
 
     logger.debug("[modify]회원정보 수정 전 : {}", memberDto);
 
     if (mfile != null) {
-      //UUID uuid = UUID.randomUUID();
-      //awsProfilePath = uuid + "_" + mfile.getOriginalFilename();
       fileDto = awsS3Service.upload(mfile, "sccs");
 
       logger.info("[modify]파일이름 : {}", fileDto.getFileName());
       logger.info("[modify]파일경로 : {}", fileDto.getUrl());
       memberDto.setProfileImage(fileDto.getUrl());
     }
-      if (nickname != null) {
+      if (nickname != null || !nickname.equals("")) {
           memberDto.setNickname(nickname);
       }
-      if (email != null) {
+      if (email != null || !email.equals("")) {
           memberDto.setEmail(email);
       }
     logger.debug("[modify]회원정보 수정 후 : {}", memberDto);
@@ -324,7 +333,7 @@ public class MemberController {
       logger.debug("[duplicateParam]이미 존재하는 {}입니다.", uniqueDto.getType());
       resultMap.put("unique", false);
       resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + "입니다");
-      return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+      return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
   }
 
@@ -380,9 +389,9 @@ public class MemberController {
       logger.debug("[refreshToken]토큰 인증 성공");
       if (id.equals(redisService.getRefreshTokenWithRedis(refreshToken))) {
         logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
-        String newAccessToken = jwtService.createToken(id, "accessToken", 20 * MINUTE);
+        String newAccessToken = jwtService.createToken(id, "accessToken", 9 * HOUR);
 
-        long exp = System.currentTimeMillis() + (MINUTE * 20);
+        long exp = System.currentTimeMillis() + (HOUR * 9);
 
         // 토큰 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);
@@ -443,7 +452,7 @@ public class MemberController {
   @GetMapping("/redisKeys")
   public ResponseEntity<?> showRedisKeys() {
     int result = redisService.showAllKeys();
-    return new ResponseEntity<String>("모든 키 조회 성공: " + result + "개", HttpStatus.OK);
+    return new ResponseEntity<>("모든 키 조회 성공: " + result + "개", HttpStatus.OK);
   }
 
   /**

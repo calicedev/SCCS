@@ -69,6 +69,7 @@ public class StudyroomController {
         if (studyroomId != 0) {
             resultMap.put("studyroomId", studyroomId);
             return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
+
         } else {
 
             resultMap.put("message", "방 생성 실패");
@@ -182,16 +183,8 @@ public class StudyroomController {
      **/
     @PostMapping("/studyroom/study")
     public ResponseEntity<?> startStudy(@RequestBody StudyroomDto studyroomDto) throws IOException {
-        Map<String, Object> resultMap = studyroomService.startStudy(studyroomDto);
+        List resultMap = studyroomService.startStudy(studyroomDto);
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
-    }
-
-    /**
-     * 코딩 테스트 방장에 의해 끝내기
-     **/
-    @PatchMapping("/studyroom/codingtest")
-    public ResponseEntity<?> endStudyroomByOwner(@RequestBody int id) {
-        return new ResponseEntity<>(studyroomService.endStudyroomByOwner(id), HttpStatus.OK);
     }
 
 }

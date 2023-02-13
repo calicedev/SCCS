@@ -24,5 +24,6 @@ public class SubmissionDto {
   private String fileName;
   private String fileUrl;
 
+  private String memberNickname;
 
 }

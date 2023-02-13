@@ -4,7 +4,7 @@ import Editor from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs/components/prism-core'
 // import loadLanguages from 'prismjs/components/'
 
-import "prismjs/components/prism-clike"; // 이거 없으면 자바 오류남
+import 'prismjs/components/prism-clike' // 이거 없으면 자바 오류남
 import 'prismjs/components/prism-python' // import 언어 모듈가서 확인 뒤 바꿔주기
 import 'prismjs/components/prism-java' // 2개 import하면 오류뜸
 import 'prismjs/themes/prism.css' //Example style, you can use another
@@ -15,7 +15,7 @@ const hightlightWithLineNumbers = (input, language) =>
     .split('\n')
     .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
     .join('\n')
-    
+
 export default function Textarea() {
   // loadLanguages(['pythnm', 'java']);
 
@@ -40,7 +40,6 @@ export default function Textarea() {
         fontFamily: '"Fira code", "Fira Mono", monospace',
         fontSize: 14,
         outline: 0,
-        
       }}
     />
   )
@@ -51,13 +50,11 @@ const StyledEditor = styled(Editor)`
     counter-reset: line;
     border: 1px solid #ced4da;
     height: 100%;
-    
   }
 
   &.editor #codeArea {
     outline: none;
     padding-left: 60px !important;
-    
   }
 
   &.editor pre {
@@ -67,7 +64,7 @@ const StyledEditor = styled(Editor)`
   &.editor .editorLineNumber {
     position: absolute;
     left: 0px;
-    color: #D7ECFF;
+    color: #d7ecff;
     text-align: right;
     width: 40px;
     font-weight: 100;
