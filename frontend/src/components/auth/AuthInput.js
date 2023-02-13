@@ -111,6 +111,7 @@ const Label = styled.label`
   font-size: 1rem;
 `
 const StyledInput = styled.input`
+  width: 90%;
   padding-left: 0.5rem;
   background-color: #00000000;
 `

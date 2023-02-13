@@ -16,6 +16,7 @@ import RoomInfo from 'components/study/RoomInfo'
 import Loading from 'components/common/Loading'
 import ShareSection from 'components/study/ShareSection'
 import ScreenVideoComponent from 'components/study/ScreenVideoComponent'
+import { GiCondorEmblem } from 'react-icons/gi'
 
 export default function StudyPage() {
   const {
@@ -48,6 +49,8 @@ export default function StudyPage() {
   const [codeProblems, setCodeProblems] = useState(null)
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
   const [mainStreamManager, setMainStreamManager] = useState(undefined)
+
+  const [screenContent, setScreenContent] = useState(null)
 
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager === stream) return
@@ -137,14 +140,49 @@ export default function StudyPage() {
     // 내가 발표자일 경우
     if (presenter === user.nickname) {
       const canvas = document.querySelector('#code-with-drawing')
-      const ctx = canvas.getContext('2d')
-      ctx.fillStyle = 'white'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.font = '10px serif'
-      ctx.strokeText('codsdfsdfe', 10, 10)
-      const track = canvas.captureStream(10).getVideoTracks()[0]
+      const rect = canvas.getBoundingClientRect()
+
+      const x = rect.left
+      const y = rect.top
+      const width = rect.width
+      const height = rect.height
+      console.log(x, y, width, height)
+
+      const track = await navigator.mediaDevices
+        .getDisplayMedia({
+          displaySurface: 'screen',
+          captureArea: {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+          },
+        })
+        .then(function (stream) {
+          return stream.getVideoTracks()[0]
+          // do something with the stream
+        })
       publisher.replaceTrack(track)
       setIsScreenShare(true)
+      // const ctx = canvas.getContext('2d')
+      // const [type, content] = await getScreenContent()
+      // setScreenContent([type, content])
+      // ctx.fillStyle = 'white'
+      // ctx.fillRect(0, 0, canvas.width, canvas.height)
+      // if (type === 'code') {
+      //   ctx.lineWidth = '0.1px'
+      //   ctx.strokeStyle = 'black'
+      //   ctx.font = '1rem serif'
+      //   ctx.strokeText(content, 10, 10)
+      // } else {
+      //   const problemImage = new Image(canvas.width, canvas.height)
+      //   problemImage.src = content
+      //   console.log('content', problemImage)
+      //   ctx.drawImage(problemImage, 0, 0)
+      // }
+      // const track = canvas.captureStream(10).getVideoTracks()[0]
+      // publisher.replaceTrack(track)
+      // setIsScreenShare(true)
     }
 
     // 내가 이전에 발표자였을 경우
@@ -169,14 +207,52 @@ export default function StudyPage() {
     }
   }
 
-  // 멤버로 발표후보자 객체 생성
+  // 멤버로 발표 후보자 객체 생성
   const candidatesObject = useMemo(() => {
     const tempObject = {}
     members.forEach((member) => {
       tempObject[member] = member
     })
     return tempObject
-  }, members)
+  }, [members])
+
+  // 발표자 선택 시, 스크린 컨텐츠 형성
+  const getScreenContent = async () => {
+    const selectedCodeList = codeProblems[codeProblemIdx].codeList
+    let myCode = null // 내 코드 객체
+
+    console.log('selectedCodeList', selectedCodeList)
+    selectedCodeList.forEach((code) => {
+      if (code.memberId === user.id) {
+        myCode = code
+      }
+    })
+
+    console.log('myCode', myCode)
+
+    let screenContent = [] //내 코드 스트링 or Img Url
+    if (myCode) {
+      screenContent = await fetch(myCode.fileUrl)
+        .then((res) => {
+          console.log('res!!!!!!!', res)
+          console.log('res.text!!!!!!!', res.text())
+
+          return ['code', res.text()]
+          return res.text()
+        })
+        .then((res) => {
+          console.log('after then', res)
+        })
+        .catch((err) => {
+          console.log('code', err)
+        })
+    } else {
+      screenContent = ['img', codeProblems[codeProblemIdx].problemImgUrl]
+    }
+
+    console.log('screenContent', screenContent)
+    return screenContent
+  }
 
   return (
     <>
@@ -191,19 +267,20 @@ export default function StudyPage() {
               hostNickname={roomInfo.hostNickname}
               personnel={roomInfo.personnel}
             />
+            {[...Array(codeProblems.length).keys()].map((idx) => {
+              return (
+                <Button
+                  key={`${idx}-code-problem`}
+                  size="medium"
+                  value={idx + 1}
+                  disabled={roomInfo.hostId === user.id ? false : true}
+                  type={codeProblemIdx === idx ? 'primary' : 'secondary'}
+                  onClick={() => changeProblem(idx)}
+                />
+              )
+            })}
             {roomInfo.hostId === user.id && (
               <>
-                {[...Array(codeProblems.length).keys()].map((idx) => {
-                  return (
-                    <Button
-                      key={`${idx}-code-problem`}
-                      size="medium"
-                      value={idx + 1}
-                      type={codeProblemIdx === idx ? 'primary' : 'secondary'}
-                      onClick={() => changeProblem(idx)}
-                    />
-                  )
-                })}
                 <ButtonDropdown
                   title="발표자 선택"
                   size="small"
@@ -217,7 +294,7 @@ export default function StudyPage() {
           <FlexBox2>
             <StyledDiv>
               {presenter === user.nickname ? (
-                <ShareSection />
+                <ShareSection screenContent={screenContent} />
               ) : (
                 mainStreamManager && (
                   <ScreenVideoComponent streamManager={mainStreamManager} />
