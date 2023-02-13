@@ -17,6 +17,7 @@ export default function ProblemList() {
   const navigate = { useNavigate }
 
   // 리덕스 -> 유저의 id 읽어오기
+  // const id = useSelector((state) => state.user.id)
   const id = useSelector((state) => state.user.id)
 
   // useState

@@ -47,7 +47,14 @@ export default function TestPage() {
   const [finishedList, setFinishedList] = useState([])
   const [languageId, setLanguageId] = useState(roomInfo.languageIds[0])
 
-  const [code, setCode] = useState('')
+  //const [code, setCode] = useState('')
+  let [code, setCode] = useState('')
+
+  if (languageId === 1) {
+    [code, setCode] = useState('python')
+  } else {
+    [code, setCode] = useState('java')
+  }
 
   // 남은 시간 표시하기 위한 state
   const [timer, setTimer] = useState(2 * 60 * 60)
