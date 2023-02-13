@@ -33,11 +33,10 @@ export default function Textarea(props) {
   // // Returns a highlighted HTML string
   // const html = Prism.highlight(code, Prism.languages.py, 'python');
 
-  console.log(props);
-  console.log(props.lanuagePk);
+  
   console.log("javaCode", javaCode);
 
-  const [codeValue, setCodeValue] = useState("aaaaaa")
+  const [codeValue, setCodeValue] = useState(props.lanuagePk)
 
   return (
     <StyledEditor
