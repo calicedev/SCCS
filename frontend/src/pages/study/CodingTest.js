@@ -214,9 +214,7 @@ export default function CodingTest({
               <FlexColumn>
                 <CodingSection>
                   <Changer>언어 선택</Changer>
-                  <Textarea
-                    codeValue=''
-                  ></Textarea>
+                  <Textarea value={languagePk}></Textarea>
                 </CodingSection>
                 <Resizable
                   defaultSize={{ width: '100%', height: '37%' }}
