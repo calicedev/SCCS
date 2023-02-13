@@ -57,7 +57,8 @@ export default function CodeSection({
         //     ? `python`
         //     : `java`
         // }
-        value={value}
+        
+        value={languageId === 1 ? "python" : "java"}
         onValueChange={(code) => setValue(code)}
         highlight={
           languageId === 1
