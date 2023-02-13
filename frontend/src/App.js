@@ -59,7 +59,7 @@ function App() {
             <Route path="solved" element={<SolvedPage />}></Route>
           </Route>
         </Route>
-        <Route path="/problem/:id" element={<CodeReview />}></Route>
+        <Route path="/problem/:problemId" element={<CodeReview />}></Route>
         <Route path="/room/:studyroomId" element={<StudyRoom />}>
           <Route path="waiting" element={<WaitingPage />}></Route>
           <Route path="test" element={<TestPage />}></Route>

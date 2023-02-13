@@ -1,26 +1,35 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
 import Textarea from 'components/study/Textarea'
 import Button from 'components/common/Button'
 import axios from 'libs/axios'
 import api from 'constants/api'
-
+import { useSelector } from 'react-redux'
+// import useUser from 'hooks/useUser'
 
 export default function CodeReview() {
-  const { id } = useParams()
-  const [problemId, setProblemId] = useState()
+  const navigate = useNavigate()
+  // const { id } = useParams()
+  const memberId = useSelector((state) => state.user.id)
+  const {problemId} = useParams()
+
+  const [problemUrl, setProblemUrl] = useState(null)
+  const [submissionList, setSubmissionList] = useState([])
+  const [submissionIdx, setSubmissionIdx] = useState(0)
 
   useEffect(() => {
-    const [url, method] = api('codeReview', { id })
+    const [url, method] = api('solveProblem', { memberId, problemId })
     const config = { url, method }
     axios
       .request(config)
       .then((res) => {
+        setProblemUrl(res.data.problemUrl)
+        
+        console.log('데이터 값')
         console.log(res.data)
-        setProblemId(res.data)
-        // console.log(study)
+        setSubmissionList(res.data.submissionInfo)
       })
       .catch((err) => {
         alert('스터디 내역을 불러오지 못했습니다.')
@@ -28,8 +37,38 @@ export default function CodeReview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const [codingTestResult, setCodingTestResult] = useState([])
+  const submitCode = () => {
+    const content = document.querySelector('textarea').value
+    const file = new Blob([content], { type: 'text/plain' })
+    const formData = new FormData()
+    formData.append('formFile', file)
+    formData.append('memberId', memberId) 
+    formData.append('problemId', problemId)
+    formData.append('languageId', 1)
+    // formData.append('studyroomId', studyroomId)
+    // console.log(onProblem)
+    // 지금은 채점 서버에 1번 문제밖에 없어서 이렇게 하지만 더 들어오면 OnProblem으로 해야함 (2.10 민혁)
+    // formData.append('problemId', 1)
+    // 지금은 Java(2)로 고정하지만 나중에는 파이썬 or 파이썬+자바의 경우도 넣어줘야함 (2.10 민혁)
 
+    const headers = { 'Content-Type': 'multipart/form-data' }
 
+    // console.log(formData)
+    const [url, method] = api('submitCode')
+    const config = { url, method, data: formData, headers }
+    axios(config)
+      .then((res) => {
+        // navigate('/')
+        setCodingTestResult(res.data)
+        console.log(res.data)
+      })
+      .catch((err) => {})
+    // element.href = URL.createObjectURL(file);
+    // // element.download = fileName;
+    // document.body.appendChild(element); // Required for this to work in FireFox
+    // element.click()
+  }
 
 
 
@@ -39,7 +78,7 @@ export default function CodeReview() {
   return (
     <Main>
       <Problem>
-        <Img src={problemId}></Img>
+        <Img src={problemUrl}></Img>
       </Problem>
       <Resizable
         defaultSize={{ width: '50%', height: '100%' }}
@@ -76,28 +115,37 @@ export default function CodeReview() {
               topLeft: false,
             }}
           >
-            {/* <ResultSection>
-              {codingTestResult.map((result, idx) => {
-                if (idx !== 5) {
-                  return <div key={idx}>{result.result}</div>
-                } else {
-                  return (
-                    <div key={idx}>
-                      <div>메모리: {result.avgMemory}</div>
-                      <div>실행시간: {result.avgRuntime}ms</div>
-                      <div>
-                        결과:
-                        {result.isAnswer ? (
-                          <span> Success</span>
-                        ) : (
-                          <span> Fail</span>
-                        )}
-                      </div>
-                    </div>
-                  )
-                }
-              })}
-            </ResultSection> */}
+            <ResultSection>
+              {codingTestResult.resultList && (
+                <>
+                  {codingTestResult.resultList.map((problem, index) => (
+                    <p
+                      className={problem.result ? 'pass' : 'error'}
+                      key={`${index}-problem-result`}
+                    >
+                      {index + 1}번{') '} {problem.message} : {problem.memory}kb
+                      {' / '}
+                      {problem.runtime}ms
+                    </p>
+                  ))}
+                  {codingTestResult.isAnswer ? (
+                    <p className="pass">
+                      <br />
+                      통과했습니다~~~!!!
+                      <br /> 런타임 평균: {codingTestResult.avgRuntime}ms 메모리 평균:{' '}
+                      {codingTestResult.avgMemory}kb
+                    </p>
+                  ) : (
+                    <p className="error">
+                      <br />
+                      틀렸습니다ㅜㅜ
+                      <br /> 런타임 평균: {codingTestResult.avgRuntime}ms 메모리 평균:{' '}
+                      {codingTestResult.avgMemory}kb
+                    </p>
+                  )}
+                </>
+              )}
+            </ResultSection>
           </Resizable>
           <ColoredLine color="#4B91F1" />
 
@@ -107,6 +155,9 @@ export default function CodeReview() {
                 value="시험 종료"
                 type="danger"
                 size="small"
+                onClick={() =>{
+                  navigate(`/mypage/study/`)
+                }}
               ></Button>
             </EndBtn>
             <CompileBtn>
@@ -118,15 +169,15 @@ export default function CodeReview() {
                 onClick={() => {
                   testCode('')
                 }}
-              ></Button>
+              ></Button> */}
               <Space></Space>
               <Button
                 value="제출"
                 size="small"
                 onClick={() => {
                   submitCode('')
-                }} */}
-              {/* ></Button> */}
+                }}
+              ></Button>
             </CompileBtn>
           </Foot>
         </FlexColumn>

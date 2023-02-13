@@ -16,49 +16,11 @@ const hightlightWithLineNumbers = (input, language) =>
     .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
     .join('\n')
 
-export default function CodeSection({
-  value,
-  setValue,
-  languageIds,
-  languageId,
-  setLanguageId,
-}) {
-  const languageObject = useMemo(() => {
-    const tempObject = {}
-    languageIds.forEach((languageId) => {
-      tempObject[languageId] = languagePk[languageId]
-    })
-    return tempObject
-  }, [languageIds])
-
-  const highLightByLanguage = (code) => {
-    if (languageId === 1) {
-      hightlightWithLineNumbers(code, languages.py)
-      return
-    }
-    hightlightWithLineNumbers(code, languages.java)
-  }
-
+export default function Code({ value, setValue, languageId }) {
   return (
     <Container>
-      <FlexBox>
-        {languageId === 1 ? <FaPython /> : <FaJava />}
-        <ButtonDropdown
-          title="언어선택"
-          size="small"
-          type="gray"
-          options={languageObject}
-          onClick={(e) => setLanguageId(parseInt(e.target.id.slice(0, 1)))}
-        />
-      </FlexBox>
       <StyledEditor
-        // value = {
-        //   languageId === 1
-        //     ? `python`
-        //     : `java`
-        // }
-        
-        value={languageId === 1 ? "python" : "java"}
+        value={value}
         onValueChange={(code) => setValue(code)}
         highlight={
           languageId === 1

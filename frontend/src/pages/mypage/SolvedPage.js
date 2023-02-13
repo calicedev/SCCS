@@ -6,8 +6,7 @@ import Pagination from 'components/mypage/Pagination'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import { useNavigate } from 'react-router-dom'
-// import { useSelector } from 'react-redux'
-import useUser from 'hooks/useUser'
+import { useSelector } from 'react-redux'
 import Loading from 'components/common/Loading'
 
 const PROBLEM_PER_PAGE = 7 // 페이지 당 문제 수
@@ -19,7 +18,7 @@ export default function ProblemList() {
 
   // 리덕스 -> 유저의 id 읽어오기
   // const id = useSelector((state) => state.user.id)
-  const id = useUser().id
+  const id = useSelector((state) => state.user.id)
 
   // useState
   const [problems, setProblems] = useState(null)
@@ -63,11 +62,11 @@ export default function ProblemList() {
             .map((problem, i) => {
               return (
                 <ProblemItem
-                  problemName={problem.name}
+                  problemName={problem.problemName}
                   answerRate={problem.answerRate}
                   submitDatetime={problem.date}
                   difficulty={problem.difficulty}
-                  onClick={() => navigate(`/problem/${problem.id}`)}
+                  onClick={() => navigate(`/problem/${problem.problemID}`)}
                   key={i}
                 />
               )

@@ -119,7 +119,6 @@ export default function CodingTest({
   const submitCode = () => {
     // let fileName = 'formFile.txt';
     const content = document.querySelector('textarea').value
-    const element = document.createElement('a')
     const file = new Blob([content], { type: 'text/plain' })
     const formData = new FormData()
     formData.append('formFile', file)
