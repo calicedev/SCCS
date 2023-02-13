@@ -133,8 +133,8 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-                (MINUTE * 20));
-        long exp = System.currentTimeMillis() + (MINUTE * 20);
+                (HOUR * 9));
+        long exp = System.currentTimeMillis() + (HOUR * 9);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
                 (HOUR * 10));
 
@@ -259,10 +259,10 @@ public class MemberController {
       logger.info("[modify]파일경로 : {}", fileDto.getUrl());
       memberDto.setProfileImage(fileDto.getUrl());
     }
-      if (nickname != null) {
+      if (nickname != null || !nickname.equals("")) {
           memberDto.setNickname(nickname);
       }
-      if (email != null) {
+      if (email != null || !email.equals("")) {
           memberDto.setEmail(email);
       }
     logger.debug("[modify]회원정보 수정 후 : {}", memberDto);
@@ -389,9 +389,9 @@ public class MemberController {
       logger.debug("[refreshToken]토큰 인증 성공");
       if (id.equals(redisService.getRefreshTokenWithRedis(refreshToken))) {
         logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
-        String newAccessToken = jwtService.createToken(id, "accessToken", 20 * MINUTE);
+        String newAccessToken = jwtService.createToken(id, "accessToken", 9 * HOUR);
 
-        long exp = System.currentTimeMillis() + (MINUTE * 20);
+        long exp = System.currentTimeMillis() + (HOUR * 9);
 
         // 토큰 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);

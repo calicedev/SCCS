@@ -25,11 +25,9 @@ public class MessageController {
 
     if(socketDto.getStatus().equals("enter")){
       socketDto.setMessage(socketDto.getNickname() + "님이 채팅방에 참여하였습니다.");
-      StudyroomDto studyroomDto = new StudyroomDto();
-      studyroomDto.setId(socketDto.getStudyroomId());
-      studyroomService.increaseStudyroomPersonnel(studyroomDto);
-      int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
-      socketDto.setPersonnel(temp2);
+      studyroomService.increaseStudyroomPersonnel(socketDto.getStudyroomId());
+      int temp = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+      socketDto.setPersonnel(temp);
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 
@@ -55,6 +53,11 @@ public class MessageController {
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }
 
+    else if(socketDto.getStatus().equals("problem")){
+      socketDto.setMessage(socketDto.getMessage());
+      template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+    }
+
     else if(socketDto.getStatus().equals("exit")){
       MemberDto memberDto = studyroomService.getHostnicknameByStudyroomInfo(socketDto.getStudyroomId());
       //방장이 방을 나가면
@@ -64,11 +67,9 @@ public class MessageController {
       }
       else {
         socketDto.setMessage(socketDto.getNickname() + "님이 채팅방을 나갔습니다.");
-        StudyroomDto studyroomDto = new StudyroomDto();
-        studyroomDto.setId(socketDto.getStudyroomId());
-        studyroomService.decreaseStudyroomPersonnel(studyroomDto);
-        int temp2 = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
-        socketDto.setPersonnel(temp2);
+        studyroomService.decreaseStudyroomPersonnel(socketDto.getStudyroomId());
+        int temp = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+        socketDto.setPersonnel(temp);
       }
       template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
     }

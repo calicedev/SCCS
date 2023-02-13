@@ -6,17 +6,18 @@ import OutlineButton from 'components/common/OutlineButton'
 import ProfileImgInput from 'components/mypage/ProfileImgInput'
 import { useNavigate } from 'react-router-dom'
 import { useProfileInput } from 'hooks/useProfileInput'
-import useUser from 'hooks/useUser'
 import getUserInfo from 'libs/getUserInfo'
 import axios from 'libs/axios'
 import api from 'constants/api'
+// import useUser from 'hooks/useUser'
+import { useSelector } from 'react-redux'
 
 export default function ProfileEdit() {
   // 리액트 훅관련 함수 정의
   const navigate = useNavigate()
 
   // 리덕스 -> 사용자 정보 읽어오기
-  const user = useUser()
+  const user = useSelector((state) => state.user)
 
   // 커스텀 훅 useProfileInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [nickname, setNickname, nicknameMsg, nicknameIsChanged] =
@@ -30,9 +31,8 @@ export default function ProfileEdit() {
   const [img, setImg] = useState(user.profileImage)
 
   // 서버에서 받은 정보는 img url이 string값 그대로지만, edit시에는 파일이 업로드 됨으로 url 주소를 추출
-  console.log(user)
   const imgUrl = useMemo(() => {
-    if (!img) {
+    if (img === null) {
       return img
     }
     if (typeof img === 'string') {
@@ -47,7 +47,7 @@ export default function ProfileEdit() {
     const data = {
       nickname: nicknameIsChanged ? nickname : null,
       email: emailIsChanged ? email : null,
-      mfile: typeof img !== 'string' ? img[0] : null,
+      mfile: typeof img === 'string' || img === null ? null : img[0],
     }
     const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api('updateUserInfo')

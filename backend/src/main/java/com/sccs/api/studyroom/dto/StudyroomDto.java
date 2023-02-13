@@ -30,4 +30,5 @@ public class StudyroomDto {
 
   private String hostId;
   private int personnel;
+  private String nickname;
 }

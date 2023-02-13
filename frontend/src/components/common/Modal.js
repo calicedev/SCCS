@@ -24,7 +24,8 @@ export default function Modal({ close, content }) {
         <ButtonWrapper>
           <IconButton icon={<FaTimes />} onClick={stopClose} />
         </ButtonWrapper>
-        {content}
+        {/* 2.12 민혁 추가 - <pre></pre> 태그로 감싸주면 공백이나 줄바꿈이 잘 적용됨 */}
+        <pre>{content}</pre>
       </StyledDiv>
     </Container>
   )

@@ -179,14 +179,14 @@
     where id= #{id}
   </select>
 
-  <update id="increaseStudyroomPersonnel" parameterType="StudyroomDto" useGeneratedKeys="true"
+  <update id="increaseStudyroomPersonnel" parameterType="int" useGeneratedKeys="true"
     keyProperty="personnel">
     UPDATE studyroom
     SET personnel = personnel+1
     WHERE id = #{id}
   </update>
 
-  <update id="decreaseStudyroomPersonnel" parameterType="StudyroomDto" useGeneratedKeys="true"
+  <update id="decreaseStudyroomPersonnel" parameterType="int" useGeneratedKeys="true"
     keyProperty="personnel">
     UPDATE studyroom
     SET personnel = personnel-1
@@ -215,24 +215,19 @@
 
   <!--스터디에 필요한 정보를 가져오는 쿼리, 각 회원들이 2개의 문제를 해결한 결과를 보여준다. -->
   <select id="getStudyInfo" parameterType="StudyroomDto" resultType="SubmissionDto">
-    select
-    *
-    from(
-      select
-      *
-      from submission
-      where (member_id, submit_datetime) in (
-        select member_id, max(submit_datetime) as submit_datetime
-        from submission where studyroom_id=#{id} and problem_id=#{problemId} group by member_id
-      )
-      order by submit_datetime desc
-    ) t
-    group by t.member_id
+    SELECT s.id as id, s.runtime as runtime, s.memory as memory, s.result as result, s.submit_datetime as submit_datetime,
+    s.problem_id as problem_id, s.member_id as member_id, m.nickname as member_nickname, s.language_id as language_id,
+    s.studyroom_id as studyroom_id, s.file_name as file_name FROM (select * from submission
+    where (member_id, submit_datetime) in (
+    select member_id, max(submit_datetime) as submit_datetime
+    from submission where studyroom_id=#{id} and problem_id=#{problemId} group by member_id
+    ) order by submit_datetime desc)s
+    LEFT JOIN member m ON m.id=s.member_id;
   </select>
 
   <update id="endStudyroomByOwner" parameterType="int">
     UPDATE studyroom
-    SET is_active=FALSE
+    SET is_active=FALSE ,destroy_datetime = now()
     WHERE id = #{id}
   </update>
 

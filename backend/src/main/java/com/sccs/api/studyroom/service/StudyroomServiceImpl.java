@@ -1,6 +1,5 @@
 package com.sccs.api.studyroom.service;
 
-import com.sccs.api.aws.dto.FileDto;
 import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.studyroom.dto.ProblemDto;
@@ -14,10 +13,7 @@ import com.sccs.api.studyroom.file.FileStore;
 import com.sccs.api.studyroom.mapper.StudyroomMapper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -265,8 +261,11 @@ public class StudyroomServiceImpl implements StudyroomService {
         // 1. isSolving 상태를 진행 중(1)으로 바꾼다.
         studyroomMapper.changeStudyroomSolvingStatus(studyroomDto);
 
-        // 2. 스터디 시작하는 애들 아이디 넣어준다.
-        studyroomMapper.insertMemberIds(studyroomDto);
+        // 2. 요청을 보내는 사람이 호스트이면 스터디 시작하는 애들 아이디 넣어준다.
+        MemberDto memberDto = studyroomMapper.getHostnicknameByStudyroomInfo(studyroomDto.getId());
+        if (studyroomDto.getNickname().equals(memberDto.getNickname())) {
+            studyroomMapper.insertMemberIds(studyroomDto);
+        }
 
         // 3. 스터디룸 정보를 담은 걸 resultmap에 담는다.
         StudyroomDto s = studyroomMapper.selectStudyroomById(studyroomDto.getId());
@@ -288,7 +287,7 @@ public class StudyroomServiceImpl implements StudyroomService {
      * 코딩 테스트 문제 제출
      **/
     @Override
-    public List<Map<String, Object>> submitProblem(SubmissionDto submissionDto) throws IOException {
+    public Map<String, Object> submitProblem(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
         //파일을 원하는 경로에 실제로 저장한다.
         MultipartFile f = fileStore.storeFile(submissionDto.getFormFile());
@@ -322,15 +321,18 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         //프록시 서버에서 채점 서버로 API 호출
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+        Map<String, Object> s = REST_TEMPLATE.postForObject(url, requestEntity, Map.class);
+
+
+        System.out.println((Boolean) s.get("isAnswer"));
 
         // 문제를 풀었다는 정보를 문제 db에 저장하기 위해 problem에 담는다
         Map<String, Object> p = new HashMap<>();
         p.put("id", problemDto.getId());
         // 찬희님 한테서 가져온 정보를 확인해보고 마지막 5 배열이 맞았고 회원에서 한번도 풀린적이 없다면 점수를 더해준다.
         // 만약 맞았어. 한번도 안풀었어.
-        if ((Boolean) s.get(5).get("isAnswer") ) {
-            if( studyroomMapper.isSolvingByUser(submissionDto) == 0) {
+        if ((Boolean) s.get("isAnswer")) {
+            if (studyroomMapper.isSolvingByUser(submissionDto) == 0) {
                 // 내 등급을 알기 위해 member에서 내 점수를 가져와
                 int score = studyroomMapper.getScoreByMember(submissionDto.getMemberId());
                 Map<String, Object> resultMap = new HashMap<>();
@@ -339,7 +341,7 @@ public class StudyroomServiceImpl implements StudyroomService {
                 resultMap.put("memberScore", score);
                 studyroomMapper.injectScore(resultMap);
             }
-            p.put("correct",1);
+            p.put("correct", 1);
         }
 
         // 문제 풀었다는 걸 db에 저장한다.
@@ -347,17 +349,17 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         //문제 제출 정보를 실제 디비에 저장한다.
         submissionDto.setFileName(f.getName());
-        submissionDto.setResult((Boolean) s.get(5).get("isAnswer"));
-        submissionDto.setMemory((Integer) s.get(5).get("avgMemory"));
-        submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get(5).get("avgRuntime"))));
+        submissionDto.setResult((Boolean) s.get("isAnswer"));
+        submissionDto.setMemory((Integer) s.get("avgMemory"));
+        submissionDto.setRuntime(Double.parseDouble(String.valueOf(s.get("avgRuntime"))));
         studyroomMapper.submitProblem(submissionDto);
         return s;
     }
 
     /**
      * 코딩 테스트 테스트 코드 제출
-     */
-    public List<Map<String, Object>> submitTest(SubmissionDto submissionDto) throws IOException {
+     **/
+    public Map<String, Object> submitTest(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
         //파일을 원하는 경로에 실제로 저장한다.
         MultipartFile f = fileStore.storeFile(submissionDto.getFormFile());
@@ -388,23 +390,44 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         //프록시 서버에서 채점 서버로 API 호출
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-        List<Map<String, Object>> s = REST_TEMPLATE.postForObject(url, requestEntity, List.class);
+        Map<String, Object> s = REST_TEMPLATE.postForObject(url, requestEntity, Map.class);
         return s;
     }
 
+    /**
+     * 스터디 시작하기
+     **/
+    public List startStudy(StudyroomDto studyroomDto) {
+        List resultMap = new ArrayList();
 
-    public Map<String, Object> startStudy(StudyroomDto studyroomDto) {
-        Map<String, Object> resultMap = new HashMap<>();
         for (int i = 0; i < 2; i++) {
+            Map<String, Object> problem = new HashMap<>();
+
+            // 스터디 정보 가져오기
             int problemId = studyroomDto.getProblemIds().get(i);
             studyroomDto.setProblemId(problemId);
             List<SubmissionDto> s = studyroomMapper.getStudyInfo(studyroomDto);
-            resultMap.put("problemResult" + problemId, s);
 
-            //문제 이미지 담기
+            // 문제 아이디 넣어주기
+            problem.put("problemId", problemId);
+
+            // AWS에서 문제 사진 가져오기
             ProblemDto p = studyroomMapper.getProblemInfo(problemId);
             String url = awsS3service.getTemporaryUrl("problem/" + p.getProblemFolder() + ".jpg");
-            resultMap.put("problem" + problemId, url);
+            problem.put("problemImgUrl", url);
+
+            // 제출 코드 리스트에 담기
+            if (s.size() != 0) {
+                problem.put("codeList", s);
+                //문제 이미지 담기
+                for (int j = 0; j < s.size(); j++) {
+                    s.get(j).setFileUrl(awsS3service.getTemporaryUrl("submission/" + s.get(j).getFileName()));
+                }
+            } else {
+                List<String> emptyList = Collections.emptyList();
+                problem.put("codeList", emptyList);
+            }
+            resultMap.add(problem);
         }
         return resultMap;
     }
@@ -427,46 +450,41 @@ public class StudyroomServiceImpl implements StudyroomService {
         }
     }
 
-    public ProblemDto getProblemInfo(int problemId) {
-        ProblemDto p = studyroomMapper.getProblemInfo(problemId);
-        return p;
-    }
-
+    /**
+     * 소켓 통신 인원 조회
+     **/
     public int getStudyroomPersonnel(int id) {
         int personnel = studyroomMapper.getStudyroomPersonnel(id);
         return personnel;
     }
 
+    /**
+     * 소켓 통신 처음에 들어오는 사람 increase
+     **/
     @Override
-    public int increaseStudyroomPersonnel(StudyroomDto studyroomDto) {
-        return studyroomMapper.increaseStudyroomPersonnel(studyroomDto);
+    public int increaseStudyroomPersonnel(int id) {
+        return studyroomMapper.increaseStudyroomPersonnel(id);
     }
 
-
-    public int decreaseStudyroomPersonnel(StudyroomDto studyroomDto) {
-        return studyroomMapper.decreaseStudyroomPersonnel(studyroomDto);
+    /**
+     * 소켓 통신 처음에 들어오는 사람 decrease
+     **/
+    public int decreaseStudyroomPersonnel(int id) {
+        return studyroomMapper.decreaseStudyroomPersonnel(id);
     }
 
-
+    /**
+     * 메인 화면에서 입장할 때 존재하는 방인지 체크하는 로직
+     */
     @Override
     public boolean isExistStudyroom(int id) {
         boolean isExist = studyroomMapper.isExistStudyroom(id);
         return isExist;
     }
 
-    @Override
-    public List<SubmissionDto> getStudyInfo(StudyroomDto studyroomDto) {
-        List<SubmissionDto> s = studyroomMapper.getStudyInfo(studyroomDto);
-        for (int i = 0; i < s.size(); i++) {
-            s.get(i).setFileUrl(awsS3service.getTemporaryUrl("submission/" + s.get(i).getFileName()));
-        }
-        return s;
-    }
-
-    public String getNicknameById(String id) {
-        return studyroomMapper.getNicknameById(id);
-    }
-
+    /**
+     * 스터디룸 조회하면 호스트 닉네임 반환. id랑 nickname이랑 꼬여서 만든 로직.
+     */
     @Override
     public MemberDto getHostnicknameByStudyroomInfo(int studyroomId) {
         return studyroomMapper.getHostnicknameByStudyroomInfo(studyroomId);

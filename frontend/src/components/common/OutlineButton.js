@@ -64,8 +64,6 @@ const StyledButton = styled.button`
 
   border-radius: 10px;
 
-  background-color: #ffffff;
-
   text-align: center;
   font-weight: 600;
   white-space: nowrap;

@@ -31,8 +31,6 @@ export default function WaitingPage() {
   const [readyList, setReadyList] = useState([])
   const [subscription, setSubscription] = useState(null)
 
-  console.log('readyList', readyList)
-
   const toggleReady = () => {
     const newReady = !ready
     setReady(newReady)
