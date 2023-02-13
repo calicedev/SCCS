@@ -52,7 +52,13 @@ export default function CodeSection({
         />
       </FlexBox>
       <StyledEditor
-        value={value}
+        // value = {
+        //   languageId === 1
+        //     ? `python`
+        //     : `java`
+        // }
+        
+        value={languageId === 1 ? "python" : "java"}
         onValueChange={(code) => setValue(code)}
         highlight={
           languageId === 1
