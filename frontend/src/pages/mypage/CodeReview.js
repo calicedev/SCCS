@@ -6,7 +6,8 @@ import Textarea from 'components/study/Textarea'
 import Button from 'components/common/Button'
 import axios from 'libs/axios'
 import api from 'constants/api'
-import useUser from 'hooks/useUser'
+import { useSelector } from 'react-redux'
+// import useUser from 'hooks/useUser'
 
 export default function CodeReview({
   problem,
@@ -14,23 +15,25 @@ export default function CodeReview({
   
 }) {
   const navigate = useNavigate()
-  const { id } = useParams()
-  // const id = useUser().id  
-  const [problemUrl, setProblemUrl] = useState()
+  // const { id } = useParams()
+  const memberId = useSelector((state) => state.user.id)
+  const {problemId} = useParams()
+
+  const [problemUrl, setProblemUrl] = useState(null)
+  const [submissionList, setSubmissionList] = useState([])
+  const [submissionIdx, setSubmissionIdx] = useState(0)
+
 
   useEffect(() => {
-    const [url, method] = api('codeReview', { id })
+    const [url, method] = api('solveProblem', { memberId, problemId })
     const config = { url, method }
     axios
       .request(config)
       .then((res) => {
-        console.log(res.data)
-        setProblemUrl(res.data)
-        // console.log(study)
-        console.log(id)
+        setProblemUrl(res.data.problemUrl)
+        setSubmissionList(res.data.submissionInfo)
       })
       .catch((err) => {
-        console.log(id)
         alert('스터디 내역을 불러오지 못했습니다.')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
