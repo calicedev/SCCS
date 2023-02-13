@@ -11,7 +11,7 @@ opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 �
 onChange: 클릭 시 동작할 함수
 */
 
-export default function ShareSection({ code }) {
+export default function ShareSection({ screenContent }) {
   // canvas
   const canvasBoardRef = useRef()
   const cavasContainerRef = useRef()
@@ -89,8 +89,20 @@ export default function ShareSection({ code }) {
             canvasBoardRef.current.width,
             canvasBoardRef.current.height,
           )
-          context.font = '10px serif'
-          context.strokeText('codsdfsdfe', 10, 10)
+          const [type, content] = screenContent
+          if (type === 'code') {
+            context.lineWidth = '0.1px'
+            context.strokeStyle = 'black'
+            context.font = '1rem serif'
+            context.strokeText(content, 10, 10)
+          } else {
+            const problemImage = new Image(
+              canvasBoardRef.current.width,
+              canvasBoardRef.current.height,
+            )
+            problemImage.src = content
+            context.drawImage(problemImage, 0, 0)
+          }
         }
       }
     }
@@ -148,7 +160,7 @@ export default function ShareSection({ code }) {
     }
 
     makeCanvas()
-  }, [])
+  }, [screenContent])
   return (
     <CanvasContainer ref={cavasContainerRef}>
       <CanvasBoard ref={canvasBoardRef} id="code-with-drawing"></CanvasBoard>

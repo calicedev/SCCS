@@ -11,6 +11,7 @@ import Modal from 'components/common/Modal'
 import CreateRoomMdContent from 'components/main/CreateRoomMdContent'
 import Loading from 'components/common/Loading'
 import useInterval from 'hooks/useInterval'
+import checkLogin from 'libs/checkLogin'
 
 const searchOptions = {
   title: '방 이름',
@@ -18,6 +19,8 @@ const searchOptions = {
 }
 
 export default function MainRooms() {
+  const isLogin = checkLogin()
+
   const [rooms, setRooms] = useState(null)
   const [algoIds, setAlgoIds] = useState([])
   const [languageIds, setLanguageIds] = useState([])
@@ -61,6 +64,14 @@ export default function MainRooms() {
       return
     }
     setAlgoIds(algoIds.filter((ele) => ele !== id))
+  }
+
+  const createRoom = () => {
+    if (!isLogin) {
+      alert('로그인 후 이용 가능합니다.')
+      return
+    }
+    setShowModal(true)
   }
 
   // 방 세부 검색 함수
@@ -140,7 +151,7 @@ export default function MainRooms() {
         </SearchContainer>
         <Button
           type="secondary"
-          onClick={() => setShowModal(!showModal)}
+          onClick={createRoom}
           value="방 만들기"
         ></Button>
       </FlexBox>

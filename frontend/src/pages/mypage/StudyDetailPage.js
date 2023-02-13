@@ -17,7 +17,7 @@ export default function StudyDetailPage() {
   const [studyTitle, setStudyTitle] = useState(null)
   const [problems, setProblems] = useState(null) // 스터디에서 푼 문제 배열
   const [problemIdx, setProblemIdx] = useState(0) // 현재 보여지는 문제의 인덱스
-  const [studyroomId, setStudyroomId] = useState(null)
+  const [studyroomId, setStudyroomId] = useState(id)
   // 마운트시 axios 요청으로 스터디 데이터(study) 요청
   useEffect(() => {
     const [url, method] = api('studyDetail', { id })

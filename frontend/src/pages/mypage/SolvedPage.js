@@ -62,11 +62,11 @@ export default function ProblemList() {
             .map((problem, i) => {
               return (
                 <ProblemItem
-                  problemName={problem.name}
+                  problemName={problem.problemName}
                   answerRate={problem.answerRate}
                   submitDatetime={problem.date}
                   difficulty={problem.difficulty}
-                  onClick={() => navigate(`/problem/${problem.id}`)}
+                  onClick={() => navigate(`/problem/${problem.problemID}`)}
                   key={i}
                 />
               )
