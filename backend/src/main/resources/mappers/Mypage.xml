@@ -121,7 +121,7 @@
   <select id="getProblemUrl" parameterType="hashmap" resultMap="problemIdFromSubmission">
     SELECT p.problem_folder as problemUrl, s.id as submissionId, s.language_id as
     submissionLanguageId, s.file_name as submissionFileName FROM problem p, submission s WHERE
-    p.id=#{problemId} and s.problem_id=p.id;
+    p.id=#{problemId} and s.problem_id=p.id and s.member_id=#{memberId};
   </select>
 
   <select id="getProblemUrlOnly" resultType="String">
