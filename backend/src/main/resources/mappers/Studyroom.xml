@@ -167,7 +167,7 @@
     where id=#{id}
   </select>
 
-  <select id="getIdNickname" parameterType="String" resultType="String">
+  <select id="getIdByNickname" parameterType="String" resultType="String">
     select id
     from member
     where nickname=#{nickname}
