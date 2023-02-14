@@ -163,7 +163,7 @@ const FlexBox = styled.div`
 const FlexBox2 = styled.div`
   display: flex;
   justify-content: space-between;
-  max-height: ${({ windowHeight }) => `calc(${windowHeight}px - 300px)`};
+  max-height: ${({ height }) => height}px;
   gap: 10px;
   height: 100%;
 `

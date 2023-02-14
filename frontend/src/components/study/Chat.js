@@ -64,6 +64,7 @@ const Container = styled.div`
   flex-wrap: wrap;
 
   width: 100%;
+  max-width: 30%;
   min-width: 20rem;
   height: 100%;
 
