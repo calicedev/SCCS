@@ -19,6 +19,10 @@ export default function CodeReview() {
   const [submissionList, setSubmissionList] = useState([])
   const [submissionIdx, setSubmissionIdx] = useState(0)
 
+  const [idx, setIdx] = useState(0)
+
+  const [code, setCode] = useState('')
+  
   useEffect(() => {
     const [url, method] = api('solveProblem', { memberId, problemId })
     const config = { url, method }
@@ -30,6 +34,7 @@ export default function CodeReview() {
         console.log('데이터 값')
         console.log(res.data)
         setSubmissionList(res.data.submissionInfo)
+        setIdx(res.data.submissionInfo.length)
       })
       .catch((err) => {
         alert('스터디 내역을 불러오지 못했습니다.')
@@ -71,6 +76,17 @@ export default function CodeReview() {
   }
 
 
+  const fetchData = () => {
+    fetch(submissionList[0].submissionFile)
+      .then((res) => {
+        console.log('res', res)
+        return res.text()
+      })
+      .then((code) => {
+        console.log('code', code)
+        setCode(code)
+      })
+  }
 
 
 
@@ -98,7 +114,7 @@ export default function CodeReview() {
         <FlexColumn>
           <CodingSection>
             <Changer>언어 선택</Changer>
-            <Textarea></Textarea>
+            <Textarea lastCode={code}></Textarea>
           </CodingSection>
           <Resizable
             defaultSize={{ width: '100%', height: '37%' }}
@@ -160,6 +176,10 @@ export default function CodeReview() {
                 }}
               ></Button>
             </EndBtn>
+            <div>
+              {code}
+            </div>
+              <h1 onClick={fetchData}>asdggg</h1>
             <CompileBtn>
               {/* <Button
                 value="테스트"
