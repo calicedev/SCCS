@@ -1,0 +1,8 @@
+import sys
+class Solution:
+    N = int(input())
+    prime = [0, 0, 1] + [1] * (N - 2)
+    for i in range(2, int(N ** 0.5) + 1):
+        if prime[i]:
+            prime[2 * i::i] = [0] * (N // i - 1)
+    print(sum(prime))
