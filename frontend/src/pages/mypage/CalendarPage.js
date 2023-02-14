@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { format } from 'date-fns'
+import styled from 'styled-components'
+import { useSelector } from 'react-redux'
 import { addMonths, subMonths } from 'date-fns'
+import api from 'constants/api'
+import axios from 'libs/axios'
+import StudyList from 'components/mypage/StudyList'
 import MemoizedCalendar from 'components/mypage/Calendar'
 import MonthSelector from 'components/mypage/MonthSelector'
-import styled from 'styled-components'
-import { format } from 'date-fns'
-import StudyList from 'components/mypage/StudyList'
-import axios from 'libs/axios'
-import api from 'constants/api'
 // import useUser from 'hooks/useUser'
-import { useSelector } from 'react-redux'
 
 export default function StudyCalendar() {
   // 리덕스 -> 유저 id 읽기
@@ -106,6 +106,7 @@ export default function StudyCalendar() {
   const nextMonth = () => {
     setCurrentDate(addMonths(currentDate, 1))
   }
+
   return (
     <Container>
       <Modal

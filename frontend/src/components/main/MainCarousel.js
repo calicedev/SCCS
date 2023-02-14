@@ -15,7 +15,7 @@ export default function MainCarousel() {
       showThumbs={false}
       autoPlay={true}
       infiniteLoop={true}
-      interval={2000}
+      interval={3000}
     >
       <div>
         <img src={mainBanner1} alt="배너이미지1" />

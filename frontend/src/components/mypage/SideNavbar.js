@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { FaRegBookmark, FaRegUser, FaListUl } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
+import { FaRegBookmark, FaRegUser, FaListUl } from 'react-icons/fa'
 import sideNavBlueBg from 'assets/img/side_nav_blue_bg.png'
 
 /*

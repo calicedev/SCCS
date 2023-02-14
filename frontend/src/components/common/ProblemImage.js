@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-export default function ProblemImage({ imgUrl }) {
+export default function ProblemImage({ src }) {
   return (
     <Wrapper>
-      <StyledImg src={imgUrl} alt="문제이미지" />
+      <StyledImg src={src} alt="문제이미지" />
     </Wrapper>
   )
 }
@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   overflow-y: auto;
   width: 100%;
   height: 100%;
+  padding: 1rem;
 `
 
 const StyledImg = styled.img`

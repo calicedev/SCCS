@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import TestButtons from 'components/study/TestButtons'
@@ -6,9 +6,24 @@ import TestButtons from 'components/study/TestButtons'
 /*
 Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
 
-title: 옵션들의 제목
-opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
-onChange: 클릭 시 동작할 함수
+results: 결과 배열
+        {
+          isAnswer: Boolean,
+          avgRuntime: Number,
+          avgMemory: Number,
+          resultList: [
+            {
+              result: Boolean,
+              message: String,
+              memory: Number,
+              runtime: Number,
+            }
+          ]
+        }
+isFinished: 종료 여부를 나타내는 Bool. FInish 버튼의 텍스트를 결정
+finish: 종료 버튼 클릭 시 동작하는 함수
+test: 테스트 버튼 클릭 시 동작하는 함수
+submit: 제출 버튼 클릭 시 동작하는 함수
 */
 
 export default function ResultSection({
@@ -28,24 +43,24 @@ export default function ResultSection({
                 className={problem.result ? 'c pass' : 'c error'}
                 key={`${index}-problem-result`}
               >
-                {index + 1}번{') '} {problem.message} : {problem.memory}kb
+                {index + 1}번{') '} {problem.message} : {problem.memory}MB
                 {' / '}
-                {problem.runtime}ms
+                {problem.runtime}s
               </p>
             ))}
             {results.isAnswer ? (
               <p className="pass ">
                 <br />
                 통과했습니다~~~!!!
-                <br /> 런타임 평균: {results.avgRuntime}ms 메모리 평균:{' '}
-                {results.avgMemory}kb
+                <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:{' '}
+                {results.avgMemory}MB
               </p>
             ) : (
               <p className="error c">
                 <br />
                 틀렸습니다ㅜㅜ
-                <br /> 런타임 평균: {results.avgRuntime}ms 메모리 평균:{' '}
-                {results.avgMemory}kb
+                <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:{' '}
+                {results.avgMemory}MB
               </p>
             )}
           </>
@@ -59,6 +74,22 @@ export default function ResultSection({
       />
     </Container>
   )
+}
+
+ResultSection.propTypes = {
+  results: PropTypes.array,
+  isFinished: PropTypes.bool,
+  finish: PropTypes.func,
+  test: PropTypes.func,
+  submit: PropTypes.func,
+}
+
+ResultSection.defaultProps = {
+  results: [],
+  isFinished: false,
+  finish: undefined,
+  test: undefined,
+  submit: undefined,
 }
 
 const Container = styled.div`

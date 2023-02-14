@@ -4,11 +4,13 @@ import styled from 'styled-components'
 import Button from 'components/common/Button'
 
 /*
-Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
+클릭시 버튼 옵션들이 아래로 나타나는 컴포넌트
 
 title: 옵션들의 제목
-opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
-onChange: 클릭 시 동작할 함수
+size: Button Component의 사이즈
+type: Button Component의 색깔 
+options: {key: value}형태의 옵션 객체. 버튼의 id = "key-value". 버튼의 글씨 = value.
+onClick: 클릭 시 동작할 함수
 */
 
 export default function ButtonDropdown({
@@ -18,8 +20,10 @@ export default function ButtonDropdown({
   options,
   onClick,
 }) {
+  // 옵션 버튼들의 display 여부
   const [showOptions, setShowOptions] = useState(false)
 
+  // 버튼 사이즈에 따라 옵션 버튼들의 위치 조정
   const top =
     size === 'tiny'
       ? '2rem'
@@ -58,17 +62,19 @@ export default function ButtonDropdown({
   )
 }
 
-// ButtonDropdown.propTypes = {
-//   title: PropTypes.string.isRequired,
-//   options: PropTypes.object.isRequired,
-//   onChange: PropTypes.func,
-// }
+ButtonDropdown.propTypes = {
+  title: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(['tiny', 'small', 'medium', 'large']), // 버튼 크기
+  type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'danger']), // 버튼 커스터마이징 (글자색, 배경색, border-radius)
+  options: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
+}
 
-// ButtonDropdown.defaultProps = {
-//   onChange: undefined,
-//   name: '',
-//   value: '',
-// }
+ButtonDropdown.defaultProps = {
+  size: 'medium',
+  type: 'primary',
+  onClick: undefined,
+}
 
 const Container = styled.div`
   display: flex;
@@ -81,17 +87,12 @@ const OptionWrapper = styled.div`
   flex-direction: column;
   gap: 5px;
 
-  z-index: 6;
-
   position: absolute;
   top: ${({ top }) => top};
 
+  z-index: 6;
+
   animation: 0.5s ease-in-out forwards dropdown;
-
-  & > p {
-    font-size: 1.2rem;
-  }
-
   @keyframes dropdown {
     0% {
       opacity: 0;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import Button from 'components/common/Button'
 import styled from 'styled-components'
-import { Link, useNavigate } from 'react-router-dom'
-import getUserInfo from 'libs/getUserInfo'
-import { setExpiration } from 'redux/expSlice'
 import { useDispatch } from 'react-redux'
+import { setExpiration } from 'redux/expSlice'
+import { Link, useNavigate } from 'react-router-dom'
+import api from 'constants/api'
+import axios from 'libs/axios'
+import getUserInfo from 'libs/getUserInfo'
+import Button from 'components/common/Button'
 import AuthInput from 'components/auth/AuthInput'
 import Checkbox from 'components/common/Checkbox'
-import axios from 'libs/axios'
-import api from 'constants/api'
 
 export default function LoginForm() {
   // 라액트 훅 관련 함수 정의
@@ -24,7 +24,7 @@ export default function LoginForm() {
   })
   const [isChecked, setIsChecked] = useState(false)
 
-  // 로그인 서버 요청
+  // 로그인 api 요청
   const login = () => {
     if (!id || !password) {
       const newMsg = { ...message }

@@ -7,6 +7,7 @@ import checkLogin from 'libs/checkLogin'
 */
 
 export default function PrivateRoute() {
+  // 로그인 여부 체크
   const isLogin = checkLogin()
 
   if (isLogin) {

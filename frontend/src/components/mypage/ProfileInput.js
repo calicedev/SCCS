@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
 /*
 인증화면에서 사용할 입력 컴포넌트
@@ -10,6 +10,10 @@ value: input 태그에 할당할 state
 onChange: input 태그에 입력 시 실행할 함수
 disabled: input 태그의 활성화 여부, 기본 false
 message: message가 있을 시, isValid 여부에 따라 적절한 색깔로 문구를 보여줌
+        {
+          message: String,
+          isValid: Boolean,
+        }
 */
 
 const typeObj = {
@@ -91,6 +95,7 @@ ProfileInput.propTypes = {
   ]),
   value: PropTypes.string,
   onChange: PropTypes.func,
+  onKeyUp: PropTypes.func,
   message: PropTypes.object,
   disabled: PropTypes.bool,
 }
@@ -99,6 +104,7 @@ ProfileInput.defaultProps = {
   type: 'id',
   value: '',
   onChange: undefined,
+  onKeyUp: undefined,
   message: { text: '', isValid: false },
   disabled: false,
 }
@@ -122,8 +128,6 @@ const Input = styled.input`
 
 const Label = styled.label`
   display: block;
-
   margin-top: 1rem;
-
   font-size: 1.3rem;
 `

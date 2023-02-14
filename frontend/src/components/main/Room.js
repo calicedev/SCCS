@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { algorithmPk } from 'constants/pk'
-import { FaLock, FaPython, FaJava } from 'react-icons/fa'
-import IconButton from 'components/common/IconButton'
+import { useNavigate } from 'react-router-dom'
+import { FaLock } from 'react-icons/fa'
+import { algorithmPk, languageIconPk } from 'constants/pk'
 import checkLogin from 'libs/checkLogin'
 import Modal from 'components/common/Modal'
+import IconButton from 'components/common/IconButton'
 import PwdModalContent from 'components/main/PwdModalContent'
-import { useNavigate } from 'react-router-dom'
 
 /*
 메인 화면에서 스터디룸을 표시하는 컴포넌트
@@ -38,35 +38,38 @@ export default function Room({
   const [showModal, setShowModal] = useState(false) // 비밀방의 모달창 표시 여부를 정하는 State
   const [isHover, setIsHover] = useState(false)
 
-  // 선택된 알고리즘을 해쉬태그 형식으로 표현
-  // Ex. [2, 3] => '#기초 #탐색'
-  let algorithms = ''
-  algoIds.forEach((pk) => {
-    algorithms += `#${algorithmPk[pk]} `
-  })
-
   // 선택된 언어 유형을 아이콘으로 표현
   // Ex. [1, 2] => [<FaPython/>, <FaJava />]
-  const languages = []
-  languageIds.forEach((pk) => {
-    languages.push(
-      <IconButton
-        key={pk}
-        type={isHover ? 'white' : isSolving ? 'tertiary' : 'secondary'}
-        disabled={true}
-        icon={pk === 1 ? <FaPython /> : <FaJava />}
-      />,
-    )
-  })
+  const languages = useMemo(() => {
+    const tempLanguages = []
+    languageIds.forEach((pk) => {
+      tempLanguages.push(
+        <IconButton key={pk} disabled={true} icon={languageIconPk[pk]} />,
+      )
+    })
+    return tempLanguages
+  }, [languageIds])
 
-  // 방을 입장하는 함수
+  // 선택된 알고리즘을 해쉬태그 형식으로 표현
+  // Ex. [2, 3] => '#기초 #탐색'
+  const algorithms = useMemo(() => {
+    let tempAlgorithms = ''
+    algoIds.forEach((pk) => {
+      tempAlgorithms += `#${algorithmPk[pk]} `
+    })
+    return tempAlgorithms
+  }, [algoIds])
+
+  // 방을 입장 함수
   const enterRoom = () => {
+    // 로그인하지 않았을 때
     if (!isLogin) {
       alert('로그인 후 이용해주세요')
       return
     }
+    // 진행방 일 경우
     if (isSolving) return
-    // 비밀방일 경우 모달창 띄우기
+    // 비밀방 일 경우 모달창 띄우기
     if (isPrivate) {
       setShowModal(true)
       return
@@ -141,10 +144,10 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  padding: 0rem 0.7rem;
-
   width: 19rem;
   height: 8rem;
+
+  padding: 0rem 0.7rem;
 
   border: 5px solid
     ${({ isSolving, theme }) =>
@@ -183,8 +186,6 @@ const OutlineBox = styled.div`
   justify-content: start;
   align-items: center;
 
-  white-space: nowrap;
-
   overflow: hidden;
 
   height: 2.2rem;
@@ -192,7 +193,6 @@ const OutlineBox = styled.div`
   margin: 0.5rem 0.2rem;
   padding: 0rem 0.5rem;
 
-  background-color: #ffffff;
   border: 4px solid
     ${({ isSolving, isHover, theme }) =>
       isSolving
@@ -203,4 +203,8 @@ const OutlineBox = styled.div`
         ? theme.deepSecondaryColor
         : theme.secondaryColor};
   border-radius: 1rem;
+
+  background-color: ${({ theme }) => theme.whiteColor};
+
+  white-space: nowrap;
 `

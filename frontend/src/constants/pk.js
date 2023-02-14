@@ -1,3 +1,5 @@
+import { FaPython, FaJava } from 'react-icons/fa'
+
 export const algorithmPk = {
   0: '랜덤',
   1: '기초',
@@ -12,4 +14,9 @@ export const algorithmPk = {
 export const languagePk = {
   1: 'Python',
   2: 'Java',
+}
+
+export const languageIconPk = {
+  1: <FaPython />,
+  2: <FaJava />,
 }

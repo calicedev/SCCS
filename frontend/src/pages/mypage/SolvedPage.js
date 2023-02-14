@@ -1,13 +1,12 @@
-import React from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
-import { useState, useMemo, useEffect } from 'react'
-import ProblemItem from 'components/mypage/ProblemItem'
-import Pagination from 'components/mypage/Pagination'
-import axios from 'libs/axios'
-import api from 'constants/api'
-import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import api from 'constants/api'
+import axios from 'libs/axios'
 import Loading from 'components/common/Loading'
+import Pagination from 'components/mypage/Pagination'
+import ProblemItem from 'components/mypage/ProblemItem'
 
 const PROBLEM_PER_PAGE = 7 // 페이지 당 문제 수
 const BUTTON_PER_PAGINATION = 5 // 페이네이션에 표시할 버튼 수
@@ -17,7 +16,6 @@ export default function ProblemList() {
   const navigate = useNavigate()
 
   // 리덕스 -> 유저의 id 읽어오기
-  // const id = useSelector((state) => state.user.id)
   const id = useSelector((state) => state.user.id)
 
   // useState
@@ -41,7 +39,7 @@ export default function ProblemList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
-  // lastPage : 마지막 페이지의 인덱스
+  // lastPage : 마지막 페이지의 인덱스 계산
   const lastPage = useMemo(() => {
     if (!problems) return
     if (problems.length / PROBLEM_PER_PAGE) {

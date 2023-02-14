@@ -6,12 +6,15 @@ import IconButton from 'components/common/IconButton'
 import { FaCaretDown } from 'react-icons/fa'
 
 /*
-Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
+Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 아래로 보여지는 컴포넌트
 
 title: 옵션들의 제목
-opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
+opitions: {key: value}형태의 옵션
+    체크 박스 요소들의 id = 'key-value'
+    체크 박스 요소들의 name = 'key'
+    체크 박스 요소들의 value = 'value'
+    체크 박스 요소들으 label ='value'
 onChange: 클릭 시 동작할 함수
-
 */
 
 export default function CheckDropdown({ title, options, onChange }) {
@@ -29,8 +32,10 @@ export default function CheckDropdown({ title, options, onChange }) {
       >
         {Object.keys(options).map((key) => (
           <Checkbox
-            key={key + options[key].toString()}
-            id={key + options[key].toString()}
+            key={key + '-' + options[key].toString()}
+            id={key + '-' + options[key].toString()}
+            name={key}
+            value={options[key]}
             label={options[key]}
             onChange={onChange}
           ></Checkbox>
@@ -48,8 +53,6 @@ CheckDropdown.propTypes = {
 
 CheckDropdown.defaultProps = {
   onChange: undefined,
-  name: '',
-  value: '',
 }
 
 const Container = styled.div`
@@ -59,7 +62,6 @@ const Container = styled.div`
 const StyledDiv = styled.div`
   display: flex;
   flex-wrap: nowrap;
-  white-space: nowrap;
   align-items: center;
 
   height: 100%;
@@ -70,9 +72,10 @@ const StyledDiv = styled.div`
   border-radius: 0.5rem;
 
   background-color: ${({ theme }) => theme.bgColor};
-  box-shadow: 3px 3px 7px #00000050;
 
   font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 3px 3px 7px #00000050;
 
   cursor: pointer;
 `

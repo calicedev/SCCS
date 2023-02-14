@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { RiArrowGoBackFill } from 'react-icons/ri'
+import axios from 'libs/axios'
+import api from 'constants/api'
 import Button from 'components/common/Button'
 import AuthInput from 'components/auth/AuthInput'
 import IconButton from 'components/common/IconButton'
-import { RiArrowGoBackFill } from 'react-icons/ri'
-import { useNavigate } from 'react-router-dom'
-import axios from 'libs/axios'
-import api from 'constants/api'
 
 export default function FindIdForm() {
   // 리액트 훅 기반 함수 정의
@@ -20,7 +20,7 @@ export default function FindIdForm() {
     isValid: false,
   })
 
-  // 아아디 찾기 서버 요청
+  // 아아디 찾기 api 요청
   const findId = () => {
     // 이름과 이메일 입력 여부 확인
     if (!name || !email) {
