@@ -63,7 +63,7 @@ export default function TestPage() {
   useEffect(() => {
     const data = {
       id: studyroomId,
-      nickname: user.nickname,
+      memberId: user.id,
       memberIds: members,
     }
     const [url, method] = api('codingTest')
