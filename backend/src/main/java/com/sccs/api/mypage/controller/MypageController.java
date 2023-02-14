@@ -57,8 +57,8 @@ public class MypageController {
   public ResponseEntity<?> getHistoryDetail(@PathVariable int studyId) {
     HashMap<String, Object> targets = mypageService.getHistoryDetail(studyId);
 
-    ArrayList<HashMap<String, Object>> problems;
-    problems = (ArrayList<HashMap<String, Object>>) targets.get("studyroomWithProblems");
+    ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
+        "studyroomWithProblems");
     for (int i = 0; i < problems.size(); i++) {
       ArrayList<HashMap<String, Object>> participants;
       participants = (ArrayList<HashMap<String, Object>>) problems.get(i)
