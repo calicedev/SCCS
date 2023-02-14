@@ -6,7 +6,7 @@ import 'prismjs/components/prism-python' // import 언어 모듈가서 확인 �
 import 'prismjs/components/prism-java' // 2개 import하면 오류뜸
 import 'prismjs/themes/prism.css' //Example style, you can use another
 import styled from 'styled-components'
-import ButtonDropdown from 'components/common/ButtonDropdown'
+import OutlineButtonDropdown from 'components/common/OutlineButtonDropdown'
 import { languagePk } from 'constants/pk'
 import { FaPython, FaJava } from 'react-icons/fa'
 
@@ -31,33 +31,19 @@ export default function CodeSection({
     return tempObject
   }, [languageIds])
 
-  const highLightByLanguage = (code) => {
-    if (languageId === 1) {
-      hightlightWithLineNumbers(code, languages.py)
-      return
-    }
-    hightlightWithLineNumbers(code, languages.java)
-  }
-
   return (
     <Container>
       <FlexBox>
         {languageId === 1 ? <FaPython /> : <FaJava />}
-        <ButtonDropdown
+        <OutlineButtonDropdown
           title="언어선택"
           size="small"
-          type="gray"
+          type="secondary"
           options={languageObject}
           onClick={(e) => setLanguageId(parseInt(e.target.id.slice(0, 1)))}
         />
       </FlexBox>
       <StyledEditor
-        // value = {
-        //   languageId === 1
-        //     ? `python`
-        //     : `java`
-        // }
-        
         value={value}
         onValueChange={(code) => setValue(code)}
         highlight={
@@ -79,25 +65,24 @@ export default function CodeSection({
 }
 
 const Container = styled.div`
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  white-space: wrap;
+  height: 100%;
   position: relative;
-  padding: 1rem;
+
+  overflow-y: auto;
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.studyBgColor};
+
+  white-space: wrap;
 `
 const FlexBox = styled.div`
-  position: absolute;
-  z-index: 1;
-  width: 100%;
-
   display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1rem 0rem 1.2rem;
+
   justify-content: space-between;
 `
 const StyledEditor = styled(Editor)`
-  margin-top: 1rem;
   color: ${({ theme }) => theme.codeFontColor};
 
   margn &.editor {

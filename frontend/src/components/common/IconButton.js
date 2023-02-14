@@ -67,15 +67,15 @@ const IconWrapper = styled.div`
   }
 
   &.tiny-icbtn {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   &.small-icbtn {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
   &.medium-icbtn {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   &.large-icbtn {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 `

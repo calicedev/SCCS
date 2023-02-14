@@ -74,6 +74,11 @@ export default function FindIdForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              findId()
+            }
+          }}
         ></AuthInput>
         <p className={message.isValid ? 'pass' : 'error'}>{message.text}</p>
       </Form>

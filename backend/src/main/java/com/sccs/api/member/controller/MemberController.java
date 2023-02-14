@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
@@ -64,6 +65,7 @@ public class MemberController {
   private static final int DAY = HOUR * 24; // 24시간
   private static final int WEEK = DAY * 7; // 1주일
   private static final String HEADER_AUTH = "authorization";
+  private static final String MESSAGE = "message";
 
   private final MemberService memberService;
   private final JWTService jwtService;
@@ -102,11 +104,11 @@ public class MemberController {
 
     if (memberService.signUp(memberDto).equals(SUCCESS)) {
       logger.debug("[signUp]회원 가입 성공");
-      resultMap.put("message", "성공");
+      resultMap.put(MESSAGE, "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else {
       logger.debug("[signUp]회원 가입 실패");
-      resultMap.put("message", "실패");
+      resultMap.put(MESSAGE, "실패");
       return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 401
     }
   }
@@ -161,17 +163,17 @@ public class MemberController {
 //        String exp = (String) jwtService.getToken(accessToken).get("expiration");
 
         logger.debug("[login]로그인 성공");
-        resultmap.put("message", "성공");
+        resultmap.put(MESSAGE, "성공");
         resultmap.put("expiration", exp);
         return new ResponseEntity<>(resultmap, HttpStatus.OK); // 200
       } else {
         logger.debug("[logIn]비밀번호 불일치");
-        resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
+        resultmap.put(MESSAGE, "아이디나 비밀번호가 잘못되었습니다.");
         return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED); // 401
       }
     } catch (Exception e) {
       logger.debug("[logIn]아이디가 존재하지 않습니다.");
-      resultmap.put("message", "아이디나 비밀번호가 잘못되었습니다.");
+      resultmap.put(MESSAGE, "아이디나 비밀번호가 잘못되었습니다.");
       return new ResponseEntity<>(resultmap, HttpStatus.UNAUTHORIZED); // 401
     }
   }
@@ -210,7 +212,7 @@ public class MemberController {
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else { // id가 없는 경우
       logger.debug("[memberInfo]회원이 존재하지 않습니다.");
-      resultMap.put("message", "회원이 존재하지 않습니다.");
+      resultMap.put(MESSAGE, "회원이 존재하지 않습니다.");
       return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND); // 404
     }
   }
@@ -228,7 +230,7 @@ public class MemberController {
     } else {
       logger.debug("[findId]회원정보가 존재하지 않습니다.");
       HashMap<String, String> resultMap = new HashMap<>();
-      resultMap.put("message" , "회원정보가 존재하지 않습니다.");
+      resultMap.put(MESSAGE , "회원정보가 존재하지 않습니다.");
       return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND); // 404
     }
   }
@@ -259,21 +261,21 @@ public class MemberController {
       logger.info("[modify]파일경로 : {}", fileDto.getUrl());
       memberDto.setProfileImage(fileDto.getUrl());
     }
-      if (nickname != null || !nickname.equals("")) {
+      if (nickname != null) {
           memberDto.setNickname(nickname);
       }
-      if (email != null || !email.equals("")) {
+      if (email != null) {
           memberDto.setEmail(email);
       }
     logger.debug("[modify]회원정보 수정 후 : {}", memberDto);
 
     if (memberService.modify(memberDto).equals(SUCCESS)) {
       logger.debug("[modify]회원정보 수정 성공");
-      resultMap.put("message", "성공");
+      resultMap.put(MESSAGE, "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else {
       logger.debug("[modify]회원정보 수정 실패");
-      resultMap.put("message", "실패");
+      resultMap.put(MESSAGE, "실패");
       return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 401
     }
   }
@@ -301,11 +303,11 @@ public class MemberController {
 
     if (memberService.modifyPassword(memberDto).equals(SUCCESS)) {
       logger.debug("[modifyPassword]비밀번호 수정 성공");
-      resultMap.put("message", "성공");
+      resultMap.put(MESSAGE, "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK); // 200
     } else {
       logger.debug("[modifyPassword]비밀번호 수정 실패");
-      resultMap.put("message", "실패");
+      resultMap.put(MESSAGE, "실패");
       return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 401
     }
   }
@@ -327,12 +329,12 @@ public class MemberController {
     if (result == null) { // 중복이 존재하지 않는 경우 unique = true
       logger.debug("[duplicateParam]사용 가능한 {}입니다.", uniqueDto.getType());
       resultMap.put("unique", true);
-      resultMap.put("message", "사용 가능한 " + uniqueDto.getType() + " 입니다");
+      resultMap.put(MESSAGE, "사용 가능한 " + uniqueDto.getType() + " 입니다");
       return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     } else { // 중복인 경우 unique = false
       logger.debug("[duplicateParam]이미 존재하는 {}입니다.", uniqueDto.getType());
       resultMap.put("unique", false);
-      resultMap.put("message", "이미 존재하는 " + uniqueDto.getType() + "입니다");
+      resultMap.put(MESSAGE, "이미 존재하는 " + uniqueDto.getType() + "입니다");
       return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
   }
@@ -354,24 +356,24 @@ public class MemberController {
 
     if (memberDto == null) {
       logger.debug("[initPassword]유효하지 않은 아이디 입니다.");
-      resultMap.put("message", "유효하지 않은 아이디 입니다.");
+      resultMap.put(MESSAGE, "유효하지 않은 아이디 입니다.");
       return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
     }
 
     if (!memberDto.getEmail().equals(email)) {
       logger.debug("[initPassword]이메일 정보가 일치하지 않습니다.");
-      resultMap.put("message", "이메일 정보가 일치하지 않습니다.");
+      resultMap.put(MESSAGE, "이메일 정보가 일치하지 않습니다.");
       return new ResponseEntity<>(resultMap, HttpStatus.NOT_FOUND);
     }
 
     if (emailService.sendEmail(id, email)) {
       logger.debug("[initPassword]비밀번호 초기화 성공");
-      resultMap.put("message", "성공");
+      resultMap.put(MESSAGE, "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
     logger.debug("[initPassword]비밀번호 초기화 실패");
-    resultMap.put("message", "실패");
+    resultMap.put(MESSAGE, "실패");
     return new ResponseEntity<>(resultMap, HttpStatus.OK);
   }
 
@@ -399,12 +401,12 @@ public class MemberController {
         // 엑세스 토큰 세팅
         response.addCookie(accessTokenCookie);
 
-        resultMap.put("message", SUCCESS);
+        resultMap.put(MESSAGE, SUCCESS);
         resultMap.put("expiration", exp);
       }
     } else {
       logger.debug("리프레쉬 토큰 사용 불가");
-      resultMap.put("message", "리프레쉬 토큰 사용 불가 \n 로그인 페이지로 이동하세요");
+      resultMap.put(MESSAGE, "리프레쉬 토큰 사용 불가 \n 로그인 페이지로 이동하세요");
       status = HttpStatus.UNAUTHORIZED;
     }
     return new ResponseEntity<>(resultMap, status);
@@ -419,12 +421,12 @@ public class MemberController {
 
     if (memberService.delete(id).equals(SUCCESS)) {
       logger.debug("[delete]회원 탈퇴 성공");
-      resultMap.put("message", "성공");
+      resultMap.put(MESSAGE, "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
     logger.debug("[delete]회원 탈퇴 실패");
-    resultMap.put("message", "실패");
+    resultMap.put(MESSAGE, "실패");
     return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
   }
 
@@ -435,13 +437,13 @@ public class MemberController {
   @DeleteMapping ("/member/refreshToken")
   public ResponseEntity<?> deleteRefreshToken(@CookieValue String refreshToken) {
     HashMap<String, String> resultMap = new HashMap<>();
-    if (redisService.deleteKey(refreshToken) == SUCCESS) {
+    if (Objects.equals(redisService.deleteKey(refreshToken), SUCCESS)) {
       logger.debug("deleteRefreshToken레디스 값 삭제 성공");
-      resultMap.put("message", "성공");
+      resultMap.put(MESSAGE, "성공");
       return new ResponseEntity<>(resultMap, HttpStatus.OK);
     } else {
       logger.debug("[deleteRefreshToken]레디스 값 삭제 실패");
-      resultMap.put("message", "실패");
+      resultMap.put(MESSAGE, "실패");
       return new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED);
     }
   }

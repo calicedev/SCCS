@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
@@ -7,17 +7,24 @@ import Button from 'components/common/Button'
 import axios from 'libs/axios'
 import api from 'constants/api'
 import { useSelector } from 'react-redux'
+
+import ButtonDropdown from 'components/common/ButtonDropdown'
+import CustomedTextarea from 'components/mypage/CustomedTextarea'
 // import useUser from 'hooks/useUser'
+import { languagePk } from 'constants/pk'
 
 export default function CodeReview() {
   const navigate = useNavigate()
   // const { id } = useParams()
   const memberId = useSelector((state) => state.user.id)
-  const {problemId} = useParams()
+  const { problemId } = useParams()
 
   const [problemUrl, setProblemUrl] = useState(null)
   const [submissionList, setSubmissionList] = useState([])
-  const [submissionIdx, setSubmissionIdx] = useState(0)
+
+  // 2.14 민혁 추가
+  const [code, setCode] = useState('') // ㅇㅇ번째 코드 버튼을 클릭되었을 때 code에 지난 제출 코드가 담김
+  const [languageId, setLanguageId] = useState(1)
 
   useEffect(() => {
     const [url, method] = api('solveProblem', { memberId, problemId })
@@ -26,8 +33,6 @@ export default function CodeReview() {
       .request(config)
       .then((res) => {
         setProblemUrl(res.data.problemUrl)
-        
-        console.log('데이터 값')
         console.log(res.data)
         setSubmissionList(res.data.submissionInfo)
       })
@@ -43,14 +48,9 @@ export default function CodeReview() {
     const file = new Blob([content], { type: 'text/plain' })
     const formData = new FormData()
     formData.append('formFile', file)
-    formData.append('memberId', memberId) 
+    formData.append('memberId', memberId)
     formData.append('problemId', problemId)
-    formData.append('languageId', 1)
-    // formData.append('studyroomId', studyroomId)
-    // console.log(onProblem)
-    // 지금은 채점 서버에 1번 문제밖에 없어서 이렇게 하지만 더 들어오면 OnProblem으로 해야함 (2.10 민혁)
-    // formData.append('problemId', 1)
-    // 지금은 Java(2)로 고정하지만 나중에는 파이썬 or 파이썬+자바의 경우도 넣어줘야함 (2.10 민혁)
+    formData.append('languageId', languageId) // 2.14 민혁 추가
 
     const headers = { 'Content-Type': 'multipart/form-data' }
 
@@ -70,10 +70,34 @@ export default function CodeReview() {
     // element.click()
   }
 
+  // 제출한 코드 목록 (2.13 민혁 추가)
+  const codesObject = useMemo(() => {
+    const tempObject = {}
+    submissionList.forEach((code, idx) => {
+      tempObject[`${idx}`] = `${idx + 1}번째 제출코드` //code.submissionFile
+    })
 
+    return tempObject
+  }, [submissionList])
 
+  // 해당 idx클릭하면 idx에 담긴 url 주소의 문제를 불러오기
+  const fetchData = async (idx) => {
+    fetch(submissionList[idx[0]].submissionFile)
+      .then((res) => {
+        // console.log('res', res)
+        return res.text()
+      })
+      .then((code) => {
+        // console.log('code', code)
+        setCode(code)
+      })
+  }
 
-
+  // 언어선택 드롭다운을 통해 언어 idx 바꾸기
+  const changeLanguageId = (idx) => {
+    console.log(idx[0])
+    setLanguageId(idx[0])
+  }
 
   return (
     <Main>
@@ -96,9 +120,24 @@ export default function CodeReview() {
         }}
       >
         <FlexColumn>
+          <Flex>
+            <ButtonDropdown
+              title="언어 선택"
+              size="small"
+              type="primary"
+              options={{ 1: 'Python', 2: 'Java' }}
+              onClick={(e) => changeLanguageId(e.target.id.split('-'))}
+            />
+            <ButtonDropdown
+              title="코드 선택"
+              size="small"
+              type="primary"
+              options={codesObject}
+              onClick={(e) => fetchData(e.target.id.split('-'))}
+            />
+          </Flex>
           <CodingSection>
-            <Changer>언어 선택</Changer>
-            <Textarea></Textarea>
+            <CustomedTextarea lastCode={code}></CustomedTextarea>
           </CodingSection>
           <Resizable
             defaultSize={{ width: '100%', height: '37%' }}
@@ -132,15 +171,15 @@ export default function CodeReview() {
                     <p className="pass">
                       <br />
                       통과했습니다~~~!!!
-                      <br /> 런타임 평균: {codingTestResult.avgRuntime}ms 메모리 평균:{' '}
-                      {codingTestResult.avgMemory}kb
+                      <br /> 런타임 평균: {codingTestResult.avgRuntime}ms 메모리
+                      평균: {codingTestResult.avgMemory}kb
                     </p>
                   ) : (
                     <p className="error">
                       <br />
                       틀렸습니다ㅜㅜ
-                      <br /> 런타임 평균: {codingTestResult.avgRuntime}ms 메모리 평균:{' '}
-                      {codingTestResult.avgMemory}kb
+                      <br /> 런타임 평균: {codingTestResult.avgRuntime}ms 메모리
+                      평균: {codingTestResult.avgMemory}kb
                     </p>
                   )}
                 </>
@@ -155,7 +194,7 @@ export default function CodeReview() {
                 value="시험 종료"
                 type="danger"
                 size="small"
-                onClick={() =>{
+                onClick={() => {
                   navigate(`/mypage/study/`)
                 }}
               ></Button>
@@ -195,8 +234,6 @@ const Main = styled.div`
   background-color: #263747;
 `
 
-
-
 const Problem = styled.div`
   height: 100vh;
   width: calc(40% - 12px);
@@ -206,6 +243,10 @@ const Problem = styled.div`
 
 const Img = styled.img`
   width: 100%;
+`
+
+const Flex = styled.div`
+  display: flex;
 `
 
 const FlexColumn = styled.div`
@@ -290,3 +331,4 @@ const Space = styled.div`
   height: auto;
   display: inline-block;
 `
+

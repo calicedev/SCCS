@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import Button from 'components/common/Button'
+import OutlineButton from 'components/common/OutlineButton'
 
 /*
 Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
@@ -36,7 +36,7 @@ export default function ButtonDropdown({
 
   return (
     <Container>
-      <Button
+      <OutlineButton
         size={size}
         type={type}
         value={title}
@@ -44,7 +44,7 @@ export default function ButtonDropdown({
       />
       <OptionWrapper display={showOptions ? 'flex' : 'none'} top={top}>
         {Object.keys(options).map((key) => (
-          <Button
+          <OutlineButton
             key={key + '-' + options[key].toString()}
             id={key + '-' + options[key].toString()}
             size={size}
@@ -79,7 +79,7 @@ const Container = styled.div`
 const OptionWrapper = styled.div`
   display: ${({ display }) => display};
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 
   z-index: 6;
 

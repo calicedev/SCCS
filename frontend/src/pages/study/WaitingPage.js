@@ -7,6 +7,7 @@ import { useOutletContext } from 'react-router-dom'
 import Button from 'components/common/Button'
 import RoomInfo from 'components/study/RoomInfo'
 import Chat from 'components/study/Chat'
+import Announcement from 'components/study/Announcement'
 
 export default function WaitingPage() {
   const {
@@ -30,7 +31,7 @@ export default function WaitingPage() {
   const [ready, setReady] = useState(false)
   const [readyList, setReadyList] = useState([])
   const [subscription, setSubscription] = useState(null)
-
+  console.log(roomInfo)
   const toggleReady = () => {
     const newReady = !ready
     setReady(newReady)
@@ -94,6 +95,21 @@ export default function WaitingPage() {
     }
   }, [])
 
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  useEffect(() => {
+    const updateMaxHeight = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', updateMaxHeight)
+    updateMaxHeight()
+
+    return () => {
+      window.removeEventListener('resize', updateMaxHeight)
+    }
+  }, [])
+
   return (
     <Container>
       <FlexBox>
@@ -109,6 +125,7 @@ export default function WaitingPage() {
           <Button
             onClick={sendStart}
             type="primary"
+            size="small"
             value={
               roomInfo.personnel === readyList.length + 1
                 ? '테스트 시작'
@@ -122,12 +139,15 @@ export default function WaitingPage() {
           <Button
             onClick={toggleReady}
             type="primary"
+            size="small"
             value={ready ? 'Ready 취소' : 'Ready'}
           />
         )}
       </FlexBox>
-      <FlexBox2>
-        <StyledDiv>안내사항</StyledDiv>
+      <FlexBox2 windowHeight={windowHeight}>
+        <Announcement
+          roomInfo={roomInfo}
+        ></Announcement>
         <Chat
           chatList={chatList}
           message={message}
@@ -155,18 +175,9 @@ const FlexBox = styled.div`
 `
 
 const FlexBox2 = styled.div`
-  height: 100%;
   display: flex;
   justify-content: space-between;
+  max-height: ${({ windowHeight }) => `calc(${windowHeight}px - 300px)`};
   gap: 10px;
-`
-const StyledDiv = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: ${({ theme }) => theme.studyBgColor};
+  height: 100%;
 `

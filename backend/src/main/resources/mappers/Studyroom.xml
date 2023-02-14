@@ -167,6 +167,12 @@
     where id=#{id}
   </select>
 
+  <select id="getIdByNickname" parameterType="String" resultType="String">
+    select id
+    from member
+    where nickname=#{nickname}
+  </select>
+
   <update id="changeStudyroomSolvingStatus" parameterType="StudyroomDto">
     UPDATE studyroom
     SET is_solving = true

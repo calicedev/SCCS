@@ -37,7 +37,7 @@ export default function VideoComponent({ streamManager }) {
               id={'publisher-video'}
               autoPlay
               muted
-              width="280px"
+              width="240px"
               height="160px"
             ></PublisherVideo>
           )}
@@ -48,11 +48,21 @@ export default function VideoComponent({ streamManager }) {
 }
 
 const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  overflow: hidden;
+
   position: relative;
+  width: 240px;
+  height: 160px;
+
+  border-radius: 0.5rem;
 `
 const Video = styled.video`
-  width: 280px;
-  height: 160px;
+  width: 100%;
+  height: auto;
   border-radius: 0.5rem;
 `
 const StyledP = styled.p`
@@ -60,8 +70,6 @@ const StyledP = styled.p`
   top: 0;
   left: 0;
   z-index: 1;
-
-  border-radius: 0.5rem 0rem 0rem 0rem;
 
   padding: 0.2rem;
   font-size: 0.8rem;
@@ -75,6 +83,6 @@ const PublisherVideo = styled.video`
   top: 0;
   left: 0;
   z-index: -1;
-  width: 280px;
-  height: 160px;
+  width: 100% !important;
+  height: auto !important;
 `

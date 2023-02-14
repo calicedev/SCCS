@@ -46,6 +46,7 @@ public class FileStore {
     OutputStream os = fileItem.getOutputStream();
     IOUtils.copy(input, os);
     MultipartFile mFile = new CommonsMultipartFile(fileItem);
+    input.close();
     return mFile;
   }
 

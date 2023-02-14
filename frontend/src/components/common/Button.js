@@ -76,11 +76,11 @@ const BtnWrapper = styled.button`
     width: 1.7rem;
     height: 1.7rem;
     border-radius: 50%;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   &.sm-btn {
-    padding: 0.4rem 0.9rem;
-    font-size: 1.1rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 1rem;
   }
   &.md-btn {
     padding: 0.5rem 1rem;

@@ -149,7 +149,6 @@ public class StudyroomServiceImpl implements StudyroomService {
             StudyroomMemberDto studyroomMemberDto = new StudyroomMemberDto();
             studyroomMemberDto.setMemberId(studyroomDto.getHostId());
             studyroomMemberDto.setStudyroomId(id);
-            studyroomMapper.insertMemberId(studyroomMemberDto);
             return id;
         } catch (Exception e) {
             e.printStackTrace();
@@ -262,9 +261,16 @@ public class StudyroomServiceImpl implements StudyroomService {
         studyroomMapper.changeStudyroomSolvingStatus(studyroomDto);
 
         // 2. 요청을 보내는 사람이 호스트이면 스터디 시작하는 애들 아이디 넣어준다.
+
         MemberDto memberDto = studyroomMapper.getHostnicknameByStudyroomInfo(studyroomDto.getId());
         if (studyroomDto.getNickname().equals(memberDto.getNickname())) {
-            studyroomMapper.insertMemberIds(studyroomDto);
+        List<String> memberNicknames = studyroomDto.getMemberIds();
+        List<String> memberIds = new ArrayList<String>();
+        for(String nickname : memberNicknames) {
+            memberIds.add(studyroomMapper.getIdByNickname(nickname));
+        }
+        studyroomDto.setMemberIds(memberIds);
+        studyroomMapper.insertMemberIds(studyroomDto);
         }
 
         // 3. 스터디룸 정보를 담은 걸 resultmap에 담는다.
@@ -312,6 +318,7 @@ public class StudyroomServiceImpl implements StudyroomService {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         //채점 서버 url
+//        String url = "http://70.12.246.161:8201";
         String url = "https://sccs.kr";
         if (submissionDto.getLanguageId() == 1) {
             url += "/solve/python/submission";

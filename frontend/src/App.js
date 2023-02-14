@@ -32,6 +32,9 @@ import WaitingPage from './pages/study/WaitingPage'
 import TestPage from './pages/study/TestPage'
 import StudyPage from './pages/study/StudyPage'
 
+// 2.14 민혁 추가 (프로젝트 상세 설명 페이지)
+import AboutPage from 'pages/main/AboutPage'
+
 function App() {
   const theme = useSelector((state) => state.theme)
 
@@ -40,6 +43,7 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/auth" element={<AuthPage />}>
           <Route path="login" element={<LoginForm />} />
           <Route path="signup" element={<SignupForm />} />

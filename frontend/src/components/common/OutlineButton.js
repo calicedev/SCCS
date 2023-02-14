@@ -13,6 +13,7 @@ disabled: 버튼 클릭 가능 여부
 */
 
 export default function OutlineButton({
+  id,
   size,
   type,
   onClick,
@@ -30,10 +31,11 @@ export default function OutlineButton({
 
   return (
     <StyledButton
+      id={id}
       className={`${sizeClass}`}
       type={type}
-      onClick={onClick}
       disabled={disabled}
+      onClick={onClick}
     >
       {value}
     </StyledButton>
@@ -83,11 +85,11 @@ const StyledButton = styled.button`
     width: 1.7rem;
     height: 1.7rem;
     border-radius: 50%;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   &.sm-outbtn {
-    padding: 0.3rem 0.8rem;
-    font-size: 1.1rem;
+    padding: 0.2rem 0.7rem;
+    font-size: 1rem;
   }
   &.md-outbtn {
     padding: 0.4rem 0.9rem;

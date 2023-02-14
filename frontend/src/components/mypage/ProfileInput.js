@@ -54,6 +54,7 @@ export default function ProfileInput({
   type,
   value,
   onChange,
+  onKeyUp,
   disabled,
   message,
 }) {
@@ -67,6 +68,7 @@ export default function ProfileInput({
         type={typeObj[type].type}
         placeholder={typeObj[type].placeholder}
         value={value}
+        onKeyUp={onKeyUp}
         onChange={onChange}
         disabled={disabled}
       />
@@ -106,6 +108,7 @@ const Wrapper = styled.div``
 const Input = styled.input`
   width: 17rem;
 
+  margin-bottom: 0.2rem;
   padding: 0.5rem 0.5rem;
 
   border: 1px solid;

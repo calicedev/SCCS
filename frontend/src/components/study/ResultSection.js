@@ -25,7 +25,7 @@ export default function ResultSection({
           <>
             {results.resultList.map((problem, index) => (
               <p
-                className={problem.result ? 'pass' : 'error'}
+                className={problem.result ? 'c pass' : 'c error'}
                 key={`${index}-problem-result`}
               >
                 {index + 1}번{') '} {problem.message} : {problem.memory}kb
@@ -34,14 +34,14 @@ export default function ResultSection({
               </p>
             ))}
             {results.isAnswer ? (
-              <p className="pass">
+              <p className="pass ">
                 <br />
                 통과했습니다~~~!!!
                 <br /> 런타임 평균: {results.avgRuntime}ms 메모리 평균:{' '}
                 {results.avgMemory}kb
               </p>
             ) : (
-              <p className="error">
+              <p className="error c">
                 <br />
                 틀렸습니다ㅜㅜ
                 <br /> 런타임 평균: {results.avgRuntime}ms 메모리 평균:{' '}
@@ -64,8 +64,9 @@ export default function ResultSection({
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
-  overflow: hidden;
+  height: 100%;
 
   padding: 0.5rem;
   border-radius: 0.5rem;
@@ -73,12 +74,10 @@ const Container = styled.div`
 `
 const ResultsWrapper = styled.div`
   border-radius: 0.5rem;
+
+  overflow: hidden;
+
   padding: 0.5rem;
   margin: 1rem;
   background-color: ${({ theme }) => theme.deepStudyBgColor};
-`
-
-const FlexBox = styled.div`
-  display: flex;
-  gap: 10px;
 `

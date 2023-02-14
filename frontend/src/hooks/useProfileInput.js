@@ -117,7 +117,7 @@ export function useProfileInput(
         return
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputValue])
+  }, [debouncedInputValue])
 
   return [inputValue, setInputValue, message, isChanged]
 }

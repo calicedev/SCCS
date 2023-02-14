@@ -23,7 +23,7 @@ const javaCode = `class Solution {
 }
 `
 
-export default function Textarea({ lastCode }) {
+export default function CustomedTextarea({ lastCode }) {
   // loadLanguages(['pythnm', 'java']);
 
   // // The code snippet you want to highlight, as a string
@@ -33,8 +33,13 @@ export default function Textarea({ lastCode }) {
   // const html = Prism.highlight(code, Prism.languages.py, 'python');
 
   // console.log('javaCode', javaCode)
-
+  // useEffect(() => {
+  //   setCodeValue(lastCode)
+  // })
   const [codeValue, setCodeValue] = useState('')
+  useEffect(() => {
+    setCodeValue(lastCode)
+  }, [lastCode])
 
   return (
     <StyledEditor
