@@ -7,17 +7,12 @@ export default function Announcement(props) {
   const [algoList, setAlgoList] = useState(props.roomInfo.algoIds)
   const [languageList, setLanguageList] = useState(props.roomInfo.languageIds)
 
+  function Span({ space = 5 }){
+    return (
+        <span style={{ paddingRight: space }}></span>
+      );
+  }
   console.log()
-  // console.log(roomInfo)
-  console.log(props.roomInfo.algoIds.length)
-  console.log(props.roomInfo.languageIds.length)
-  // useEffect(() => {
-  //   if (props.roomInfo.languageIds === 1){
-      
-  //   }
-
-
-  // })
   return (
     <StyledDiv>
     <h2>안내사항</h2>
@@ -41,22 +36,34 @@ export default function Announcement(props) {
       
       
       <Div>
-        <h3>테스트 시간</h3>                                                      
-        <h3>테스트 문항</h3>
+        <Info>
+          <h3>테스트 시간</h3>  
+        </Info>
+        <Info>
+          <h3>테스트 문항</h3>
+        </Info>
       </Div>
       <Div>
-        <h4>120분</h4>
-        <h4>2문제</h4>
+        <Info>
+          <h4>120분</h4>
+        </Info>
+        <Info>
+          <h4>2문제</h4>
+        </Info>
       </Div>
       
       <br></br>
       <Div>
-        <h3>사용 언어</h3>
-        <h3>문제 유형</h3>
+        <Info>
+          <h3>사용 언어</h3>
+        </Info>
+        <Info>
+          <h3>문제 유형</h3>
+        </Info>
       </Div>
       <Div>
-        <h3>
-        <Div>
+        <Info>          
+          <h3>
             {props.roomInfo.algoIds.map((algo, index) => {
               if (algo===0){
                 return <div>#랜덤</div>
@@ -72,14 +79,14 @@ export default function Announcement(props) {
                 return <div>#완전탐색</div>
               } if (algo===6){
                 return <div>#BFS/DFS</div>
-              } if (algo===1){
-                return <div>#완전탐색</div>
+              } else {
+                return <div>#DP</div>
               }
             })}
-          </Div>
-        </h3>
-        <h3>
-          <Div>
+          </h3>
+        </Info>
+        <Info>
+          <h3>
             {props.roomInfo.languageIds.map((language, index) => {
               if (language===1){
                 return <div>#python</div>
@@ -87,11 +94,9 @@ export default function Announcement(props) {
                 return <div>#Java</div>
               }
             })}
-          </Div>
-        </h3>
+          </h3>
+        </Info>
       </Div>
-      
-
     </Body>
   </StyledDiv>
   )
@@ -116,7 +121,7 @@ const Hr = styled.hr`
   width: 90%;
   align: left;
   height: 10px;
-  background: #BD5CCD;
+  background: #000000;
 }
 `
 
@@ -127,5 +132,10 @@ const Body = styled.div`
 
 const Div = styled.div`
   display: flex;
-  justify-content: space-between;
+  
+`
+
+const Info = styled.div`
+
+  width : 50%;
 `
