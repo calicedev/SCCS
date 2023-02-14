@@ -1,28 +1,31 @@
 import React from 'react'
 import styled from 'styled-components'
-import info1 from 'assets/img/info_1.png'
+
+import Layout from 'layouts/MainPageLayout'
+import Navbar from 'components/common/Navbar'
+
 import info2 from 'assets/img/info_2.png'
 import info3 from 'assets/img/info_3.png'
 import info4 from 'assets/img/info_4.png'
 
 export default function AboutPage() {
   return (
-    <>
-      <H1>About SCCS</H1>
+    <Layout>
+      <Navbar />
       <Flex>
-        <img src={info4} alt="" />
-        <img src={info2} alt="" />
-        <img src={info3} alt="" />
+        <StyledImg src={info4} alt="" />
+        <StyledImg src={info2} alt="" />
+        <StyledImg src={info3} alt="" />
       </Flex>
-    </>
+    </Layout>
   )
 }
 
 const Flex = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `
-const H1 = styled.h1`
-  text-align: center;
-  font-size: 3rem;
+const StyledImg = styled.img`
+  width: 1500px;
 `
