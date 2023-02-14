@@ -37,9 +37,9 @@ export default function RadioDropdown({
       >
         {Object.keys(options).map((key) => (
           <Radio
-            key={key}
+            key={key + '-' + options[key].toString()}
             name={name}
-            id={key}
+            id={key + '-' + options[key].toString()}
             label={options[key]}
             onChange={onChange}
             checked={key === selectedKey ? true : false}

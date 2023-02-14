@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import api from 'constants/api'
 import axios from 'libs/axios'
 import checkReg from 'libs/regExp'
-import api from 'constants/api'
 import Button from 'components/common/Button'
 
 /*
@@ -59,6 +60,11 @@ export default function PwdModalContent({ id }) {
       <StyledInput
         type="number"
         value={password}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            submitPassword()
+          }
+        }}
         onChange={(e) => setPassword(e.target.value)}
       ></StyledInput>
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
@@ -67,6 +73,10 @@ export default function PwdModalContent({ id }) {
       <Button type="secondary" value="제출" onClick={submitPassword}></Button>
     </Container>
   )
+}
+
+PwdModalContent.propTypes = {
+  id: PropTypes.number.isRequired,
 }
 
 const Container = styled.div`

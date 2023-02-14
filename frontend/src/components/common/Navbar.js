@@ -20,8 +20,7 @@ export default function Navbar() {
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const location = useLocation()
-  console.log('navbar', location)
+  const pathname = useLocation().pathname
 
   const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
   const isLogin = checkLogin() // 로그인 여부 판단
@@ -55,7 +54,14 @@ export default function Navbar() {
         <NavStyle to="/about">About</NavStyle>
         {isLogin ? (
           <>
-            <NavStyle to="/mypage/study">MyPage</NavStyle>
+            <NavStyle
+              to="/mypage/study"
+              className={`${
+                pathname.substring(0, 7) === '/mypage' ? 'active' : null
+              }`}
+            >
+              MyPage
+            </NavStyle>
             <StyledDiv onClick={logout}>Logout</StyledDiv>
           </>
         ) : (
@@ -74,6 +80,8 @@ const Nav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  width: 100%;
 
   margin: 1.5rem 0rem;
   padding: 0rem 2rem;

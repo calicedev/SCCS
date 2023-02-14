@@ -58,9 +58,10 @@ export default function CreateRoomMdContent() {
       if (e.target.checked) {
         // 랜덤 외의 다른 모든 배열을 체크해제
         const checkEles = document.querySelectorAll('#algo-options input')
-        checkEles.slice(1).forEach((ele) => {
+        checkEles.forEach((ele) => {
           ele.checked = false
         })
+        checkEles[0].checked = true
         setAlgoIds([0])
         return
       }
@@ -107,6 +108,8 @@ export default function CreateRoomMdContent() {
     }
     // 알고리즘 선택 조건 체크
     if (algoIds.length === 0 || algoIds.length > 2) {
+      console.log(algoIds)
+      console.log(algoIds)
       const newMsg = { ...message }
       console.log(algoIds.length)
       newMsg.text = '알고리즘은 하나 이상 두개 이하 선택가능합니다.'
@@ -166,7 +169,7 @@ export default function CreateRoomMdContent() {
           {Object.keys(languagePk).map((key) => (
             <Checkbox
               key={key}
-              id={key + languagePk[key].toString()}
+              id={key + '-' + languagePk[key].toString()}
               label={languagePk[key]}
               onChange={changeLanguageIds}
             />
@@ -180,7 +183,7 @@ export default function CreateRoomMdContent() {
           {Object.keys(algorithmPk).map((key) => (
             <Checkbox
               key={key}
-              id={key + algorithmPk[key].toString()}
+              id={key + '-' + algorithmPk[key].toString()}
               label={algorithmPk[key]}
               onChange={changeAlgoIds}
             />

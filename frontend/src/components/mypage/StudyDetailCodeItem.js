@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { useState, useMemo } from 'react'
 import { languageIconPk } from 'constants/pk'
 import Modal from 'components/common/Modal'
 import IconButton from 'components/common/IconButton'
+import Code from 'components/study/Code'
 
 /*
 코드 제출 내역 정보를 받아 "유저아이디, 언어, 메모리 시간, 런타임, 결과"를 테이블 형식으로 출력
@@ -29,13 +29,16 @@ export default function StudyDetailCodeItem({
   fileUrl,
 }) {
   const [showModal, setShowModal] = useState(false)
+  const [codeString, setCodeString] = useState(null)
 
-  const codeString = useMemo(async () => {
-    const result = await fetch(fileUrl).then((res) => {
-      console.log('res', res)
-      return res.text()
-    })
-    return result
+  useEffect(() => {
+    fetch(fileUrl)
+      .then((res) => {
+        return res.text()
+      })
+      .then((code) => {
+        setCodeString(code)
+      })
   }, [fileUrl])
 
   return (
@@ -43,27 +46,28 @@ export default function StudyDetailCodeItem({
       {showModal ? (
         <Modal
           close={() => setShowModal(false)}
-          content={<pre>{codeString}</pre>}
+          content={<Code value={codeString} languageId={languageId} />}
         />
       ) : null}
-
-      <>
-        <FlexBox
-          onClick={() => {
-            setShowModal(true)
-          }}
-        >
-          <FlexEle flex={1}>{memberId}</FlexEle>
-          <FlexEle flex={1}>
-            <IconButton icon={languageIconPk[languageId]} disabled={true} />
-          </FlexEle>
-          <FlexEle flex={1}>{runtime}ms</FlexEle>
-          <FlexEle flex={1}>{memory}kb</FlexEle>
-          <FlexEle flex={1} className={result === 'true' ? 'pass' : 'error'}>
-            {result}
-          </FlexEle>
-        </FlexBox>
-      </>
+      <FlexBox
+        onClick={() => {
+          setShowModal(true)
+        }}
+      >
+        <FlexEle flex={1}>{memberId}</FlexEle>
+        <FlexEle flex={1}>
+          <IconButton
+            icon={languageIconPk[languageId]}
+            type="gray"
+            disabled={true}
+          />
+        </FlexEle>
+        <FlexEle flex={1}>{runtime}s</FlexEle>
+        <FlexEle flex={1}>{memory}MB</FlexEle>
+        <FlexEle flex={1} className={result === 'true' ? 'pass' : 'error'}>
+          {result}
+        </FlexEle>
+      </FlexBox>
     </>
   )
 }
