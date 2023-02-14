@@ -60,8 +60,9 @@ public class MessageController {
 
     else if(socketDto.getStatus().equals("exit")){
       MemberDto memberDto = studyroomService.getHostnicknameByStudyroomInfo(socketDto.getStudyroomId());
+      String nickname = studyroomService.getNicknameById(memberDto.getId());
       //방장이 방을 나가면
-      if(socketDto.getNickname().equals(memberDto.getNickname())){
+      if(socketDto.getNickname().equals(nickname)){
         socketDto.setMessage("방장이 채팅방을 나갔습니다.");
         studyroomService.endStudyroomByOwner(socketDto.getStudyroomId());
       }

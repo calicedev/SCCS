@@ -54,4 +54,8 @@ public interface StudyroomService {
 
   /** 스터디 시작하기 **/
   public List startStudy(StudyroomDto studyroomDto);
+
+  public String getNicknameById(String id);
+
+  public String getIdByNickname(String nickname);
 }
