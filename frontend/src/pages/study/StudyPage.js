@@ -40,12 +40,11 @@ export default function StudyPage() {
     publisher,
     setPublisher,
     subscribers,
-    // mainStreamManager,
-    // setMainStreamManager,
+    presenter,
+    setPresenter,
   } = useOutletContext()
 
   const [subscription, setSubscription] = useState(null)
-  const [presenter, setPresenter] = useState(roomInfo.hostNickname)
   const [isScreenShare, setIsScreenShare] = useState(false)
   const [codeProblems, setCodeProblems] = useState(null)
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
@@ -168,26 +167,31 @@ export default function StudyPage() {
   const changeScreen = async () => {
     // 내가 발표자일 경우
     if (presenter === user.nickname) {
-      const newPublisher = OV.current.initPublisher('html-element-id', {
-        videoSource: 'screen',
-        publishAudio: true,
-      })
-      newPublisher.once('accessAllowed', async (event) => {
-        newPublisher.stream
-          .getMediaStream()
-          .getVideoTracks()[0]
-          .addEventListener('ended', () => {
-            console.log('User pressed the "Stop sharing" button')
-          })
-        await session.unpublish(publisher)
-        await session.publish(newPublisher)
+      const canvas = document.querySelector('#code-with-drawing')
+      const rect = canvas.getBoundingClientRect()
 
-        setIsScreenShare(true)
-      })
+      const x = rect.left
+      const y = rect.top
+      const width = rect.width
+      const height = rect.height
+      console.log(x, y, width, height)
 
-      newPublisher.once('accessDenied', (event) => {
-        console.warn('ScreenShare: Access Denied')
-      })
+      const track = await navigator.mediaDevices
+        .getDisplayMedia({
+          displaySurface: 'window',
+          captureArea: {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+          },
+        })
+        .then(function (stream) {
+          return stream.getVideoTracks()[0]
+          // do something with the stream
+        })
+      publisher.replaceTrack(track)
+      setIsScreenShare(true)
     }
 
     // 내가 이전에 발표자였을 경우
@@ -257,6 +261,21 @@ export default function StudyPage() {
       })
   }
 
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  useEffect(() => {
+    const updateMaxHeight = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', updateMaxHeight)
+    updateMaxHeight()
+
+    return () => {
+      window.removeEventListener('resize', updateMaxHeight)
+    }
+  }, [])
+
   return (
     <>
       {showModal && (
@@ -274,20 +293,44 @@ export default function StudyPage() {
       {codeProblems ? (
         <Container>
           <FlexBox>
-            <RoomInfo
-              id={roomInfo.id}
-              title={roomInfo.title}
-              languageIds={roomInfo.languageIds}
-              algoIds={roomInfo.algoIds}
-              hostNickname={roomInfo.hostNickname}
-              personnel={roomInfo.personnel}
-            />
-            <Button
-              size="medium"
-              value="문제 보기"
-              type="primary"
-              onClick={() => setShowModal(true)}
-            />
+            <ButtonWrapper>
+              <RoomInfo
+                id={roomInfo.id}
+                title={roomInfo.title}
+                languageIds={roomInfo.languageIds}
+                algoIds={roomInfo.algoIds}
+                hostNickname={roomInfo.hostNickname}
+                personnel={roomInfo.personnel}
+              />
+              {[...Array(codeProblems.length).keys()].map((idx) => {
+                return (
+                  <Button
+                    key={`${idx}-code-problem`}
+                    size="small"
+                    value={idx + 1}
+                    type={codeProblemIdx === idx ? 'primary' : 'secondary'}
+                    onClick={() => changeProblem(idx)}
+                  />
+                )
+              })}
+              <Button
+                size="small"
+                value="문제 보기"
+                type="primary"
+                onClick={() => setShowModal(true)}
+              />
+              {roomInfo.hostId === user.id && (
+                <>
+                  <ButtonDropdown
+                    title="발표자 선택"
+                    size="small"
+                    type="primary"
+                    options={codesObject}
+                    onClick={(e) => changePresenter(e.target.id.split('-')[0])}
+                  />
+                </>
+              )}
+            </ButtonWrapper>
             <ButtonDropdown
               title="다른 사람 코드"
               size="small"
@@ -295,31 +338,8 @@ export default function StudyPage() {
               options={codesObject}
               onClick={(e) => fetchData(e.target.id.split('-')[0])}
             />
-            {roomInfo.hostId === user.id && (
-              <>
-                {[...Array(codeProblems.length).keys()].map((idx) => {
-                  return (
-                    <Button
-                      key={`${idx}-code-problem`}
-                      size="medium"
-                      value={idx + 1}
-                      type={codeProblemIdx === idx ? 'primary' : 'secondary'}
-                      onClick={() => changeProblem(idx)}
-                    />
-                  )
-                })}
-
-                <ButtonDropdown
-                  title="발표자 선택"
-                  size="small"
-                  type="primary"
-                  options={codesObject}
-                  onClick={(e) => changePresenter(e.target.id.split('-')[0])}
-                />
-              </>
-            )}
           </FlexBox>
-          <FlexBox2>
+          <FlexBox2 windowHeight={windowHeight}>
             {presenter === user.nickname ? (
               <ShareSection code={myCode} languageId={myCodeLanguageId} />
             ) : (
@@ -329,7 +349,7 @@ export default function StudyPage() {
                     <ScreenVideoComponent streamManager={mainStreamManager} />
                   </StyledDiv>
                 )}
-                <ColumnBox>
+                <ColumnBox flexDirection={mainStreamManager ? 'column' : 'row'}>
                   <Code languageId={codeLanguageId} value={code} />
                   <Chat
                     chatList={chatList}
@@ -354,8 +374,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  width: 100vw;
   padding: 1rem;
-  height: 100%;
 `
 
 const FlexBox = styled.div`
@@ -365,16 +386,22 @@ const FlexBox = styled.div`
 `
 
 const FlexBox2 = styled.div`
-  height: 100%;
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 5px;
+  height: ${({ windowHeight }) => `calc(${windowHeight}px - 300px)`};
 `
 
 const ColumnBox = styled.div`
-display: flex
-flex-direction: column;
+  display: flex;
+  flex-direction: ${({ flexDirection }) => flexDirection};
+  gap: 5px;
+  width: 100%;
 `
 const StyledDiv = styled.div`
   flex: 1;
+`
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
 `

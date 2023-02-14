@@ -29,7 +29,7 @@ export default function ChatItem({ nickname, profileImage, message, isMine }) {
 
 ChatItem.propTypes = {
   nickname: PropTypes.string.isRequired,
-  profileImage: PropTypes.string.isRequired,
+  profileImage: PropTypes.oneOf(PropTypes.string, PropTypes.number).isRequired,
   message: PropTypes.string.isRequired,
   isMine: PropTypes.bool,
 }

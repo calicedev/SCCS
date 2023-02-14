@@ -14,9 +14,6 @@ const Wrapper = styled.div`
   overflow-y: auto;
   width: 100%;
   height: 100%;
-
-  border-radius: 0.5rem;
-  overflow: hidden;
 `
 
 const StyledImg = styled.img`

@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import ButtonDropdown from 'components/common/ButtonDropdown'
 import { languagePk } from 'constants/pk'
 import { FaPython, FaJava } from 'react-icons/fa'
+import IconButton from 'components/common/IconButton'
 
 const hightlightWithLineNumbers = (input, language) =>
   highlight(input, language)
@@ -19,6 +20,12 @@ const hightlightWithLineNumbers = (input, language) =>
 export default function Code({ value, setValue, languageId }) {
   return (
     <Container>
+      <ButtonWrapper>
+        <IconButton
+          size="small"
+          icon={languageId === 1 ? <FaPython /> : <FaJava />}
+        />
+      </ButtonWrapper>
       <StyledEditor
         value={value}
         onValueChange={(code) => setValue(code)}
@@ -41,23 +48,26 @@ export default function Code({ value, setValue, languageId }) {
 }
 
 const Container = styled.div`
-  overflow-x: hidden;
   overflow-y: auto;
 
-  white-space: wrap;
   position: relative;
+
+  width: 100%;
+  height: 100%;
+
   padding: 1rem;
+
+  white-space: wrap;
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.studyBgColor};
 `
-const FlexBox = styled.div`
-  position: absolute;
-  z-index: 1;
-  width: 100%;
 
-  display: flex;
-  justify-content: space-between;
+const ButtonWrapper = styled.div`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
 `
+
 const StyledEditor = styled(Editor)`
   margin-top: 1rem;
   color: ${({ theme }) => theme.codeFontColor};

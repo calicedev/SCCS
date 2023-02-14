@@ -12,6 +12,7 @@ import {
   GiChessQueen,
   GiChessBishop,
   GiChessKnight,
+  GiChessRook,
   GiChessPawn,
 } from 'react-icons/gi'
 
@@ -35,8 +36,8 @@ export default function Profile() {
       // console.log('knight')
       setGrade([false, false, 'knight', false])
     } else {
-      // console.log('pawn')
-      setGrade([false, false, false, 'pawn'])
+      // console.log('Rook')
+      setGrade([false, false, false, 'Rook'])
     }
   }, [])
 
@@ -58,7 +59,7 @@ export default function Profile() {
           <GiChessKnight style={{ width: '100px', height: '50px' }} />
         ) : null}
         {grade[3] ? (
-          <GiChessPawn style={{ width: '100px', height: '50px' }} />
+          <GiChessRook style={{ width: '100px', height: '50px' }} />
         ) : null}
         <ProfileImg imgUrl={user.profileImage} />
         <p className="semi-bold">가입일: {user.joinDate}</p>

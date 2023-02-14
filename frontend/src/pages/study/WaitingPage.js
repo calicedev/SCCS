@@ -110,6 +110,7 @@ export default function WaitingPage() {
           <Button
             onClick={sendStart}
             type="primary"
+            size="small"
             value={
               roomInfo.personnel === readyList.length + 1
                 ? '테스트 시작'
@@ -123,6 +124,7 @@ export default function WaitingPage() {
           <Button
             onClick={toggleReady}
             type="primary"
+            size="small"
             value={ready ? 'Ready 취소' : 'Ready'}
           />
         )}
@@ -158,8 +160,8 @@ const FlexBox = styled.div`
 `
 
 const FlexBox2 = styled.div`
-  height: 100%;
   display: flex;
   justify-content: space-between;
   gap: 10px;
+  height: 100%;
 `

@@ -80,6 +80,11 @@ export default function ResetPasswordForm() {
           onChange={(e) => {
             setEmail(e.target.value)
           }}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              resetPassword()
+            }
+          }}
           result={message}
         ></AuthInput>
         <p className={message.isValid ? 'pass' : 'error'}>{message.text}</p>

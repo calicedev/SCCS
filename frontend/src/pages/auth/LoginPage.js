@@ -72,6 +72,11 @@ export default function LoginForm() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              login()
+            }
+          }}
         ></AuthInput>
         <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
           {message.text}
