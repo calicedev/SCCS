@@ -259,9 +259,15 @@ public class StudyroomServiceImpl implements StudyroomService {
 
         // 1. isSolving 상태를 진행 중(1)으로 바꾼다.
         studyroomMapper.changeStudyroomSolvingStatus(studyroomDto);
-        
+
         // 2. 요청을 보내는 사람이 호스트이면 스터디 시작하는 애들 아이디 넣어준다.
         MemberDto memberDto = studyroomMapper.getHostnicknameByStudyroomInfo(studyroomDto.getId());
+        List<String> memberNicknames = studyroomDto.getMemberIds();
+        List<String> memberIds = new ArrayList<String>();
+        for(String nickname : memberNicknames) {
+            memberIds.add(studyroomMapper.getIdNickname(nickname));
+        }
+        studyroomDto.setMemberIds(memberIds);
         if (studyroomDto.getNickname().equals(memberDto.getNickname())) {
             studyroomMapper.insertMemberIds(studyroomDto);
         }
