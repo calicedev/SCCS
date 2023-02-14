@@ -78,11 +78,12 @@ public class StudyroomServiceImpl implements StudyroomService {
             StudyroomAlgoDto studyroomAlgoDto = new StudyroomAlgoDto();
             studyroomAlgoDto.setStudyroomId(id);
             //받은 알고리즘 유형이 랜덤이면
-            if (algo_ids.size() == 1 && algo_ids.get(0).equals(0)) {
+//            if (algo_ids.size() == 1 && algo_ids.get(0).equals(0)) {
+            if (algo_ids.size() == 1 && algo_ids.get(0)==0) {
                 int min = 1;
-                int max = 2;
+                int max = 7;
 
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < 2; i++) {
                     // 알고리즘 유형 2개 랜덤하게 고르기
                     int randomAlgo = (int) (Math.random() * (max - min + 1)) + min;
                     // 알고리즘 유형 2개 저장.
@@ -101,7 +102,7 @@ public class StudyroomServiceImpl implements StudyroomService {
                     studyroomMapper.insertProblemId(studyroomProblemDto);
 
                 }
-            } else if (algo_ids.size() == 1 && !algo_ids.get(0).equals(0)) {
+            } else if (algo_ids.size() == 1 && algo_ids.get(0)!=0) {
                 // 알고리즘 유형 1개 저장
                 studyroomAlgoDto.setAlgoId(algo_ids.get(0));
                 studyroomMapper.insertAlgoId(studyroomAlgoDto);
