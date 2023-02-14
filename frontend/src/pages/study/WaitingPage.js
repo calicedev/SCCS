@@ -95,6 +95,21 @@ export default function WaitingPage() {
     }
   }, [])
 
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  useEffect(() => {
+    const updateMaxHeight = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', updateMaxHeight)
+    updateMaxHeight()
+
+    return () => {
+      window.removeEventListener('resize', updateMaxHeight)
+    }
+  }, [])
+
   return (
     <Container>
       <FlexBox>
@@ -129,7 +144,7 @@ export default function WaitingPage() {
           />
         )}
       </FlexBox>
-      <FlexBox2>
+      <FlexBox2 windowHeight={windowHeight}>
         <Announcement
           roomInfo={roomInfo}
         ></Announcement>
@@ -162,6 +177,7 @@ const FlexBox = styled.div`
 const FlexBox2 = styled.div`
   display: flex;
   justify-content: space-between;
+  max-height: ${({ windowHeight }) => `calc(${windowHeight}px - 300px)`};
   gap: 10px;
   height: 100%;
 `
