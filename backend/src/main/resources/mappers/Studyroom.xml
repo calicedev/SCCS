@@ -222,7 +222,7 @@
     SELECT * from problem where id=#{problemId}
   </select>
 
-  <!--스터디에 필요한 정보를 가져오는 쿼리, 각 회원들이 2개의 문제를 해결한 결과를 보여준다. -->
+  <!-- 스터디에 필요한 정보를 가져오는 쿼리, 각 회원들이 2개의 문제를 해결한 결과를 보여준다. -->
   <select id="getStudyInfo" parameterType="StudyroomDto" resultType="SubmissionDto">
     SELECT s.id as id, s.runtime as runtime, s.memory as memory, s.result as result, s.submit_datetime as submit_datetime,
     s.problem_id as problem_id, s.member_id as member_id, m.nickname as member_nickname, s.language_id as language_id,
