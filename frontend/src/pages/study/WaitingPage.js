@@ -7,6 +7,7 @@ import { useOutletContext } from 'react-router-dom'
 import Button from 'components/common/Button'
 import RoomInfo from 'components/study/RoomInfo'
 import Chat from 'components/study/Chat'
+import Announcement from 'components/study/Announcement'
 
 export default function WaitingPage() {
   const {
@@ -30,7 +31,7 @@ export default function WaitingPage() {
   const [ready, setReady] = useState(false)
   const [readyList, setReadyList] = useState([])
   const [subscription, setSubscription] = useState(null)
-
+  console.log(roomInfo)
   const toggleReady = () => {
     const newReady = !ready
     setReady(newReady)
@@ -129,7 +130,9 @@ export default function WaitingPage() {
         )}
       </FlexBox>
       <FlexBox2>
-        <StyledDiv>안내사항</StyledDiv>
+        <Announcement
+          roomInfo={roomInfo}
+        ></Announcement>
         <Chat
           chatList={chatList}
           message={message}
@@ -161,17 +164,4 @@ const FlexBox2 = styled.div`
   justify-content: space-between;
   gap: 10px;
   height: 100%;
-`
-const StyledDiv = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  min-width: 900px;
-
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: ${({ theme }) => theme.studyBgColor};
 `
