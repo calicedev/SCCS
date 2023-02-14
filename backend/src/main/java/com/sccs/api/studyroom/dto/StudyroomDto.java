@@ -21,7 +21,6 @@ public class StudyroomDto {
   private List<Integer> languageIds;
   private List<Integer> algoIds;
   private List<String> memberIds;
-
   private List<Integer> problemIds;
   private Boolean isPrivate;
   private int languageId;
@@ -30,5 +29,5 @@ public class StudyroomDto {
 
   private String hostId;
   private int personnel;
-  private String nickname;
+  private String memberId;
 }

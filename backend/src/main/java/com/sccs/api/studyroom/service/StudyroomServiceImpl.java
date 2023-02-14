@@ -227,7 +227,7 @@ public class StudyroomServiceImpl implements StudyroomService {
     @Override
     public Map<String, Object> enterStudyroom(int id) {
         StudyroomDto s = studyroomMapper.enterStudyroom(id);
-        String hostNickname = studyroomMapper.getNicknameById(s.getHostId());
+//        String hostNickname = studyroomMapper.getNicknameById(s.getHostId());
         Map<String, Object> resultMap = null;
         if (s.getIsSolving()) {
             resultMap = new HashMap<>();
@@ -241,7 +241,7 @@ public class StudyroomServiceImpl implements StudyroomService {
             resultMap.put("title", s.getTitle());
             resultMap.put("id", s.getId());
             resultMap.put("hostId", s.getHostId());
-            resultMap.put("hostNickname", hostNickname);
+//            resultMap.put("hostNickname", hostNickname);
             resultMap.put("personnel", s.getPersonnel());
         } else if (s.getPersonnel() == 6) {
             resultMap = new HashMap<>();
@@ -261,19 +261,11 @@ public class StudyroomServiceImpl implements StudyroomService {
         // 1. isSolving 상태를 진행 중(1)으로 바꾼다.
         studyroomMapper.changeStudyroomSolvingStatus(studyroomDto);
 
-        // 2. 요청을 보내는 사람이 호스트이면 스터디 시작하는 애들 아이디 넣어준다.
-
-        MemberDto memberDto = studyroomMapper.getHostnicknameByStudyroomInfo(studyroomDto.getId());
-        if (studyroomDto.getNickname().equals(memberDto.getNickname())) {
-        List<String> memberNicknames = studyroomDto.getMemberIds();
-        List<String> memberIds = new ArrayList<String>();
-        for(String nickname : memberNicknames) {
-            memberIds.add(studyroomMapper.getIdByNickname(nickname));
-        }
-        studyroomDto.setMemberIds(memberIds);
-            System.out.println(memberIds+"++++++++++++++++");
-            System.out.println(studyroomDto.getMemberIds()+"************************");
-        studyroomMapper.insertMemberIds(studyroomDto);
+        // 2. 요청을 보내는 사람이 호스트이면 스터디 시작하는 애들 아이디를 DB에 넣어준다.
+        //  -> 요청 보내는 스터디룸 조회를 해서 호스트 정보를 가지고 있어. 그 호스트가 요청한 사람이랑 같으면 DB 접근
+        MemberDto hostMemberDto = studyroomMapper.getHostInfoByStudyroomId(studyroomDto.getId());
+        if (studyroomDto.getMemberId().equals(hostMemberDto.getId())) {
+            studyroomMapper.insertMemberIds(studyroomDto);
         }
 
         // 3. 스터디룸 정보를 담은 걸 resultmap에 담는다.
@@ -442,6 +434,9 @@ public class StudyroomServiceImpl implements StudyroomService {
         return resultMap;
     }
 
+    /**
+     * 닉네임과 id 꼬여서 넣은 로직. 되도록이면 쓰지말자.
+     **/
     @Override
     public String getNicknameById(String id) {
         return studyroomMapper.getNicknameById(id);
@@ -449,7 +444,7 @@ public class StudyroomServiceImpl implements StudyroomService {
 
     @Override
     public String getIdByNickname(String nickname) {
-        return getIdByNickname(nickname);
+        return studyroomMapper.getIdByNickname(nickname);
     }
 
 
@@ -486,12 +481,14 @@ public class StudyroomServiceImpl implements StudyroomService {
         return studyroomMapper.increaseStudyroomPersonnel(id);
     }
 
+
     /**
      * 소켓 통신 처음에 들어오는 사람 decrease
      **/
     public int decreaseStudyroomPersonnel(int id) {
         return studyroomMapper.decreaseStudyroomPersonnel(id);
     }
+
 
     /**
      * 메인 화면에서 입장할 때 존재하는 방인지 체크하는 로직
@@ -503,11 +500,11 @@ public class StudyroomServiceImpl implements StudyroomService {
     }
 
     /**
-     * 스터디룸 조회하면 호스트 닉네임 반환. id랑 nickname이랑 꼬여서 만든 로직.
+     * 스터디룸 조회하면 호스트 아이디와 닉네임 반환.
      */
     @Override
-    public MemberDto getHostnicknameByStudyroomInfo(int studyroomId) {
-        return studyroomMapper.getHostnicknameByStudyroomInfo(studyroomId);
+    public MemberDto getHostInfoByStudyroomId(int studyroomId) {
+        return studyroomMapper.getHostInfoByStudyroomId(studyroomId);
     }
 
 

@@ -14,6 +14,7 @@ public class SocketDto {
 
   private int studyroomId;
   private String nickname;
+  private String id;
   private String message;
   private String status;
   private int personnel;
@@ -22,7 +23,7 @@ public class SocketDto {
   private String profileImage;
   private int problemIdx;
 
-  private List<String> membersNickname;
+  private List<String> memberIds;
   private List<String> readyForStudyArray;
 
 }
