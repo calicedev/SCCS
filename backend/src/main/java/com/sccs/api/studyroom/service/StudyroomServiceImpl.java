@@ -227,7 +227,7 @@ public class StudyroomServiceImpl implements StudyroomService {
     @Override
     public Map<String, Object> enterStudyroom(int id) {
         StudyroomDto s = studyroomMapper.enterStudyroom(id);
-//        String hostNickname = studyroomMapper.getNicknameById(s.getHostId());
+        String hostNickname = studyroomMapper.getNicknameById(s.getHostId());
         Map<String, Object> resultMap = null;
         if (s.getIsSolving()) {
             resultMap = new HashMap<>();
@@ -241,7 +241,7 @@ public class StudyroomServiceImpl implements StudyroomService {
             resultMap.put("title", s.getTitle());
             resultMap.put("id", s.getId());
             resultMap.put("hostId", s.getHostId());
-//            resultMap.put("hostNickname", hostNickname);
+            resultMap.put("hostNickname", hostNickname);
             resultMap.put("personnel", s.getPersonnel());
         } else if (s.getPersonnel() == 6) {
             resultMap = new HashMap<>();
