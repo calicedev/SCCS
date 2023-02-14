@@ -51,6 +51,7 @@ export default function Navbar() {
           />
         </ButtonWrapper>
         <NavStyle to="/">Home</NavStyle>
+        <NavStyle to="/about">About</NavStyle>
         {isLogin ? (
           <>
             <NavStyle to="/mypage/study">MyPage</NavStyle>
