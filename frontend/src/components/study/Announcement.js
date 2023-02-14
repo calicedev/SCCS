@@ -1,7 +1,29 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { algorithmPk, languagePk } from 'constants/pk'
 
-export default function Announcement(props) {
+export default function Announcement({ languageIds, algoIds }) {
+  // 선택된 언어 유형을 아이콘으로 표현
+  // Ex. [1, 2] => [<FaPython/>, <FaJava />]
+  const languages = useMemo(() => {
+    let tempLanguages = ''
+    languageIds.forEach((pk) => {
+      tempLanguages += `${languagePk[pk]}, `
+    })
+    return tempLanguages
+  }, [languageIds])
+
+  // 선택된 알고리즘을 해쉬태그 형식으로 표현
+  // Ex. [2, 3] => '#기초 #탐색'
+  const algorithms = useMemo(() => {
+    let tempAlgorithms = ''
+    algoIds.forEach((pk) => {
+      tempAlgorithms += `${algorithmPk[pk]}, `
+    })
+    return tempAlgorithms
+  }, [algoIds])
+
   return (
     <Container>
       <Wrapper>
@@ -32,8 +54,8 @@ export default function Announcement(props) {
           <AnnouncementItem title={'테스트 문항'} content={`2문제`} />
         </FlexBox>
         <FlexBox>
-          <AnnouncementItem title={'사용 언어'} content={`2문제`} />
-          <AnnouncementItem title={'문제 유형'} content={`2문제`} />
+          <AnnouncementItem title={'사용 언어'} content={languages} />
+          <AnnouncementItem title={'문제 유형'} content={algorithms} />
         </FlexBox>
       </Wrapper>
     </Container>
@@ -47,6 +69,16 @@ const AnnouncementItem = ({ title, content }) => {
       <p>{content}</p>
     </StyledDiv>
   )
+}
+
+Announcement.propTypes = {
+  languageIds: PropTypes.array,
+  algoIds: PropTypes.array,
+}
+
+Announcement.defaultProps = {
+  languageIds: [],
+  algoIds: [],
 }
 
 const Container = styled.div`

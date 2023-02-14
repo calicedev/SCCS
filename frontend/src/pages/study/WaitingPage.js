@@ -132,7 +132,10 @@ export default function WaitingPage() {
         )}
       </FlexBox>
       <FlexBox2 height={isVideos ? windowHeight - 280 : windowHeight - 120}>
-        <Announcement roomInfo={roomInfo}></Announcement>
+        <Announcement
+          languageIds={roomInfo.languageIds}
+          algoIds={roomInfo.algoIds}
+        ></Announcement>
         <Chat
           chatList={chatList}
           message={message}
