@@ -270,6 +270,8 @@ public class StudyroomServiceImpl implements StudyroomService {
             memberIds.add(studyroomMapper.getIdByNickname(nickname));
         }
         studyroomDto.setMemberIds(memberIds);
+            System.out.println(memberIds+"++++++++++++++++");
+            System.out.println(studyroomDto.getMemberIds()+"************************");
         studyroomMapper.insertMemberIds(studyroomDto);
         }
 
@@ -437,6 +439,16 @@ public class StudyroomServiceImpl implements StudyroomService {
             resultMap.add(problem);
         }
         return resultMap;
+    }
+
+    @Override
+    public String getNicknameById(String id) {
+        return studyroomMapper.getNicknameById(id);
+    }
+
+    @Override
+    public String getIdByNickname(String nickname) {
+        return getIdByNickname(nickname);
     }
 
 
