@@ -24,14 +24,8 @@ export default function StudyDetailPage() {
     axios
       .request(config)
       .then((res) => {
-        console.log(res.data)
         setStudyTitle(res.data.studyroomTitle)
-        // console.log(res.data.studyroomTitle)
         setProblems(res.data.studyroomWithProblems)
-        // console.log(problemIdx)
-        // console.log(problems)
-        // console.log(problemId)
-        // console.log(res.data.studyroomWithProblems)
       })
       .catch((err) => {
         setStudyTitle('')

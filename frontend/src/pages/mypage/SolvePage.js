@@ -95,7 +95,7 @@ export default function SolvePage() {
     <>
       {problemImageUrl ? (
         <Container>
-          <ImageWrapper windowHeight={windowHeight}>
+          <ImageWrapper height={windowHeight - 30}>
             <ProblemImage src={problemImageUrl} />
           </ImageWrapper>
           <Resizable
@@ -113,7 +113,7 @@ export default function SolvePage() {
               topLeft: false,
             }}
           >
-            <FlexColumn windowHeight={windowHeight}>
+            <FlexColumn height={windowHeight - 30}>
               <FlexBox>
                 <ButtonDropdown
                   title="언어 선택"
@@ -188,11 +188,11 @@ const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  height: ${({ windowHeight }) => `calc(${windowHeight}px - 30px)`};
+  height: ${({ height }) => height}px;
 `
 const ImageWrapper = styled.div`
   padding: 0.5rem;
   border-radius: 0.5rem;
-  height: ${({ windowHeight }) => `calc(${windowHeight}px - 30px)`};
+  height: ${({ height }) => height}px;
   background-color: ${({ theme }) => theme.whiteColor};
 `
