@@ -1,10 +1,9 @@
 import React from 'react'
-import DateBox from 'components/mypage/DateBox'
-import styled from 'styled-components'
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns'
-import { isSameMonth, addDays, format } from 'date-fns'
 import PropTypes from 'prop-types'
-import 'styles/font.css'
+import styled from 'styled-components'
+import { isSameMonth, addDays, format } from 'date-fns'
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns'
+import DateBox from 'components/mypage/DateBox'
 
 /*
 달력 컴포넌트. React.memo 컴포넌트 제공 (MemoizedCalendar)
@@ -30,7 +29,7 @@ function Calendar({
   const calendarStart = startOfWeek(monthStart) // 달력의 시작 일자
   const calendarEnd = endOfWeek(monthEnd) // 달력의 마지막 일자
 
-  // 달력 날짜 박스 Array 형성. 현 월이 아닐 경우 disabled=true
+  // 달력 날짜 박스 Array 형성. 현 월이 아닐 경우 disabled={true}
   const dates = []
   let date = calendarStart
   while (date <= calendarEnd) {

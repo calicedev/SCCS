@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import OutlineButton from 'components/common/OutlineButton'
 import Button from 'components/common/Button'
 
 /*
-Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
+문제를 푸는 페이지에서 하단의 버튼들(종료버튼, 테스트버튼, 제출 버튼)
 
-title: 옵션들의 제목
-opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
-onChange: 클릭 시 동작할 함수
+isFinished: 종료 여부를 나타내는 Bool. FInish 버튼의 텍스트를 결정
+finish: 종료 버튼 클릭 시 동작하는 함수
+test: 테스트 버튼 클릭 시 동작하는 함수
+submit: 제출 버튼 클릭 시 동작하는 함수
 */
 
-export default function ButtonDropdown({ isFinished, finish, test, submit }) {
-  const [showOptions, setShowOptions] = useState(false)
-
+export default function TestButtons({ isFinished, finish, test, submit }) {
   return (
     <Container>
       <OutlineButton
@@ -30,6 +29,21 @@ export default function ButtonDropdown({ isFinished, finish, test, submit }) {
       </FlexBox>
     </Container>
   )
+}
+
+TestButtons.propTypes = {
+  isFinished: PropTypes.bool,
+  finish: PropTypes.func,
+  test: PropTypes.func,
+  submit: PropTypes.func,
+}
+
+TestButtons.defaultProps = {
+  results: [],
+  isFinished: false,
+  finish: undefined,
+  test: undefined,
+  submit: undefined,
 }
 
 const Container = styled.div`

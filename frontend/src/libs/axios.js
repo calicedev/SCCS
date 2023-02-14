@@ -15,14 +15,6 @@ const apiRequest = axios.create({
 // request 인터셉터
 apiRequest.interceptors.request.use(
   (config) => {
-    // // accessToken이 있을 경우 Authorization헤더에 추가해서 요청
-    // const state = store.getState()
-    // const accessToken = state.token.accessToken
-    // if (!accessToken) return config
-    // config.headers.Authorization = `Bearer ${accessToken}`
-    // return {
-    //   ...config,
-    // }
     return config
   },
   (error) => {
@@ -63,8 +55,20 @@ apiRequest.interceptors.response.use(
           return redirect('/auth/login')
         })
     }
+    if (response.status === 500) {
+      alert('서버와의 통신에 문제가 발생하였습니다.')
+    }
     return Promise.reject(error)
   },
 )
 
 export default apiRequest
+
+// // accessToken이 있을 경우 Authorization헤더에 추가해서 요청
+// const state = store.getState()
+// const accessToken = state.token.accessToken
+// if (!accessToken) return config
+// config.headers.Authorization = `Bearer ${accessToken}`
+// return {
+//   ...config,
+// }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Button from 'components/common/Button'
 import IconButton from 'components/common/IconButton'
@@ -8,7 +9,6 @@ import {
   FaAngleLeft,
   FaAngleRight,
 } from 'react-icons/fa'
-import PropTypes from 'prop-types'
 
 /*
 페이지네이션 기능의 컴포넌트

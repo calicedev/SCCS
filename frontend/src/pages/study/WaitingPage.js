@@ -1,12 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useOutletContext } from 'react-router-dom'
-
+import { useNavigate, useOutletContext } from 'react-router-dom'
+import Chat from 'components/study/Chat'
 import Button from 'components/common/Button'
 import RoomInfo from 'components/study/RoomInfo'
-import Chat from 'components/study/Chat'
 
 export default function WaitingPage() {
   const {
@@ -14,23 +11,22 @@ export default function WaitingPage() {
     studyroomId,
     roomInfo,
     stomp,
-    connected,
-    members,
     setMembers,
-    problems,
-    setProblems,
     message,
     setMessage,
     chatList,
     sendChat,
-    disconnect,
   } = useOutletContext()
+
+  // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
 
+  // useState
   const [ready, setReady] = useState(false)
   const [readyList, setReadyList] = useState([])
   const [subscription, setSubscription] = useState(null)
 
+  // Ready Button을 토글하는 함수
   const toggleReady = () => {
     const newReady = !ready
     setReady(newReady)
@@ -66,7 +62,7 @@ export default function WaitingPage() {
     )
   }
 
-  // 웹 소켓 subscribe
+  // 웹 소켓 subscribe 함수
   useEffect(() => {
     setSubscription(
       stomp.subscribe('/sub/studyroom/' + studyroomId, (chatDto) => {
@@ -92,6 +88,7 @@ export default function WaitingPage() {
     return () => {
       subscription && subscription.unsubscribe()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

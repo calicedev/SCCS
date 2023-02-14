@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { RiArrowGoBackFill } from 'react-icons/ri'
+import api from 'constants/api'
+import axios from 'libs/axios'
 import Button from 'components/common/Button'
 import AuthInput from 'components/auth/AuthInput'
-import { useNavigate } from 'react-router-dom'
 import IconButton from 'components/common/IconButton'
-import { RiArrowGoBackFill } from 'react-icons/ri'
-import axios from 'libs/axios'
-import api from 'constants/api'
 
 export default function ResetPasswordForm() {
   // 리액트 훅 관련 함수 정의
@@ -20,7 +20,7 @@ export default function ResetPasswordForm() {
     isValid: false,
   })
 
-  // 비밀번호 초기화 서버 요청
+  // 비밀번호 초기화 api 요청
   const resetPassword = () => {
     // 아이디와 메일 입력 여부 확인
     if (!id || !email) {

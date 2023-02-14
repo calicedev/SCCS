@@ -1,6 +1,7 @@
-import Button from 'components/common/Button'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { useWindowHeight } from 'hooks/useWindowHeight'
+import Button from 'components/common/Button'
 import ChatItem from 'components/study/ChatItem'
 
 export default function WaitingPage({
@@ -10,20 +11,8 @@ export default function WaitingPage({
   sendChat,
   user,
 }) {
-  const [windowHeight, setWindowHeight] = useState(0)
-
-  useEffect(() => {
-    const updateMaxHeight = () => {
-      setWindowHeight(window.innerHeight)
-    }
-
-    window.addEventListener('resize', updateMaxHeight)
-    updateMaxHeight()
-
-    return () => {
-      window.removeEventListener('resize', updateMaxHeight)
-    }
-  }, [])
+  // window의 innerHeight를 반환하는 커스텀 훅
+  const windowHeight = useWindowHeight()
 
   return (
     <Container>

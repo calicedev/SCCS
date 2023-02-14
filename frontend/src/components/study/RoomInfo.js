@@ -1,10 +1,7 @@
-import Button from 'components/common/Button'
-import React from 'react'
+import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import ChatItem from 'components/study/ChatItem'
-import { useMemo } from 'react'
-import { algorithmPk } from 'constants/pk'
-import { FaPython, FaJava } from 'react-icons/fa'
+import { algorithmPk, languageIconPk } from 'constants/pk'
 import IconButton from 'components/common/IconButton'
 
 export default function RoomInfo({
@@ -21,11 +18,7 @@ export default function RoomInfo({
     const tempLanguages = []
     languageIds.forEach((pk) => {
       tempLanguages.push(
-        <IconButton
-          key={pk}
-          disabled={true}
-          icon={pk === 1 ? <FaPython /> : <FaJava />}
-        />,
+        <IconButton key={pk} disabled={true} icon={languageIconPk[pk]} />,
       )
     })
     return tempLanguages
@@ -53,6 +46,15 @@ export default function RoomInfo({
   )
 }
 
+RoomInfo.propTypes = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  algoIds: PropTypes.array.isRequired,
+  languageIds: PropTypes.array.isRequired,
+  hostNickname: PropTypes.string.isRequired,
+  personnel: PropTypes.number.isRequired,
+}
+
 const Container = styled.div`
   display: flex;
   gap: 10px;
@@ -61,9 +63,12 @@ const Container = styled.div`
 const StyledDiv = styled.div`
   display: flex;
   align-items: center;
+
   padding: 0.2rem 0.5rem;
+
   border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.studyBgColor};
+
   font-size: 0.9rem;
   font-weight: bold;
-  background-color: ${({ theme }) => theme.studyBgColor};
 `

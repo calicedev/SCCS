@@ -1,36 +1,36 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import axios from 'libs/axios'
-import api from 'constants/api'
-import styled from 'styled-components'
-import sockjs from 'sockjs-client'
+import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom'
 import stompjs from 'stompjs'
-import Loading from 'components/common/Loading'
-import ToolBar from 'components/study/ToolBar'
-
-import { toggleTheme } from 'redux/themeSlice'
-
-import { OpenVidu, VideoInsertMode } from 'openvidu-browser'
 import axiosOriginal from 'axios'
-import VideoComponent from '../../components/study/VideoComponent'
+import sockjs from 'sockjs-client'
+import styled from 'styled-components'
 import * as faceapi from 'face-api.js'
-import presentImg from 'assets/img/webRTC_present_image.png'
+import { OpenVidu } from 'openvidu-browser'
+import { toggleTheme } from 'redux/themeSlice'
+import api from 'constants/api'
+import axios from 'libs/axios'
+import ToolBar from 'components/study/ToolBar'
+import Loading from 'components/common/Loading'
+import VideoList from 'components/study/VideoList'
 import absentImg from 'assets/img/webRTC_absent_image.png'
+import presentImg from 'assets/img/webRTC_present_image.png'
 
 //Openvidu AppServer
-const APPLICATION_SERVER_URL = 'https://i8a301.p.ssafy.io/'
 // const APPLICATION_SERVER_URL = 'http://localhost:5000/'
+const APPLICATION_SERVER_URL = 'https://i8a301.p.ssafy.io/'
 
 export default function StudyRoom() {
+  // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const location = useLocation()
 
+  // 리덕스
   const theme = useSelector((state) => state.theme)
+  const user = useSelector((state) => state.user)
 
   // 기본정보
-  const user = useSelector((state) => state.user)
   const { studyroomId } = useParams()
   const [roomInfo, setRoomInfo] = useState(null)
   const [members, setMembers] = useState([])
@@ -44,8 +44,18 @@ export default function StudyRoom() {
   const [message, setMessage] = useState('')
   const [chatList, setChatList] = useState([])
 
-  // 비디오 on/off를 위해서 여기에 선언
-  const [presenter, setPresenter] = useState(null)
+  // Opnvidu useState
+  const [session, setSession] = useState(undefined)
+  const [publisher, setPublisher] = useState(undefined)
+  const [subscribers, setSubscribers] = useState([])
+  const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
+
+  const [isMicOn, setIsMicOn] = useState(true)
+  const [isVideos, setIsVideos] = useState(true)
+  const [isCameraOn, setIsCameraOn] = useState(true)
+
+  const OV = useRef(null) // OV객체를 저장
+  const faceInterval = useRef(null) // face-api 동작 시, setInterval 객체를 저장
 
   // 스터디룸 정보 axios 요청
   useEffect(() => {
@@ -60,15 +70,17 @@ export default function StudyRoom() {
       .catch((err) => {
         alert('대기방 정보를 불러오지 못했습니다.')
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // mount시에 소켓통신 연결, unmount 시 소켓통신 해제
+  // mount시에 소켓통신과 webRTC 연결, unmount 시 소켓통신과 webRTC 연결 해제
   useEffect(() => {
     joinSession()
     connect()
     return () => {
       exit()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 새로고침 시
@@ -85,27 +97,29 @@ export default function StudyRoom() {
     exit()
   })
 
+  // 뒤로가기 시
+  window.onpopstate = (event) => {
+    exit()
+  }
+
+  // 나가는 함수. 소켓통신과 webRTC 연결을 해제하고 메인페이지로 이동
   const exit = () => {
     if (stomp) {
       sendExit()
       stomp.disconnect()
     }
-
     if (session) {
       session.disconnect()
     }
-
     setConnected(false)
-    // Empty all properties...
     OV.current = null
     setSession(undefined)
     setSubscribers([])
     setPublisher(undefined)
-    // setMainStreamManager(undefined)
     navigate('/')
   }
 
-  // 소켓 통신 여는 함수
+  // 소켓 통신 열고, subscribe
   const connect = () => {
     const sock = new sockjs('https://sccs.kr/sccs')
     const stomp = stompjs.over(sock)
@@ -123,7 +137,6 @@ export default function StudyRoom() {
           return
         }
         if (content.status === 'exit') {
-          checkHostExit(content.nickname)
           setRoomInfo((roomInfo) => {
             const newRoomInfo = { ...roomInfo }
             newRoomInfo.personnel = content.personnel
@@ -150,14 +163,6 @@ export default function StudyRoom() {
         }),
       )
     })
-  }
-
-  // 소켓 통신 닫는 함수
-  const disconnect = () => {
-    sendExit()
-    stomp.disconnect()
-    setConnected(false)
-    navigate('/')
   }
 
   // 웹 소켓 send: 방 나가기
@@ -189,27 +194,7 @@ export default function StudyRoom() {
     setMessage('')
   }
 
-  const checkHostExit = (nickname) => {
-    console.log(roomInfo)
-    if (nickname === roomInfo.hostNickname) {
-      exit()
-    }
-  }
-
-  ////////////////////////////Open Vidu////////////////////////////
-  const [session, setSession] = useState(undefined)
-  const [publisher, setPublisher] = useState(undefined)
-  const [subscribers, setSubscribers] = useState([])
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
-  // const [mainStreamManager, setMainStreamManager] = useState(undefined)
-  const OV = useRef(null)
-
-  const [isMicOn, setIsMicOn] = useState(true)
-  const [isScreen, setIsScreen] = useState(false)
-  const [isCameraOn, setIsCameraOn] = useState(true)
-
-  const faceInterval = useRef(null)
-
+  // openvidu subscriber삭제하는 함수
   const deleteSubscriber = (streamManager) => {
     // 진짜 이유는 모르겠는데 newSubscribers = [...subscribers] 로 불러오면 안됨!!! 모두 처리해준 다음에 마지막 대입 전에 전개
     const newSubscribers = subscribers
@@ -223,15 +208,13 @@ export default function StudyRoom() {
   // OpenVidu Session에 Join하는 함수
   const joinSession = () => {
     // --- 1) Get an OpenVidu object ---
-
     OV.current = new OpenVidu()
 
     // --- 2) Init a session ---
-
     setSession(OV.current.initSession())
   }
 
-  // OpenVidu 비디오를 스트리밍 하는 함수
+  // join한 session이 업데이트 됨에 따라 OpenVidu 비디오를 스트리밍을 시작하는 함수
   useEffect(() => {
     if (!session) return
 
@@ -314,35 +297,22 @@ export default function StudyRoom() {
           )
         })
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
-
-  // OpenVidu Session을 떠나는 함수
-  const leaveSession = () => {
-    // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-    if (session) {
-      session.disconnect()
-    }
-
-    // Empty all properties...
-    OV.current = null
-    setSession(undefined)
-    setSubscribers([])
-    // setMainStreamManager(undefined)
-    setPublisher(undefined)
-  }
 
   // 카메라 상태를 토글하는 함수(화면 <-> 얼굴인식)
   const toggleCamera = async () => {
-    // 카메라가 꺼진 상태였을 경우, 원래 화면으로
+    // 1. 카메라가 꺼진 상태였을 경우, 원래 화면으로 새로 publish
     if (!isCameraOn) {
       const video = document.getElementById('publisher-video')
       video.srcObject = undefined
+      // 1-1. 기존의 face-api setInterval를 삭제
       if (faceInterval.current) {
         clearInterval(faceInterval.current)
         faceInterval.current = null
       }
+      // 1-2. default video device로 stream 생성
       const devices = await OV.current.getDevices()
-      // videoDevice 배열 추출
       const videoDevices = devices.filter(
         (device) => device.kind === 'videoinput',
       )
@@ -356,15 +326,15 @@ export default function StudyRoom() {
       await session.publish(newPublisher)
 
       setPublisher(newPublisher)
-      // setMainStreamManager(newPublisher)
       setIsCameraOn(!isCameraOn)
       return
     }
 
-    // 카메라가 켜진 상태였을 경우, 얼굴인식 화면으로
+    // 2. 카메라가 켜진 상태였을 경우, 얼굴인식 화면으로 changeTrack
     const MODEL_URL = process.env.PUBLIC_URL + '/models'
     const video = document.getElementById('publisher-video')
 
+    // 2-1. 필요 모델 로드
     Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
       // faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
@@ -372,6 +342,7 @@ export default function StudyRoom() {
       // faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
     ]).then(startVideo)
 
+    // 2-2. 얼굴 인식을 할 비디오 생성
     function startVideo() {
       navigator.mediaDevices
         .getUserMedia({ video: true })
@@ -384,7 +355,7 @@ export default function StudyRoom() {
     }
 
     video.addEventListener('play', () => {
-      console.log('play')
+      // 2-3. 얼굴인식 결과를 그릴 canvas 생성하고 track 변경
       const canvas = faceapi.createCanvasFromMedia(video)
       const track = canvas.captureStream(10).getVideoTracks()[0]
       publisher.replaceTrack(track)
@@ -395,6 +366,7 @@ export default function StudyRoom() {
       // 이미지 선언
       const img = new Image(canvas.width, canvas.height)
 
+      // 얼굴인식 setInterval 이벤트 리스너 추가
       faceInterval.current = setInterval(async () => {
         const detections = await faceapi.detectSingleFace(
           video,
@@ -473,7 +445,6 @@ export default function StudyRoom() {
     )
     return response.data // The token
   }
-  /////////////////////////////////////////////////////////////////
 
   return (
     <Container>
@@ -494,32 +465,18 @@ export default function StudyRoom() {
               setMessage,
               chatList,
               sendChat,
-              disconnect,
               OV,
               session,
               publisher,
               setPublisher,
               subscribers,
-              presenter,
-              setPresenter,
+              setIsVideos,
             }}
           />
 
-          {location.pathname.slice(-4) !== 'test' &&
-            presenter !== user.nickname && (
-              <VideoContainer>
-                {publisher && (
-                  <div className="stream-container">
-                    <VideoComponent streamManager={publisher} />
-                  </div>
-                )}
-                {subscribers.map((sub, i) => (
-                  <div key={`${sub.id}-${i}`} className="stream-container">
-                    <VideoComponent streamManager={sub} />
-                  </div>
-                ))}
-              </VideoContainer>
-            )}
+          {isVideos && location.pathname.slice(-4) !== 'test' && (
+            <VideoList publisher={publisher} subscribers={subscribers} />
+          )}
         </>
       ) : (
         <Loading height="30rem" />
@@ -532,6 +489,8 @@ export default function StudyRoom() {
         exit={exit}
         theme={theme}
         toggleTheme={() => dispatch(toggleTheme())}
+        isVideosOn={isVideos}
+        toggleVideos={() => setIsVideos(!isVideos)}
       />
     </Container>
   )
@@ -547,47 +506,6 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: ${({ theme }) => theme.studyBaseBgColor};
-`
-const VideoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 5px;
-`
 
-// // 웹소켓 subscribe
-// useEffect(() => {
-//   if (!connected) return
-//   const subscription = stomp.subscribe(
-//     '/sub/studyroom/' + studyroomId,
-//     (chatDto) => {
-//       const content = JSON.parse(chatDto.body)
-//       if (content.status === 'enter') {
-//         setRoomInfo((roomInfo) => {
-//           const newRoomInfo = { ...roomInfo }
-//           newRoomInfo.personnel = content.personnel
-//           return newRoomInfo
-//         })
-//         return
-//       }
-//       if (content.status === 'exit') {
-//         setRoomInfo((roomInfo) => {
-//           const newRoomInfo = { ...roomInfo }
-//           newRoomInfo.personnel = content.personnel
-//           return newRoomInfo
-//         })
-//         return
-//       }
-//       if (content.status === 'chat') {
-//         const { nickname, profileImage, message } = content
-//         setChatList((chatList) => [
-//           ...chatList,
-//           { nickname, profileImage, message },
-//         ])
-//       }
-//     },
-//   )
-//   return () => {
-//     subscription.unsubscribe()
-//   }
-// }, [connected, roomInfo, chatList])
+  transition: all 0.5s ease-in-out;
+`

@@ -1,23 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { useOutletContext } from 'react-router-dom'
-import axios from 'libs/axios'
-import api from 'constants/api'
-
 import styled from 'styled-components'
-import Chat from 'components/study/Chat'
-
-import Drawing from 'components/study/Drawing'
-import { algorithmPk, languagePk } from 'constants/pk'
-import Button from 'components/common/Button'
-import ButtonDropdown from 'components/common/ButtonDropdown'
-import RoomInfo from 'components/study/RoomInfo'
-import Loading from 'components/common/Loading'
-import ShareSection from 'components/study/ShareSection'
-import ScreenVideoComponent from 'components/study/ScreenVideoComponent'
-import Modal from 'components/common/Modal'
+import { useOutletContext } from 'react-router-dom'
+import { useWindowHeight } from 'hooks/useWindowHeight'
+import api from 'constants/api'
+import axios from 'libs/axios'
 import Code from 'components/study/Code'
+import Chat from 'components/study/Chat'
+import Modal from 'components/common/Modal'
+import Button from 'components/common/Button'
+import Loading from 'components/common/Loading'
+import RoomInfo from 'components/study/RoomInfo'
+import ShareSection from 'components/study/ShareSection'
+import ButtonDropdown from 'components/common/ButtonDropdown'
+import ScreenVideoComponent from 'components/study/ScreenVideoComponent'
 
 export default function StudyPage() {
   const {
@@ -25,45 +20,40 @@ export default function StudyPage() {
     studyroomId,
     roomInfo,
     stomp,
-    connected,
-    members,
-    setMembers,
     problems,
-    setProblems,
     message,
     setMessage,
     chatList,
     sendChat,
-    disconnect,
     OV,
     session,
     publisher,
     setPublisher,
     subscribers,
-    presenter,
-    setPresenter,
+    setIsVideos,
   } = useOutletContext()
 
+  // window의 innerHeight를 반환하는 커스텀 훅
+  const windowHeight = useWindowHeight()
+
+  // useState
   const [subscription, setSubscription] = useState(null)
-  const [isScreenShare, setIsScreenShare] = useState(false)
+
   const [codeProblems, setCodeProblems] = useState(null)
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
-  const [mainStreamManager, setMainStreamManager] = useState(undefined)
 
-  // 민혁 추가 부분
+  const [presenter, setPresenter] = useState(null)
+  const [mainStreamManager, setMainStreamManager] = useState(undefined)
+  const [isScreenShare, setIsScreenShare] = useState(false)
+
   const [showModal, setShowModal] = useState(false)
-  // 버튼 클릭 시에 해당 코드를 불러오는 fetch 요청
+
   const [code, setCode] = useState('')
   const [codeLanguageId, setCodeLanguageId] = useState(1)
   const [myCode, setMyCode] = useState('')
   const [myCodeLanguageId, setMyCodeLanguageId] = useState(1)
 
-  const handleMainVideoStream = (stream) => {
-    if (mainStreamManager === stream) return
-    setMainStreamManager(stream)
-  }
-
-  // 코딩테스트 결과 요청
+  // 마운트 시, 코딩테스트 결과 요청
   useEffect(() => {
     const problemIds = problems.map((problem) => problem.id)
     const data = {
@@ -77,7 +67,14 @@ export default function StudyPage() {
         setCodeProblems(res.data)
       })
       .catch((err) => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    fetchMyData() // myCode 업데이트
+    changeScreen() // presenter, isScreenShare, isVideos 업데이트
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presenter])
 
   // 웹 소켓 send: 문제 변경 (study 페이지)
   const changeProblem = (idx) => {
@@ -114,13 +111,10 @@ export default function StudyPage() {
         const content = JSON.parse(chatDto.body)
         if (content.status === 'present') {
           setPresenter(content.presenter)
-          console.log('setPresent')
           subscribers.forEach((sub) => {
             const getNicknameTag = JSON.parse(
               sub.stream.connection.data,
             ).clientData
-            console.log('sub', sub)
-            console.log('nickname', getNicknameTag)
             if (getNicknameTag === content.presenter) {
               console.log('handleMainStream')
               handleMainVideoStream(sub)
@@ -135,35 +129,52 @@ export default function StudyPage() {
     return () => {
       subscription && subscription.unsubscribe()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    // myCode, myLnaguageId 셋팅
-    fetchMyData(user.nickname)
-    changeScreen()
-  }, [presenter])
+  //openvidu MainStreamer 변경
+  const handleMainVideoStream = (stream) => {
+    if (mainStreamManager === stream) return
+    setMainStreamManager(stream)
+  }
 
-  // 선택한 코드를 불러와서 화면에 띄워주기
-  const fetchMyData = async (nickname) => {
+  // 선택한 nickname의 불러와서 code, languageId 업데이트
+  const fetchData = async (nickname) => {
     let idx = 0
     codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
       if (code.memberNickname === nickname) {
+        idx = index
+        setCodeLanguageId(code.languageId)
+      }
+    })
+    fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
+      .then((res) => {
+        return res.text()
+      })
+      .then((code) => {
+        setCode(code)
+      })
+  }
+
+  // 선택한 코드를 불러와서 myCode 업데이트
+  const fetchMyData = async (e) => {
+    let idx = 0
+    codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
+      if (code.memberNickname === user.nickname) {
         idx = index
         setMyCodeLanguageId(code.languageId)
       }
     })
     fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
       .then((res) => {
-        console.log('res', res)
         return res.text()
       })
       .then((code) => {
-        console.log('code', code)
         setMyCode(code)
       })
   }
 
-  // 오픈비두 스크린 쉐어
+  // 내가 발표자인지 여부에 따라, publisher, isScreenShare, isVideos업데이트
   const changeScreen = async () => {
     // 내가 발표자일 경우
     if (presenter === user.nickname) {
@@ -192,6 +203,7 @@ export default function StudyPage() {
         })
       publisher.replaceTrack(track)
       setIsScreenShare(true)
+      setIsVideos(false)
     }
 
     // 내가 이전에 발표자였을 경우
@@ -213,20 +225,13 @@ export default function StudyPage() {
       //   setMainStreamManager(undefined)
       setPublisher(newPublisher)
       setIsScreenShare(false)
+      setIsVideos(true)
     }
   }
 
-  // 멤버로 발표 후보자 객체 생성
+  // 제출한 코드 목록을 바탕으로 발표후보 객체 형성
+  // {nickname: nickname}
   const candidatesObject = useMemo(() => {
-    const tempObject = {}
-    members.forEach((member) => {
-      tempObject[member] = member
-    })
-    return tempObject
-  }, [members])
-
-  // 제출한 코드 목록 (2.13 민혁 추가)
-  const codesObject = useMemo(() => {
     if (!codeProblems) return {}
     const tempObject = {}
     codeProblems[codeProblemIdx].codeList.forEach((code) => {
@@ -240,41 +245,6 @@ export default function StudyPage() {
     })
     return tempObject
   }, [codeProblems, codeProblemIdx])
-
-  // 선택한 코드를 불러와서 화면에 띄워주기
-  const fetchData = async (nickname) => {
-    let idx = 0
-    codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
-      if (code.memberNickname === nickname) {
-        idx = index
-        setCodeLanguageId(code.languageId)
-      }
-    })
-    fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
-      .then((res) => {
-        console.log('res', res)
-        return res.text()
-      })
-      .then((code) => {
-        console.log('code', code)
-        setCode(code)
-      })
-  }
-
-  const [windowHeight, setWindowHeight] = useState(0)
-
-  useEffect(() => {
-    const updateMaxHeight = () => {
-      setWindowHeight(window.innerHeight)
-    }
-
-    window.addEventListener('resize', updateMaxHeight)
-    updateMaxHeight()
-
-    return () => {
-      window.removeEventListener('resize', updateMaxHeight)
-    }
-  }, [])
 
   return (
     <>
@@ -325,7 +295,7 @@ export default function StudyPage() {
                     title="발표자 선택"
                     size="small"
                     type="primary"
-                    options={codesObject}
+                    options={candidatesObject}
                     onClick={(e) => changePresenter(e.target.id.split('-')[0])}
                   />
                 </>
@@ -335,7 +305,7 @@ export default function StudyPage() {
               title="다른 사람 코드"
               size="small"
               type="primary"
-              options={codesObject}
+              options={candidatesObject}
               onClick={(e) => fetchData(e.target.id.split('-')[0])}
             />
           </FlexBox>

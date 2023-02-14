@@ -1,15 +1,23 @@
-import React, { useState, useMemo } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import Editor from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs/components/prism-core'
-import 'prismjs/components/prism-clike' // 이거 없으면 자바 오류남
-import 'prismjs/components/prism-python' // import 언어 모듈가서 확인 뒤 바꿔주기
-import 'prismjs/components/prism-java' // 2개 import하면 오류뜸
-import 'prismjs/themes/prism.css' //Example style, you can use another
-import styled from 'styled-components'
-import ButtonDropdown from 'components/common/ButtonDropdown'
-import { languagePk } from 'constants/pk'
-import { FaPython, FaJava } from 'react-icons/fa'
+import { languageIconPk } from 'constants/pk'
 import IconButton from 'components/common/IconButton'
+import 'prismjs/themes/prism.css'
+import 'prismjs/components/prism-clike' // 포함되어야 하단 2개 이상의 css import 시 오류발생 안함
+import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-java'
+
+/*
+prism.js 스타일이 적용된 코드 입력창 컴포넌트
+왼쪽 상단에 코드에 따른 언어 아이콘이 나타난다.
+
+value: 코드 문자열
+setValue: 코드를 변화시키는 setState 함수
+languageId: 언어 pk
+*/
 
 const hightlightWithLineNumbers = (input, language) =>
   highlight(input, language)
@@ -23,7 +31,8 @@ export default function Code({ value, setValue, languageId }) {
       <ButtonWrapper>
         <IconButton
           size="small"
-          icon={languageId === 1 ? <FaPython /> : <FaJava />}
+          icon={languageIconPk[languageId]}
+          disabled={true}
         />
       </ButtonWrapper>
       <StyledEditor
@@ -45,6 +54,17 @@ export default function Code({ value, setValue, languageId }) {
       />
     </Container>
   )
+}
+
+Code.propTypes = {
+  value: PropTypes.string,
+  setValue: PropTypes.func,
+  languageId: PropTypes.number.isRequired,
+}
+
+Code.defaultProps = {
+  value: '',
+  setValue: undefined,
 }
 
 const Container = styled.div`

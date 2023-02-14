@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import {
   BsFillCameraVideoFill,
   BsFillCameraVideoOffFill,
@@ -8,9 +8,11 @@ import {
   BsMicMuteFill,
   BsSunFill,
   BsMoonFill,
+  BsBoxArrowInUp,
+  BsBoxArrowDown,
 } from 'react-icons/bs'
-import IconButton from 'components/common/IconButton'
 import Button from 'components/common/Button'
+import IconButton from 'components/common/IconButton'
 
 /*
 스터디룸 하단(display=absolute, bottom=0) 조작 툴바 컴포넌트
@@ -30,6 +32,8 @@ export default function ToolBar({
   exit,
   theme,
   toggleTheme,
+  isVideosOn,
+  toggleVideos,
 }) {
   return (
     <Container>
@@ -54,6 +58,11 @@ export default function ToolBar({
           icon={theme === 'light' ? <BsSunFill /> : <BsMoonFill />}
           type="white"
           onClick={toggleTheme}
+        />
+        <IconButton
+          icon={isVideosOn ? <BsBoxArrowDown /> : <BsBoxArrowInUp />}
+          type="white"
+          onClick={toggleVideos}
         />
       </Wrapper>
       <Button size="small" type="danger" value="Exit" onClick={exit} />
@@ -94,5 +103,6 @@ const Wrapper = styled.div`
 
   position: absolute;
   left: 50%;
+
   transform: translate(-50%, 0);
 `

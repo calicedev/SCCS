@@ -1,24 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useOutletContext } from 'react-router-dom'
 import { Resizable } from 're-resizable'
-
-// import Footer from 'components/study/Footer'
-import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'libs/axios'
-import api from 'constants/api'
-
-import Button from 'components/common/Button'
-import Textarea from 'components/study/Textarea'
-import { algorithmPk, languagePk } from 'constants/pk'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import useInterval from 'hooks/useInterval'
-import OutlineButton from 'components/common/OutlineButton'
-import ProblemImage from 'components/common/ProblemImage'
-import CodeSection from 'components/study/CodeSection'
-
-import RoomInfo from 'components/study/RoomInfo'
-import ResultSection from 'components/study/ResultSection'
+import { useWindowHeight } from 'hooks/useWindowHeight'
+import api from 'constants/api'
+import axios from 'libs/axios'
+import Button from 'components/common/Button'
 import Loading from 'components/common/Loading'
+import RoomInfo from 'components/study/RoomInfo'
+import CodeSection from 'components/study/CodeSection'
+import ProblemImage from 'components/common/ProblemImage'
+import ResultSection from 'components/study/ResultSection'
 
 const initialCode = {
   1: `class Solution:
@@ -33,38 +26,24 @@ const initialCode = {
 }
 
 export default function TestPage() {
-  const {
-    user,
-    studyroomId,
-    roomInfo,
-    stomp,
-    connected,
-    members,
-    setMembers,
-    problems,
-    setProblems,
-    message,
-    setMessage,
-    chatList,
-    sendChat,
-    disconnect,
-  } = useOutletContext()
+  const { user, studyroomId, roomInfo, stomp, members, problems, setProblems } =
+    useOutletContext()
 
+  // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
+  const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
 
+  // useState
   const [subscription, setSubscription] = useState(null)
 
   const [problemIdx, setProblemIdx] = useState(0) // 현재 선택된 문제의 인덱스
+
+  const [languageId, setLanguageId] = useState(roomInfo.languageIds[0])
+  const [code, setCode] = useState(initialCode[languageId]) // langaugaeId 다음에 선언
+  const [testResult, setTestResult] = useState(null)
+
   const [finished, setFinished] = useState(false)
   const [finishedList, setFinishedList] = useState([])
-  const [languageId, setLanguageId] = useState(roomInfo.languageIds[0])
-
-  const [code, setCode] = useState(initialCode[languageId])
-
-  // 남은 시간 표시하기 위한 state
-  const [timer, setTimer] = useState(2 * 60 * 60)
-
-  const [testResult, setTestResult] = useState(null)
 
   // 코딩테스트 페이지 입장 시 axios 요청
   useEffect(() => {
@@ -80,6 +59,7 @@ export default function TestPage() {
         setProblems(res.data.problems)
       })
       .catch(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 문제 번호나, 언어 변경 시 초기화
@@ -93,6 +73,7 @@ export default function TestPage() {
     if (finishedList.length === members.length) {
       navigate(`/room/${studyroomId}/study`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finishedList])
 
   // 웹 소켓 send: 시험 종료
@@ -122,18 +103,20 @@ export default function TestPage() {
     return () => {
       subscription && subscription.unsubscribe()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 타이머
+  // 타이머 관련 설정
+  const [timer, setTimer] = useState(2 * 60 * 60) // 남은 시간 표시
   useInterval(() => setTimer((timer) => timer - 1), 1000)
-
   useEffect(() => {
     if (timer <= 0) {
       navigate(`/room/${studyroomId}/study`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer])
 
-  // 코드 제출
+  // 코드 제출 함수. type = 'test' or 'submit'
   const submitCode = (type) => {
     const apiKey = type === 'submit' ? 'submitCode' : 'testCode'
     const codeString = code
@@ -143,8 +126,6 @@ export default function TestPage() {
     formData.append('studyroomId', studyroomId)
     formData.append('problemId', problems[problemIdx].id)
     formData.append('languageId', languageId)
-    // formData.append('problemId', 16)
-    // formData.append('languageId', 2)
     const headers = { 'Content-Type': 'multipart/form-data' }
     const [url, method] = api(apiKey)
     const config = { url, method, data: formData, headers }
@@ -154,21 +135,6 @@ export default function TestPage() {
       })
       .catch(() => {})
   }
-
-  const [windowHeight, setWindowHeight] = useState(0)
-
-  useEffect(() => {
-    const updateMaxHeight = () => {
-      setWindowHeight(window.innerHeight)
-    }
-
-    window.addEventListener('resize', updateMaxHeight)
-    updateMaxHeight()
-
-    return () => {
-      window.removeEventListener('resize', updateMaxHeight)
-    }
-  }, [])
 
   return (
     <>
@@ -270,6 +236,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
   height: 100%;
 
   padding: 1rem;
@@ -288,11 +255,13 @@ const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
+
   height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
 `
 const ImageWrapper = styled.div`
   padding: 0.5rem;
   border-radius: 0.5rem;
+
   height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
   background-color: ${({ theme }) => theme.whiteColor};
 `
@@ -300,11 +269,14 @@ const ImageWrapper = styled.div`
 const StyledDiv = styled.div`
   display: flex;
   align-items: center;
+
   padding: 0.2rem 0.5rem;
+
   border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.studyBgColor};
+
   font-size: 0.9rem;
   font-weight: bold;
-  background-color: ${({ theme }) => theme.studyBgColor};
 `
 
 const ButtonWrapper = styled.div`

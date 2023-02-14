@@ -54,15 +54,15 @@ StudyDetailCodeList.propTypes = {
 const Container = styled.div``
 
 const StyledP = styled.p`
-  font-size: 1.2rem;
   margin-bottom: 1rem;
+  font-size: 1.2rem;
 `
 
 const FlexBox = styled.div`
   display: flex;
 
-  border-radius: 0.5rem;
   padding: 0.5rem;
+  border-radius: 0.5rem;
   background-color: #00000015;
 
   font-weight: 600;

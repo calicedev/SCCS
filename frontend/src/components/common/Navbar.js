@@ -1,29 +1,30 @@
 import React from 'react'
-import Logo from 'components/common/Logo'
-import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import IconButton from 'components/common/IconButton'
-import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
-import { useSelector, useDispatch } from 'react-redux'
+import { setExpiration } from 'redux/expSlice'
 import { toggleTheme } from 'redux/themeSlice'
 import { deleteUserInfo } from 'redux/userSlice'
-import checkLogin from 'libs/checkLogin'
-import { setExpiration } from 'redux/expSlice'
-import axios from 'libs/axios'
+import { useSelector, useDispatch } from 'react-redux'
+import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import api from 'constants/api'
+import axios from 'libs/axios'
+import checkLogin from 'libs/checkLogin'
+import Logo from 'components/common/Logo'
+import IconButton from 'components/common/IconButton'
 
 /*
 상단 네비게이션바 컴포넌트
 */
 
 export default function Navbar() {
+  // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
-
-  // 리덕스 -> theme정보
-  const theme = useSelector((state) => state.theme)
-  const isLogin = checkLogin()
-
   const dispatch = useDispatch()
+  const location = useLocation()
+  console.log('navbar', location)
+
+  const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
+  const isLogin = checkLogin() // 로그인 여부 판단
 
   const logout = () => {
     navigate('/')
@@ -72,6 +73,7 @@ const Nav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   margin: 1.5rem 0rem;
   padding: 0rem 2rem;
 `

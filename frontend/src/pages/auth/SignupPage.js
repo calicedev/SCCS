@@ -1,11 +1,12 @@
+import React from 'react'
 import styled from 'styled-components'
-import Button from 'components/common/Button'
-import AuthInput from 'components/auth/AuthInput'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
-import axios from 'libs/axios'
 import api from 'constants/api'
+import axios from 'libs/axios'
+import Button from 'components/common/Button'
+import AuthInput from 'components/auth/AuthInput'
 
 export default function SignupForm() {
   // 리액트 훅 관련 함수 정의
@@ -30,7 +31,7 @@ export default function SignupForm() {
   // 커스텀 훅 useConrimPwd(초깃값, 비교할 비밀번호 값)
   const [confirmPwd, setConfirmPwd, confirmPwdMsg] = useConfirmPwd('', password)
 
-  // 회원가입 서버 요청
+  // 회원가입 api 요청
   const signup = () => {
     // 모든 정보를 유효하게 입력했는지 확인
     if (

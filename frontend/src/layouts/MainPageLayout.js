@@ -2,6 +2,18 @@ import React from 'react'
 import styled from 'styled-components'
 import mypageBgImg from 'assets/img/mypage_bg_img.png'
 
+export default function MainPageLayout({ children }) {
+  const [Up, Middle, Down] = children
+
+  return (
+    <Container>
+      <UpperPane>{Up}</UpperPane>
+      <MiddlePane>{Middle}</MiddlePane>
+      <LowerPane>{Down}</LowerPane>
+    </Container>
+  )
+}
+
 const Container = styled.div`
   position: relative;
 
@@ -43,22 +55,4 @@ const LowerPane = styled.div`
     min-width: 1000px;
     width: 75%;
   }
-`
-
-export default function MainPageLayout({ children }) {
-  const [Up, Middle, Down] = children
-
-  return (
-    <Container>
-      <UpperPane>{Up}</UpperPane>
-      <MiddlePane>{Middle}</MiddlePane>
-      <StyledH1>Find Your Match</StyledH1>
-      <LowerPane>{Down}</LowerPane>
-    </Container>
-  )
-}
-
-const StyledH1 = styled.h2`
-  color: ${({ theme }) => theme.lightPrimaryColor};
-  margin: 1rem 0rem 0rem;
 `
