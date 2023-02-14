@@ -10,10 +10,9 @@ export default function AboutPage() {
     <>
       <H1>About SCCS</H1>
       <Flex>
-        <img src={info1} alt="" />
+        <img src={info4} alt="" />
         <img src={info2} alt="" />
         <img src={info3} alt="" />
-        <img src={info4} alt="" />
       </Flex>
     </>
   )
