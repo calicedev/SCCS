@@ -64,6 +64,8 @@ const StyledDiv = styled.div`
   display: flex;
   align-items: center;
 
+  overflow: hidden;
+
   padding: 0.2rem 0.5rem;
 
   border-radius: 0.5rem;
@@ -71,4 +73,5 @@ const StyledDiv = styled.div`
 
   font-size: 0.9rem;
   font-weight: bold;
+  white-space: nowrap;
 `

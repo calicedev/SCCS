@@ -159,6 +159,7 @@ export default function StudyRoom() {
         JSON.stringify({
           status: 'enter',
           studyroomId: studyroomId,
+          id: user.id,
           nickname: user.nickname,
         }),
       )
@@ -173,6 +174,7 @@ export default function StudyRoom() {
       JSON.stringify({
         status: 'exit',
         studyroomId: studyroomId,
+        id: user.id,
         nickname: user.nickname,
       }),
     )
@@ -186,6 +188,7 @@ export default function StudyRoom() {
       JSON.stringify({
         status: 'chat',
         studyroomId: studyroomId,
+        id: user.id,
         nickname: user.nickname,
         profileImage: user.profileImage,
         message: message,
@@ -470,7 +473,9 @@ export default function StudyRoom() {
               publisher,
               setPublisher,
               subscribers,
+              isVideos,
               setIsVideos,
+              setIsMicOn,
             }}
           />
 
@@ -479,7 +484,7 @@ export default function StudyRoom() {
           )}
         </>
       ) : (
-        <Loading height="30rem" />
+        <Loading height="90vh" />
       )}
       <ToolBar
         toggleCamera={toggleCamera}
@@ -507,5 +512,5 @@ const Container = styled.div`
   height: 100vh;
   background-color: ${({ theme }) => theme.studyBaseBgColor};
 
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
 `

@@ -31,10 +31,10 @@ export default function StudyPage() {
     setPublisher,
     subscribers,
     setIsVideos,
+    isVideos,
   } = useOutletContext()
 
-  // window의 innerHeight를 반환하는 커스텀 훅
-  const windowHeight = useWindowHeight()
+  const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
 
   // useState
   const [subscription, setSubscription] = useState(null)
@@ -309,7 +309,7 @@ export default function StudyPage() {
               onClick={(e) => fetchData(e.target.id.split('-')[0])}
             />
           </FlexBox>
-          <FlexBox2 windowHeight={windowHeight}>
+          <FlexBox2 height={isVideos ? windowHeight - 280 : windowHeight - 120}>
             {presenter === user.nickname ? (
               <ShareSection code={myCode} languageId={myCodeLanguageId} />
             ) : (
@@ -358,7 +358,7 @@ const FlexBox = styled.div`
 const FlexBox2 = styled.div`
   display: flex;
   gap: 5px;
-  height: ${({ windowHeight }) => `calc(${windowHeight}px - 300px)`};
+  height: ${({ height }) => height}px;
 `
 
 const ColumnBox = styled.div`

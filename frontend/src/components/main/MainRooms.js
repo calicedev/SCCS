@@ -39,8 +39,6 @@ export default function MainRooms() {
       .catch((err) => {
         if (err.response.status === 400) {
           alert(err.response.data.message)
-        } else {
-          alert('서버와의 통신이 불안정합니다.')
         }
         setRooms([])
       })
@@ -101,7 +99,7 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert('서버와의 통신이 불안정합니다.')
+        setRooms([])
       })
   }
 
@@ -116,7 +114,6 @@ export default function MainRooms() {
 
   return (
     <>
-      <h1>Find Your Match</h1>
       <Container>
         {showModal && (
           <Modal

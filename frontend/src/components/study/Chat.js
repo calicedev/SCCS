@@ -1,30 +1,27 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { useWindowHeight } from 'hooks/useWindowHeight'
 import Button from 'components/common/Button'
 import ChatItem from 'components/study/ChatItem'
 
-export default function WaitingPage({
+export default function Chat({
   chatList,
   message,
   onChangeMsg,
   sendChat,
-  user,
+  nickname,
 }) {
-  // window의 innerHeight를 반환하는 커스텀 훅
-  const windowHeight = useWindowHeight()
-
   return (
     <Container>
       <Header>채팅방</Header>
-      <ChatContainer windowHeight={windowHeight}>
+      <ChatContainer>
         {chatList.map((chatItem, index) => (
           <ChatItem
             key={`${index}-${chatItem.nickname}`}
             nickname={chatItem.nickname}
             profileImage={chatItem.profileImage}
             message={chatItem.message}
-            isMine={chatItem.nickname === user.nickname ? true : false}
+            isMine={chatItem.nickname === nickname ? true : false}
           />
         ))}
       </ChatContainer>
@@ -43,6 +40,21 @@ export default function WaitingPage({
       </StyledDiv>
     </Container>
   )
+}
+
+Chat.propTypes = {
+  chatList: PropTypes.array.isRequired,
+  message: PropTypes.string,
+  onChangeMsg: PropTypes.func,
+  sendChat: PropTypes.func,
+  nickname: PropTypes.string.isRequired,
+  offset: PropTypes.number.isRequired,
+}
+
+Chat.defaultProps = {
+  message: '',
+  onChangeMsg: undefined,
+  sendChat: undefined,
 }
 
 const Container = styled.div`
@@ -73,7 +85,6 @@ const ChatContainer = styled.div`
   flex-direction: column-reverse;
   overflow-y: auto;
   width: 100%;
-  max-height: ${({ windowHeight }) => `calc(${windowHeight}px - 500px)`};
   padding: 1rem;
 `
 const StyledDiv = styled.div`
@@ -88,7 +99,7 @@ const StyledDiv = styled.div`
 const StyledInput = styled.textarea`
   flex: 1;
 
-  height: 7rem;
+  height: 5rem;
   padding: 1rem;
 
   color: ${({ theme }) => theme.blackFontColor};

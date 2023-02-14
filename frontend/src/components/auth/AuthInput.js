@@ -107,6 +107,7 @@ const Container = styled.div`
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`
+  margin: 0.2rem 0rem;
   padding: 0.3rem 0rem;
   border-bottom: 1px solid gray;
   white-space: nowrap;

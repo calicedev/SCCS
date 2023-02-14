@@ -4,6 +4,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom'
 import Chat from 'components/study/Chat'
 import Button from 'components/common/Button'
 import RoomInfo from 'components/study/RoomInfo'
+import { useWindowHeight } from 'hooks/useWindowHeight'
 
 export default function WaitingPage() {
   const {
@@ -16,10 +17,12 @@ export default function WaitingPage() {
     setMessage,
     chatList,
     sendChat,
+    isVideos,
   } = useOutletContext()
 
   // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
+  const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
 
   // useState
   const [ready, setReady] = useState(false)
@@ -41,6 +44,7 @@ export default function WaitingPage() {
       JSON.stringify({
         status: 'ready',
         studyroomId: studyroomId,
+        id: user.id,
         nickname: user.nickname,
         ready: ready,
       }),
@@ -56,8 +60,9 @@ export default function WaitingPage() {
       JSON.stringify({
         status: 'start',
         studyroomId: studyroomId,
+        id: user.id,
         nickname: user.nickname,
-        membersNickname: [...readyList, user.nickname],
+        memberIds: [...readyList, user.id],
       }),
     )
   }
@@ -70,17 +75,17 @@ export default function WaitingPage() {
         if (content.status === 'ready') {
           // 준비 되었을 경우
           if (content.ready) {
-            setReadyList((readyList) => [...readyList, content.nickname])
+            setReadyList((readyList) => [...readyList, content.id])
             return
           }
           // 준비되지 않았을 경우
           setReadyList((readyList) =>
-            readyList.filter((nickname) => nickname !== content.nickname),
+            readyList.filter((nickname) => nickname !== content.id),
           )
           return
         }
         if (content.status === 'start') {
-          setMembers(content.membersNickname)
+          setMembers(content.memberIds)
           navigate(`/room/${studyroomId}/test`)
         }
       }),
@@ -125,14 +130,15 @@ export default function WaitingPage() {
           />
         )}
       </FlexBox>
-      <FlexBox2>
+      <FlexBox2 height={isVideos ? windowHeight - 280 : windowHeight - 120}>
         <StyledDiv>안내사항</StyledDiv>
         <Chat
           chatList={chatList}
           message={message}
           onChangeMsg={(e) => setMessage(e.target.value)}
           sendChat={sendChat}
-          user={user}
+          nickname={user.nickname}
+          offset={isVideos ? 1000 : 500}
         />
       </FlexBox2>
     </Container>
@@ -157,7 +163,7 @@ const FlexBox2 = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  height: 100%;
+  height: ${({ height }) => height}px;
 `
 const StyledDiv = styled.div`
   flex: 1;

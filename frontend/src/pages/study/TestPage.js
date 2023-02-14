@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
 import { useOutletContext, useNavigate } from 'react-router-dom'
-import useInterval from 'hooks/useInterval'
 import { useWindowHeight } from 'hooks/useWindowHeight'
 import api from 'constants/api'
 import axios from 'libs/axios'
+import Timer from 'components/study/Timer'
 import Button from 'components/common/Button'
 import Loading from 'components/common/Loading'
 import RoomInfo from 'components/study/RoomInfo'
@@ -26,8 +26,16 @@ const initialCode = {
 }
 
 export default function TestPage() {
-  const { user, studyroomId, roomInfo, stomp, members, problems, setProblems } =
-    useOutletContext()
+  const {
+    user,
+    studyroomId,
+    roomInfo,
+    stomp,
+    members,
+    problems,
+    setProblems,
+    setIsMicOn,
+  } = useOutletContext()
 
   // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
@@ -44,6 +52,12 @@ export default function TestPage() {
 
   const [finished, setFinished] = useState(false)
   const [finishedList, setFinishedList] = useState([])
+
+  // 코딩테스트 페이지 입장 시 마이크 뮤트
+  useEffect(() => {
+    setIsMicOn(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // 코딩테스트 페이지 입장 시 axios 요청
   useEffect(() => {
@@ -84,6 +98,7 @@ export default function TestPage() {
       JSON.stringify({
         status: 'study',
         studyroomId: studyroomId,
+        id: user.id,
         nickname: user.nickname,
       }),
     )
@@ -105,16 +120,6 @@ export default function TestPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // 타이머 관련 설정
-  const [timer, setTimer] = useState(2 * 60 * 60) // 남은 시간 표시
-  useInterval(() => setTimer((timer) => timer - 1), 1000)
-  useEffect(() => {
-    if (timer <= 0) {
-      navigate(`/room/${studyroomId}/study`)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timer])
 
   // 코드 제출 함수. type = 'test' or 'submit'
   const submitCode = (type) => {
@@ -162,14 +167,16 @@ export default function TestPage() {
                 )
               })}
             </ButtonWrapper>
-            <StyledDiv>
-              {parseInt(timer / (60 * 60))}:{parseInt((timer / 60) % 60)}:
-              {parseInt(timer % 60)}
-            </StyledDiv>
+            <Timer
+              sec={2 * 60 * 60}
+              onZero={() => {
+                navigate(`/room/${studyroomId}/study`)
+              }}
+            />
           </FlexBox>
           <FlexBox2>
-            <ImageWrapper windowHeight={windowHeight}>
-              <ProblemImage imgUrl={problems[problemIdx].problemImageUrl} />
+            <ImageWrapper height={windowHeight - 120}>
+              <ProblemImage src={problems[problemIdx].problemImageUrl} />
             </ImageWrapper>
             <Resizable
               defaultSize={{ width: '50%', height: '100%' }}
@@ -186,7 +193,7 @@ export default function TestPage() {
                 topLeft: false,
               }}
             >
-              <FlexColumn windowHeight={windowHeight}>
+              <FlexColumn height={windowHeight - 120}>
                 <CodeSection
                   value={code}
                   setValue={setCode}
@@ -256,27 +263,14 @@ const FlexColumn = styled.div`
   flex-direction: column;
   gap: 5px;
 
-  height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
+  height: ${({ height }) => height}px;
 `
 const ImageWrapper = styled.div`
   padding: 0.5rem;
   border-radius: 0.5rem;
 
-  height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
+  height: ${({ height }) => height}px;
   background-color: ${({ theme }) => theme.whiteColor};
-`
-
-const StyledDiv = styled.div`
-  display: flex;
-  align-items: center;
-
-  padding: 0.2rem 0.5rem;
-
-  border-radius: 0.5rem;
-  background-color: ${({ theme }) => theme.studyBgColor};
-
-  font-size: 0.9rem;
-  font-weight: bold;
 `
 
 const ButtonWrapper = styled.div`

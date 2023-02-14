@@ -28,7 +28,7 @@ export default function ButtonDropdown({
     size === 'tiny'
       ? '2rem'
       : size === 'small'
-      ? '2.4rem'
+      ? '3rem'
       : size === 'medium'
       ? '3.5rem'
       : '4rem'

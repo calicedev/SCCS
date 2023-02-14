@@ -9,6 +9,7 @@ export default function MainPageLayout({ children }) {
     <Container>
       <UpperPane>{Up}</UpperPane>
       <MiddlePane>{Middle}</MiddlePane>
+      <h1 className="secondary">Find Your Match!</h1>
       <LowerPane>{Down}</LowerPane>
     </Container>
   )
