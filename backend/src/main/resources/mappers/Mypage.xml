@@ -62,23 +62,42 @@
   </resultMap>
 
   <select id="getHistoryDetail" resultMap="studyroomWithProblemsWithParticipantWithCode">
+    select * FROM(
     Select ANY_VALUE(sr.id) as 'studyroom_id' , sr.title as 'studyroom_title',
     DATE_FORMAT(ANY_VALUE(sr.create_Datetime) ,'%Y-%m-%d %H:%i:%S') as
     'studyroom_create_datetime',ANY_VALUE(p.name) as
-    'problem_name',
-    ANY_VALUE(p.problem_folder) as
-    'problem_folder', ANY_VALUE(s.id) as 'submission_id', ANY_VALUE(s.file_name) as
-    'submission_FileName',ANY_VALUE(s.runtime) as 'submission_runtime', ANY_VALUE(s.memory) as
-    'submission_memory', ANY_VALUE(s.result) as 'submission_result',
-    DATE_FORMAT(ANY_VALUE(s.submit_datetime) ,'%Y-%m-%d %H:%i:%S') as
-    'submission_submitDatetime',ANY_VALUE(p.id) as 'problem_id',
-    s.member_id as 'submission_memberId' ,
-    ANY_VALUE(language_id) as 'submission_languageId'
-    from studyroom sr, submission s, problem p,studyroom_problem sp
-    where sr.id = #{studyId} and sr.id = s.studyroom_id and sr.id = s.studyroom_id and
-    sp.problem_id = p.id and sp.studyroom_id=sr.id and s.problem_id = p.id group by s.problem_id,
-    s.member_id
-    order by s.submit_datetime;
+    'problem_name', ANY_VALUE(p.problem_folder) as
+    'problem_folder', ANY_VALUE(p.id) as 'problem_id',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    s.id,'') as 'submission_id',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    s.file_name,'') as 'submission_FileName',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    s.runtime,'')
+    as 'submission_runtime',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    s.memory,'')
+    as 'submission_memory',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    s.result,'')
+    as 'submission_result',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    DATE_FORMAT(s.submit_datetime,'%Y-%m-%d %H:%i:%S'),'') as 'submission_submitDatetime',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    s.member_id,'') as 'submission_memberId',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    language_id,'') as 'submission_languageId'
+    from studyroom sr, problem p,studyroom_problem sp, submission s
+    where sr.id = #{studyId} and sp.problem_id = p.id and sp.studyroom_id=sr.id and
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    sr.id =
+    s.studyroom_id,sr.id=#{studyId}) and
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
+    s.problem_id
+    = p.id,p.id)
+    order by submission_submitDatetime desc
+    LIMIT 18446744073709551615
+    ) as a group by problem_name,submission_memberId;
   </select>
 
   <resultMap id="submissionWithProblemAboutUser" type="hashmap">
