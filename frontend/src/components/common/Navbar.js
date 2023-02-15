@@ -99,7 +99,6 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <IconWrapper2>{gradeIcons[index]}</IconWrapper2>
             <StyledDiv onClick={() => navigate('/auth/login')}>Login</StyledDiv>
             <StyledDiv2 onClick={() => navigate('/auth/signup')}>
               Signup
@@ -178,11 +177,4 @@ const IconWrapper = styled.div`
   font-size: 25px;
   margin-top: 5px;
   margin-right: 5px;
-`
-
-const IconWrapper2 = styled.div`
-  color: ${({ theme }) => theme.secondaryFontColor};
-  font-size: 25px;
-  margin-top: 5px;
-  margin-right: 25px;
 `
