@@ -88,7 +88,7 @@ const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.grayColor};
   border-radius: 5px;
 
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.dateBoxColor};
 
   &::after {
     display: block;
@@ -97,6 +97,6 @@ const Container = styled.div`
   }
 
   &.disabled {
-    background-color: #dddddd;
+    background-color: ${({ theme }) => theme.dateBoxDisabledColor};
   }
 `

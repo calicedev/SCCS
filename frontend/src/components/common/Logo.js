@@ -32,7 +32,7 @@ Logo.propTypes = {
 
 Logo.defaultProps = {
   width: '9rem',
-  height: '4rem',
+  height: '3rem',
 }
 
 const Container = styled.div`

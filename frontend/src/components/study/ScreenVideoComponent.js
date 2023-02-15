@@ -41,18 +41,17 @@ const Container = styled.div`
   justify-content: center;
   align-items: flex-end;
 
-  overflow: hidden;
+  overflow: auto;
 
   position: relative;
 
   width: 100%;
-  min-width: 700px;
   height: 100%;
 
   border-radius: 0.5rem;
 `
 const Video = styled.video`
-  width: auto;
+  width: 100%;
   height: 100%;
   border-radius: 0.5rem;
 `
@@ -65,7 +64,7 @@ const StyledP = styled.p`
   padding: 0.2rem;
 
   border-radius: 0.5rem 0rem 0rem 0rem;
-  background-color: #ffffff50;
+  background-color: #ffffff80;
 
   font-size: 0.8rem;
   color: ${({ theme }) => theme.grayFontColor};
