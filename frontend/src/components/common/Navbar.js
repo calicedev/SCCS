@@ -84,7 +84,7 @@ export default function Navbar() {
         </ButtonWrapper>
         <NavStyle to="/">Home</NavStyle>
         <NavStyle to="/about">About</NavStyle>
-        {isLogin ? (
+        {isLogin && user ? (
           <>
             <IconWrapper>{gradeIcons[index]}</IconWrapper>
             <NavStyle
