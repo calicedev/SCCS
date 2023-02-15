@@ -69,12 +69,21 @@ export default function StudyRoom() {
         const roomInfo = res.data
         setRoomInfo(roomInfo)
       })
+      axios
+      .request(config)
+      .then((res) => {
+        const roomInfo = res.data
+        setRoomInfo(roomInfo)
+      })
       .catch((err) => {
-        alert('대기방 정보를 불러오지 못했습니다.')
-        exit()
+        if (err.response.status === 404 ) {
+          alert('존재하지 않는 방입니다.')
+          navigate('/')
+        }
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
 
   // mount시에 소켓통신과 webRTC 연결, unmount 시 소켓통신과 webRTC 연결 해제
   useEffect(() => {
