@@ -54,9 +54,8 @@ export default function TestPage() {
   const [finished, setFinished] = useState(false)
   const [finishedList, setFinishedList] = useState([])
 
-  // 테스트, 제출 버튼 클릭 관련 state
-  const [onSubmitButton, setOnSubmitButoon] = useState(false)
-  const [onTestButton, setOnTestButoon] = useState(false)
+  // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)
+  const [onButton, setOnButton] = useState(false)
 
   // 코딩테스트 페이지 입장 시 마이크 뮤트
   useEffect(() => {
@@ -131,11 +130,9 @@ export default function TestPage() {
   const submitCode = (type) => {
     const apiKey = type === 'submit' ? 'submitCode' : 'testCode'
     if (type === 'submit') {
-      setOnTestButoon(false)
-      setOnSubmitButoon(true)
+      setOnButton(true)
     } else {
-      setOnSubmitButoon(false)
-      setOnTestButoon(true)
+      setOnButton(false)
     }
     const codeString = code
     const formData = new FormData()
@@ -209,6 +206,7 @@ export default function TestPage() {
             submit={() => {
               submitCode('submit')
             }}
+            onButton={onButton}
           />
         </Layout>
       ) : (

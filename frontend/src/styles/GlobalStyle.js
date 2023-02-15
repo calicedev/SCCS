@@ -127,6 +127,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 160%;
     font: inherit;
     vertical-align: baseline;
+    font-family: 'bigjohn','NanumSquareEB';
     box-sizing: border-box;
     color: inherit;
     outline: 0;
@@ -140,7 +141,6 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     color: ${({ theme }) => theme.fontColor};
     background-color: ${({ theme }) => theme.baseBgColor};
-    font-family: 'NanumSquareB',
     font-size: 100%;
     line-height: 1.2;
   }

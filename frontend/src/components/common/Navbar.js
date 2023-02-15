@@ -59,13 +59,7 @@ export default function Navbar() {
     dispatch(setExpiration(null))
     const [url, method] = api('logout')
     const config = { url, method }
-    axios
-      .request(config)
-      .then()
-      .catch((err) => {
-        alert('로그아웃을 할 수 없습니다.')
-        navigate('/')
-      })
+    axios.request(config)
   }
 
   return (
@@ -88,7 +82,14 @@ export default function Navbar() {
         <NavStyle to="/about">About</NavStyle>
         {isLogin && user ? (
           <>
-            <IconWrapper>{gradeIcons[index]}</IconWrapper>
+            <NavStyle2
+              to="/mypage/study"
+              className={`${
+                pathname.substring(0, 7) === '/mypage' ? 'active' : null
+              }`}
+            >
+              <IconWrapper>{gradeIcons[index]}</IconWrapper>
+            </NavStyle2>
             <NavStyle
               to="/mypage/study"
               className={`${
@@ -153,6 +154,19 @@ const NavStyle = styled(NavLink)`
     font-weight: 600;
   }
 `
+const NavStyle2 = styled(NavLink)`
+  margin: 1rem 0rem;
+  padding: 0rem 0.5rem 0rem 0rem;
+
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.secondaryFontColor};
+
+  &.active {
+    color: ${({ theme }) => theme.primaryFontColor};
+    font-weight: 600;
+  }
+`
 const StyledDiv = styled.div`
   margin: 1rem 0rem;
   padding: 0rem 1rem 0rem 2rem;
@@ -177,8 +191,7 @@ const StyledDiv2 = styled.div`
   cursor: pointer;
 `
 const IconWrapper = styled.div`
-  color: ${({ theme }) => theme.secondaryFontColor};
   font-size: 25px;
   margin-top: 5px;
-  margin-right: 5px;
+  padding: 0px;
 `

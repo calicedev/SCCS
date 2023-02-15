@@ -43,7 +43,7 @@ export default function Profile() {
       <ProfileContainer>
         <IconWrapper>
           {gradeIcons[index]}
-          {user.score}점
+          <Span>{user.score}점</Span>
         </IconWrapper>
         <ProfileImg src={user.profileImage} />
         <p className="semi-bold">가입일: {user.joinDate}</p>
@@ -122,4 +122,9 @@ const ButtonWrapper = styled.div`
 const IconWrapper = styled.div`
   color: ${({ theme }) => theme.secondaryColor};
   font-size: 30px;
+  display: flex;
+  align-items: center;
+`
+const Span = styled.span`
+  font-size: 25px;
 `

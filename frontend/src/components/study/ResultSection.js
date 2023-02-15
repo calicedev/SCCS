@@ -32,8 +32,7 @@ export default function ResultSection({
   finish,
   test,
   submit,
-  onSubmitButton,
-  onTestButton,
+  onButton,
 }) {
   return (
     <Container>
@@ -41,20 +40,19 @@ export default function ResultSection({
         <H4>결과창</H4>
         {results && (
           <>
-            {onSubmitButton && null}
-            {onTestButton &&
-              results.resultList.slice(0, 3).map((problem, index) => (
-                <p
-                  className={problem.result ? 'c pass' : 'c error'}
-                  key={`${index}-problem-result`}
-                >
-                  {index + 1}번{') '} {problem.message} : {problem.memory}MB
-                  {' / '}
-                  {problem.runtime}s
-                </p>
-              ))}
+            {onButton
+              ? null
+              : results.resultList.slice(0, 3).map((problem, index) => (
+                  <p
+                    className={problem.result ? 'c pass' : 'c error'}
+                    key={`${index}-problem-result`}
+                  >
+                    {index + 1}번{') '} {problem.message} : {problem.memory}MB
+                    {' / '}
+                    {problem.runtime}s
+                  </p>
+                ))}
 
-            {/*  */}
             {results.isAnswer ? (
               <p className="pass ">
                 <br />

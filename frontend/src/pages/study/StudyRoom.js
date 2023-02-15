@@ -76,16 +76,17 @@ export default function StudyRoom() {
         .request(config)
         .then((res) => {
           const roomInfo = res.data
-          console.log('request!!!!!!roomInfo', roomInfo)
           setRoomInfo(roomInfo)
           dispatch(setReduxRoomInfo(roomInfo))
         })
         .catch((err) => {
+          alert('방 정보를 불러올 수 없습니다.')
           exit()
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
 
   // mount시에 소켓통신과 webRTC 연결, unmount 시 소켓통신과 webRTC 연결 해제
   useEffect(() => {
