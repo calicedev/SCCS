@@ -70,12 +70,18 @@ public class MypageController {
     if (targets != null) {
       ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
           "studyroomWithProblems");
+      System.out.println("problem size " + problems.size());
       for (int i = 0; i < problems.size(); i++) {
         ArrayList<HashMap<String, Object>> participants = (ArrayList<HashMap<String, Object>>) problems.get(
             i).get("participantWithCode");
+        System.out.println("participant size " + participants.size());
+        if (participants.size() == 0) {
+          participants.clear();
+          continue;
+        }
         for (int j = 0; j < participants.size(); j++) {
           if (participants.get(j).get("submissionMemberId").equals("")) {
-            participants.clear();
+            participants.remove(j);
             continue;
           }
           String filename = (String) participants.get(j).get("submissionFileName");
@@ -165,7 +171,7 @@ public class MypageController {
   public ResponseEntity<String> getProblemUrlOnly(@PathVariable int problemId) {
     String pUrl = mypageService.getProblemUrlOnly(problemId);
     String ErrMsg;
-    if (!pUrl.equals(null)) {
+    if (pUrl != null) {
       String pRealPath = "problem/" + pUrl + ".jpg";
       pUrl = awsS3service.getTemporaryUrl(pRealPath);
 
