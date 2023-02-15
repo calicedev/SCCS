@@ -8,6 +8,11 @@ import styled from 'styled-components'
 import * as faceapi from 'face-api.js'
 import { OpenVidu } from 'openvidu-browser'
 import { toggleTheme } from 'redux/themeSlice'
+import {
+  setReduxRoomInfo,
+  setReduxMainStreamManager,
+  deleteRoom,
+} from 'redux/roomSlice'
 import api from 'constants/api'
 import axios from 'libs/axios'
 import ToolBar from 'components/study/ToolBar'
@@ -21,6 +26,9 @@ import presentImg from 'assets/img/webRTC_present_image.png'
 const APPLICATION_SERVER_URL = 'https://i8a301.p.ssafy.io/'
 
 export default function StudyRoom() {
+  // 리덕스 -> 기존 방 정보 읽어오기
+  const room = useSelector((state) => state.room)
+
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -32,9 +40,9 @@ export default function StudyRoom() {
 
   // 기본정보
   const { studyroomId } = useParams()
-  const [roomInfo, setRoomInfo] = useState(null)
-  const [members, setMembers] = useState([])
-  const [problems, setProblems] = useState(null)
+  const [roomInfo, setRoomInfo] = useState(room)
+  const [members, setMembers] = useState(room.members)
+  const [problems, setProblems] = useState(room.problems)
 
   // 웹소켓 useState
   const [stomp, setStomp] = useState(null)
@@ -61,26 +69,21 @@ export default function StudyRoom() {
 
   // 스터디룸 정보 axios 요청
   useEffect(() => {
-    const [url, method] = api('enterRoom', { studyroomId })
-    const config = { url, method }
-    axios
-      .request(config)
-      .then((res) => {
-        const roomInfo = res.data
-        setRoomInfo(roomInfo)
-      })
+    if (JSON.stringify(roomInfo) === '{}') {
+      const [url, method] = api('enterRoom', { studyroomId })
+      const config = { url, method }
       axios
-      .request(config)
-      .then((res) => {
-        const roomInfo = res.data
-        setRoomInfo(roomInfo)
-      })
-      .catch((err) => {
-        if (err.response.status === 404 ) {
-          alert('존재하지 않는 방입니다.')
-          navigate('/')
-        }
-      })
+        .request(config)
+        .then((res) => {
+          const roomInfo = res.data
+          setRoomInfo(roomInfo)
+          dispatch(setReduxRoomInfo(roomInfo))
+        })
+        .catch((err) => {
+          alert('방 정보를 불러올 수 없습니다.')
+          exit()
+        })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -178,6 +181,9 @@ export default function StudyRoom() {
     setSession(undefined)
     setSubscribers([])
     setPublisher(undefined)
+    dispatch(deleteRoom())
+    setMainStreamManager(undefined)
+    dispatch(setReduxMainStreamManager(undefined))
     navigate('/')
   }
 

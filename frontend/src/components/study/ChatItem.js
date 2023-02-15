@@ -18,8 +18,8 @@ isMine: 내가 보낸 메시지인지 판별
 export default function ChatItem({ nickname, profileImage, message, isMine }) {
   return (
     <Container isMine={isMine}>
-      <ProfileImg imgUrl={profileImage} type="chat" />
-      <FlexBox>
+      <ProfileImg src={profileImage} type="chat" />
+      <FlexBox isMine={isMine}>
         <p className="bold">{nickname}</p>
         <StyledDiv isMine={isMine}>{message}</StyledDiv>
       </FlexBox>
@@ -51,7 +51,7 @@ const Container = styled.div`
 const FlexBox = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${({ isMine }) => (isMine ? 'flex-start' : 'flex-end')};
+  align-items: ${({ isMine }) => (isMine ? 'end' : 'start')};
   gap: 5px;
 `
 

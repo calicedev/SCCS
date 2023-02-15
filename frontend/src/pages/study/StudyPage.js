@@ -1,10 +1,17 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import styled from 'styled-components'
 import { Resizable } from 're-resizable'
+import { useDispatch, useSelector } from 'react-redux'
 import { useOutletContext } from 'react-router-dom'
 import { useWindowHeight } from 'hooks/useWindowHeight'
+import {
+  setReduxPresenter,
+  setReduxIsScreenShare,
+  setReduxMainStreamManager,
+} from 'redux/roomSlice'
 import api from 'constants/api'
 import axios from 'libs/axios'
+import Layout from 'layouts/StudyPageLayout'
 import Code from 'components/study/Code'
 import Chat from 'components/study/Chat'
 import Modal from 'components/common/Modal'
@@ -14,8 +21,6 @@ import RoomInfo from 'components/study/RoomInfo'
 import ShareSection from 'components/study/ShareSection'
 import ButtonDropdown from 'components/common/ButtonDropdown'
 import ScreenVideoComponent from 'components/study/ScreenVideoComponent'
-
-import Layout from 'layouts/StudyPageLayout'
 
 export default function StudyPage() {
   const {
@@ -39,7 +44,10 @@ export default function StudyPage() {
     setMainStreamManager,
   } = useOutletContext()
 
+  const room = useSelector((state) => state.room)
+
   const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
+  const dispatch = useDispatch()
 
   // useState
   const [subscription, setSubscription] = useState(null)
@@ -47,8 +55,8 @@ export default function StudyPage() {
   const [codeProblems, setCodeProblems] = useState(null)
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
 
-  const [presenter, setPresenter] = useState(null)
-  const [isScreenShare, setIsScreenShare] = useState(false)
+  const [presenter, setPresenter] = useState(room.presenter)
+  const [isScreenShare, setIsScreenShare] = useState(room.isScreenShare)
 
   const [showModal, setShowModal] = useState(false)
   const [codeNickname, setCodeNickname] = useState(null)
@@ -116,12 +124,12 @@ export default function StudyPage() {
         const content = JSON.parse(chatDto.body)
         if (content.status === 'present') {
           setPresenter(content.presenter)
+          dispatch(setReduxPresenter(content.presenter))
           subscribers.forEach((sub) => {
             const getNicknameTag = JSON.parse(
               sub.stream.connection.data,
             ).clientData
             if (getNicknameTag === content.presenter) {
-              console.log('handleMainStream')
               handleMainVideoStream(sub)
             }
           })
@@ -141,6 +149,7 @@ export default function StudyPage() {
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager === stream) return
     setMainStreamManager(stream)
+    dispatch(setReduxMainStreamManager(stream))
   }
 
   // 내가 선택한 코드보기 사람의 닉네임 변경
@@ -205,7 +214,6 @@ export default function StudyPage() {
       const y = rect.top
       const width = rect.width
       const height = rect.height
-      console.log(x, y, width, height)
 
       const track = await navigator.mediaDevices
         .getDisplayMedia({
@@ -223,6 +231,7 @@ export default function StudyPage() {
         })
       publisher.replaceTrack(track)
       setIsScreenShare(true)
+      dispatch(setReduxIsScreenShare(true))
       setIsVideos(false)
     }
 
@@ -245,6 +254,7 @@ export default function StudyPage() {
       //   setMainStreamManager(undefined)
       setPublisher(newPublisher)
       setIsScreenShare(false)
+      dispatch(setReduxIsScreenShare(false))
       setIsVideos(true)
     }
   }
