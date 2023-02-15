@@ -51,14 +51,14 @@
   </resultMap>
 
   <resultMap id="ParticipantWithCode" type="HashMap">
-    <result column="submission_id" property="submissionId"></result>
+    <result column="submission_id" property="submissionId" javaType="int"></result>
     <result column="submission_FileName" property="submissionFileName"></result>
-    <result column="submission_runtime" property="submissionRuntime"></result>
-    <result column="submission_memory" property="submissionMemory"></result>
-    <result column="submission_result" property="submissionResult"></result>
+    <result column="submission_runtime" property="submissionRuntime" javaType="int"></result>
+    <result column="submission_memory" property="submissionMemory" javaType="int"></result>
+    <result column="submission_result" property="submissionResult" javaType="int"></result>
     <result column="submission_submitDatetime" property="submissionSubmitDateTime"></result>
     <result column="submission_memberId" property="submissionMemberId"></result>
-    <result column="submission_languageId" property="submissionLanguageId"></result>
+    <result column="submission_languageId" property="submissionLanguageId" javaType="int"></result>
   </resultMap>
 
   <select id="getHistoryDetail" resultMap="studyroomWithProblemsWithParticipantWithCode">
@@ -68,34 +68,33 @@
     'studyroom_create_datetime',ANY_VALUE(p.name) as
     'problem_name', ANY_VALUE(p.problem_folder) as
     'problem_folder', ANY_VALUE(p.id) as 'problem_id',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    s.id,'') as 'submission_id',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    s.file_name,'') as 'submission_FileName',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    s.runtime,'')
-    as 'submission_runtime',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    s.memory,'')
-    as 'submission_memory',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    s.result,'')
-    as 'submission_result',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    DATE_FORMAT(s.submit_datetime,'%Y-%m-%d %H:%i:%S'),'') as 'submission_submitDatetime',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    s.member_id,'') as 'submission_memberId',
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    language_id,'') as 'submission_languageId'
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , s.id,'') as 'submission_id',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , s.file_name,'') as 'submission_FileName',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , s.runtime,'') as 'submission_runtime',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , s.memory,'') as 'submission_memory',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , s.result,'') as 'submission_result',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , DATE_FORMAT(s.submit_datetime,'%Y-%m-%d %H:%i:%S'),'') as
+    'submission_submitDatetime',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , s.member_id,'') as 'submission_memberId',
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , language_id,'') as 'submission_languageId'
     from studyroom sr, problem p,studyroom_problem sp, submission s
     where sr.id = #{studyId} and sp.problem_id = p.id and sp.studyroom_id=sr.id and
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    sr.id =
-    s.studyroom_id,sr.id=#{studyId}) and
-    if((select count(member_id) as count from submission where studyroom_id = #{studyId}) > 0 ,
-    s.problem_id
-    = p.id,p.id)
-    order by submission_submitDatetime desc
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , sr.id = s.studyroom_id, sr.id=#{studyId}) and
+    if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
+    s.problem_id = problem_id) > 0 , s.problem_id = p.id,p.id)
+    order by case when if((select count(member_id) as count from submission where studyroom_id =
+    #{studyId}
+    and s.problem_id = problem_id) > 0, submission_submitDatetime,'') then submission_submitDatetime
+    end desc
     LIMIT 18446744073709551615
     ) as a group by problem_name,submission_memberId;
   </select>
