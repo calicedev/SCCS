@@ -205,6 +205,8 @@ export default function TestPage() {
             submit={() => {
               submitCode('submit')
             }}
+            onSubmitButton
+            onTestButton
           />
         </Layout>
       ) : (
