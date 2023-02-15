@@ -68,14 +68,22 @@ export default function Room({
       return
     }
     // 진행방 일 경우
-    if (isSolving) return
+    if (isSolving) {
+      alert('이미 문제를 풀고 있는 방입니다')
+      return
+    }
     // 비밀방 일 경우 모달창 띄우기
     if (isPrivate) {
       setShowModal(true)
       return
     }
     // 비밀방이 아닐 경우 바로 이동
+    if (personnel >= 6) {
+      alert('만석입니다')
+      return
+    }
     navigate(`/room/${id}/waiting`)
+
   }
 
   return (
