@@ -51,14 +51,14 @@ export default function ResultSection({
             {results.isAnswer ? (
               <p className="pass ">
                 <br />
-                통과했습니다~~~!!!
+                통과했습니다.
                 <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:{' '}
                 {results.avgMemory}MB
               </p>
             ) : (
               <p className="error c">
                 <br />
-                틀렸습니다ㅜㅜ
+                틀렸습니다.
                 <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:{' '}
                 {results.avgMemory}MB
               </p>
