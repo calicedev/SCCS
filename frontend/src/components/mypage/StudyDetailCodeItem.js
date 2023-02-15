@@ -64,8 +64,8 @@ export default function StudyDetailCodeItem({
         </FlexEle>
         <FlexEle flex={1}>{runtime}s</FlexEle>
         <FlexEle flex={1}>{memory}MB</FlexEle>
-        <FlexEle flex={1} className={result === 'true' ? 'pass' : 'error'}>
-          {result}
+        <FlexEle flex={1} className={result === '1' ? 'pass' : 'error'}>
+          {result==='1' ? 'success' : 'fail'}
         </FlexEle>
       </FlexBox>
     </>
