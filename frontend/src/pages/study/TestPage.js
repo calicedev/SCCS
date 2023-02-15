@@ -53,6 +53,9 @@ export default function TestPage() {
   const [finished, setFinished] = useState(false)
   const [finishedList, setFinishedList] = useState([])
 
+  const [onSubmitButton, setOnSubmitButoon] = useState(false)
+  const [onTestButton, setOnTestButoon] = useState(false)
+
   // 코딩테스트 페이지 입장 시 마이크 뮤트
   useEffect(() => {
     setIsMicOn(false)
@@ -124,6 +127,13 @@ export default function TestPage() {
   // 코드 제출 함수. type = 'test' or 'submit'
   const submitCode = (type) => {
     const apiKey = type === 'submit' ? 'submitCode' : 'testCode'
+    if (type === 'submit') {
+      setOnTestButoon(false)
+      setOnSubmitButoon(true)
+    } else {
+      setOnSubmitButoon(false)
+      setOnTestButoon(true)
+    }
     const codeString = code
     const formData = new FormData()
     formData.append('formFile', new Blob([codeString], { type: 'text/plain' }))
@@ -226,6 +236,8 @@ export default function TestPage() {
                     submit={() => {
                       submitCode('submit')
                     }}
+                    onSubmitButton={onSubmitButton}
+                    onTestButton={onTestButton}
                   />
                 </Resizable>
               </FlexColumn>

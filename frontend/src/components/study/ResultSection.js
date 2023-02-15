@@ -32,36 +32,45 @@ export default function ResultSection({
   finish,
   test,
   submit,
+  onSubmitButton,
+  onTestButton,
 }) {
   return (
     <Container>
       <ResultsWrapper>
+        <H4>결과창</H4>
         {results && (
           <>
-            {results.resultList.map((problem, index) => (
-              <p
-                className={problem.result ? 'c pass' : 'c error'}
-                key={`${index}-problem-result`}
-              >
-                {index + 1}번{') '} {problem.message} : {problem.memory}MB
-                {' / '}
-                {problem.runtime}s
-              </p>
-            ))}
+            {onSubmitButton && null}
+            {onTestButton &&
+              results.resultList.slice(0, 3).map((problem, index) => (
+                <p
+                  className={problem.result ? 'c pass' : 'c error'}
+                  key={`${index}-problem-result`}
+                >
+                  {index + 1}번{') '} {problem.message} : {problem.memory}MB
+                  {' / '}
+                  {problem.runtime}s
+                </p>
+              ))}
+
+            {/*  */}
             {results.isAnswer ? (
               <p className="pass ">
                 <br />
                 통과했습니다.
-                <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:{' '}
+                <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:
                 {results.avgMemory}MB
               </p>
             ) : (
-              <p className="error c">
-                <br />
-                틀렸습니다.
-                <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:{' '}
-                {results.avgMemory}MB
-              </p>
+              <>
+                <p className="error c">
+                  <br />
+                  틀렸습니다.
+                  <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:
+                  {results.avgMemory}MB
+                </p>
+              </>
             )}
           </>
         )}
@@ -112,4 +121,8 @@ const ResultsWrapper = styled.div`
   padding: 0.5rem;
   margin: 1rem;
   background-color: ${({ theme }) => theme.deepStudyBgColor};
+`
+const H4 = styled.h4`
+  text-align: center;
+  font-weight: bold;
 `
