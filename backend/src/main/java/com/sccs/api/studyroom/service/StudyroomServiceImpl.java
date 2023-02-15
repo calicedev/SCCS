@@ -23,6 +23,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -288,6 +289,7 @@ public class StudyroomServiceImpl implements StudyroomService {
      * 코딩 테스트 문제 제출
      **/
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> submitProblem(SubmissionDto submissionDto) throws IOException {
         ProblemDto problemDto = studyroomMapper.getProblemInfo(submissionDto.getProblemId());
         //파일을 원하는 경로에 실제로 저장한다.
@@ -313,8 +315,8 @@ public class StudyroomServiceImpl implements StudyroomService {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         //채점 서버 url
-//        String url = "http://70.12.246.161:8201";
-        String url = "https://sccs.kr";
+        String url = "http://70.12.246.161:8201";
+        //String url = "https://sccs.kr";
         if (submissionDto.getLanguageId() == 1) {
             url += "/solve/python/submission";
         } else if (submissionDto.getLanguageId() == 2) {
