@@ -159,11 +159,11 @@ export default function StudyPage() {
 
   // 선택한 nickname의 불러와서 code, languageId 업데이트
   useEffect(
-    (nickname) => {
+    () => {
       if (codeProblems) {
         let idx = -1
         codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
-          if (code.memberNickname === nickname) {
+          if (code.memberNickname === codeNickname) {
             idx = index
             setCodeLanguageId(code.languageId)
           }
