@@ -1,7 +1,6 @@
 package com.sccs.api.member.service;
 
-//import com.sccs.exception.InterceptorException;
-//import com.sccs.exception.InterceptorExceptionEnum;
+
 import com.sccs.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -9,13 +8,10 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpException;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,10 +59,10 @@ public class JWTServiceImpl implements JWTService {
           .getBody();
     } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
       logger.debug("토큰 만료");
-      throw new UnAuthorizedException("토큰 만료됐음");
+      throw new UnAuthorizedException("accessToken expired");
     } catch (Exception e) {
       logger.debug("토큰 검증 에러");
-      throw new UnAuthorizedException("토큰 검증 에러임!!!!!!!!!!!!!!!!!!!!");
+      throw new UnAuthorizedException("accessToken expired");
     }
   }
 
