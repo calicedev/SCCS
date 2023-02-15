@@ -1,6 +1,5 @@
 package com.sccs.api.member.controller;
 
-import com.amazonaws.util.IOUtils;
 import com.sccs.api.aws.dto.FileDto;
 import com.sccs.api.aws.service.AwsS3Service;
 import com.sccs.api.member.dto.MemberDto;
@@ -14,27 +13,17 @@ import com.sccs.api.member.util.RedisService;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.*;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -49,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -64,7 +52,6 @@ public class MemberController {
   private static final int HOUR = MINUTE * 60; // 1시간
   private static final int DAY = HOUR * 24; // 24시간
   private static final int WEEK = DAY * 7; // 1주일
-  private static final String HEADER_AUTH = "authorization";
   private static final String MESSAGE = "message";
 
   private final MemberService memberService;
@@ -84,13 +71,6 @@ public class MemberController {
           @ApiResponse(code = 200, message = "회원 가입 성공"),
           @ApiResponse(code = 401, message = "회원 가입 실패")
   })
-//  @ApiImplicitParams({
-//          @ApiImplicitParam(name = "id", value = "아이디", required = true),
-//          @ApiImplicitParam(name = "name", value = "이름", required = true),
-//          @ApiImplicitParam(name = "nickname", value = "닉네임", required = true),
-//          @ApiImplicitParam(name = "email", value = "이메일", required = true),
-//          @ApiImplicitParam(name = "password", value = "비밀번호", required = true),
-//  })
   public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto)
       throws NoSuchAlgorithmException {
     Map<String, String> resultMap = new HashMap<>();
@@ -128,9 +108,6 @@ public class MemberController {
       String salt = memberDto.getSalt(); // DTO에 저장된 salt 값 불러오기
       String hex = encryptService.encryptPassword(password, salt); // 암호화 후 비밀번호
 
-//      logger.debug("[logIn]로그인 시도 비번 : {}", hex);
-//      logger.debug("[logIn]기존   비밀번호 : {}", memberDto.getPassword());
-
       if (hex.equals(memberDto.getPassword())) { // DB에 저장되어있는 비밀번호와 새롭게 들어온 비밀번호와 같은지 비교
         logger.debug("[logIn]로그인 성공");
 
@@ -139,9 +116,6 @@ public class MemberController {
         long exp = System.currentTimeMillis() + (HOUR * 9);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
                 (HOUR * 10));
-
-//        resultmap.put("accessToken", accessToken);
-//        resultmap.put("refreshToken", refreshToken);
 
         // 쿠키 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", accessToken);
@@ -158,9 +132,6 @@ public class MemberController {
         }
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
-
-//        Claims claims = jwtService.getToken(accessToken);
-//        String exp = (String) jwtService.getToken(accessToken).get("expiration");
 
         logger.debug("[login]로그인 성공");
         resultmap.put(MESSAGE, "성공");
@@ -183,12 +154,8 @@ public class MemberController {
    * Auth
    **/
   @GetMapping("/member")
-  public ResponseEntity<?> memberInfo(HttpServletRequest request, @CookieValue(value = "accessToken", defaultValue = "") String accessToken) { // @CookieValue String accessToken
+  public ResponseEntity<?> memberInfo(@CookieValue(value = "accessToken", defaultValue = "") String accessToken) {
     Map<String, Object> resultMap = new HashMap<>();
-
-    // 헤더 방식
-    // final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length()); // 헤더에서 토큰 파싱
-    // String id = (String) jwtService.getToken(token).get("id"); // 회원 아이디를 accessToken에서 파싱
 
     if (accessToken.isEmpty()) {
       resultMap.put(MESSAGE, "쿠키 없음");
