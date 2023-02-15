@@ -171,9 +171,8 @@ const Modal = styled.div`
   border: 1px solid gray;
   border-radius: 5px;
 
-  background-color: white;
+  background-color: ${({ theme }) => theme.dateBoxColor};
 
-  color: #000000;
   white-space: nowrap;
 
   &::-webkit-scrollbar {

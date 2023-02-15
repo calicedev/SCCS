@@ -8,6 +8,7 @@ import RoomInfo from 'components/study/RoomInfo'
 import Announcement from 'components/study/Announcement'
 
 export default function WaitingPage() {
+  // props
   const {
     user,
     studyroomId,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import styled from 'styled-components'
+import { Resizable } from 're-resizable'
 import { useOutletContext } from 'react-router-dom'
 import { useWindowHeight } from 'hooks/useWindowHeight'
 import api from 'constants/api'
@@ -13,6 +14,8 @@ import RoomInfo from 'components/study/RoomInfo'
 import ShareSection from 'components/study/ShareSection'
 import ButtonDropdown from 'components/common/ButtonDropdown'
 import ScreenVideoComponent from 'components/study/ScreenVideoComponent'
+
+import Layout from 'layouts/StudyPageLayout'
 
 export default function StudyPage() {
   const {
@@ -32,6 +35,8 @@ export default function StudyPage() {
     subscribers,
     setIsVideos,
     isVideos,
+    mainStreamManager,
+    setMainStreamManager,
   } = useOutletContext()
 
   const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
@@ -43,10 +48,10 @@ export default function StudyPage() {
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
 
   const [presenter, setPresenter] = useState(null)
-  const [mainStreamManager, setMainStreamManager] = useState(undefined)
   const [isScreenShare, setIsScreenShare] = useState(false)
 
   const [showModal, setShowModal] = useState(false)
+  const [codeNickname, setCodeNickname] = useState(null)
 
   const [code, setCode] = useState('')
   const [codeLanguageId, setCodeLanguageId] = useState(1)
@@ -138,23 +143,38 @@ export default function StudyPage() {
     setMainStreamManager(stream)
   }
 
-  // 선택한 nickname의 불러와서 code, languageId 업데이트
-  const fetchData = async (nickname) => {
-    let idx = 0
-    codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
-      if (code.memberNickname === nickname) {
-        idx = index
-        setCodeLanguageId(code.languageId)
-      }
-    })
-    fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
-      .then((res) => {
-        return res.text()
-      })
-      .then((code) => {
-        setCode(code)
-      })
+  // 내가 선택한 코드보기 사람의 닉네임 변경
+  const changeCode = (nickname) => {
+    setCodeNickname(nickname)
   }
+
+  // 선택한 nickname의 불러와서 code, languageId 업데이트
+  useEffect(
+    (nickname) => {
+      if (codeProblems) {
+        let idx = -1
+        codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
+          if (code.memberNickname === nickname) {
+            idx = index
+            setCodeLanguageId(code.languageId)
+          }
+        })
+        if (idx === -1) {
+          setCode('')
+        } else {
+          fetch(codeProblems[codeProblemIdx].codeList[idx].fileUrl)
+            .then((res) => {
+              return res.text()
+            })
+            .then((code) => {
+              setCode(code)
+            })
+        }
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [codeProblemIdx, codeNickname],
+  )
 
   // 선택한 코드를 불러와서 myCode 업데이트
   const fetchMyData = async (e) => {
@@ -261,8 +281,9 @@ export default function StudyPage() {
         />
       )}
       {codeProblems ? (
-        <Container>
-          <FlexBox>
+        <Layout isVideos={{ isVideos }}>
+          {/* UpperPane */}
+          <>
             <ButtonWrapper>
               <RoomInfo
                 id={roomInfo.id}
@@ -306,69 +327,98 @@ export default function StudyPage() {
               size="small"
               type="primary"
               options={candidatesObject}
-              onClick={(e) => fetchData(e.target.id.split('-')[0])}
+              onClick={(e) => changeCode(e.target.id.split('-')[0])}
             />
-          </FlexBox>
-          <FlexBox2 height={isVideos ? windowHeight - 280 : windowHeight - 120}>
-            {presenter === user.nickname ? (
-              <ShareSection code={myCode} languageId={myCodeLanguageId} />
-            ) : (
-              <>
-                {mainStreamManager && (
-                  <StyledDiv>
+          </>
+          {/* LowerPane */}
+          {presenter === user.nickname ? (
+            <ShareSection code={myCode} languageId={myCodeLanguageId} />
+          ) : (
+            <>
+              {mainStreamManager && (
+                <Resizable
+                  defaultSize={{
+                    width: '60%',
+                    height: '100%',
+                  }}
+                  minWidth={'30%'}
+                  maxWidth={'70%'}
+                  enable={{
+                    top: false,
+                    right: true,
+                    bottom: false,
+                    left: false,
+                    topRight: false,
+                    bottomRight: false,
+                    bottomLeft: false,
+                    topLeft: false,
+                  }}
+                >
+                  <StyledDiv
+                    height={isVideos ? windowHeight - 280 : windowHeight - 120}
+                  >
                     <ScreenVideoComponent streamManager={mainStreamManager} />
                   </StyledDiv>
-                )}
-                <ColumnBox flexDirection={mainStreamManager ? 'column' : 'row'}>
-                  <Code languageId={codeLanguageId} value={code} />
+                </Resizable>
+              )}
+              <ColumnBox
+                flexDirection={mainStreamManager ? 'column' : 'row'}
+                height={isVideos ? windowHeight - 280 : windowHeight - 120}
+              >
+                <Code
+                  languageId={codeLanguageId}
+                  value={code}
+                  setValue={setCode}
+                />
+                <Resizable
+                  defaultSize={{
+                    width: mainStreamManager ? '100%' : '50%',
+                    height: mainStreamManager ? '50%' : '100%',
+                  }}
+                  minWidth={mainStreamManager ? '100%' : '30%'}
+                  maxWidth={mainStreamManager ? '100%' : '70%'}
+                  minHeight={mainStreamManager ? '30%' : '100%'}
+                  maxHeight={mainStreamManager ? '70%' : '100%'}
+                  enable={{
+                    top: mainStreamManager ? true : false,
+                    right: false,
+                    bottom: false,
+                    left: mainStreamManager ? false : true,
+                    topRight: false,
+                    bottomRight: false,
+                    bottomLeft: false,
+                    topLeft: false,
+                  }}
+                >
                   <Chat
                     chatList={chatList}
                     message={message}
                     onChangeMsg={(e) => setMessage(e.target.value)}
                     sendChat={sendChat}
-                    user={user}
+                    nickname={user.nickname}
                   />
-                </ColumnBox>
-              </>
-            )}
-          </FlexBox2>
-        </Container>
+                </Resizable>
+              </ColumnBox>
+            </>
+          )}
+        </Layout>
       ) : (
-        <Loading height="70vh" />
+        <Loading height="90vh" />
       )}
     </>
   )
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  width: 100vw;
-  padding: 1rem;
-`
-
-const FlexBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-`
-
-const FlexBox2 = styled.div`
-  display: flex;
-  gap: 5px;
-  height: ${({ height }) => height}px;
-`
 
 const ColumnBox = styled.div`
   display: flex;
   flex-direction: ${({ flexDirection }) => flexDirection};
   gap: 5px;
   width: 100%;
+  height: ${({ height }) => height}px;
 `
 const StyledDiv = styled.div`
   flex: 1;
+  height: ${({ height }) => height}px;
 `
 
 const ButtonWrapper = styled.div`

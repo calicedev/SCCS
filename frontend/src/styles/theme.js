@@ -45,6 +45,9 @@ export const light = {
   bgColor: '#FFFFFF', // 컨텐츠 화면 배경색
   bluishBgColor: '#F6FAFF', // 사이드바 화면 배경색
 
+  dateBoxColor: '#FFFFFF',
+  dateBoxDisabledColor: '#EDEDED',
+
   studyBaseBgColor: '#98ABBE',
   studyBgColor: '#F9FCFF',
   deepStudyBgColor: '#D8EBFF',
@@ -61,6 +64,9 @@ export const dark = {
   baseBgColor: '#34424E', // 최하단 화면 배경색
   bgColor: '#46535F', // 컨텐츠 화면 배경색
   bluishBgColor: '#5F738C', // 사이드바 화면 배경색
+
+  dateBoxColor: '#7D90A3',
+  dateBoxDisabledColor: '#999999',
 
   studyBaseBgColor: '#98ABBE',
   studyBgColor: '#263747',

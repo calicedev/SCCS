@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { algorithmPk, languageIconPk } from 'constants/pk'
-import IconButton from 'components/common/IconButton'
 
 export default function RoomInfo({
   id,
@@ -17,9 +16,7 @@ export default function RoomInfo({
   const languages = useMemo(() => {
     const tempLanguages = []
     languageIds.forEach((pk) => {
-      tempLanguages.push(
-        <IconButton key={pk} disabled={true} icon={languageIconPk[pk]} />,
-      )
+      tempLanguages.push(languageIconPk[pk])
     })
     return tempLanguages
   }, [languageIds])

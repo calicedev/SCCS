@@ -118,6 +118,8 @@ const Nav = styled.div`
 
   margin: 1.5rem 0rem;
   padding: 0rem 2rem;
+
+  font-family: 'bigjohn';
 `
 const Flexbox = styled.div`
   display: flex;

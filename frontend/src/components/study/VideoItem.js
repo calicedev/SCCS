@@ -73,7 +73,7 @@ const StyledP = styled.p`
 
   padding: 0.2rem;
 
-  background-color: #ffffff50;
+  background-color: #ffffff80;
 
   font-size: 0.8rem;
   color: ${({ theme }) => theme.grayFontColor};
