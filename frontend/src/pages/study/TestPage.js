@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Resizable } from 're-resizable'
+import { useDispatch } from 'react-redux'
 import { useOutletContext, useNavigate } from 'react-router-dom'
-import { useWindowHeight } from 'hooks/useWindowHeight'
+import { setReduxProblems } from 'redux/roomSlice'
 import api from 'constants/api'
 import axios from 'libs/axios'
+import Layout from 'layouts/TestPageLayout'
 import Timer from 'components/study/Timer'
 import Button from 'components/common/Button'
 import Loading from 'components/common/Loading'
@@ -39,7 +40,7 @@ export default function TestPage() {
 
   // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
-  const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
+  const dispatch = useDispatch()
 
   // useState
   const [subscription, setSubscription] = useState(null)
@@ -53,8 +54,8 @@ export default function TestPage() {
   const [finished, setFinished] = useState(false)
   const [finishedList, setFinishedList] = useState([])
 
-  const [onSubmitButton, setOnSubmitButoon] = useState(false)
-  const [onTestButton, setOnTestButoon] = useState(false)
+  // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)
+  const [onButton, setOnButton] = useState(false)
 
   // 코딩테스트 페이지 입장 시 마이크 뮤트
   useEffect(() => {
@@ -74,6 +75,7 @@ export default function TestPage() {
     axios(config)
       .then((res) => {
         setProblems(res.data.problems)
+        dispatch(setReduxProblems(res.data.problems))
       })
       .catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,11 +130,9 @@ export default function TestPage() {
   const submitCode = (type) => {
     const apiKey = type === 'submit' ? 'submitCode' : 'testCode'
     if (type === 'submit') {
-      setOnTestButoon(false)
-      setOnSubmitButoon(true)
+      setOnButton(true)
     } else {
-      setOnSubmitButoon(false)
-      setOnTestButoon(true)
+      setOnButton(false)
     }
     const codeString = code
     const formData = new FormData()
@@ -154,8 +154,9 @@ export default function TestPage() {
   return (
     <>
       {problems ? (
-        <Container>
-          <FlexBox>
+        <Layout>
+          {/* HeaderPane */}
+          <>
             <ButtonWrapper>
               <RoomInfo
                 id={roomInfo.id}
@@ -183,107 +184,37 @@ export default function TestPage() {
                 navigate(`/room/${studyroomId}/study`)
               }}
             />
-          </FlexBox>
-          <FlexBox2>
-            <ImageWrapper height={windowHeight - 120}>
-              <ProblemImage src={problems[problemIdx].problemImageUrl} />
-            </ImageWrapper>
-            <Resizable
-              defaultSize={{ width: '50%', height: '100%' }}
-              minWidth={'20%'}
-              maxWidth={'80%'}
-              enable={{
-                top: false,
-                right: true,
-                bottom: false,
-                left: true,
-                topRight: false,
-                bottomRight: false,
-                bottomLeft: false,
-                topLeft: false,
-              }}
-            >
-              <FlexColumn height={windowHeight - 120}>
-                <CodeSection
-                  value={code}
-                  setValue={setCode}
-                  languageIds={roomInfo.languageIds}
-                  languageId={languageId}
-                  setLanguageId={setLanguageId}
-                />
-                <Resizable
-                  defaultSize={{ width: '100%', height: '40%' }}
-                  minHeight={'20%'}
-                  maxHeight={'80%'}
-                  enable={{
-                    top: true,
-                    right: false,
-                    bottom: false,
-                    left: false,
-                    topRight: false,
-                    bottomRight: false,
-                    bottomLeft: false,
-                    topLeft: false,
-                  }}
-                >
-                  <ResultSection
-                    results={testResult}
-                    isFinished={finished}
-                    finish={sendFinished}
-                    test={() => {
-                      submitCode('test')
-                    }}
-                    submit={() => {
-                      submitCode('submit')
-                    }}
-                    onSubmitButton={onSubmitButton}
-                    onTestButton={onTestButton}
-                  />
-                </Resizable>
-              </FlexColumn>
-            </Resizable>
-          </FlexBox2>
-        </Container>
+          </>
+          {/* LeftPane */}
+          <ProblemImage src={problems[problemIdx].problemImageUrl} />
+          {/* RightUpPane */}
+          <CodeSection
+            value={code}
+            setValue={setCode}
+            languageIds={roomInfo.languageIds}
+            languageId={languageId}
+            setLanguageId={setLanguageId}
+          />
+          {/* RightDownPane */}
+          <ResultSection
+            results={testResult}
+            isFinished={finished}
+            finish={sendFinished}
+            test={() => {
+              submitCode('test')
+            }}
+            submit={() => {
+              submitCode('submit')
+            }}
+            onButton={onButton}
+          />
+        </Layout>
       ) : (
-        <Loading height="70vh" />
+        <Loading height="90vh" />
       )}
     </>
   )
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  height: 100%;
-
-  padding: 1rem;
-`
-const FlexBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-const FlexBox2 = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 5px;
-`
-
-const FlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-
-  height: ${({ height }) => height}px;
-`
-const ImageWrapper = styled.div`
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-
-  height: ${({ height }) => height}px;
-  background-color: ${({ theme }) => theme.whiteColor};
-`
 
 const ButtonWrapper = styled.div`
   display: flex;

@@ -9,7 +9,7 @@ export default function MainPageLayout({ children }) {
     <Container>
       <UpperPane>{Up}</UpperPane>
       <MiddlePane>{Middle}</MiddlePane>
-      <h1 className="secondary">Find Your Match!</h1>
+      <StyledH1 className="secondary">Find Your Match!</StyledH1>
       <LowerPane>{Down}</LowerPane>
     </Container>
   )
@@ -26,6 +26,10 @@ const Container = styled.div`
 
   background-image: url(${mypageBgImg});
   background-size: cover;
+`
+
+const StyledH1 = styled.h1`
+  font-family: 'bigjohn';
 `
 
 const UpperPane = styled.div`

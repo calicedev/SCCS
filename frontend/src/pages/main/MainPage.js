@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { deleteRoom } from 'redux/roomSlice'
 import Layout from 'layouts/MainPageLayout'
 import Navbar from 'components/common/Navbar'
 import MainRooms from 'components/main/MainRooms'
@@ -9,6 +11,12 @@ import MainCarousel from 'components/main/MainCarousel'
 // MainRooms: 주요 기능 컴포넌트
 
 export default function MyPage() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(deleteRoom())
+  }, [])
+
   return (
     <Layout>
       <Navbar />

@@ -8,10 +8,9 @@ import ProfileImg from 'components/common/ProfileImg'
 
 src: 현재 화면에 표시할 이미지 url
 onChange: 사진 선택 시 동작할 함수
-onDelete: 쓰레기통 아이콘 버튼 클릭 시 동작할 함수
 */
 
-export default function ProfileImgInput({ src, onChange, onDelete }) {
+export default function ProfileImgInput({ src, onChange }) {
   return (
     <>
       <ProfileImg src={src}></ProfileImg>
@@ -30,13 +29,11 @@ export default function ProfileImgInput({ src, onChange, onDelete }) {
 ProfileImgInput.propTypes = {
   imgUrl: PropTypes.string,
   onChange: PropTypes.func,
-  onDelete: PropTypes.func,
 }
 
 ProfileImgInput.derfaultProps = {
   imgUrl: '',
   onChange: undefined,
-  onDelete: undefined,
 }
 
 const Flexbox = styled.div`

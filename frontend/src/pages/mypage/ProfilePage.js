@@ -27,7 +27,6 @@ export default function Profile() {
 
   // score을 기반으로 gradeIcons 배열의 인덱스 계산
   const index = useMemo(() => {
-    console.log(user.score, '유저스코어다!')
     if (user.score >= 1000000) return 0
     if (user.score >= 30000) return 1
     if (user.score >= 3000) return 2
@@ -44,9 +43,9 @@ export default function Profile() {
       <ProfileContainer>
         <IconWrapper>
           {gradeIcons[index]}
-          {user.score}점
+          <Span>{user.score}점</Span>
         </IconWrapper>
-        <ProfileImg imgUrl={user.profileImage} />
+        <ProfileImg src={user.profileImage} />
         <p className="semi-bold">가입일: {user.joinDate}</p>
       </ProfileContainer>
 
@@ -123,7 +122,9 @@ const ButtonWrapper = styled.div`
 const IconWrapper = styled.div`
   color: ${({ theme }) => theme.secondaryColor};
   font-size: 30px;
+  display: flex;
+  align-items: center;
 `
-const IconWrapper2 = styled.div`
-  color: ${({ theme }) => theme.secondaryColor};
+const Span = styled.span`
+  font-size: 25px;
 `

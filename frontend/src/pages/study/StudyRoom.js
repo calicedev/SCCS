@@ -8,6 +8,11 @@ import styled from 'styled-components'
 import * as faceapi from 'face-api.js'
 import { OpenVidu } from 'openvidu-browser'
 import { toggleTheme } from 'redux/themeSlice'
+import {
+  setReduxRoomInfo,
+  setReduxMainStreamManager,
+  deleteRoom,
+} from 'redux/roomSlice'
 import api from 'constants/api'
 import axios from 'libs/axios'
 import ToolBar from 'components/study/ToolBar'
@@ -21,6 +26,9 @@ import presentImg from 'assets/img/webRTC_present_image.png'
 const APPLICATION_SERVER_URL = 'https://i8a301.p.ssafy.io/'
 
 export default function StudyRoom() {
+  // 리덕스 -> 기존 방 정보 읽어오기
+  const room = useSelector((state) => state.room)
+
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -32,9 +40,9 @@ export default function StudyRoom() {
 
   // 기본정보
   const { studyroomId } = useParams()
-  const [roomInfo, setRoomInfo] = useState(null)
-  const [members, setMembers] = useState([])
-  const [problems, setProblems] = useState(null)
+  const [roomInfo, setRoomInfo] = useState(room)
+  const [members, setMembers] = useState(room.members)
+  const [problems, setProblems] = useState(room.problems)
 
   // 웹소켓 useState
   const [stomp, setStomp] = useState(null)
@@ -46,6 +54,7 @@ export default function StudyRoom() {
 
   // Opnvidu useState
   const [session, setSession] = useState(undefined)
+  const [mainStreamManager, setMainStreamManager] = useState(undefined)
   const [publisher, setPublisher] = useState(undefined)
   const [subscribers, setSubscribers] = useState([])
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
@@ -54,31 +63,37 @@ export default function StudyRoom() {
   const [isVideos, setIsVideos] = useState(true)
   const [isCameraOn, setIsCameraOn] = useState(true)
 
+  const checkHostExit = useRef(null)
   const OV = useRef(null) // OV객체를 저장
   const faceInterval = useRef(null) // face-api 동작 시, setInterval 객체를 저장
 
   // 스터디룸 정보 axios 요청
   useEffect(() => {
-    const [url, method] = api('enterRoom', { studyroomId })
-    const config = { url, method }
-    axios
-      .request(config)
-      .then((res) => {
-        const roomInfo = res.data
-        setRoomInfo(roomInfo)
-      })
-      .catch((err) => {
-        alert('대기방 정보를 불러오지 못했습니다.')
-      })
+    if (JSON.stringify(roomInfo) === '{}') {
+      const [url, method] = api('enterRoom', { studyroomId })
+      const config = { url, method }
+      axios
+        .request(config)
+        .then((res) => {
+          const roomInfo = res.data
+          setRoomInfo(roomInfo)
+          dispatch(setReduxRoomInfo(roomInfo))
+        })
+        .catch((err) => {
+          alert('방 정보를 불러올 수 없습니다.')
+          exit()
+        })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
 
   // mount시에 소켓통신과 webRTC 연결, unmount 시 소켓통신과 webRTC 연결 해제
   useEffect(() => {
     joinSession()
     connect()
     return () => {
-      exit()
+      disconnect()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -87,7 +102,7 @@ export default function StudyRoom() {
   window.addEventListener('beforeunload', (event) => {
     // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
     event.preventDefault()
-    exit()
+    disconnect()
   })
 
   // 브라우저창 닫을 시
@@ -97,25 +112,78 @@ export default function StudyRoom() {
     exit()
   })
 
-  // 뒤로가기 시
-  window.onpopstate = (event) => {
-    exit()
-  }
+  // 뒤로가기 막기
+  useEffect(() => {
+    const handlePopstate = (event) => {
+      event.preventDefault()
+    }
 
-  // 나가는 함수. 소켓통신과 webRTC 연결을 해제하고 메인페이지로 이동
-  const exit = () => {
+    window.history.pushState(null, null, location.href)
+    window.addEventListener('popstate', handlePopstate)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopstate)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // webSocket과 openvidu session을 끊는 함수
+  const disconnect = () => {
+    // 1. 웹소켓 통신 끊기
     if (stomp) {
-      sendExit()
+      sendDisconnect()
       stomp.disconnect()
     }
+    // 2. openvidu 세션 끊기
     if (session) {
       session.disconnect()
     }
+    // 3. face-interval 비디오 초기화
+    const video = document.getElementById('publisher-video')
+    if (video) {
+      video.srcObject = undefined
+    }
+    if (faceInterval.current) {
+      clearInterval(faceInterval.current)
+      faceInterval.current = null
+    }
+    // 4. 관련 변수 모두 초기화
     setConnected(false)
     OV.current = null
     setSession(undefined)
     setSubscribers([])
     setPublisher(undefined)
+  }
+
+  // webSocket과 openvidu session을 끊고 exit
+  const exit = () => {
+    // 1. 웹소켓 통신 끊기
+    if (stomp) {
+      sendExit()
+      stomp.disconnect()
+    }
+    // 2. openvidu 세션 끊기
+    if (session) {
+      session.disconnect()
+    }
+    // 3. face-interval 비디오 초기화
+    const video = document.getElementById('publisher-video')
+    if (video) {
+      video.srcObject = undefined
+    }
+    if (faceInterval.current) {
+      clearInterval(faceInterval.current)
+      faceInterval.current = null
+    }
+    // 4. 관련 변수 모두 초기화
+    setConnected(false)
+    OV.current = null
+    setSession(undefined)
+    setSubscribers([])
+    setPublisher(undefined)
+    dispatch(deleteRoom())
+    setMainStreamManager(undefined)
+    dispatch(setReduxMainStreamManager(undefined))
     navigate('/')
   }
 
@@ -137,6 +205,7 @@ export default function StudyRoom() {
           return
         }
         if (content.status === 'exit') {
+          checkHostExit.current(content.id)
           setRoomInfo((roomInfo) => {
             const newRoomInfo = { ...roomInfo }
             newRoomInfo.personnel = content.personnel
@@ -164,6 +233,20 @@ export default function StudyRoom() {
         }),
       )
     })
+  }
+
+  // 웹 소켓 send: 방 연결이 끊겼을 때
+  const sendDisconnect = () => {
+    stomp.send(
+      '/pub/studyroom',
+      {},
+      JSON.stringify({
+        status: 'disconnect',
+        studyroomId: studyroomId,
+        id: user.id,
+        nickname: user.nickname,
+      }),
+    )
   }
 
   // 웹 소켓 send: 방 나가기
@@ -195,6 +278,13 @@ export default function StudyRoom() {
       }),
     )
     setMessage('')
+  }
+
+  checkHostExit.current = (id) => {
+    if (id === roomInfo.hostId) {
+      alert('방장이 방을 나갔습니다ㅜㅜ')
+      exit()
+    }
   }
 
   // openvidu subscriber삭제하는 함수
@@ -476,6 +566,8 @@ export default function StudyRoom() {
               isVideos,
               setIsVideos,
               setIsMicOn,
+              mainStreamManager,
+              setMainStreamManager,
             }}
           />
 

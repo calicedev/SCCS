@@ -93,7 +93,7 @@ export default function ProfileEdit() {
 
       <ProfileContainer>
         <ProfileImgInput
-          imgUrl={imgUrl}
+          src={imgUrl}
           onChange={(e) => setImg(e.target.files)}
         ></ProfileImgInput>
       </ProfileContainer>

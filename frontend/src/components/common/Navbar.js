@@ -31,11 +31,9 @@ export default function Navbar() {
   const pathname = useLocation().pathname
 
   const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
+  const user = useSelector((state) => state.user)
 
   const isLogin = checkLogin() // 로그인 여부 판단
-
-  const user = useSelector((state) => state.user)
-  console.log('user', user)
 
   const gradeIcons = [
     <FaChessQueen />,
@@ -54,8 +52,6 @@ export default function Navbar() {
       return 3
     }
   }, [user])
-
-  console.log('idx', index)
 
   const logout = () => {
     navigate('/')
@@ -86,7 +82,14 @@ export default function Navbar() {
         <NavStyle to="/about">About</NavStyle>
         {isLogin && user ? (
           <>
-            <IconWrapper>{gradeIcons[index]}</IconWrapper>
+            <NavStyle2
+              to="/mypage/study"
+              className={`${
+                pathname.substring(0, 7) === '/mypage' ? 'active' : null
+              }`}
+            >
+              <IconWrapper>{gradeIcons[index]}</IconWrapper>
+            </NavStyle2>
             <NavStyle
               to="/mypage/study"
               className={`${
@@ -118,6 +121,8 @@ const Nav = styled.div`
 
   margin: 1.5rem 0rem;
   padding: 0rem 2rem;
+
+  font-family: 'bigjohn';
 `
 const Flexbox = styled.div`
   display: flex;
@@ -139,6 +144,19 @@ const ButtonWrapper = styled.div`
 const NavStyle = styled(NavLink)`
   margin: 1rem 0rem;
   padding: 0rem 2rem 0rem 0rem;
+
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.secondaryFontColor};
+
+  &.active {
+    color: ${({ theme }) => theme.primaryFontColor};
+    font-weight: 600;
+  }
+`
+const NavStyle2 = styled(NavLink)`
+  margin: 1rem 0rem;
+  padding: 0rem 0.5rem 0rem 0rem;
 
   font-size: 1.7rem;
   font-weight: 500;
@@ -173,8 +191,7 @@ const StyledDiv2 = styled.div`
   cursor: pointer;
 `
 const IconWrapper = styled.div`
-  color: ${({ theme }) => theme.secondaryFontColor};
   font-size: 25px;
   margin-top: 5px;
-  margin-right: 5px;
+  padding: 0px;
 `

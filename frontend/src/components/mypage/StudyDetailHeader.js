@@ -23,7 +23,6 @@ export default function StudyDetailHeader({
   setProblemIdx,
   problemId,
 }) {
-  console.log(setProblemIdx)
   // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
 

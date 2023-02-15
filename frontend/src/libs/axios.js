@@ -34,7 +34,7 @@ apiRequest.interceptors.response.use(
     const response = error.response // 에러 정보 추출
     // accesstoken 재발급 로직
     if (
-      response.status === 400 &&
+      response.status === 403 &&
       response.data.errorMessage === 'accessToken expired'
     ) {
       console.log('accessToken 재발급 요청 보냄')
@@ -55,7 +55,7 @@ apiRequest.interceptors.response.use(
           return redirect('/auth/login')
         })
     }
-    if (response.status === 500) {
+    if (response.status >= 500) {
       alert('서버와의 통신에 문제가 발생하였습니다.')
     }
     return Promise.reject(error)

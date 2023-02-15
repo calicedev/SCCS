@@ -1,7 +1,6 @@
 package com.sccs.api.member.service;
 
-import com.sccs.exception.InterceptorException;
-import com.sccs.exception.InterceptorExceptionEnum;
+
 import com.sccs.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -9,7 +8,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -61,13 +59,10 @@ public class JWTServiceImpl implements JWTService {
           .getBody();
     } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
       logger.debug("토큰 만료");
-      //throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "token expired");
-      //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-      throw new UnAuthorizedException();
+      throw new UnAuthorizedException("accessToken expired");
     } catch (Exception e) {
       logger.debug("토큰 검증 에러");
-      throw new UnAuthorizedException();
-      //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+      throw new UnAuthorizedException("accessToken expired");
     }
   }
 
@@ -81,18 +76,13 @@ public class JWTServiceImpl implements JWTService {
           .parseClaimsJws(jwt);
       logger.debug("claims : {}", claims);
       return true;
+    } catch(ExpiredJwtException e) {
+      logger.debug("토큰 만료");
+      throw new UnAuthorizedException("accessToken expired");
     } catch (Exception e) {
-      logger.error(e.getMessage());
-      return false;
+      logger.debug("토큰 검증 에러");
+      throw new UnAuthorizedException("accessToken expired");
     }
-//        } catch (ExpiredJwtException e) {
-//            logger.info("토큰 유효기간 만료");
-//            throw new InterceptorException(InterceptorExceptionEnum.EXPIREDTOKEN);
-//        } catch (Exception e) {
-//            logger.info("토큰 검증 에러");
-//            throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-//        }
-    //return false;
   }
 
 }

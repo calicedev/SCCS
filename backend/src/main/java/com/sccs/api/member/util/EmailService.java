@@ -2,7 +2,6 @@ package com.sccs.api.member.util;
 
 import com.sccs.api.member.dto.MemberDto;
 import com.sccs.api.member.service.MemberService;
-import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -18,13 +17,12 @@ public class EmailService {
   private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
   // 생성자 주입
   private final MailSender mailSender;
-  private final EncryptService encryptService;
   private final MemberService memberService;
 
 
 
   // Todo : 비밀번호 랜덤 생성 로직 만들기, 함수를 기능 1개 단위로 분리하기
-  public boolean sendEmail(String id, String email) throws MessagingException {
+  public boolean sendEmail(String id, String email)  {
     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
     try {
