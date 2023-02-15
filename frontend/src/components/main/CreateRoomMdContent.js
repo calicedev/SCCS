@@ -1,14 +1,13 @@
-import Checkbox from 'components/common/Checkbox'
-import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+import checkReg from 'libs/regExp'
 import axios from 'libs/axios'
 import api from 'constants/api'
-import { useSelector } from 'react-redux'
 import { algorithmPk, languagePk } from 'constants/pk'
-import styled from 'styled-components'
 import Button from 'components/common/Button'
-import checkReg from 'libs/regExp'
-import useUser from 'hooks/useUser'
+import Checkbox from 'components/common/Checkbox'
 
 /*
 방 생성하는 모달의 실제 컨텐츠 컴포넌트
@@ -40,61 +39,55 @@ export default function CreateRoomMdContent() {
     setIsPrivate(!isPrivate)
   }
 
-  // 언어 체크박스 토글 함수
+  // languageId 체크박스에 따른 languageIds 업데이트
   const changeLanguageIds = (e) => {
-    // 체크박스 옵션의 id가 10이하의 정수문자열로 시작하는 전제조건
-    const id = parseInt(e.target.id.slice(0, 1))
+    const languageId = parseInt(e.target.id.split('-')[0]) // 선택된 languageId
     if (e.target.checked) {
-      setLanguageIds([...languageIds, id])
+      setLanguageIds([...languageIds, languageId])
       return
     }
-    setLanguageIds(languageIds.filter((ele) => ele !== id))
+    setLanguageIds(languageIds.filter((ele) => ele !== languageId))
   }
 
   // 알고리즘 체크박스 토글 함수. 랜덤과 그 외의 값들이 배타적이어야 한다.
   const changeAlgoIds = (e) => {
-    // 체크박스 옵션의 id가 10이하의 정수문자열로 시작하는 전제조건
-    const id = parseInt(e.target.id.slice(0, 1))
-    // 랜덤 항목
-    if (!id) {
-      // 랜덤 항목을 체크한 경우
+    const algoId = parseInt(e.target.id.split('-')[0]) // 선택된 languageId
+    // 1. 랜덤 항목
+    if (!algoId) {
+      // 1-1. 랜덤 항목을 체크
       if (e.target.checked) {
         // 랜덤 외의 다른 모든 배열을 체크해제
-        const allChecks = document.querySelectorAll('#algo-options input')
-        allChecks.forEach((ele, index) => {
-          if (index) {
-            ele.checked = false
-          }
+        const checkEles = document.querySelectorAll('#algo-options input')
+        checkEles.forEach((ele) => {
+          ele.checked = false
         })
-        // AlgoIds에 모든 항목을 셋팅
-
+        checkEles[0].checked = true
         setAlgoIds([0])
-
         return
       }
-      // 랜덤 항목을 해제한 경우
+      // 1-2. 랜덤 항목을 해제
       setAlgoIds([])
       return
     }
 
-    // 랜덤외의 항목
+    // 2. 랜덤 외 항목
     if (e.target.checked) {
-      // 랜덤 항목이 체크되어 있던 경우
-      const randomCheck = document.querySelector('#algo-options input')
-      if (randomCheck.checked) {
-        randomCheck.checked = false
-        setAlgoIds([id])
+      // 2-1-1. 항목을 체크, 랜덤 항목이 체크되어 있던 경우
+      const randomEle = document.querySelector('#algo-options input')
+      if (randomEle.checked) {
+        randomEle.checked = false
+        setAlgoIds([algoId])
         return
       }
-      // 랜덤 항목이 체크 되어 있지 않덛 경우
-      setAlgoIds([...algoIds, id])
+      // 2-1-2. 항목을 체크, 랜덤 항목이 체크되어 있지 않던 경우
+      setAlgoIds([...algoIds, algoId])
       return
     }
-    // 체크 해제한 경우
-    setAlgoIds(algoIds.filter((ele) => ele !== id))
+    // 2-2. 항목을 해제
+    setAlgoIds(algoIds.filter((ele) => ele !== algoId))
   }
 
-  // 제출 함수
+  // 방 생성 api 요청
   const createRoom = () => {
     // 패스워드 4자리 숫자 여부 체크
     const [isValid, msg] = checkReg('roomPassword', password)
@@ -113,10 +106,10 @@ export default function CreateRoomMdContent() {
       setMessage(newMsg)
       return
     }
-
-    // console.log('확인로직', algoIds.length)
     // 알고리즘 선택 조건 체크
-    if ((algoIds.length !== 1) & (algoIds.length !== 2)) {
+    if (algoIds.length === 0 || algoIds.length > 2) {
+      console.log(algoIds)
+      console.log(algoIds)
       const newMsg = { ...message }
       console.log(algoIds.length)
       newMsg.text = '알고리즘은 하나 이상 두개 이하 선택가능합니다.'
@@ -142,9 +135,10 @@ export default function CreateRoomMdContent() {
       })
       .catch((err) => {})
   }
+
   return (
     <Container>
-      <H3 className="bold">방 만들기</H3>
+      <h3>방 만들기</h3>
 
       <Wrapper>
         <p>방 이름</p>
@@ -175,7 +169,7 @@ export default function CreateRoomMdContent() {
           {Object.keys(languagePk).map((key) => (
             <Checkbox
               key={key}
-              id={key + languagePk[key].toString()}
+              id={key + '-' + languagePk[key].toString()}
               label={languagePk[key]}
               onChange={changeLanguageIds}
             />
@@ -189,7 +183,7 @@ export default function CreateRoomMdContent() {
           {Object.keys(algorithmPk).map((key) => (
             <Checkbox
               key={key}
-              id={key + algorithmPk[key].toString()}
+              id={key + '-' + algorithmPk[key].toString()}
               label={algorithmPk[key]}
               onChange={changeAlgoIds}
             />
@@ -216,9 +210,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `
-const H3 = styled.h3`
-  align-self: center;
-`
 
 const Wrapper = styled.div`
   margin: 0.7rem 0rem;
@@ -233,8 +224,9 @@ const StyledInput = styled.input`
   margin: 0.5rem 0rem;
   padding: 0.5rem;
 
-  box-shadow: 3px 3px 5px #00000050;
   border-radius: 0.5rem;
+  box-shadow: 3px 3px 5px #00000050;
+
   color black;
 `
 

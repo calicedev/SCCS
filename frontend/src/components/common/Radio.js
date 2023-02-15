@@ -6,10 +6,10 @@ import PropTypes from 'prop-types'
 input type='checkbox'와 라벨을 가지는 컴포넌트
 
 id: input 태그의 id & label 태그의 for
-label: label 태그의 문구
-onChange: 클릭 시 동작
+label: label 태그에 띄울 문구
+onChange: 클릭 시 동작할 함수
 
-name: input 태그의 name (Radio버튼들의 그불을 구별지음)
+name: input 태그의 name (Radio버튼의 그룹)
 value: input 태그의 value
 */
 

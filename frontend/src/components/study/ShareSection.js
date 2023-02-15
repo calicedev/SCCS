@@ -1,15 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { FaEraser } from 'react-icons/fa'
-import IconButton from 'components/common/IconButton'
 import Code from 'components/study/Code'
+import IconButton from 'components/common/IconButton'
 
 /*
-Dropbox 우측의 아래 버튼 아이콘 클릭 시, 체크박스 옵션들이 보여지는 컴포넌트
+스터디 페이지에서 공유되는 화면, 코드 위에 그림판 canvas가 겹쳐 있음
 
-title: 옵션들의 제목
-opitions: {key: value}형태의 옵션. vlaue의 값이 Label로 체크박스 옆에 display
-onChange: 클릭 시 동작할 함수
+code: 뒷편에 띄울 code 문자열.
+languageId: code의 언어 pk.
 */
 
 export default function ShareSection({ code, languageId }) {
@@ -17,11 +17,10 @@ export default function ShareSection({ code, languageId }) {
   const canvasBoardRef = useRef()
   const cavasContainerRef = useRef()
   const colorPickRefs = useRef([])
-
   const resetRef = useRef()
 
+  // 캔버스의 크기를 윈도우 사이즈에 따라 동적을 조절
   const [windowHeight, setWindowHeight] = useState(0)
-
   useEffect(() => {
     const updateMaxHeight = () => {
       setWindowHeight(window.innerHeight)
@@ -35,17 +34,8 @@ export default function ShareSection({ code, languageId }) {
     }
   }, [])
 
-  // 색 버튼
-  const colors = [
-    '#c0392b',
-    // '#e67e22',
-    '#f1c40f',
-    '#2ecc71',
-    '#3498db',
-    // 'blueviolet',
-    // '#e84393',
-    '#2c3e50',
-  ]
+  // 색깔
+  const colors = ['#c0392b', '#f1c40f', '#2ecc71', '#3498db', '#2c3e50']
 
   useEffect(() => {
     let dataChannel
@@ -188,11 +178,17 @@ export default function ShareSection({ code, languageId }) {
   )
 }
 
+ShareSection.propTypes = {
+  code: PropTypes.string.isRequired,
+  languageId: PropTypes.number.isRequired,
+}
+
 const Container = styled.div`
   position: relative;
 
   width: 100%;
   height: ${({ windowHeight }) => `calc(${windowHeight}px - 130px)`};
+
   border-radius: 0.5rem;
 `
 const CanvasContainer = styled.div`
@@ -217,8 +213,8 @@ const CodeWrapper = styled.div`
 `
 
 const CanvasBoard = styled.canvas`
-  height: 100%;
   width: 100%;
+  height: 100%;
 
   z-index: 4;
 `
@@ -244,8 +240,8 @@ const ColorPick = styled.div`
 `
 
 const Reset = styled.div`
-  cursor: pointer;
   width: 30px;
   height: 30px;
   z-index: 5;
+  cursor: pointer;
 `

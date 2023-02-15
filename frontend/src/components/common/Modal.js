@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import IconButton from 'components/common/IconButton'
 import { FaTimes } from 'react-icons/fa'
 
@@ -8,8 +8,8 @@ import { FaTimes } from 'react-icons/fa'
 모달창 컴포넌트. 배경을 어둡게 하고 화면 최상단에 노출된다.
 X 버튼이나 어두운 배경을 클릭해서 닫을 수 있다. 
 
-close: 모달 창의 부모 컴포넌트에서 모달창의 렌더링 여부를 결정하기 위헤 동작할 함수,
-content: 모달 컨텐츠를 가진 컴포넌트,
+close: 배경이나 'X'버튼 클릭 시, 동작하는 함수,
+content: 모달에 띄울 컴포넌트,
 */
 
 export default function Modal({ close, content }) {
@@ -24,8 +24,7 @@ export default function Modal({ close, content }) {
         <ButtonWrapper>
           <IconButton icon={<FaTimes />} onClick={stopClose} />
         </ButtonWrapper>
-        {/* 2.12 민혁 추가 - <pre></pre> 태그로 감싸주면 공백이나 줄바꿈이 잘 적용됨 */}
-        <pre>{content}</pre>
+        {content}
       </StyledDiv>
     </Container>
   )
@@ -45,7 +44,6 @@ const Container = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
 
   display: flex;
   justify-content: center;
@@ -55,10 +53,15 @@ const Container = styled.div`
   height: 100vh;
 
   background-color: #00000090;
+
+  z-index: 10;
 `
 
 const StyledDiv = styled.div`
   position: relative;
+
+  max-width: 90vw;
+  max-height: 90vh;
   padding: 1rem 2rem 1.5rem;
 
   border-radius: 1rem;

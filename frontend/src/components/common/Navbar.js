@@ -1,29 +1,61 @@
-import React from 'react'
-import Logo from 'components/common/Logo'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { React, useMemo } from 'react'
 import styled from 'styled-components'
-import IconButton from 'components/common/IconButton'
-import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
-import { useSelector, useDispatch } from 'react-redux'
+import { setExpiration } from 'redux/expSlice'
 import { toggleTheme } from 'redux/themeSlice'
 import { deleteUserInfo } from 'redux/userSlice'
-import checkLogin from 'libs/checkLogin'
-import { setExpiration } from 'redux/expSlice'
-import axios from 'libs/axios'
+import { useSelector, useDispatch } from 'react-redux'
+import { BsCloudSun, BsCloudMoon } from 'react-icons/bs'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import api from 'constants/api'
+import axios from 'libs/axios'
+import checkLogin from 'libs/checkLogin'
+import Logo from 'components/common/Logo'
+import IconButton from 'components/common/IconButton'
+
+import {
+  FaChessQueen,
+  FaChessRook,
+  FaChessKnight,
+  FaChessBishop,
+  FaChessPawn,
+} from 'react-icons/fa'
 
 /*
 상단 네비게이션바 컴포넌트
 */
 
 export default function Navbar() {
+  // 리액트 훅 관련 함수 정의
   const navigate = useNavigate()
-
-  // 리덕스 -> theme정보
-  const theme = useSelector((state) => state.theme)
-  const isLogin = checkLogin()
-
   const dispatch = useDispatch()
+  const pathname = useLocation().pathname
+
+  const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
+
+  const isLogin = checkLogin() // 로그인 여부 판단
+
+  const user = useSelector((state) => state.user)
+  console.log('user', user)
+
+  const gradeIcons = [
+    <FaChessQueen />,
+    <FaChessRook />,
+    <FaChessKnight />,
+    <FaChessBishop />,
+    <FaChessPawn />,
+  ]
+
+  const index = useMemo(() => {
+    if (user === null) return 4
+    else {
+      if (user.score >= 1000000) return 0
+      if (user.score >= 30000) return 1
+      if (user.score >= 3000) return 2
+      if (user.score) return 3
+    }
+  }, [user])
+
+  console.log('idx', index)
 
   const logout = () => {
     navigate('/')
@@ -54,11 +86,20 @@ export default function Navbar() {
         <NavStyle to="/about">About</NavStyle>
         {isLogin ? (
           <>
-            <NavStyle to="/mypage/study">MyPage</NavStyle>
+            <IconWrapper>{gradeIcons[index]}</IconWrapper>
+            <NavStyle
+              to="/mypage/study"
+              className={`${
+                pathname.substring(0, 7) === '/mypage' ? 'active' : null
+              }`}
+            >
+              {user.nickname}
+            </NavStyle>
             <StyledDiv onClick={logout}>Logout</StyledDiv>
           </>
         ) : (
           <>
+            <IconWrapper>{gradeIcons[index]}</IconWrapper>
             <StyledDiv onClick={() => navigate('/auth/login')}>Login</StyledDiv>
             <StyledDiv2 onClick={() => navigate('/auth/signup')}>
               Signup
@@ -73,6 +114,9 @@ const Nav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  width: 100%;
+
   margin: 1.5rem 0rem;
   padding: 0rem 2rem;
 `
@@ -128,4 +172,10 @@ const StyledDiv2 = styled.div`
   color: ${({ theme }) => theme.secondaryFontColor};
 
   cursor: pointer;
+`
+const IconWrapper = styled.div`
+  color: ${({ theme }) => theme.secondaryFontColor};
+  font-size: 25px;
+  margin-top: 5px;
+  margin-right: 5px;
 `

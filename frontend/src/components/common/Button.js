@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 /*
 기본 버튼 컴포넌트
 
+id: 버튼의 id
 size: 버튼 사이즈
 type: 버튼 색깔
 onClick: 클릭 시 동작
@@ -23,19 +24,20 @@ export default function Button({ id, size, type, onClick, value, disabled }) {
       : 'lg-btn'
 
   return (
-    <BtnWrapper
+    <SytledButton
       id={id}
       className={`${sizeClass}`}
       type={type}
       disabled={disabled}
-      onClick={(e) => (disabled ? null : onClick(e))}
+      onClick={onClick}
     >
       {value}
-    </BtnWrapper>
+    </SytledButton>
   )
 }
 
 Button.propTypes = {
+  id: PropTypes.string,
   size: PropTypes.oneOf(['tiny', 'small', 'medium', 'large']), // 버튼 크기
   type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'danger']), // 버튼 커스터마이징 (글자색, 배경색, border-radius)
   onClick: PropTypes.func,
@@ -44,6 +46,7 @@ Button.propTypes = {
 }
 
 Button.defaultProps = {
+  id: null,
   size: 'medium',
   type: 'primary',
   onClick: undefined,
@@ -51,12 +54,14 @@ Button.defaultProps = {
   disabled: false,
 }
 
-const BtnWrapper = styled.button`
+// 정규식으로 색깔 지정. styles > theme.js
+const SytledButton = styled.button`
   display: inline-flex;
   justify-content: center;
   align-items: center;
 
   border-radius: 10px;
+  background-color: ${({ theme, type }) => theme[`${type}Color`]};
 
   color: white;
   text-align: center;
@@ -64,8 +69,6 @@ const BtnWrapper = styled.button`
   white-space: nowrap;
 
   transition: background-color ease 0.1s;
-
-  background-color: ${({ theme, type }) => theme[`${type}Color`]};
   &:hover {
     background-color: ${({ theme, type }) =>
       theme[`deep${type.replace(/^[a-z]/, (c) => c.toUpperCase())}Color`]};

@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { BiUser } from 'react-icons/bi'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdOutlineEmail } from 'react-icons/md'
@@ -10,8 +10,13 @@ import { MdOutlineEmail } from 'react-icons/md'
 
 type: 타입에 따라서 input의 type, label 텍스트, logo, placeholder 할당
 value: input 태그에 할당할 state
-onChange: input 태그에 입력 시 실행할 함수
 message: message가 있을 시, isValid 여부에 따라 적절한 색깔로 문구를 보여줌
+        {
+          message: String,
+          isValid: Boolean,
+        }
+onChange: onChange시 실행되는 함수
+onKeyUp: onKeyUp시 실행되는 함수
 */
 
 const typeObj = {
@@ -53,14 +58,14 @@ const typeObj = {
   },
 }
 
-export default function AuthInput({ type, value, onChange, onKeyUp, message }) {
+export default function AuthInput({ type, value, message, onChange, onKeyUp }) {
   return (
     <Container>
       <Label htmlFor={type}>{typeObj[type].label}</Label>
       <FlexBox>
         {typeObj[type].logo}
         <StyledInput
-          id={type}
+          id={`${type}-authinput`}
           type={typeObj[type].type}
           placeholder={typeObj[type].placeholder}
           value={value}
@@ -85,26 +90,27 @@ AuthInput.propTypes = {
     'email',
   ]),
   value: PropTypes.string,
-  onChange: PropTypes.func,
   message: PropTypes.object,
+  onChange: PropTypes.func,
+  onKeyUp: PropTypes.func,
 }
 
 AuthInput.defaultProps = {
   type: 'id',
   value: '',
-  onChange: undefined,
   message: { text: '', isValid: false },
+  onChange: undefined,
+  onKeyUp: undefined,
 }
 
 const Container = styled.div`
   margin-bottom: 0.8rem;
 `
 const FlexBox = styled.div`
-  white-space: nowrap;
+  margin: 0.2rem 0rem;
   padding: 0.3rem 0rem;
-
   border-bottom: 1px solid gray;
-  margin-btoom: 0.2rem;
+  white-space: nowrap;
 `
 const Label = styled.label`
   margin-top: 1rem;

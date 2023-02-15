@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import Button from 'components/common/Button'
+import styled from 'styled-components'
 import axios from 'libs/axios'
+import checkLogin from 'libs/checkLogin'
 import api from 'constants/api'
+import { algorithmPk, languagePk } from 'constants/pk'
+import useInterval from 'hooks/useInterval'
 import Room from 'components/main/Room'
+import Modal from 'components/common/Modal'
+import Button from 'components/common/Button'
+import Loading from 'components/common/Loading'
 import CheckDropdown from 'components/common/CheckDropdown'
 import RadioDropdown from 'components/common/RadioDropdown'
-import { algorithmPk, languagePk } from 'constants/pk'
-import styled from 'styled-components'
-import Modal from 'components/common/Modal'
 import CreateRoomMdContent from 'components/main/CreateRoomMdContent'
-import Loading from 'components/common/Loading'
-import useInterval from 'hooks/useInterval'
-import checkLogin from 'libs/checkLogin'
 
 const searchOptions = {
   title: '방 이름',
@@ -28,7 +28,7 @@ export default function MainRooms() {
   const [query, setQuery] = useState('')
   const [showModal, setShowModal] = useState(false)
 
-  // 마운트 시 방 전체조회
+  // 컴포넌트 생성 시 방 검색 api 요청
   useEffect(() => {
     const [url, method] = api('searchRoom')
     const config = { url, method }
@@ -39,33 +39,32 @@ export default function MainRooms() {
       .catch((err) => {
         if (err.response.status === 400) {
           alert(err.response.data.message)
-        } else {
-          alert('서버와의 통신이 불안정합니다.')
         }
         setRooms([])
       })
   }, [])
 
-  // 언어 선택에 다른 languageIds 배열 변환 함수
+  // 언어 선택에 따른 languageIds 배열 변환 함수
   const changeLanguageIds = (e) => {
-    const id = parseInt(e.target.id.slice(0, 1))
+    const languageId = parseInt(e.target.id.split('-')[0])
     if (e.target.checked) {
-      setLanguageIds([...languageIds, id])
+      setLanguageIds([...languageIds, languageId])
       return
     }
-    setLanguageIds(languageIds.filter((ele) => ele !== id))
+    setLanguageIds(languageIds.filter((id) => id !== languageId))
   }
 
   // 알고리즘 선택에 다른 algoIds 배열 변환 함수
   const changeAlgoIds = (e) => {
-    const id = parseInt(e.target.id.slice(0, 1))
+    const algoId = parseInt(e.target.id.split('-')[0])
     if (e.target.checked) {
-      setAlgoIds([...algoIds, id])
+      setAlgoIds([...algoIds, algoId])
       return
     }
-    setAlgoIds(algoIds.filter((ele) => ele !== id))
+    setAlgoIds(algoIds.filter((id) => id !== algoId))
   }
 
+  // 방생성 버튼 클릭 시
   const createRoom = () => {
     if (!isLogin) {
       alert('로그인 후 이용 가능합니다.')
@@ -74,7 +73,7 @@ export default function MainRooms() {
     setShowModal(true)
   }
 
-  // 방 세부 검색 함수
+  // 방 세부 검색 api 요청
   const searchRoomDetail = () => {
     let data = {}
     if (selectedOption === 'title') {
@@ -100,80 +99,82 @@ export default function MainRooms() {
         setRooms(res.data)
       })
       .catch((err) => {
-        alert('서버와의 통신이 불안정합니다.')
+        setRooms([])
       })
   }
 
-  // 옵션변화로 인한 방 세부 조회 요청
+  // 옵션변화가 일어날 때마다 방 세부 검색 api 요청
   useEffect(() => {
     searchRoomDetail()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [algoIds, languageIds])
 
-  // useInterval 훅으로 5초마다 마지막 요청 보내기
+  // useInterval로 10초마다 방 세부 검색 자동 api 요청
   useInterval(searchRoomDetail, 10000)
 
   return (
-    <Container>
-      {showModal && (
-        <Modal
-          close={() => setShowModal(false)}
-          content={<CreateRoomMdContent />}
-        ></Modal>
-      )}
-      <FlexBox>
-        <SearchContainer>
-          <CheckDropdown
-            title="언어 선택"
-            options={languagePk}
-            onChange={changeLanguageIds}
-          />
-          <CheckDropdown
-            title="알고리즘 선택"
-            options={algorithmPk}
-            onChange={changeAlgoIds}
-          />
-          <InputBox>
-            <RadioDropdown
-              selectedId={selectedOption}
-              name="검색 옵션"
-              options={searchOptions}
-              selectedKey="title"
-              onChange={(e) => setSelectedOption(e.target.id)}
+    <>
+      <Container>
+        {showModal && (
+          <Modal
+            close={() => setShowModal(false)}
+            content={<CreateRoomMdContent />}
+          ></Modal>
+        )}
+        <FlexBox>
+          <SearchContainer>
+            <CheckDropdown
+              title="언어 선택"
+              options={languagePk}
+              onChange={changeLanguageIds}
             />
-            <StyledInput
-              type={selectedOption === 'title' ? 'text' : 'number'}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            ></StyledInput>
-          </InputBox>
-          <Button onClick={searchRoomDetail} value="검색"></Button>
-        </SearchContainer>
-        <Button
-          type="secondary"
-          onClick={createRoom}
-          value="방 만들기"
-        ></Button>
-      </FlexBox>
-      {rooms ? (
-        <GridBox>
-          {rooms.map((room) => (
-            <Room
-              key={room.id}
-              id={room.id}
-              title={room.title}
-              isSolving={room.isSolving}
-              isPrivate={room.isPrivate}
-              algoIds={room.algoIds}
-              languageIds={room.languageIds}
-              personnel={room.personnel}
+            <CheckDropdown
+              title="알고리즘 선택"
+              options={algorithmPk}
+              onChange={changeAlgoIds}
             />
-          ))}
-        </GridBox>
-      ) : (
-        <Loading height="30rem" />
-      )}
-    </Container>
+            <InputBox>
+              <RadioDropdown
+                selectedId={selectedOption}
+                name="검색 옵션"
+                options={searchOptions}
+                selectedKey="title"
+                onChange={(e) => setSelectedOption(e.target.id)}
+              />
+              <StyledInput
+                type={selectedOption === 'title' ? 'text' : 'number'}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              ></StyledInput>
+            </InputBox>
+            <Button onClick={searchRoomDetail} value="검색"></Button>
+          </SearchContainer>
+          <Button
+            type="secondary"
+            onClick={createRoom}
+            value="방 만들기"
+          ></Button>
+        </FlexBox>
+        {rooms ? (
+          <GridBox>
+            {rooms.map((room) => (
+              <Room
+                key={room.id}
+                id={room.id}
+                title={room.title}
+                isSolving={room.isSolving}
+                isPrivate={room.isPrivate}
+                algoIds={room.algoIds}
+                languageIds={room.languageIds}
+                personnel={room.personnel}
+              />
+            ))}
+          </GridBox>
+        ) : (
+          <Loading height="30rem" />
+        )}
+      </Container>
+    </>
   )
 }
 const Container = styled.div`
@@ -233,8 +234,8 @@ const GridBox = styled.div`
 
   height: 32rem;
 
-  padding: 0.2rem 1rem 0rem;
   margin: 2rem 0rem 0rem;
+  padding: 0.2rem 1rem 0rem;
 
   grid-template-columns: repeat(2, 1fr);
 

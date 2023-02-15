@@ -1,26 +1,23 @@
 import React from 'react'
 import styled from 'styled-components'
-import ProfileInput from 'components/mypage/ProfileInput'
-import Button from 'components/common/Button'
-import OutlineButton from 'components/common/OutlineButton'
-import ProfileImg from 'components/common/ProfileImg'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAuthInput } from 'hooks/useAuthInput'
 import { useConfirmPwd } from 'hooks/useConfirmPwd'
-// import useUser from 'hooks/useUser'
-import { useSelector } from 'react-redux'
-import axios from 'libs/axios'
 import api from 'constants/api'
+import axios from 'libs/axios'
+import Button from 'components/common/Button'
+import ProfileImg from 'components/common/ProfileImg'
+import ProfileInput from 'components/mypage/ProfileInput'
+import OutlineButton from 'components/common/OutlineButton'
+// import useUser from 'hooks/useUser'
 
 export default function PasswordEdit() {
   // 리액트 훅관련 함수 정의
   const navigate = useNavigate()
 
   // 리덕스 -> 사용자 정보 읽어오기
-  // const user = useSelector((state) => state.user)
-  // const user = useUser()
   const user = useSelector((state) => state.user)
-
 
   // 커스텀 훅 useAuthInput(타입, 초깃값, 정규식검사여부, 서버검사여부)
   const [password, setPassword] = useAuthInput('password', '')
@@ -31,7 +28,7 @@ export default function PasswordEdit() {
     newPassword,
   )
 
-  // 수정 정보 저장
+  // 수정 비밀번호 저장 api 요청
   const save = () => {
     // 모든 정보를 유효하게 입력했는지 확인
     if (!confirmPwdMsg.isValid) {
@@ -114,10 +111,11 @@ const Container = styled.div`
 
   position: relative;
 
-  max-width: 700px;
   width: 100%;
-  font-family: 'NanumSquareB';
+  max-width: 700px;
+
   padding: 2rem;
+  font-family: 'NanumSquareB';
 `
 
 const ProfileContainer = styled.div`

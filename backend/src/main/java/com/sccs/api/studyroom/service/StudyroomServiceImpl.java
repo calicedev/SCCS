@@ -78,11 +78,12 @@ public class StudyroomServiceImpl implements StudyroomService {
             StudyroomAlgoDto studyroomAlgoDto = new StudyroomAlgoDto();
             studyroomAlgoDto.setStudyroomId(id);
             //받은 알고리즘 유형이 랜덤이면
-            if (algo_ids.size() == 1 && algo_ids.get(0).equals(0)) {
+//            if (algo_ids.size() == 1 && algo_ids.get(0).equals(0)) {
+            if (algo_ids.size() == 1 && algo_ids.get(0)==0) {
                 int min = 1;
-                int max = 2;
+                int max = 7;
 
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < 2; i++) {
                     // 알고리즘 유형 2개 랜덤하게 고르기
                     int randomAlgo = (int) (Math.random() * (max - min + 1)) + min;
                     // 알고리즘 유형 2개 저장.
@@ -101,7 +102,7 @@ public class StudyroomServiceImpl implements StudyroomService {
                     studyroomMapper.insertProblemId(studyroomProblemDto);
 
                 }
-            } else if (algo_ids.size() == 1 && !algo_ids.get(0).equals(0)) {
+            } else if (algo_ids.size() == 1 && algo_ids.get(0)!=0) {
                 // 알고리즘 유형 1개 저장
                 studyroomAlgoDto.setAlgoId(algo_ids.get(0));
                 studyroomMapper.insertAlgoId(studyroomAlgoDto);
@@ -260,17 +261,11 @@ public class StudyroomServiceImpl implements StudyroomService {
         // 1. isSolving 상태를 진행 중(1)으로 바꾼다.
         studyroomMapper.changeStudyroomSolvingStatus(studyroomDto);
 
-        // 2. 요청을 보내는 사람이 호스트이면 스터디 시작하는 애들 아이디 넣어준다.
-
-        MemberDto memberDto = studyroomMapper.getHostnicknameByStudyroomInfo(studyroomDto.getId());
-        if (studyroomDto.getNickname().equals(memberDto.getNickname())) {
-        List<String> memberNicknames = studyroomDto.getMemberIds();
-        List<String> memberIds = new ArrayList<String>();
-        for(String nickname : memberNicknames) {
-            memberIds.add(studyroomMapper.getIdByNickname(nickname));
-        }
-        studyroomDto.setMemberIds(memberIds);
-        studyroomMapper.insertMemberIds(studyroomDto);
+        // 2. 요청을 보내는 사람이 호스트이면 스터디 시작하는 애들 아이디를 DB에 넣어준다.
+        //  -> 요청 보내는 스터디룸 조회를 해서 호스트 정보를 가지고 있어. 그 호스트가 요청한 사람이랑 같으면 DB 접근
+        MemberDto hostMemberDto = studyroomMapper.getHostInfoByStudyroomId(studyroomDto.getId());
+        if (studyroomDto.getMemberId().equals(hostMemberDto.getId())) {
+            studyroomMapper.insertMemberIds(studyroomDto);
         }
 
         // 3. 스터디룸 정보를 담은 걸 resultmap에 담는다.
@@ -439,6 +434,19 @@ public class StudyroomServiceImpl implements StudyroomService {
         return resultMap;
     }
 
+    /**
+     * 닉네임과 id 꼬여서 넣은 로직. 되도록이면 쓰지말자.
+     **/
+    @Override
+    public String getNicknameById(String id) {
+        return studyroomMapper.getNicknameById(id);
+    }
+
+    @Override
+    public String getIdByNickname(String nickname) {
+        return studyroomMapper.getIdByNickname(nickname);
+    }
+
 
     /**
      * 코딩 테스트 방장에 의해 끝내기
@@ -473,12 +481,14 @@ public class StudyroomServiceImpl implements StudyroomService {
         return studyroomMapper.increaseStudyroomPersonnel(id);
     }
 
+
     /**
      * 소켓 통신 처음에 들어오는 사람 decrease
      **/
     public int decreaseStudyroomPersonnel(int id) {
         return studyroomMapper.decreaseStudyroomPersonnel(id);
     }
+
 
     /**
      * 메인 화면에서 입장할 때 존재하는 방인지 체크하는 로직
@@ -490,11 +500,11 @@ public class StudyroomServiceImpl implements StudyroomService {
     }
 
     /**
-     * 스터디룸 조회하면 호스트 닉네임 반환. id랑 nickname이랑 꼬여서 만든 로직.
+     * 스터디룸 조회하면 호스트 아이디와 닉네임 반환.
      */
     @Override
-    public MemberDto getHostnicknameByStudyroomInfo(int studyroomId) {
-        return studyroomMapper.getHostnicknameByStudyroomInfo(studyroomId);
+    public MemberDto getHostInfoByStudyroomId(int studyroomId) {
+        return studyroomMapper.getHostInfoByStudyroomId(studyroomId);
     }
 
 

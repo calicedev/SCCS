@@ -5,18 +5,20 @@ import PropTypes from 'prop-types'
 /*
 투명한 아이콘 버튼 컴포넌트(글자 포함 가능)
 
+id: 버튼의 id
 icon: 아이콘. 기본적으로 'react-icon'라이브러리의 아이콘을 prop받음
-type: 색깔
-size: 버튼의 크기
-text: 버튼 옆에 표시할 글자
+size: 버튼 사이즈
+type: 버튼 색깔
+text: 아이콘 옆 문구
 onClick: 클릭 시 동작
-disabled: 클릭 가능 여부
+disabled: 버튼 클릭 가능 여부
 */
 
 export default function IconButton({
+  id,
   icon,
-  type,
   size,
+  type,
   text,
   onClick,
   disabled,
@@ -25,6 +27,7 @@ export default function IconButton({
 
   return (
     <IconWrapper
+      id={id}
       disabled={disabled}
       type={type}
       className={`${sizeClass}`}
@@ -36,6 +39,7 @@ export default function IconButton({
 }
 
 IconButton.propTypes = {
+  id: PropTypes.string,
   icon: PropTypes.element.isRequired,
   type: PropTypes.oneOf([
     'black',
@@ -58,9 +62,9 @@ IconButton.defaultProps = {
 
 const IconWrapper = styled.div`
   cursor: pointer;
-  color: black;
 
   color: ${({ theme, type }) => theme[`${type}Color`]};
+
   &:hover {
     color: ${({ theme, type }) =>
       theme[`deep${type.replace(/^[a-z]/, (c) => c.toUpperCase())}Color`]};

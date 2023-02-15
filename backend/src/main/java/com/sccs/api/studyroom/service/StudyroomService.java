@@ -50,8 +50,12 @@ public interface StudyroomService {
   public boolean isExistStudyroom(int id);
 
   /** 스터디룸 조회하면 호스트 닉네임 반환. id랑 nickname이랑 꼬여서 만든 로직. **/
-  public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
+  public MemberDto getHostInfoByStudyroomId(int studyroomId);
 
   /** 스터디 시작하기 **/
   public List startStudy(StudyroomDto studyroomDto);
+
+  public String getNicknameById(String id);
+
+  public String getIdByNickname(String nickname);
 }

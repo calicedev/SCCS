@@ -1,13 +1,12 @@
 import React from 'react'
+import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import axios from 'libs/axios'
 import api from 'constants/api'
-
+import axios from 'libs/axios'
+import Loading from 'components/common/Loading'
 import StudyDetailHeader from 'components/mypage/StudyDetailHeader'
 import StudyDetailCodeList from 'components/mypage/StudyDetailCodeList'
-import Loading from 'components/common/Loading'
 
 export default function StudyDetailPage() {
   // url 파라미터로 가져오 스터디의 pk
@@ -17,7 +16,7 @@ export default function StudyDetailPage() {
   const [studyTitle, setStudyTitle] = useState(null)
   const [problems, setProblems] = useState(null) // 스터디에서 푼 문제 배열
   const [problemIdx, setProblemIdx] = useState(0) // 현재 보여지는 문제의 인덱스
-  const [studyroomId, setStudyroomId] = useState(id)
+
   // 마운트시 axios 요청으로 스터디 데이터(study) 요청
   useEffect(() => {
     const [url, method] = api('studyDetail', { id })
@@ -25,14 +24,8 @@ export default function StudyDetailPage() {
     axios
       .request(config)
       .then((res) => {
-        console.log(res.data) 
         setStudyTitle(res.data.studyroomTitle)
-        // console.log(res.data.studyroomTitle)
         setProblems(res.data.studyroomWithProblems)
-        // console.log(problemIdx)
-        // console.log(problems)
-        // console.log(problemId)
-        // console.log(res.data.studyroomWithProblems)
       })
       .catch((err) => {
         setStudyTitle('')
@@ -52,7 +45,7 @@ export default function StudyDetailPage() {
             problemIdx={problemIdx}
             setProblemIdx={setProblemIdx}
             problemId={problems[problemIdx].problemId}
-            studyroomId={setStudyroomId}
+            studyroomId={id}
           />
           <Flexbox>
             <Pane>

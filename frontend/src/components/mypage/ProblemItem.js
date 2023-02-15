@@ -59,9 +59,9 @@ const Container = styled.div`
 
   background-color: ${({ theme }) => theme.bgColor};
 
-  transition: all 0.3s ease-in-out;
   cursor: pointer;
 
+  transition: all 0.3s ease-in-out;
   &:hover {
     scale: 1.05;
     background-color: #7ab6ec24;

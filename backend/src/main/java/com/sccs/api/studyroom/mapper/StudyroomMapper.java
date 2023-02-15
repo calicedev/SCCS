@@ -41,7 +41,7 @@ public interface StudyroomMapper {
 
   /** 코딩 테스트 시작하기 **/
   public void changeStudyroomSolvingStatus(StudyroomDto studyroomDto);
-  public MemberDto getHostnicknameByStudyroomInfo(int studyroomId);
+  public MemberDto getHostInfoByStudyroomId(int studyroomId);
   public void insertMemberIds(StudyroomDto studyroomDto);
   public StudyroomDto selectStudyroomById(int id);
   public List<ProblemDto> selectProblemByStudyroomId(int id);

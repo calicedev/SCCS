@@ -2,13 +2,29 @@ import React from 'react'
 import styled from 'styled-components'
 import mypageBgImg from 'assets/img/mypage_bg_img.png'
 
+export default function MyPageLayout({ children }) {
+  const [Up, Left, Right] = children
+
+  return (
+    <Container>
+      <UpperPane>{Up}</UpperPane>
+      <FlexBox>
+        <LeftPane>{Left}</LeftPane>
+        <RightPane>{Right}</RightPane>
+      </FlexBox>
+      <LeftPaneBg />
+    </Container>
+  )
+}
+
 const Container = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column;
 
-  min-height: 100vh;
+  position: relative;
+
   height: 100%;
+  min-height: 100vh;
 
   background-image: url(${mypageBgImg});
   background-size: cover;
@@ -20,24 +36,24 @@ const FlexBox = styled.div`
 `
 
 const UpperPane = styled.div`
-  z-index: 1;
   margin-bottom: 2rem;
+  z-index: 1;
 `
 
 const LeftPane = styled.div`
-  z-index: 1;
+  width: 25%;
   min-width: 250px;
   max-width: 300px;
-  width: 25%;
+  z-index: 1;
 `
 
 const LeftPaneBg = styled.div`
   position: absolute;
 
-  min-width: 250px;
-  max-width: 300px;
   width: 25%;
   height: 100%;
+  min-width: 250px;
+  max-width: 300px;
 
   background-color: ${({ theme }) => theme.bluishBgColor};
 `
@@ -56,18 +72,3 @@ const RightPane = styled.div`
 
   background-color: ${({ theme }) => theme.bgColor};
 `
-
-export default function MyPageLayout({ children }) {
-  const [Up, Left, Right] = children
-
-  return (
-    <Container>
-      <UpperPane>{Up}</UpperPane>
-      <FlexBox>
-        <LeftPane>{Left}</LeftPane>
-        <RightPane>{Right}</RightPane>
-      </FlexBox>
-      <LeftPaneBg />
-    </Container>
-  )
-}

@@ -1,12 +1,11 @@
-import styled from 'styled-components'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import 'styles/font.css'
 
 /*
 CalendarPage에서 날짜박스에 안에 넣을 StudyList 컴포넌트
-스터디 타이틀만 표시되다가, 호버 시에 스터디에서 푼 문제 타이틀도 함께 표시
+스터디 타이틀만 표시되다가, 마우스 호버 시에 스터디에서 푼 문제 타이틀도 함께 표시
 
 
 다음과 같은 구조를 받는다.
