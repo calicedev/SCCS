@@ -183,18 +183,17 @@ public class MemberController {
    * Auth
    **/
   @GetMapping("/member")
-  public ResponseEntity<?> memberInfo(HttpServletRequest request) { // @CookieValue String accessToken
+  public ResponseEntity<?> memberInfo(HttpServletRequest request, @CookieValue(value = "accessToken", defaultValue = "") String accessToken) { // @CookieValue String accessToken
     Map<String, Object> resultMap = new HashMap<>();
-
-
-    logger.info("회원정보 조회 컨트롤러 입장 !!");
-    Cookie[] cookies = request.getCookies();
-    logger.debug("쿠키에서 값 가져오기 1!!! : {}", cookies[0].getName());
-    String accessToken = cookies[0].getValue();
 
     // 헤더 방식
     // final String token = request.getHeader(HEADER_AUTH).substring("Bearer ".length()); // 헤더에서 토큰 파싱
     // String id = (String) jwtService.getToken(token).get("id"); // 회원 아이디를 accessToken에서 파싱
+
+    if (accessToken.isEmpty()) {
+      resultMap.put(MESSAGE, "쿠키 없음");
+      return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST);
+    }
 
     String id = (String) jwtService.getToken(accessToken).get("id");
     MemberDto memberDto = memberService.memberInfo(id);
@@ -381,9 +380,15 @@ public class MemberController {
    * access-token 재발급
    **/
   @GetMapping("/member/refreshToken")
-  public ResponseEntity<?> refreshToken(@CookieValue String refreshToken, HttpServletResponse response) {
+  public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", defaultValue = "") String refreshToken, HttpServletResponse response) {
     HashMap<String, Object> resultMap = new HashMap<>();
     HttpStatus status = HttpStatus.OK;
+
+    if (refreshToken.isEmpty()) {
+      logger.debug("[deleteRefreshToken]쿠키값 없음");
+      resultMap.put(MESSAGE, "쿠키값 없음");
+      return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST); // 400
+    }
 
     if (jwtService.checkToken(refreshToken)) {
       Claims claims = jwtService.getToken(refreshToken);
@@ -413,8 +418,14 @@ public class MemberController {
   }
 
   @DeleteMapping("/member")
-  public ResponseEntity<?> delete(@CookieValue String accessToken) {
+  public ResponseEntity<?> delete(@CookieValue(value = "accessToken", defaultValue = "") String accessToken) {
     HashMap<String, String> resultMap = new HashMap<>();
+
+    if (accessToken.isEmpty()) {
+      logger.debug("[deleteRefreshToken]쿠키값 없음");
+      resultMap.put(MESSAGE, "쿠키값 없음");
+      return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST); // 400
+    }
 
     Claims claims = jwtService.getToken(accessToken);
     String id = (String) claims.get("id");
@@ -435,8 +446,15 @@ public class MemberController {
    * 레디스 특정 키 값 삭제
    */
   @DeleteMapping ("/member/refreshToken")
-  public ResponseEntity<?> deleteRefreshToken(@CookieValue String refreshToken) {
+  public ResponseEntity<?> deleteRefreshToken(@CookieValue(value = "refreshToken", defaultValue = "") String refreshToken) {
     HashMap<String, String> resultMap = new HashMap<>();
+
+    if (refreshToken.isEmpty()) {
+      logger.debug("[deleteRefreshToken]쿠키값 없음");
+      resultMap.put(MESSAGE, "쿠키값 없음");
+      return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST); // 400
+    }
+
     if (Objects.equals(redisService.deleteKey(refreshToken), SUCCESS)) {
       logger.debug("deleteRefreshToken레디스 값 삭제 성공");
       resultMap.put(MESSAGE, "성공");
