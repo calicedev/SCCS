@@ -83,10 +83,10 @@ public class JWTServiceImpl implements JWTService {
       return true;
     } catch(ExpiredJwtException e) {
       logger.debug("토큰 만료");
-      throw new UnAuthorizedException("토큰 만료됐음");
+      throw new UnAuthorizedException("accessToken expired");
     } catch (Exception e) {
       logger.debug("토큰 검증 에러");
-      throw new UnAuthorizedException("토큰 검증 에러임!!!!!!!!!!!!!!!!!!!!");
+      throw new UnAuthorizedException("accessToken expired");
     }
   }
 
