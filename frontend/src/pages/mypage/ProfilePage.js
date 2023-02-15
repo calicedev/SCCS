@@ -27,7 +27,6 @@ export default function Profile() {
 
   // score을 기반으로 gradeIcons 배열의 인덱스 계산
   const index = useMemo(() => {
-    console.log(user.score, '유저스코어다!')
     if (user.score >= 1000000) return 0
     if (user.score >= 30000) return 1
     if (user.score >= 3000) return 2
@@ -46,7 +45,7 @@ export default function Profile() {
           {gradeIcons[index]}
           {user.score}점
         </IconWrapper>
-        <ProfileImg imgUrl={user.profileImage} />
+        <ProfileImg src={user.profileImage} />
         <p className="semi-bold">가입일: {user.joinDate}</p>
       </ProfileContainer>
 

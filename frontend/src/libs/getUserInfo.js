@@ -33,6 +33,5 @@ export default async function getUserInfo(id) {
       store.dispatch(setUserInfo(temUserInfo))
       return temUserInfo
     })
-  console.log('getUserInfo', user)
   return user
 }

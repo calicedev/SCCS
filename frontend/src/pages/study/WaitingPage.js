@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { useWindowHeight } from 'hooks/useWindowHeight'
+import { setReduxMembers } from 'redux/roomSlice'
 import Chat from 'components/study/Chat'
 import Button from 'components/common/Button'
 import RoomInfo from 'components/study/RoomInfo'
@@ -23,6 +25,7 @@ export default function WaitingPage() {
   } = useOutletContext()
 
   // 리액트 훅 관련 함수 선언
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
 
@@ -88,6 +91,7 @@ export default function WaitingPage() {
         }
         if (content.status === 'start') {
           setMembers(content.memberIds)
+          dispatch(setReduxMembers(content.memberIds))
           navigate(`/room/${studyroomId}/test`)
         }
       }),
