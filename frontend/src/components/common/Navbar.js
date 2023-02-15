@@ -63,7 +63,13 @@ export default function Navbar() {
     dispatch(setExpiration(null))
     const [url, method] = api('logout')
     const config = { url, method }
-    axios.request(config)
+    axios
+      .request(config)
+      .then()
+      .catch((err) => {
+        alert('로그아웃을 할 수 없습니다.')
+        navigate('/')
+      })
   }
 
   return (
