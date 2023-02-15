@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -56,28 +57,27 @@ public class MypageController {
   @ApiImplicitParam(name = "studyId", value = "스터디 아이디", required = true)
   public ResponseEntity<?> getHistoryDetail(@PathVariable int studyId) {
     HashMap<String, Object> targets = mypageService.getHistoryDetail(studyId);
-
-    ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
-        "studyroomWithProblems");
-    for (int i = 0; i < problems.size(); i++) {
-      ArrayList<HashMap<String, Object>> participants;
-      participants = (ArrayList<HashMap<String, Object>>) problems.get(i)
-          .get("participantWithCode");
-      for (int j = 0; j < participants.size(); j++) {
-        String filename = (String) participants.get(j).get("submissionFileName");
-        String realFilePath = "submission/" + filename;
-        String tempFileUrl = awsS3service.getTemporaryUrl(realFilePath);
-        participants.get(j).put("submissionFileName", tempFileUrl);
-      }
-      String url = (String) problems.get(i).get("problemFolder");
-      String realPath = "problem/" + url + ".jpg";
-      String tempUrl = awsS3service.getTemporaryUrl(realPath);
-      problems.get(i).put("problemFolder", tempUrl);
-    }
     if (targets != null) {
+      ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
+          "studyroomWithProblems");
+      for (int i = 0; i < problems.size(); i++) {
+        ArrayList<HashMap<String, Object>> participants;
+        participants = (ArrayList<HashMap<String, Object>>) problems.get(i)
+            .get("participantWithCode");
+        for (int j = 0; j < participants.size(); j++) {
+          String filename = (String) participants.get(j).get("submissionFileName");
+          String realFilePath = "submission/" + filename;
+          String tempFileUrl = awsS3service.getTemporaryUrl(realFilePath);
+          participants.get(j).put("submissionFileName", tempFileUrl);
+        }
+        String url = (String) problems.get(i).get("problemFolder");
+        String realPath = "problem/" + url + ".jpg";
+        String tempUrl = awsS3service.getTemporaryUrl(realPath);
+        problems.get(i).put("problemFolder", tempUrl);
+      }
       return ResponseEntity.ok(targets);
     } else {
-      return ResponseEntity.noContent().build();
+      return ResponseEntity.ok(Collections.EMPTY_MAP);
     }
   }
 
@@ -98,27 +98,36 @@ public class MypageController {
   public HashMap<String, Object> getProblemUrl(@PathVariable String memberId,
       @PathVariable int problemId) {
     HashMap<String, Object> targets = mypageService.getProblemUrl(memberId, problemId);
-    ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
-        "submissionInfo");
-    for (int i = 0; i < problems.size(); i++) {
-      String submissionFilename = (String) problems.get(i).get("submissionFile");
-      String path = "submission/" + submissionFilename;
-      problems.get(i).put("submissionFile", awsS3service.getTemporaryUrl(path));
-    }
-    String filename = (String) targets.get("problemUrl");
-    String realPath = "problem/" + filename + ".jpg";
-    targets.put("problemUrl", awsS3service.getTemporaryUrl(realPath));
+    if (targets != null) {
+      ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
+          "submissionInfo");
+      for (int i = 0; i < problems.size(); i++) {
+        String submissionFilename = (String) problems.get(i).get("submissionFile");
+        String path = "submission/" + submissionFilename;
+        problems.get(i).put("submissionFile", awsS3service.getTemporaryUrl(path));
+      }
+      String filename = (String) targets.get("problemUrl");
+      String realPath = "problem/" + filename + ".jpg";
+      targets.put("problemUrl", awsS3service.getTemporaryUrl(realPath));
 
-    return targets;
+      return targets;
+    } else {
+      targets = new HashMap<String, Object>();
+      return targets;
+    }
   }
 
   @GetMapping("/problem/solve/{problemId}")
   public String getProblemUrlOnly(@PathVariable int problemId) {
     String pUrl = mypageService.getProblemUrlOnly(problemId);
-    String pRealPath = "problem/" + pUrl + ".jpg";
-    pUrl = awsS3service.getTemporaryUrl(pRealPath);
+    if (!pUrl.equals(null)) {
+      String pRealPath = "problem/" + pUrl + ".jpg";
+      pUrl = awsS3service.getTemporaryUrl(pRealPath);
 
-    return pUrl;
+      return pUrl;
+    } else {
+      return "";
+    }
   }
 
 
