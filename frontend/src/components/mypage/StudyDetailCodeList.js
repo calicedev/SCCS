@@ -9,13 +9,13 @@ import StudyDetailCodeItem from './StudyDetailCodeItem'
 
 codeList =[
   {
-    id: 제출 내역의 pk
-    memberId: 유저 아이디
-    languageId: 언어 pk
-    memory: 메모리 사용
-    runtime: 실행시간
-    result: 통과여부
-    fileUrl 코드 파일 url
+    submissionId 제출 내역의 pk
+    submissionMemberId: 유저 아이디
+    submissionLanguageId: 언어 pk
+    submissionMemory: 메모리 사용
+    submissionRuntime: 실행시간
+    submissionResult: 통과여부
+    submissionFileName: 코드 파일 url
   }
 ]
 */

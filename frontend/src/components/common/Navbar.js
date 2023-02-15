@@ -51,7 +51,7 @@ export default function Navbar() {
       if (user.score >= 1000000) return 0
       if (user.score >= 30000) return 1
       if (user.score >= 3000) return 2
-      if (user.score) return 3
+      return 3
     }
   }, [user])
 
@@ -84,7 +84,7 @@ export default function Navbar() {
         </ButtonWrapper>
         <NavStyle to="/">Home</NavStyle>
         <NavStyle to="/about">About</NavStyle>
-        {isLogin ? (
+        {isLogin && user ? (
           <>
             <IconWrapper>{gradeIcons[index]}</IconWrapper>
             <NavStyle
@@ -99,7 +99,6 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <IconWrapper>{gradeIcons[index]}</IconWrapper>
             <StyledDiv onClick={() => navigate('/auth/login')}>Login</StyledDiv>
             <StyledDiv2 onClick={() => navigate('/auth/signup')}>
               Signup
