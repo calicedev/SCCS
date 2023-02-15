@@ -51,6 +51,7 @@ export default function TestPage() {
   const [finished, setFinished] = useState(false)
   const [finishedList, setFinishedList] = useState([])
 
+  // 테스트, 제출 버튼 클릭 관련 state
   const [onSubmitButton, setOnSubmitButoon] = useState(false)
   const [onTestButton, setOnTestButoon] = useState(false)
 

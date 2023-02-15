@@ -124,6 +124,3 @@ const IconWrapper = styled.div`
   color: ${({ theme }) => theme.secondaryColor};
   font-size: 30px;
 `
-const IconWrapper2 = styled.div`
-  color: ${({ theme }) => theme.secondaryColor};
-`
