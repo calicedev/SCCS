@@ -6,19 +6,19 @@ import Button from 'components/common/Button'
 import ProfileImg from 'components/common/ProfileImg'
 import ProfileInput from 'components/mypage/ProfileInput'
 import {
-  GiChessQueen,
-  GiChessBishop,
-  GiChessKnight,
-  GiChessRook,
-  GiChessPawn,
-} from 'react-icons/gi'
-import IconButton from 'components/common/IconButton'
+  FaChessQueen,
+  FaChessRook,
+  FaChessKnight,
+  FaChessBishop,
+  FaChessPawn,
+} from 'react-icons/fa'
 
 const gradeIcons = [
-  <GiChessQueen />,
-  <GiChessBishop />,
-  <GiChessKnight />,
-  <GiChessPawn />,
+  <FaChessQueen />,
+  <FaChessRook />,
+  <FaChessKnight />,
+  <FaChessBishop />,
+  <FaChessPawn />,
 ]
 
 export default function Profile() {
@@ -27,10 +27,12 @@ export default function Profile() {
 
   // score을 기반으로 gradeIcons 배열의 인덱스 계산
   const index = useMemo(() => {
+    console.log(user.score, '유저스코어다!')
     if (user.score >= 1000000) return 0
     if (user.score >= 30000) return 1
     if (user.score >= 3000) return 2
-    return 3
+    if (user.score) return 3
+    else return 4
   }, [user])
 
   // 리액트 훅 관련 함수 정의
@@ -40,7 +42,10 @@ export default function Profile() {
     <Container>
       <h1>Profile</h1>
       <ProfileContainer>
-        <IconButton icon={gradeIcons[index]} />
+        <IconWrapper>
+          {gradeIcons[index]}
+          {user.score}점
+        </IconWrapper>
         <ProfileImg imgUrl={user.profileImage} />
         <p className="semi-bold">가입일: {user.joinDate}</p>
       </ProfileContainer>
@@ -114,4 +119,11 @@ const Flexbox = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: end;
+`
+const IconWrapper = styled.div`
+  color: ${({ theme }) => theme.secondaryColor};
+  font-size: 30px;
+`
+const IconWrapper2 = styled.div`
+  color: ${({ theme }) => theme.secondaryColor};
 `

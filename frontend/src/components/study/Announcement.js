@@ -9,7 +9,7 @@ export default function Announcement({ languageIds, algoIds }) {
   const languages = useMemo(() => {
     let tempLanguages = ''
     languageIds.forEach((pk) => {
-      tempLanguages += `${languagePk[pk]}, `
+      tempLanguages += `#${languagePk[pk]} `
     })
     return tempLanguages
   }, [languageIds])
@@ -19,7 +19,7 @@ export default function Announcement({ languageIds, algoIds }) {
   const algorithms = useMemo(() => {
     let tempAlgorithms = ''
     algoIds.forEach((pk) => {
-      tempAlgorithms += `${algorithmPk[pk]}, `
+      tempAlgorithms += `#${algorithmPk[pk]} `
     })
     return tempAlgorithms
   }, [algoIds])

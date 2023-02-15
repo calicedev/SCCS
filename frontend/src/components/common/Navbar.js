@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useMemo } from 'react'
 import styled from 'styled-components'
 import { setExpiration } from 'redux/expSlice'
 import { toggleTheme } from 'redux/themeSlice'
@@ -12,6 +12,14 @@ import checkLogin from 'libs/checkLogin'
 import Logo from 'components/common/Logo'
 import IconButton from 'components/common/IconButton'
 
+import {
+  FaChessQueen,
+  FaChessRook,
+  FaChessKnight,
+  FaChessBishop,
+  FaChessPawn,
+} from 'react-icons/fa'
+
 /*
 상단 네비게이션바 컴포넌트
 */
@@ -23,7 +31,31 @@ export default function Navbar() {
   const pathname = useLocation().pathname
 
   const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
+
   const isLogin = checkLogin() // 로그인 여부 판단
+
+  const user = useSelector((state) => state.user)
+  console.log('user', user)
+
+  const gradeIcons = [
+    <FaChessQueen />,
+    <FaChessRook />,
+    <FaChessKnight />,
+    <FaChessBishop />,
+    <FaChessPawn />,
+  ]
+
+  const index = useMemo(() => {
+    if (user === null) return 4
+    else {
+      if (user.score >= 1000000) return 0
+      if (user.score >= 30000) return 1
+      if (user.score >= 3000) return 2
+      return 3
+    }
+  }, [user])
+
+  console.log('idx', index)
 
   const logout = () => {
     navigate('/')
@@ -52,15 +84,16 @@ export default function Navbar() {
         </ButtonWrapper>
         <NavStyle to="/">Home</NavStyle>
         <NavStyle to="/about">About</NavStyle>
-        {isLogin ? (
+        {isLogin && user ? (
           <>
+            <IconWrapper>{gradeIcons[index]}</IconWrapper>
             <NavStyle
               to="/mypage/study"
               className={`${
                 pathname.substring(0, 7) === '/mypage' ? 'active' : null
               }`}
             >
-              MyPage
+              {user.nickname}
             </NavStyle>
             <StyledDiv onClick={logout}>Logout</StyledDiv>
           </>
@@ -140,4 +173,10 @@ const StyledDiv2 = styled.div`
   color: ${({ theme }) => theme.secondaryFontColor};
 
   cursor: pointer;
+`
+const IconWrapper = styled.div`
+  color: ${({ theme }) => theme.secondaryFontColor};
+  font-size: 25px;
+  margin-top: 5px;
+  margin-right: 5px;
 `

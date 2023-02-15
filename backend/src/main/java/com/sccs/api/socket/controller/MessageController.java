@@ -38,7 +38,12 @@ public class MessageController {
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         } else if (socketDto.getStatus().equals("study")) {
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
-        } else if (socketDto.getStatus().equals("present")) {
+        } else if (socketDto.getStatus().equals("disconnect")) {
+            studyroomService.decreaseStudyroomPersonnel(socketDto.getStudyroomId());
+            int temp = studyroomService.getStudyroomPersonnel(socketDto.getStudyroomId());
+            socketDto.setPersonnel(temp);
+            template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
+        }else if (socketDto.getStatus().equals("present")) {
             template.convertAndSend("/sub/studyroom/" + socketDto.getStudyroomId(), socketDto);
         } else if (socketDto.getStatus().equals("chat")) {
             socketDto.setMessage(socketDto.getMessage());
@@ -49,7 +54,6 @@ public class MessageController {
         } else if (socketDto.getStatus().equals("exit")) {
             // 방 조회해서 호스트 아이디 닉네임 가져온 것.
             MemberDto hostMemberDto = studyroomService.getHostInfoByStudyroomId(socketDto.getStudyroomId());
-
             //방장이 방을 나가면 =  소켓으로 exit 요청받은 아이디가 호스트 아이디이면
             if (socketDto.getId().equals(hostMemberDto.getId())) {
                 socketDto.setMessage("방장이 채팅방을 나갔습니다.");
