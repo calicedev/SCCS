@@ -127,9 +127,9 @@ const GlobalStyle = createGlobalStyle`
     font-size: 160%;
     font: inherit;
     vertical-align: baseline;
+    font-family: 'bigjohn','NanumSquareEB';
     box-sizing: border-box;
     color: inherit;
-    font-family: handFont, bigjohn, NanumSquareB,;
     outline: 0;
   }
   html {
