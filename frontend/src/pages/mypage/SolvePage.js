@@ -80,14 +80,12 @@ export default function SolvePage() {
         return res.text()
       })
       .then((code) => {
-        // console.log('code', code)
         setCode(code)
       })
   }
 
   // 언어선택 드롭다운을 통해 languageId 바꾸기
   const changeLanguageId = (idx) => {
-    console.log(idx[0])
     setLanguageId(idx[0])
   }
 

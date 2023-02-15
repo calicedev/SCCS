@@ -3,14 +3,16 @@ import storage from 'redux-persist/lib/storage'
 import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
 import thunk from 'redux-thunk'
-import userSlice from './userSlice'
-import themeSlice from './themeSlice'
 import expSlice from './expSlice'
+import userSlice from './userSlice'
+import roomSlice from './roomSlice'
+import themeSlice from './themeSlice'
 
 const reducers = combineReducers({
   user: userSlice.reducer,
   theme: themeSlice.reducer,
   expiration: expSlice.reducer,
+  room: roomSlice.reducer,
 })
 
 const persistConfig = {

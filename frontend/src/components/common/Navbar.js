@@ -31,11 +31,9 @@ export default function Navbar() {
   const pathname = useLocation().pathname
 
   const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
+  const user = useSelector((state) => state.user)
 
   const isLogin = checkLogin() // 로그인 여부 판단
-
-  const user = useSelector((state) => state.user)
-  console.log('user', user)
 
   const gradeIcons = [
     <FaChessQueen />,
@@ -54,8 +52,6 @@ export default function Navbar() {
       return 3
     }
   }, [user])
-
-  console.log('idx', index)
 
   const logout = () => {
     navigate('/')

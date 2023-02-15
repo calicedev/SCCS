@@ -22,8 +22,6 @@ studies: [
 */
 
 export default function StudyList({ studies }) {
-  // console.log(studies)
-
   const [showOptions, setShowOptions] = useState(false)
   const navigate = useNavigate()
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
 import { useOutletContext, useNavigate } from 'react-router-dom'
+import { setReduxProblems } from 'redux/roomSlice'
 import api from 'constants/api'
 import axios from 'libs/axios'
 import Layout from 'layouts/TestPageLayout'
@@ -38,6 +40,7 @@ export default function TestPage() {
 
   // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // useState
   const [subscription, setSubscription] = useState(null)
@@ -72,6 +75,7 @@ export default function TestPage() {
     axios(config)
       .then((res) => {
         setProblems(res.data.problems)
+        dispatch(setReduxProblems(res.data.problems))
       })
       .catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
