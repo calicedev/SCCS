@@ -48,12 +48,18 @@ public class JwtInterceptor implements HandlerInterceptor {
           accessToken = cookies[i].getValue();
         }
       }
+    } else {
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST); // 쿠키가 없는 경우 (400)
     }
 
     if (jwtService.checkToken(accessToken)) {
-      logger.debug("accessToken parsing success");
+      logger.debug("토큰 사용 가능");
       return true;
     }
+
+    logger.debug("토큰 사용 불가능");
+    response.sendError(HttpServletResponse.SC_FORBIDDEN); // 토큰이 유효하지 않은 경우 (403)
+    return false;
 
     // 헤더 방식
 //    String token = "";
@@ -69,9 +75,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 //      logger.info("토큰 사용 가능 : {}", token);
 //      return true;
 //    }
-    logger.debug("토큰 사용 불가능");
-    //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-    throw new UnAuthorizedException(); // accessToken 사용 불가능, accessToken 재발급 로직으로 이동해야 함
-    // (그곳에서 refreshToken 검증) (refreshToken검증에 실패한다면 로그인 로직으로 이동) (검증 성공시에는 accessToken이 발급됨)
+
   }
 }

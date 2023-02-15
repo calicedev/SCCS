@@ -1,7 +1,7 @@
 package com.sccs.api.member.service;
 
-import com.sccs.exception.InterceptorException;
-import com.sccs.exception.InterceptorExceptionEnum;
+//import com.sccs.exception.InterceptorException;
+//import com.sccs.exception.InterceptorExceptionEnum;
 import com.sccs.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -14,6 +14,9 @@ import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpException;
+import org.apache.http.HttpStatus;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,13 +64,10 @@ public class JWTServiceImpl implements JWTService {
           .getBody();
     } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
       logger.debug("토큰 만료");
-      //throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "token expired");
-      //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-      throw new UnAuthorizedException();
+      throw new UnAuthorizedException("토큰 만료됐음");
     } catch (Exception e) {
       logger.debug("토큰 검증 에러");
-      throw new UnAuthorizedException();
-      //throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
+      throw new UnAuthorizedException("토큰 검증 에러임!!!!!!!!!!!!!!!!!!!!");
     }
   }
 
@@ -81,18 +81,13 @@ public class JWTServiceImpl implements JWTService {
           .parseClaimsJws(jwt);
       logger.debug("claims : {}", claims);
       return true;
+    } catch(ExpiredJwtException e) {
+      logger.debug("토큰 만료");
+      throw new UnAuthorizedException("토큰 만료됐음");
     } catch (Exception e) {
-      logger.error(e.getMessage());
-      return false;
+      logger.debug("토큰 검증 에러");
+      throw new UnAuthorizedException("토큰 검증 에러임!!!!!!!!!!!!!!!!!!!!");
     }
-//        } catch (ExpiredJwtException e) {
-//            logger.info("토큰 유효기간 만료");
-//            throw new InterceptorException(InterceptorExceptionEnum.EXPIREDTOKEN);
-//        } catch (Exception e) {
-//            logger.info("토큰 검증 에러");
-//            throw new InterceptorException(InterceptorExceptionEnum.UNAUTHORIZED);
-//        }
-    //return false;
   }
 
 }
