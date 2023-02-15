@@ -16,7 +16,6 @@ import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
