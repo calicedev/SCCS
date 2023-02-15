@@ -61,15 +61,20 @@ public class MypageController {
       ArrayList<HashMap<String, Object>> problems = (ArrayList<HashMap<String, Object>>) targets.get(
           "studyroomWithProblems");
       for (int i = 0; i < problems.size(); i++) {
-        ArrayList<HashMap<String, Object>> participants;
-        participants = (ArrayList<HashMap<String, Object>>) problems.get(i)
+        ArrayList<HashMap<String, Object>> participants = (ArrayList<HashMap<String, Object>>) problems.get(
+                i)
             .get("participantWithCode");
         for (int j = 0; j < participants.size(); j++) {
+          if (participants.get(j).get("submissionMemberId").equals("")) {
+            participants.clear();
+            continue;
+          }
           String filename = (String) participants.get(j).get("submissionFileName");
           String realFilePath = "submission/" + filename;
           String tempFileUrl = awsS3service.getTemporaryUrl(realFilePath);
           participants.get(j).put("submissionFileName", tempFileUrl);
         }
+
         String url = (String) problems.get(i).get("problemFolder");
         String realPath = "problem/" + url + ".jpg";
         String tempUrl = awsS3service.getTemporaryUrl(realPath);
@@ -103,6 +108,9 @@ public class MypageController {
           "submissionInfo");
       for (int i = 0; i < problems.size(); i++) {
         String submissionFilename = (String) problems.get(i).get("submissionFile");
+        if (submissionFilename.equals("")) {
+          continue;
+        }
         String path = "submission/" + submissionFilename;
         problems.get(i).put("submissionFile", awsS3service.getTemporaryUrl(path));
       }
