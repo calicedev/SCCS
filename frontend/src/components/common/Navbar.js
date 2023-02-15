@@ -51,7 +51,7 @@ export default function Navbar() {
       if (user.score >= 1000000) return 0
       if (user.score >= 30000) return 1
       if (user.score >= 3000) return 2
-      if (user.score) return 3
+      return 3
     }
   }, [user])
 
