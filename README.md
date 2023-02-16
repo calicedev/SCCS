@@ -121,6 +121,22 @@
 
 <div id="5"></div>
 
+## 주요 기술  
+- #### OpenVidu를 사용한 화상 기능
+  - 코딩 테스트가 끝난 직후, 참가자들과 얼굴을 보며 스터디를 진행할 수 있습니다.
+  - 발표자는 그림판 기능을 공유하고, 참가자들은 공유된 화면을 실시간으로 확인할 수 있습니다.   
+
+- #### WebSocket을 사용한 채팅 기능
+  - 코딩 테스트 대기방 및 스터디 페이지에서 참가자들과 실시간으로 채팅을 주고 받을 수 있습니다.  
+
+- #### 채점 서버를 통한 코드 채점 기능
+  - Java, Python 두가지 언어를 지원합니다.
+  - 제출한 소스코드를 실행시켜 컴파일 에러, 런타임 에러, 메모리 초과, 시간 초과, 정답 여부 확인이 가능합니다.
+  - Java processBuilder를 사용하여 외부 파일을 쉘 스크립트 파일로 실행합니다.  
+- ### 로그인 및 회원가입
+  - JWT를 사용한 stateless 기반 인증/인가를 적용하였습니다.
+  - refreshToken을 redis에 저장하여 잦은 요청에 대한 성능을 고려하였습니다.
+  - 토큰은 Http-Only 설정을 적용한 Cookie 방식 통신으로 교환합니다.
 
 ## 🖥️ 상세 페이지
 
@@ -139,13 +155,13 @@
         <td align="center">
               ![login](https://user-images.githubusercontent.com/53232881/219396102-82cd3ec2-0b08-487b-b3a0-8e01f5c8bcaa.gif)
         </td>
-        <td align="center">  <br> <br>로그인 <br><br>ID, PW 불일치시 안내문 출력<br/>onClick으로 이동 가능<br/><br/></td>
+        <td align="center">  <br> <br>로그인 <br><br>ID, PW 불일치시 안내문 출력<br/><br/><br/></td>
     </tr>
     <tr>
         <td align="center">
              ![findIdPassWord](https://user-images.githubusercontent.com/53232881/219397769-2e529d24-240c-43ad-b177-e2c814386b2d.gif) 
         </td>
-        <td align="center">  <br> <br>아이디 찾기 <br><br>이름과 EMAIL 일치시 이메일로 발송<br/><br/>  <br> <br>비밀번호 찾기<br><br> ID와 EMAIL 일치시 이메일로 발송<br/><br/></td>
+        <td align="center">  <br> <br>아이디 찾기 <br><br>이름과 EMAIL 일치시 이메일로 발송<br/><br/>  <br> <br>비밀번호 찾기<br><br> ID와 EMAIL 일치시 이메일로 발송(랜덤 문자열 전송)<br/><br/></td>
     </tr>
   
 </table>
@@ -163,7 +179,7 @@
         <td align="center">
               ![search](https://user-images.githubusercontent.com/53232881/219398140-300ed40b-45c6-47b4-b156-bddbf831536b.gif)
         </td>
-        <td align="center">  <br> <br>메인페이지 검색<br><br>조건별 검색기능<br/><br/></td>
+        <td align="center">  <br> <br>메인페이지 검색<br><br>조건별 검색기능, 실시간 방 목록 조회(Socket통신)<br/><br/></td>
 </tr>
 </table>
 
@@ -175,7 +191,7 @@
         <td align="center">
               ![main](https://user-images.githubusercontent.com/53232881/219308427-465ecc8e-507f-473b-9a49-78bc4b78c166.gif)
         </td>
-        <td align="center">  <br> <br>비밀번호 찾기<br><br> ID와 EMAIL 일치시 이메일로 발송<br/><br/></td>
+        <td align="center">  <br> <br>???<br><br> ???<br/><br/></td>
 </tr>
 </table>
 
@@ -187,7 +203,7 @@
         <td align="center">
               ![about](https://user-images.githubusercontent.com/53232881/219398101-7b6b711d-0f9b-49ea-9806-3a0bfafa1775.gif)
         </td>
-        <td align="center">  <br> <br>메인페이지<br><br> ID와 EMAIL 일치시 이메일로 발송<br/><br/></td>
+        <td align="center">  <br> <br>About 페이지<br><br> 사이트 소개 페이지 열람<br/><br/></td>
 </tr>
 </table>
 
@@ -200,33 +216,23 @@
         <td align="center">
               ![studyrecord](https://user-images.githubusercontent.com/53232881/219398147-f9093e93-1725-4126-8137-b897bbf23fa6.gif)
         </td>
-        <td align="center">  <br> <br>스터디 기록<br><br> 참여한 스터디 내역<br/><br/></td>
+        <td align="center">  <br> <br>스터디 기록<br><br> 참여한 스터디 내역, 제출 코드, 참여자 목록 조회 가능<br/><br/></td>
 </tr>
 <tr>
         <td align="center">
               ![myproblem](https://user-images.githubusercontent.com/53232881/219398135-cd81d354-f8e0-48b0-8e97-1ecc7c07a6bc.gif)
         </td>
-        <td align="center">  <br> <br>내가 푼 문제<br><br>내가 푼 문제들<br/><br/></td>
+        <td align="center">  <br> <br>내가 푼 문제<br><br>내가 푼 문제 목록 조회, 재제출 가능<br/><br/></td>
 </tr>
 <tr>
         <td align="center">
               ![profile](https://user-images.githubusercontent.com/53232881/219398137-ea822b43-6d4c-4c0e-bd13-98bff76e509a.gif)
         </td>
-        <td align="center">  <br> <br>프로필 페이지<br><br> 프로필 페이지<br/><br/></td>
+        <td align="center">  <br> <br>프로필 페이지<br><br>회원 정보 수정(프로필 이미지는 아마존 S3에 저장)<br/><br/></td>
 </tr>
 </table>
 
 
-- #### OpenVidu를 사용한 화상 기능
-  - 코딩 테스트가 끝난 직후, 참가자들과 얼굴을 보며 스터디를 진행할 수 있습니다.
-  - 발표자는 그림판 기능을 공유하고, 참가자들은 공유된 화면을 실시간으로 확인할 수 있습니다. <br>
-
-- #### WebSocket을 사용한 채팅 기능
-  - 코딩 테스트 대기방 및 스터디 페이지에서 참가자들과 실시간으로 채팅을 주고 받을 수 있습니다. <br>
-
-- #### 채점 서버를 통한 코드 채점 기능
-  - Java, Python 두가지 언어를 지원합니다.
-  - 제출한 소스코드를 실행시켜 컴파일 에러, 런타임 에러, 메모리 초과, 시간 초과, 정답 여부 확인이 가능합니다.
 
 
 
