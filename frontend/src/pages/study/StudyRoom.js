@@ -82,7 +82,12 @@ export default function StudyRoom() {
           dispatch(setReduxRoomInfo(roomInfo))
         })
         .catch((err) => {
-          alert('방 정보를 불러올 수 없습니다.')
+          if (err.response.status === 400) {
+            alert(err.response.status.data.message) // 이미 문제를 풀고 있는 방입니다. 대기방이 꽉 찼습니다.
+          }
+          if (err.response.status === 404) {
+            alert('방 정보를 불러올 수 없습니다.')
+          }
           exit()
         })
     }
