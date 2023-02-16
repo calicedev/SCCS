@@ -42,8 +42,13 @@ export default function StudyRoom() {
   // 기본정보
   const { studyroomId } = useParams()
   const [roomInfo, setRoomInfo] = useState(room)
-  const [members, setMembers] = useState(room.members)
   const [problems, setProblems] = useState(room.problems)
+  const [memberObject, setMemberObject] = useState(room.members)
+
+  const memberList = useMemo(() => {
+    return Object.keys(memberObject)
+  }, [memberObject])
+  console.log('memberList', memberList)
 
   // 웹소켓 useState
   const [stomp, setStomp] = useState(null)
@@ -225,10 +230,14 @@ export default function StudyRoom() {
             newRoomInfo.personnel = content.personnel
             return newRoomInfo
           })
-          if (!members) return
+          if (!memberObject) return
           // 테스트가 시작되고 인원이 나갔을 때, members 업데이트
-          setMembers((members) => members.filter((id) => id !== content.id))
-          dispatch(setReduxMembers(content.memberIds))
+          setMemberObject((memberObject) => {
+            const newMemberObject = { ...memberObject }
+            delete newMemberObject[content.id]
+            dispatch(setReduxMembers(newMemberObject))
+            return newMemberObject
+          })
           return
         }
         if (content.status === 'chat') {
@@ -569,8 +578,9 @@ export default function StudyRoom() {
               roomInfo,
               stomp,
               connected,
-              members,
-              setMembers,
+              memberObject,
+              setMemberObject,
+              memberList,
               problems,
               setProblems,
               message,

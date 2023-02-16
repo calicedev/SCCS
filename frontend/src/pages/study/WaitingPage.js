@@ -16,7 +16,7 @@ export default function WaitingPage() {
     studyroomId,
     roomInfo,
     stomp,
-    setMembers,
+    setMemberObject,
     message,
     setMessage,
     chatList,
@@ -66,7 +66,7 @@ export default function WaitingPage() {
   const sendStart = () => {
     if (roomInfo.hostId !== user.id) return
     readyObject[user.id] = true
-    const memberIds = readyObject.keys()
+    const memberIds = Object.keys(readyObject)
     stomp.send(
       '/pub/studyroom',
       {},
@@ -116,9 +116,13 @@ export default function WaitingPage() {
           return
         }
         if (content.status === 'start') {
-          setMembers(content.memberIds)
+          const memberObject = {}
+          content.memberIds.foreach((memberId) => {
+            memberObject[memberId] = true
+          })
+          setMemberObject(memberObject)
+          dispatch(setReduxMembers(memberObject))
           setReadyNicknameObject({})
-          dispatch(setReduxMembers(content.memberIds))
           navigate(`/room/${studyroomId}/test`)
         }
       }),
