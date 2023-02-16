@@ -43,7 +43,9 @@ export default function StudyRoom() {
   const { studyroomId } = useParams()
   const [roomInfo, setRoomInfo] = useState(room)
   const [problems, setProblems] = useState(room.problems)
-  const [memberObject, setMemberObject] = useState(room.members)
+  const [memberObject, setMemberObject] = useState(
+    room.members ? room.members : {},
+  )
 
   const memberList = useMemo(() => {
     return Object.keys(memberObject)
@@ -292,6 +294,7 @@ export default function StudyRoom() {
 
   // 웹 소켓 send: 채팅 전송
   const sendChat = () => {
+    if (!message.trim()) return
     stomp.send(
       '/pub/studyroom',
       {},

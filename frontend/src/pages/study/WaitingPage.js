@@ -117,7 +117,7 @@ export default function WaitingPage() {
         }
         if (content.status === 'start') {
           const memberObject = {}
-          content.memberIds.foreach((memberId) => {
+          content.memberIds.forEach((memberId) => {
             memberObject[memberId] = true
           })
           setMemberObject(memberObject)

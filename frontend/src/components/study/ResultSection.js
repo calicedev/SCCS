@@ -85,7 +85,7 @@ export default function ResultSection({
 }
 
 ResultSection.propTypes = {
-  results: PropTypes.array,
+  results: PropTypes.object,
   isFinished: PropTypes.bool,
   finish: PropTypes.func,
   test: PropTypes.func,
@@ -93,7 +93,7 @@ ResultSection.propTypes = {
 }
 
 ResultSection.defaultProps = {
-  results: [],
+  results: {},
   isFinished: false,
   finish: undefined,
   test: undefined,
