@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import styled from 'styled-components'
 import axios from 'libs/axios'
 import checkLogin from 'libs/checkLogin'
@@ -32,9 +32,9 @@ export default function MainRooms() {
   const [showModal, setShowModal] = useState(false)
 
   // 방 갯수에 따른 Pagination
-  const [pages, setPages] = useState(null)
   const [currentPage, setCurrentPage] = useState(0)
 
+  console.log('따끈 currentPage', currentPage)
   // 컴포넌트 생성 시 방 검색 api 요청
   useEffect(() => {
     const [url, method] = api('searchRoom')
@@ -43,10 +43,6 @@ export default function MainRooms() {
       .then((res) => {
         setRooms(res.data)
       })
-      .then((res) => {
-        pageCount()
-      })
-      .then((res) => {})
       .catch((err) => {
         if (err.response.status === 400) {
           alert(err.response.data.message)
@@ -56,20 +52,24 @@ export default function MainRooms() {
   }, [])
 
   // 방 갯수에 따른 Page 갯수 설정 함수
-  const pageCount = () => {
+  const pages = useMemo(() => {
+    if (!rooms) return 0
     if (rooms.length % 9 === 0) {
-      setPages(parseInt(rooms.length / 9))
+      return parseInt(rooms.length / 9)
     } else {
-      setPages(parseInt(rooms.length / 9) + 1)
+      return parseInt(rooms.length / 9) + 1
     }
-  }
+  }, [rooms])
 
   // 왼쪽, 오른쪽 버튼 클릭 시 방 Pagination 이동
   const previousPagination = () => {
+    console.log(currentPage, '왼쪽 위')
     if (currentPage === 0) return
+
     setCurrentPage(currentPage - 1)
   }
   const nextPagination = () => {
+    console.log(currentPage, '오른쪽 위')
     if (currentPage >= pages - 1) return
     setCurrentPage(currentPage + 1)
   }
