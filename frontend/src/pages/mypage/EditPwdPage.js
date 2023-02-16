@@ -44,9 +44,7 @@ export default function PasswordEdit() {
       .then((res) => {
         navigate('/mypage/profile')
       })
-      .catch((err) => {
-        alert('서버와의 통신이 원활하지 않습니다.')
-      })
+      .catch((err) => {})
   }
 
   return (
