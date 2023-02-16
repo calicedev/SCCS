@@ -34,7 +34,9 @@ export default function Navbar() {
     dispatch(setExpiration(null))
     const [url, method] = api('logout')
     const config = { url, method }
-    axios.request(config)
+    axios(config)
+      .then((res) => {})
+      .catch((err) => {})
   }
 
   return (
