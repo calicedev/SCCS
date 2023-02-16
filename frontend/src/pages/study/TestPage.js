@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import { setReduxProblems } from 'redux/roomSlice'
-import { setReduxFinished, setReduxFinishedObject } from 'redux/roomSlice'
+import { setReduxFinished } from 'redux/roomSlice'
 import api from 'constants/api'
 import axios from 'libs/axios'
 import Layout from 'layouts/TestPageLayout'
@@ -37,6 +37,9 @@ export default function TestPage() {
     problems,
     setProblems,
     setIsMicOn,
+    finishedObject,
+    setFinishedObject,
+    finishedList,
   } = useOutletContext()
 
   // 리덕스 -> 기존 방 정보 읽어오기
@@ -47,7 +50,7 @@ export default function TestPage() {
   const dispatch = useDispatch()
 
   // useState
-  const [subscription, setSubscription] = useState(null)
+  // const [subscription, setSubscription] = useState(null)
 
   const [problemIdx, setProblemIdx] = useState(0) // 현재 선택된 문제의 인덱스
 
@@ -58,16 +61,6 @@ export default function TestPage() {
   const [finished, setFinished] = useState(
     room.finished ? room.finished : false,
   )
-  const [finishedObject, setFinishedObject] = useState(
-    room.finishedObject ? room.finishedObject : {},
-  )
-
-  console.log('finishedObject', finishedObject)
-  const finishedList = useMemo(() => {
-    return Object.keys(finishedObject)
-  }, [finishedObject])
-
-  console.log('finishedList', finishedList)
 
   // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -127,25 +120,25 @@ export default function TestPage() {
   }
 
   // 웹 소켓 subscribe
-  useEffect(() => {
-    setSubscription(
-      stomp.subscribe('/sub/studyroom/' + studyroomId, (chatDto) => {
-        const content = JSON.parse(chatDto.body)
-        if (content.status === 'study') {
-          setFinishedObject((finishedObject) => {
-            const newFinishedObject = { ...finishedObject }
-            newFinishedObject[content.nickname] = true
-            dispatch(setReduxFinishedObject(newFinishedObject))
-            return newFinishedObject
-          })
-        }
-      }),
-    )
-    return () => {
-      subscription && subscription.unsubscribe()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // useEffect(() => {
+  //   setSubscription(
+  //     stomp.subscribe('/sub/studyroom/' + studyroomId, (chatDto) => {
+  //       const content = JSON.parse(chatDto.body)
+  //       if (content.status === 'study') {
+  //         setFinishedObject((finishedObject) => {
+  //           const newFinishedObject = { ...finishedObject }
+  //           newFinishedObject[content.nickname] = true
+  //           dispatch(setReduxFinishedObject(newFinishedObject))
+  //           return newFinishedObject
+  //         })
+  //       }
+  //     }),
+  //   )
+  //   return () => {
+  //     subscription && subscription.unsubscribe()
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   // 코드 제출 함수. type = 'test' or 'submit'
   const submitCode = (type) => {

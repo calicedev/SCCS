@@ -12,6 +12,7 @@ import {
   setReduxRoomInfo,
   setReduxMainStreamManager,
   setReduxMembers,
+  setReduxFinishedObject,
   deleteRoom,
 } from 'redux/roomSlice'
 import api from 'constants/api'
@@ -83,6 +84,17 @@ export default function StudyRoom() {
   const checkHostExit = useRef(null)
   const OV = useRef(null) // OV객체를 저장
   const faceInterval = useRef(null) // face-api 동작 시, setInterval 객체를 저장
+
+  // finished를 막힘없이 받기 위해서
+  const [finishedObject, setFinishedObject] = useState(
+    room.finishedObject ? room.finishedObject : {},
+  )
+  console.log('finishedObject', finishedObject)
+
+  const finishedList = useMemo(() => {
+    return Object.keys(finishedObject)
+  }, [finishedObject])
+  console.log('finishedList', finishedList)
 
   // 스터디룸 정보 axios 요청
   useEffect(() => {
@@ -248,6 +260,15 @@ export default function StudyRoom() {
             { nickname, score, profileImage, message },
             ...chatList,
           ])
+          return
+        }
+        if (content.status === 'study') {
+          setFinishedObject((finishedObject) => {
+            const newFinishedObject = { ...finishedObject }
+            newFinishedObject[content.nickname] = true
+            dispatch(setReduxFinishedObject(newFinishedObject))
+            return newFinishedObject
+          })
           return
         }
       })
@@ -604,6 +625,9 @@ export default function StudyRoom() {
               setMainStreamManager,
               readyNicknameObject,
               setReadyNicknameObject,
+              finishedObject,
+              setFinishedObject,
+              finishedList,
             }}
           />
 
