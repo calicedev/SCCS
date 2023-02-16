@@ -28,16 +28,22 @@ export default function Chat({
       </ChatContainer>
       <StyledDiv>
         <StyledInput
+          id="chat-input"
           value={message}
           onKeyUp={(e) => {
-            if (e.key === 'Enter' && e.target.value.trim()) {
-              sendChat()
+            if (e.key === 'Enter') {
+              sendChat(e)
             }
           }}
           onChange={onChangeMsg}
           placeholder="메시지를 입력하세요"
         />
-        <Button type="primary" size="small" value="전송" onClick={sendChat} />
+        <Button
+          type="primary"
+          size="small"
+          value="전송"
+          onClick={(e) => sendChat(e)}
+        />
       </StyledDiv>
     </Container>
   )

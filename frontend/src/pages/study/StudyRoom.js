@@ -294,6 +294,7 @@ export default function StudyRoom() {
 
   // 웹 소켓 send: 채팅 전송
   const sendChat = () => {
+    if (!message.trim()) return
     stomp.send(
       '/pub/studyroom',
       {},
