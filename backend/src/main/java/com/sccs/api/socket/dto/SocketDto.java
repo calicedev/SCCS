@@ -22,7 +22,7 @@ public class SocketDto {
   private String presenter;
   private String profileImage;
   private int problemIdx;
-
+  private int score;
   private List<String> memberIds;
   private List<String> readyForStudyArray;
 
