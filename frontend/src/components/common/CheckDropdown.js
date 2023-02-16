@@ -86,7 +86,7 @@ const OptionWrapper = styled.div`
 
   width: 100%;
 
-  padding: 0.5em 0.5rem;
+  padding: 0.5em 0.3rem;
 
   border: 0;
   border-radius: 0.5rem;
