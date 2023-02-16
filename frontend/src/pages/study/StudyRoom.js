@@ -43,7 +43,9 @@ export default function StudyRoom() {
   const { studyroomId } = useParams()
   const [roomInfo, setRoomInfo] = useState(room)
   const [problems, setProblems] = useState(room.problems)
-  const [memberObject, setMemberObject] = useState(room.members)
+  const [memberObject, setMemberObject] = useState(
+    room.members ? room.members : {},
+  )
 
   const memberList = useMemo(() => {
     return Object.keys(memberObject)

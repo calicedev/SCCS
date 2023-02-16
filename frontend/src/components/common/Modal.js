@@ -20,12 +20,14 @@ export default function Modal({ close, content }) {
 
   return (
     <Container onClick={stopClose}>
-      <StyledDiv onClick={(e) => e.stopPropagation()}>
-        <ButtonWrapper>
-          <IconButton icon={<FaTimes />} onClick={stopClose} />
-        </ButtonWrapper>
-        {content}
-      </StyledDiv>
+      <Wrapper>
+        <StyledDiv onClick={(e) => e.stopPropagation()}>
+          <ButtonWrapper>
+            <IconButton icon={<FaTimes />} onClick={stopClose} />
+          </ButtonWrapper>
+          {content}
+        </StyledDiv>
+      </Wrapper>
     </Container>
   )
 }
@@ -57,16 +59,22 @@ const Container = styled.div`
   z-index: 10;
 `
 
-const StyledDiv = styled.div`
-  overflow: hidden;
+const Wrapper = styled.div`
   position: relative;
 
   max-width: 90vw;
   max-height: 90vh;
-  padding: 1rem 2rem 1.5rem;
+  padding: 2rem 2rem 1.5rem;
 
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.bgColor};
+`
+
+const StyledDiv = styled.div`
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-width: 80vw;
+  max-height: 80vh;
 `
 
 const ButtonWrapper = styled.div`
