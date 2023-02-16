@@ -55,14 +55,19 @@ export default function TestPage() {
   const [code, setCode] = useState(initialCode[languageId]) // langaugaeId 다음에 선언
   const [testResult, setTestResult] = useState(null)
 
-  const [finished, setFinished] = useState(room.finished)
+  const [finished, setFinished] = useState(
+    room.finished ? room.finished : false,
+  )
   const [finishedObject, setFinishedObject] = useState(
     room.finishedObject ? room.finishedObject : {},
   )
 
+  console.log('finishedObject', finishedObject)
   const finishedList = useMemo(() => {
     return Object.keys(finishedObject)
   }, [finishedObject])
+
+  console.log('finishedList', finishedList)
 
   // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -129,7 +134,7 @@ export default function TestPage() {
         if (content.status === 'study') {
           setFinishedObject((finishedObject) => {
             const newFinishedObject = { ...finishedObject }
-            newFinishedObject[content.nickame] = true
+            newFinishedObject[content.nickname] = true
             dispatch(setReduxFinishedObject(newFinishedObject))
             return newFinishedObject
           })

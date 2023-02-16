@@ -32,18 +32,13 @@ export default function Chat({
           value={message}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
-              sendChat(e)
+              sendChat()
             }
           }}
           onChange={onChangeMsg}
           placeholder="메시지를 입력하세요"
         />
-        <Button
-          type="primary"
-          size="small"
-          value="전송"
-          onClick={(e) => sendChat(e)}
-        />
+        <Button type="primary" size="small" value="전송" onClick={sendChat} />
       </StyledDiv>
     </Container>
   )

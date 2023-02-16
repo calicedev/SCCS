@@ -188,6 +188,7 @@ export default function StudyPage() {
 
   // 선택한 코드를 불러와서 myCode 업데이트
   const fetchMyData = async (e) => {
+    if (!codeProblems) return // useEffect에 내가 presenter가 아닐경우 아예 실행되지 않는 걸로 바꾸는 것 고려
     let idx = 0
     codeProblems[codeProblemIdx].codeList.forEach((code, index) => {
       if (code.memberNickname === user.nickname) {
