@@ -40,14 +40,14 @@ Modal.defaultProps = {
 }
 
 const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   width: 100vw;
   height: 100vh;
@@ -58,6 +58,7 @@ const Container = styled.div`
 `
 
 const StyledDiv = styled.div`
+  overflow: hidden;
   position: relative;
 
   max-width: 90vw;

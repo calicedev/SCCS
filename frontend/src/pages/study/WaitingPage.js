@@ -22,7 +22,6 @@ export default function WaitingPage() {
     chatList,
     sendChat,
     isVideos,
-    readyNicknameList,
     setReadyNicknameList,
   } = useOutletContext()
 
