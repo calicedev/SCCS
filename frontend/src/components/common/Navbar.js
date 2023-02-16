@@ -36,7 +36,9 @@ export default function Navbar() {
     const config = { url, method }
     axios(config)
       .then((res) => {})
-      .catch((err) => {})
+      .catch((err) => {
+        alert('로그아웃 실패')
+      })
   }
 
   return (

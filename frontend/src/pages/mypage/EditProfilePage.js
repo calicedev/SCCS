@@ -68,9 +68,7 @@ export default function ProfileEdit() {
     const config = { url, method, data }
     axios(config)
       .then((res) => {})
-      .catch((err) => {
-        alert('서버와의 통신이 원활하지 않습니다.')
-      })
+      .catch((err) => {})
   }
 
   return (
