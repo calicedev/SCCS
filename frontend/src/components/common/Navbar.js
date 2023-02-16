@@ -1,4 +1,4 @@
-import { React } from 'react'
+import { React, useEffect } from 'react'
 import styled from 'styled-components'
 import { setExpiration } from 'redux/expSlice'
 import { toggleTheme } from 'redux/themeSlice'
@@ -12,6 +12,7 @@ import checkLogin from 'libs/checkLogin'
 import getScoreIcon from 'libs/getScoreIcon'
 import Logo from 'components/common/Logo'
 import IconButton from 'components/common/IconButton'
+import getUserInfo from 'libs/getUserInfo'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -24,6 +25,11 @@ export default function Navbar() {
   const pathname = useLocation().pathname
 
   const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
+
+  useEffect(() => {
+    getUserInfo()
+  }, [])
+
   const user = useSelector((state) => state.user)
 
   const isLogin = checkLogin() // 로그인 여부 판단

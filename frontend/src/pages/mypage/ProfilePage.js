@@ -6,7 +6,6 @@ import getScoreIcon from 'libs/getScoreIcon'
 import Button from 'components/common/Button'
 import ProfileImg from 'components/common/ProfileImg'
 import ProfileInput from 'components/mypage/ProfileInput'
-
 import getUserInfo from 'libs/getUserInfo'
 
 export default function Profile() {
