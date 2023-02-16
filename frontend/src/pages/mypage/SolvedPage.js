@@ -42,7 +42,7 @@ export default function ProblemList() {
   // lastPage : 마지막 페이지의 인덱스 계산
   const lastPage = useMemo(() => {
     if (!problems) return
-    if (problems.length / PROBLEM_PER_PAGE) {
+    if (problems.length % PROBLEM_PER_PAGE) {
       return parseInt(problems.length / PROBLEM_PER_PAGE)
     }
     return parseInt(problems.length / PROBLEM_PER_PAGE) - 1

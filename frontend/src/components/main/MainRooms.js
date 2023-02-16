@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import axios from 'libs/axios'
 import checkLogin from 'libs/checkLogin'
 import api from 'constants/api'
-import { algorithmPk, languagePk } from 'constants/pk'
+import { algorithmPkNoRandom, languagePk } from 'constants/pk'
 import useInterval from 'hooks/useInterval'
 import Room from 'components/main/Room'
 import Modal from 'components/common/Modal'
@@ -21,6 +21,8 @@ const searchOptions = {
   id: '방 번호',
 }
 
+const ROOM_PER_PAGE = 12 // 페이지 당 방의 갯수
+
 export default function MainRooms() {
   const isLogin = checkLogin()
 
@@ -34,7 +36,6 @@ export default function MainRooms() {
   // 방 갯수에 따른 Pagination
   const [currentPage, setCurrentPage] = useState(0)
 
-  console.log('따끈 currentPage', currentPage)
   // 컴포넌트 생성 시 방 검색 api 요청
   useEffect(() => {
     const [url, method] = api('searchRoom')
@@ -53,24 +54,21 @@ export default function MainRooms() {
 
   // 방 갯수에 따른 Page 갯수 설정 함수
   const pages = useMemo(() => {
-    if (!rooms) return 0
-    if (rooms.length % 9 === 0) {
-      return parseInt(rooms.length / 9)
+    if (!rooms) return
+    if (rooms.length % ROOM_PER_PAGE) {
+      return parseInt(rooms.length / ROOM_PER_PAGE)
     } else {
-      return parseInt(rooms.length / 9) + 1
+      return parseInt(rooms.length / ROOM_PER_PAGE) - 1
     }
   }, [rooms])
 
   // 왼쪽, 오른쪽 버튼 클릭 시 방 Pagination 이동
   const previousPagination = () => {
-    console.log(currentPage, '왼쪽 위')
     if (currentPage === 0) return
-
     setCurrentPage(currentPage - 1)
   }
   const nextPagination = () => {
-    console.log(currentPage, '오른쪽 위')
-    if (currentPage >= pages - 1) return
+    if (currentPage >= pages) return
     setCurrentPage(currentPage + 1)
   }
 
@@ -160,7 +158,7 @@ export default function MainRooms() {
             />
             <CheckDropdown
               title="알고리즘 선택"
-              options={algorithmPk}
+              options={algorithmPkNoRandom}
               onChange={changeAlgoIds}
             />
             <InputBox>
@@ -186,7 +184,7 @@ export default function MainRooms() {
           ></Button>
         </FlexBox>
         {rooms ? (
-          <FlexBox>
+          <FlexBox2>
             <IconButton
               size="large"
               type="gray"
@@ -194,18 +192,23 @@ export default function MainRooms() {
               onClick={previousPagination}
             ></IconButton>
             <GridBox>
-              {rooms.slice(currentPage * 9, currentPage * 9 + 9).map((room) => (
-                <Room
-                  key={room.id}
-                  id={room.id}
-                  title={room.title}
-                  isSolving={room.isSolving}
-                  isPrivate={room.isPrivate}
-                  algoIds={room.algoIds}
-                  languageIds={room.languageIds}
-                  personnel={room.personnel}
-                />
-              ))}
+              {rooms
+                .slice(
+                  currentPage * ROOM_PER_PAGE,
+                  currentPage * ROOM_PER_PAGE + ROOM_PER_PAGE,
+                )
+                .map((room) => (
+                  <Room
+                    key={room.id}
+                    id={room.id}
+                    title={room.title}
+                    isSolving={room.isSolving}
+                    isPrivate={room.isPrivate}
+                    algoIds={room.algoIds}
+                    languageIds={room.languageIds}
+                    personnel={room.personnel}
+                  />
+                ))}
             </GridBox>
             <IconButton
               size="large"
@@ -213,7 +216,7 @@ export default function MainRooms() {
               icon={<FaAngleRight />}
               onClick={nextPagination}
             ></IconButton>
-          </FlexBox>
+          </FlexBox2>
         ) : (
           <Loading height="30rem" />
         )}
@@ -245,6 +248,15 @@ const FlexBox = styled.div`
     flex-direction: row;
   }
 `
+const FlexBox2 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+
+  margin: 2rem 0rem;
+`
 
 const SearchContainer = styled.div`
   display: flex;
@@ -273,18 +285,18 @@ const StyledInput = styled.input`
 `
 const GridBox = styled.div`
   display: grid;
-  gap: 1rem 3rem;
+  gap: 2rem 3rem;
+  grid-template-columns: repeat(2, 1fr);
   overflow-y: auto;
 
-  height: 32rem;
-
   margin: 2rem 0rem 0rem;
-  padding: 0.2rem 1rem 0rem;
 
-  grid-template-columns: repeat(2, 1fr);
-
+  padding: 1rem 1rem;
   @media screen and (min-width: 1024px) {
-    gap: 1rem 1rem;
+    gap: 1.5rem 1rem;
+  }
+  @media screen and (min-width: 1300px) {
+    gap: 1.5rem 1.5rem;
     grid-template-columns: repeat(3, 1fr);
   }
 `

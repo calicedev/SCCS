@@ -58,6 +58,10 @@ const LowerPane = styled.div`
 
   @media screen and (min-width: 1024px) {
     min-width: 1000px;
+    width: 85%;
+  }
+  @media screen and (min-width: 1400px) {
+    min-width: 1200px;
     width: 75%;
   }
 `
