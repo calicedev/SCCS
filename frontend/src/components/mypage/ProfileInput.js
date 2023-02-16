@@ -115,12 +115,12 @@ const Input = styled.input`
   width: 17rem;
 
   margin-bottom: 0.2rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.7rem;
 
-  border: 1px solid;
   border-radius: 5px;
 
   background-color: ${({ disabled }) => (disabled ? '#EEEEEE' : 'white')};
+  box-shadow: inset 2px 2px 4px 3px rgba(150, 150, 150, 0.3);
 
   color: #000000;
   font-size: 1.2rem;
@@ -128,6 +128,6 @@ const Input = styled.input`
 
 const Label = styled.label`
   display: block;
-  margin-top: 1rem;
+  margin: 1rem 0rem 0.5rem;
   font-size: 1.3rem;
 `

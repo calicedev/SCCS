@@ -88,14 +88,15 @@ export default function ProblemList() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: stretch;
 
   width: 80%;
 
-  padding: 2rem 0.5rem;
+  padding: 2rem 0.5rem 3rem;
 
   @media screen and (min-width: 1024px) {
-    padding: 2rem 3rem;
+    padding: 2rem 3rem 3rem;
   }
 `
 const ProblemsContainer = styled.div`

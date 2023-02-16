@@ -1,14 +1,20 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 import { Publisher } from 'openvidu-browser'
 
-export default function VideoItem({ streamManager }) {
+export default function VideoItem({ streamManager, readyList }) {
   // streamManager로부터 닉네임을 가져오는 함수
-  const getNicknameTag = JSON.parse(
-    streamManager.stream.connection.data,
-  ).clientData
+  const nickname = JSON.parse(streamManager.stream.connection.data).clientData
 
   const videoRef = useRef()
+
+  const isReady = useMemo(() => {
+    if (readyList.includes(nickname)) {
+      return true
+    }
+    return false
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [readyList])
 
   // componentDidUpdate
   useEffect(() => {
@@ -28,9 +34,9 @@ export default function VideoItem({ streamManager }) {
   return (
     <>
       {streamManager !== undefined ? (
-        <Container>
+        <Container isReady={isReady}>
           <Video autoPlay={true} ref={videoRef} />
-          <StyledP>{getNicknameTag}</StyledP>
+          <StyledP>{nickname}</StyledP>
           {streamManager instanceof Publisher && (
             <PublisherVideo
               id={'publisher-video'}
@@ -59,6 +65,8 @@ const Container = styled.div`
   height: 160px;
 
   border-radius: 0.5rem;
+  outline: solid ${({ theme }) => theme.deepPrimaryColor}
+    ${({ isReady }) => (isReady ? '4px' : '0px')};
 `
 const Video = styled.video`
   width: 100%;
