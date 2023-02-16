@@ -11,6 +11,7 @@ import { toggleTheme } from 'redux/themeSlice'
 import {
   setReduxRoomInfo,
   setReduxMainStreamManager,
+  setReduxMembers,
   deleteRoom,
 } from 'redux/roomSlice'
 import api from 'constants/api'
@@ -62,6 +63,7 @@ export default function StudyRoom() {
   const [isMicOn, setIsMicOn] = useState(true)
   const [isVideos, setIsVideos] = useState(true)
   const [isCameraOn, setIsCameraOn] = useState(true)
+  const [isScreenShare, setIsScreenShare] = useState(room.isScreenShare)
 
   const checkHostExit = useRef(null)
   const OV = useRef(null) // OV객체를 저장
@@ -86,7 +88,6 @@ export default function StudyRoom() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
 
   // mount시에 소켓통신과 webRTC 연결, unmount 시 소켓통신과 webRTC 연결 해제
   useEffect(() => {
@@ -211,12 +212,16 @@ export default function StudyRoom() {
             newRoomInfo.personnel = content.personnel
             return newRoomInfo
           })
+          if (!members) return
+          // 테스트가 시작되고 인원이 나갔을 때, members 업데이트
+          setMembers((members) => members.filter((id) => id !== content.id))
+          dispatch(setReduxMembers(content.memberIds))
           return
         }
         if (content.status === 'chat') {
-          const { nickname, profileImage, message } = content
+          const { nickname, score, profileImage, message } = content
           setChatList((chatList) => [
-            { nickname, profileImage, message },
+            { nickname, score, profileImage, message },
             ...chatList,
           ])
           return
@@ -273,6 +278,7 @@ export default function StudyRoom() {
         studyroomId: studyroomId,
         id: user.id,
         nickname: user.nickname,
+        score: user.score,
         profileImage: user.profileImage,
         message: message,
       }),
@@ -565,15 +571,19 @@ export default function StudyRoom() {
               subscribers,
               isVideos,
               setIsVideos,
+              isScreenShare,
+              setIsScreenShare,
               setIsMicOn,
               mainStreamManager,
               setMainStreamManager,
             }}
           />
 
-          {isVideos && location.pathname.slice(-4) !== 'test' && (
-            <VideoList publisher={publisher} subscribers={subscribers} />
-          )}
+          {isVideos &&
+            location.pathname.slice(-4) !== 'test' &&
+            !isScreenShare && (
+              <VideoList publisher={publisher} subscribers={subscribers} />
+            )}
         </>
       ) : (
         <Loading height="90vh" />

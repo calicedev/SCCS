@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import getScoreIcon from 'libs/getScoreIcon'
 import ProfileImg from 'components/common/ProfileImg'
 
 /*
@@ -10,17 +11,29 @@ import ProfileImg from 'components/common/ProfileImg'
 단, 부모 컴포넌트가 display: flex, flex-direction: column속성을 가져야한다.
 
 nickname: 채팅을 보낸 사람의 닉네임
+score: 채팅을 보낸 사람의 점수
 profileImg: 채팅을 보낸 사람의 프로필 이미지
 message: 채팅 메시지
 isMine: 내가 보낸 메시지인지 판별
 */
 
-export default function ChatItem({ nickname, profileImage, message, isMine }) {
+export default function ChatItem({
+  nickname,
+  score,
+  profileImage,
+  message,
+  isMine,
+}) {
+  const scoreIcon = getScoreIcon(score)[0]
+
   return (
     <Container isMine={isMine}>
       <ProfileImg src={profileImage} type="chat" />
       <FlexBox isMine={isMine}>
-        <p className="bold">{nickname}</p>
+        <p className="bold">
+          {nickname}
+          {scoreIcon}
+        </p>
         <StyledDiv isMine={isMine}>{message}</StyledDiv>
       </FlexBox>
     </Container>
@@ -29,7 +42,11 @@ export default function ChatItem({ nickname, profileImage, message, isMine }) {
 
 ChatItem.propTypes = {
   nickname: PropTypes.string.isRequired,
-  profileImage: PropTypes.oneOf(PropTypes.string, PropTypes.number).isRequired,
+  profileImage: PropTypes.oneOf(
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.func,
+  ).isRequired,
   message: PropTypes.string.isRequired,
   isMine: PropTypes.bool,
 }

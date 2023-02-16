@@ -17,6 +17,7 @@ prism.js 스타일이 적용된 코드 입력창 컴포넌트
 value: 코드 문자열
 setValue: 코드를 변화시키는 setState 함수
 languageId: 언어 pk
+minwidth: 컴포넌트의 최소 너비
 */
 
 const hightlightWithLineNumbers = (input, language) =>
@@ -25,9 +26,9 @@ const hightlightWithLineNumbers = (input, language) =>
     .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
     .join('\n')
 
-export default function Code({ value, setValue, languageId }) {
+export default function Code({ value, setValue, languageId, minWidth }) {
   return (
-    <Container>
+    <Container minWidth={minWidth}>
       <ButtonWrapper>
         <IconButton
           size="small"
@@ -60,11 +61,13 @@ Code.propTypes = {
   value: PropTypes.string,
   setValue: PropTypes.func,
   languageId: PropTypes.number.isRequired,
+  minWidth: PropTypes.string,
 }
 
 Code.defaultProps = {
   value: '',
   setValue: undefined,
+  minWidth: '1rem',
 }
 
 const Container = styled.div`
@@ -72,7 +75,7 @@ const Container = styled.div`
 
   position: relative;
 
-  min-width: 40rem;
+  min-width: ${({ minWidth }) => minWidth};
   width: 100%;
   height: 100%;
 

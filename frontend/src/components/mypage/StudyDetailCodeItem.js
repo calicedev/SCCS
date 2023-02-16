@@ -46,7 +46,13 @@ export default function StudyDetailCodeItem({
       {showModal ? (
         <Modal
           close={() => setShowModal(false)}
-          content={<Code value={codeString} languageId={languageId} />}
+          content={
+            <Code
+              value={codeString}
+              languageId={languageId}
+              minWidth={'40rem'}
+            />
+          }
         />
       ) : null}
       <FlexBox
@@ -64,8 +70,8 @@ export default function StudyDetailCodeItem({
         </FlexEle>
         <FlexEle flex={1}>{runtime}s</FlexEle>
         <FlexEle flex={1}>{memory}MB</FlexEle>
-        <FlexEle flex={1} className={result === '1' ? 'pass' : 'error'}>
-          {result==='1' ? 'success' : 'fail'}
+        <FlexEle flex={1} className={result ? 'pass' : 'error'}>
+          {result ? 'success' : 'fail'}
         </FlexEle>
       </FlexBox>
     </>
@@ -78,7 +84,7 @@ StudyDetailCodeItem.propTypes = {
   languageId: PropTypes.number.isRequired,
   memory: PropTypes.number.isRequired,
   runtime: PropTypes.number.isRequired,
-  result: PropTypes.string.isRequired,
+  result: PropTypes.number.isRequired,
 }
 
 const FlexBox = styled.div`

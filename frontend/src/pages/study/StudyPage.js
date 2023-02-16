@@ -40,6 +40,8 @@ export default function StudyPage() {
     subscribers,
     setIsVideos,
     isVideos,
+    isScreenShare,
+    setIsScreenShare,
     mainStreamManager,
     setMainStreamManager,
   } = useOutletContext()
@@ -56,7 +58,6 @@ export default function StudyPage() {
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
 
   const [presenter, setPresenter] = useState(room.presenter)
-  const [isScreenShare, setIsScreenShare] = useState(room.isScreenShare)
 
   const [showModal, setShowModal] = useState(false)
   const [codeNickname, setCodeNickname] = useState(null)
