@@ -153,7 +153,7 @@ export default function CreateRoomMdContent() {
           label="비밀방 설정"
         />
         <StyledInput
-          type="number"
+          type="password"
           disabled={!isPrivate}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
