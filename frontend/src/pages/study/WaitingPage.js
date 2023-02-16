@@ -37,9 +37,9 @@ export default function WaitingPage() {
   const [subscription, setSubscription] = useState(null)
 
   const readyList = useMemo(() => {
-    return readyObject.keys()
+    return Object.keys(readyObject)
   }, [readyObject])
-
+  console.log('readyList', readyList)
   // Ready Button을 토글하는 함수
   const toggleReady = () => {
     const newReady = !ready
