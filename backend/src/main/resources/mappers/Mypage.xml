@@ -91,7 +91,8 @@
     s.problem_id = problem_id) > 0 , sr.id = s.studyroom_id, sr.id=#{studyId}) and
     if((select count(member_id) as count from submission where studyroom_id = #{studyId} and
     s.problem_id = problem_id) > 0 , s.problem_id = p.id,p.id)
-    order by case when if((select count(member_id) as count from submission where studyroom_id =
+    order by problem_id,case when if((select count(member_id) as count from submission where
+    studyroom_id =
     #{studyId}
     and s.problem_id = problem_id) > 0, submission_submitDatetime,'') then submission_submitDatetime
     end desc
