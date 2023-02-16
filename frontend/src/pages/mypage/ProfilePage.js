@@ -10,7 +10,7 @@ import getUserInfo from 'libs/getUserInfo'
 
 export default function Profile() {
   useEffect(() => {
-    getUserInfo()
+    getUserInfo('refreshed')
   }, [])
 
   // 리덕스 -> 사용자 정보 읽어오기

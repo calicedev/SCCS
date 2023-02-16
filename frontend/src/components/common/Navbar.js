@@ -12,7 +12,7 @@ import checkLogin from 'libs/checkLogin'
 import getScoreIcon from 'libs/getScoreIcon'
 import Logo from 'components/common/Logo'
 import IconButton from 'components/common/IconButton'
-import getUserInfo from 'libs/getUserInfo'
+// import getUserInfo from 'libs/getUserInfo'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -26,9 +26,10 @@ export default function Navbar() {
 
   const theme = useSelector((state) => state.theme) // 리덕스 -> theme정보
 
-  useEffect(() => {
-    getUserInfo()
-  }, [])
+  // 로컬에서 구동 시, 중복 요청으로 undefined 자동 할당
+  // useEffect(() => {
+  //   getUserInfo()
+  // }, [])
 
   const user = useSelector((state) => state.user)
 
@@ -74,7 +75,7 @@ export default function Navbar() {
               }`}
             >
               <IconWrapper>{getScoreIcon(user.score)[0]}</IconWrapper>
-              {user.nickname}
+              {user.id}
             </NavStyle2>
             <StyledDiv onClick={logout}>Logout</StyledDiv>
           </>
