@@ -112,10 +112,10 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-                (HOUR * 9));
-        long exp = System.currentTimeMillis() + (HOUR * 9);
+                (MINUTE));
+        long exp = System.currentTimeMillis() + (MINUTE);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-                (HOUR * 10));
+                (MINUTE * 2));
 
         // 쿠키 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", accessToken);
@@ -363,9 +363,9 @@ public class MemberController {
       logger.debug("[refreshToken]토큰 인증 성공");
       if (id.equals(redisService.getRefreshTokenWithRedis(refreshToken))) {
         logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
-        String newAccessToken = jwtService.createToken(id, "accessToken", 9 * HOUR);
+        String newAccessToken = jwtService.createToken(id, "accessToken", MINUTE);
 
-        long exp = System.currentTimeMillis() + (HOUR * 9);
+        long exp = System.currentTimeMillis() + (MINUTE);
 
         // 토큰 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);
