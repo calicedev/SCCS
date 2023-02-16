@@ -80,6 +80,7 @@ export default function WaitingPage() {
         const content = JSON.parse(chatDto.body)
         if (content.status === 'ready') {
           // 준비 되었을 경우
+          console.log(content.status, content.ready, content.nickname)
           if (content.ready) {
             setReadyList((readyList) => [...readyList, content.id])
             if (roomInfo.hostId !== user.id) return

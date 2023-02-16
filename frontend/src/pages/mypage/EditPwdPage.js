@@ -63,7 +63,7 @@ export default function PasswordEdit() {
       </TapWrapper>
 
       <ProfileContainer>
-        <ProfileImg imgUrl={user.profileImage} />
+        <ProfileImg src={user.profileImage} />
         <p className="semi-bold">가입일: {user.joinDate}</p>
       </ProfileContainer>
 

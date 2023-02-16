@@ -49,8 +49,6 @@ apiRequest.interceptors.response.use(
           console.log('accessToken 재발급 요청 error', err)
           // accessToken 재발급 실패 시, 로그인 페이지로 사용자 이동
           alert('다시 로그인 해주세요')
-          window.location.href = 'https://sccs.kr/auth/login'
-          return
         })
     }
     if (response.status >= 500) {
