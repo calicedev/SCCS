@@ -43,6 +43,7 @@ apiRequest.interceptors.response.use(
         .then((res) => {
           console.log('accessToken 재발급 요청 response', res)
           // accessToken 재발급 성공 시, 새로운 accessToken으로 기존 요청 반복
+          window.location.href = 'https://sccs.kr/auth/login'
           return apiRequest(originalConfig)
         })
         .catch((err) => {
