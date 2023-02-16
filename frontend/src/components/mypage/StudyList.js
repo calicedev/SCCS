@@ -62,7 +62,6 @@ StudyList.defaultProps = {
 
 const Wrapper = styled.div`
   width: 100%;
-  font-family: 'NanumSquareB';
 `
 
 const Study = styled.div`
@@ -70,7 +69,8 @@ const Study = styled.div`
   cursor: pointer;
 
   & > p {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
   }
 `
 
@@ -79,7 +79,7 @@ const Option = styled.div`
   animation: 0.5s ease-in-out forwards dropdown;
 
   & > p {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
   }
 
   @keyframes dropdown {

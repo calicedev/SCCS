@@ -33,10 +33,7 @@ apiRequest.interceptors.response.use(
     const originalConfig = error.config // 기존 요청 정보 저장
     const response = error.response // 에러 정보 추출
     // accesstoken 재발급 로직
-    if (
-      response.status === 403 &&
-      response.data.errorMessage === 'accessToken expired'
-    ) {
+    if (response.status === 403 && response.data === 'accessToken expired') {
       console.log('accessToken 재발급 요청 보냄')
       // accessToken 재발급 요청
       const [url, method] = api('refreshToken')
@@ -52,7 +49,7 @@ apiRequest.interceptors.response.use(
           console.log('accessToken 재발급 요청 error', err)
           // accessToken 재발급 실패 시, 로그인 페이지로 사용자 이동
           alert('다시 로그인 해주세요')
-          return redirect('/auth/login')
+          window.location.href = 'https://sccs.kr/auth/login'
         })
     }
     if (response.status >= 500) {

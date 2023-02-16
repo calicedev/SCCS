@@ -40,6 +40,8 @@ export default function StudyPage() {
     subscribers,
     setIsVideos,
     isVideos,
+    isScreenShare,
+    setIsScreenShare,
     mainStreamManager,
     setMainStreamManager,
   } = useOutletContext()
@@ -56,7 +58,6 @@ export default function StudyPage() {
   const [codeProblemIdx, setCodeProblemIdx] = useState(0)
 
   const [presenter, setPresenter] = useState(room.presenter)
-  const [isScreenShare, setIsScreenShare] = useState(room.isScreenShare)
 
   const [showModal, setShowModal] = useState(false)
   const [codeNickname, setCodeNickname] = useState(null)
@@ -268,9 +269,9 @@ export default function StudyPage() {
       if (code.result === true) {
         tempObject[
           code.memberNickname
-        ] = `${code.memberNickname} : ${code.runtime}` // pass 시에는0 runtime을 띄움
+        ] = `${code.memberNickname} : ${code.runtime}s` // pass 시에는0 runtime을 띄움
       } else {
-        tempObject[code.memberNickname] = `${code.memberNickname} : fail` // fail 시에는 그냥 fail을 띄움
+        tempObject[code.memberNickname] = `${code.memberNickname} : FAIL` // fail 시에는 그냥 fail을 띄움
       }
     })
     return tempObject

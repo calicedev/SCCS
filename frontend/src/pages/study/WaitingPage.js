@@ -22,6 +22,7 @@ export default function WaitingPage() {
     chatList,
     sendChat,
     isVideos,
+    setReadyNicknameList,
   } = useOutletContext()
 
   // 리액트 훅 관련 함수 선언
@@ -81,16 +82,28 @@ export default function WaitingPage() {
           // 준비 되었을 경우
           if (content.ready) {
             setReadyList((readyList) => [...readyList, content.id])
+            if (roomInfo.hostId !== user.id) return
+            setReadyNicknameList((readyNicknameList) => [
+              ...readyNicknameList,
+              content.nickname,
+            ])
             return
           }
           // 준비되지 않았을 경우
           setReadyList((readyList) =>
-            readyList.filter((nickname) => nickname !== content.id),
+            readyList.filter((id) => id !== content.id),
+          )
+          if (roomInfo.hostId !== user.id) return
+          setReadyNicknameList((readyNicknameList) =>
+            readyNicknameList.filter(
+              (nickname) => nickname !== content.nickname,
+            ),
           )
           return
         }
         if (content.status === 'start') {
           setMembers(content.memberIds)
+          setReadyNicknameList([])
           dispatch(setReduxMembers(content.memberIds))
           navigate(`/room/${studyroomId}/test`)
         }

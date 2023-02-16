@@ -45,6 +45,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1 {
+    font-family: 'bigjohn',;
     font-size: 2.5rem;
     font-weight: 800;
     margin: 1rem 0rem;
@@ -127,7 +128,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 160%;
     font: inherit;
     vertical-align: baseline;
-    font-family: 'bigjohn','NanumSquareEB';
+    font-family: 'NanumSquareEB', 'bigjohn',;
     box-sizing: border-box;
     color: inherit;
     outline: 0;

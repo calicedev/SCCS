@@ -59,6 +59,8 @@ public class StudyroomServiceImpl implements StudyroomService {
     public int createStudyroom(StudyroomDto studyroomDto) {
         try {
 
+            ArrayList<Integer> numbers = new ArrayList<>();
+
             // 1. studyroom DB에 스터디 룸 생성
             studyroomMapper.createStudyroom(studyroomDto);
 
@@ -97,11 +99,11 @@ public class StudyroomServiceImpl implements StudyroomService {
                     int randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
                     String path = Integer.toString(randomAlgo) + "-" + Integer.toString(randomProblem);
                     int problemId = studyroomMapper.selectProblemId(path);
-                    StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
-                    studyroomProblemDto.setStudyroomId(id);
-                    studyroomProblemDto.setProblemId(problemId);
-                    studyroomMapper.insertProblemId(studyroomProblemDto);
-
+//                    StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
+//                    studyroomProblemDto.setStudyroomId(id);
+//                    studyroomProblemDto.setProblemId(problemId);
+//                    studyroomMapper.insertProblemId(studyroomProblemDto);
+                    numbers.add(problemId);
                 }
             } else if (algo_ids.size() == 1 && algo_ids.get(0)!=0) {
                 // 알고리즘 유형 1개 저장
@@ -119,13 +121,14 @@ public class StudyroomServiceImpl implements StudyroomService {
                     } while (checkout(n, randomProblem));
                     n[i] = randomProblem;
                 }
-                StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
-                studyroomProblemDto.setStudyroomId(id);
+//                StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
+//                studyroomProblemDto.setStudyroomId(id);
                 for (int i = 0; i < 2; i++) {
                     String path = Integer.toString(algo_ids.get(0)) + "-" + Integer.toString(n[i]);
                     int problemId = studyroomMapper.selectProblemId(path);
-                    studyroomProblemDto.setProblemId(problemId);
-                    studyroomMapper.insertProblemId(studyroomProblemDto);
+                    numbers.add(problemId);
+//                    studyroomProblemDto.setProblemId(problemId);
+//                    studyroomMapper.insertProblemId(studyroomProblemDto);
                 }
 
             } else if (algo_ids.size() == 2) {
@@ -138,15 +141,24 @@ public class StudyroomServiceImpl implements StudyroomService {
                     int min2 = 1;
                     int max2 = algoCount;
                     int randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
-                    StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
+//                    StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
                     String path = Integer.toString(algo_ids.get(i)) + "-" + Integer.toString(randomProblem);
                     int problemId = studyroomMapper.selectProblemId(path);
-                    studyroomProblemDto.setStudyroomId(id);
-                    studyroomProblemDto.setProblemId(problemId);
-                    studyroomMapper.insertProblemId(studyroomProblemDto);
+//                    studyroomProblemDto.setStudyroomId(id);
+//                    studyroomProblemDto.setProblemId(problemId);
+//                    studyroomMapper.insertProblemId(studyroomProblemDto);
+                    numbers.add(problemId);
                 }
             }
 
+
+            StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
+            studyroomProblemDto.setStudyroomId(id);
+            Collections.sort(numbers);
+            for (Integer number:numbers) {
+                studyroomProblemDto.setProblemId(number);
+                studyroomMapper.insertProblemId(studyroomProblemDto);
+            }
             // 방장을 알고리즘 스터디_멤버에 삽입
             StudyroomMemberDto studyroomMemberDto = new StudyroomMemberDto();
             studyroomMemberDto.setMemberId(studyroomDto.getHostId());

@@ -11,6 +11,7 @@ import { toggleTheme } from 'redux/themeSlice'
 import {
   setReduxRoomInfo,
   setReduxMainStreamManager,
+  setReduxMembers,
   deleteRoom,
 } from 'redux/roomSlice'
 import api from 'constants/api'
@@ -52,6 +53,9 @@ export default function StudyRoom() {
   const [message, setMessage] = useState('')
   const [chatList, setChatList] = useState([])
 
+  // 레디 상태를 비디오에 표시하기 위한 리스트
+  const [readyNicknameList, setReadyNicknameList] = useState([])
+
   // Opnvidu useState
   const [session, setSession] = useState(undefined)
   const [mainStreamManager, setMainStreamManager] = useState(undefined)
@@ -62,6 +66,7 @@ export default function StudyRoom() {
   const [isMicOn, setIsMicOn] = useState(true)
   const [isVideos, setIsVideos] = useState(true)
   const [isCameraOn, setIsCameraOn] = useState(true)
+  const [isScreenShare, setIsScreenShare] = useState(room.isScreenShare)
 
   const checkHostExit = useRef(null)
   const OV = useRef(null) // OV객체를 저장
@@ -80,13 +85,17 @@ export default function StudyRoom() {
           dispatch(setReduxRoomInfo(roomInfo))
         })
         .catch((err) => {
-          alert('방 정보를 불러올 수 없습니다.')
+          if (err.response.status === 400) {
+            alert(err.response.status.data.message) // 이미 문제를 풀고 있는 방입니다. 대기방이 꽉 찼습니다.
+          }
+          if (err.response.status === 404) {
+            alert('방 정보를 불러올 수 없습니다.')
+          }
           exit()
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
 
   // mount시에 소켓통신과 webRTC 연결, unmount 시 소켓통신과 webRTC 연결 해제
   useEffect(() => {
@@ -211,12 +220,16 @@ export default function StudyRoom() {
             newRoomInfo.personnel = content.personnel
             return newRoomInfo
           })
+          if (!members) return
+          // 테스트가 시작되고 인원이 나갔을 때, members 업데이트
+          setMembers((members) => members.filter((id) => id !== content.id))
+          dispatch(setReduxMembers(content.memberIds))
           return
         }
         if (content.status === 'chat') {
-          const { nickname, profileImage, message } = content
+          const { nickname, score, profileImage, message } = content
           setChatList((chatList) => [
-            { nickname, profileImage, message },
+            { nickname, score, profileImage, message },
             ...chatList,
           ])
           return
@@ -273,6 +286,7 @@ export default function StudyRoom() {
         studyroomId: studyroomId,
         id: user.id,
         nickname: user.nickname,
+        score: user.score,
         profileImage: user.profileImage,
         message: message,
       }),
@@ -565,15 +579,25 @@ export default function StudyRoom() {
               subscribers,
               isVideos,
               setIsVideos,
+              isScreenShare,
+              setIsScreenShare,
               setIsMicOn,
               mainStreamManager,
               setMainStreamManager,
+              readyNicknameList,
+              setReadyNicknameList,
             }}
           />
 
-          {isVideos && location.pathname.slice(-4) !== 'test' && (
-            <VideoList publisher={publisher} subscribers={subscribers} />
-          )}
+          {isVideos &&
+            location.pathname.slice(-4) !== 'test' &&
+            !isScreenShare && (
+              <VideoList
+                publisher={publisher}
+                subscribers={subscribers}
+                readyList={readyNicknameList}
+              />
+            )}
         </>
       ) : (
         <Loading height="90vh" />

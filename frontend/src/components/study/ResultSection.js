@@ -24,6 +24,7 @@ isFinished: 종료 여부를 나타내는 Bool. FInish 버튼의 텍스트를 �
 finish: 종료 버튼 클릭 시 동작하는 함수
 test: 테스트 버튼 클릭 시 동작하는 함수
 submit: 제출 버튼 클릭 시 동작하는 함수
+isSubmit: results가 테스트의 결과인지 submit의 결과인지 구분하는 Boolean
 */
 
 export default function ResultSection({
@@ -32,7 +33,7 @@ export default function ResultSection({
   finish,
   test,
   submit,
-  onButton,
+  isSubmit,
 }) {
   return (
     <Container>
@@ -40,7 +41,7 @@ export default function ResultSection({
         <H4>결과창</H4>
         {results && (
           <>
-            {onButton
+            {isSubmit
               ? null
               : results.resultList.slice(0, 3).map((problem, index) => (
                   <p
