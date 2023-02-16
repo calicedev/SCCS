@@ -55,7 +55,7 @@ export default function TestPage() {
   const [finishedObject, setFinishedObject] = useState({})
 
   const finishedList = useMemo(() => {
-    return finishedObject.keys()
+    return Object.keys(finishedObject)
   }, [finishedObject])
 
   // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)

@@ -8,7 +8,6 @@ import api from 'constants/api'
 */
 
 export default async function getUserInfo(id) {
-  console.log('id', id)
   // 서버에 사용자 정보 요청
   const [url, method] = api('getUserInfo')
   const config = { method }
@@ -21,7 +20,6 @@ export default async function getUserInfo(id) {
       return userInfo
     })
     .catch((err) => {
-      console.log(1)
       // 로컬 페이제 테스트를 위해 임시로 사용자 id와 nickname으로 저장
       const tempUserInfo = {
         id: id,
@@ -32,7 +30,6 @@ export default async function getUserInfo(id) {
         joinDate: '2023-01-01',
         profileImage: null,
       }
-      console.log('tempUser', tempUserInfo)
       store.dispatch(setUserInfo(tempUserInfo))
       return tempUserInfo
     })

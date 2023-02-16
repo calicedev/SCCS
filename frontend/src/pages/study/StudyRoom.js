@@ -57,8 +57,9 @@ export default function StudyRoom() {
   const [readyNicknameObject, setReadyNicknameObject] = useState({})
 
   const readyNicknameList = useMemo(() => {
-    return readyNicknameObject.keys()
+    return Object.keys(readyNicknameObject)
   }, [readyNicknameObject])
+  console.log('readyNicknameList', readyNicknameList)
 
   // Opnvidu useState
   const [session, setSession] = useState(undefined)
