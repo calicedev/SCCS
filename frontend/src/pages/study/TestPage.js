@@ -55,7 +55,7 @@ export default function TestPage() {
   const [finishedList, setFinishedList] = useState([])
 
   // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)
-  const [onButton, setOnButton] = useState(false)
+  const [isSubmit, setIsSubmit] = useState(false)
 
   // 코딩테스트 페이지 입장 시 마이크 뮤트
   useEffect(() => {
@@ -128,11 +128,13 @@ export default function TestPage() {
 
   // 코드 제출 함수. type = 'test' or 'submit'
   const submitCode = (type) => {
-    const apiKey = type === 'submit' ? 'submitCode' : 'testCode'
+    let apiKey = ''
     if (type === 'submit') {
-      setOnButton(true)
+      apiKey = 'submitCode'
+      setIsSubmit(true)
     } else {
-      setOnButton(false)
+      apiKey = 'testCode'
+      setIsSubmit(false)
     }
     const codeString = code
     const formData = new FormData()
@@ -206,7 +208,7 @@ export default function TestPage() {
             submit={() => {
               submitCode('submit')
             }}
-            onButton={onButton}
+            isSubmit={isSubmit}
           />
         </Layout>
       ) : (

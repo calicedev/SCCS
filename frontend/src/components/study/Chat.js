@@ -21,6 +21,7 @@ export default function Chat({
             nickname={chatItem.nickname}
             profileImage={chatItem.profileImage}
             message={chatItem.message}
+            score={chatItem.score}
             isMine={chatItem.nickname === nickname ? true : false}
           />
         ))}

@@ -15,18 +15,19 @@ import ButtonDropdown from 'components/common/ButtonDropdown'
 
 export default function SolvePage() {
   const navigate = useNavigate()
+  const windowHeight = useWindowHeight() // window의 innerHeight를 반환하는 커스텀 훅
 
   const memberId = useSelector((state) => state.user.id)
   const { problemId } = useParams()
-
-  // window의 innerHeight를 반환하는 커스텀 훅
-  const windowHeight = useWindowHeight()
 
   const [problemImageUrl, setProblemImageUrl] = useState(null)
   const [submissionList, setSubmissionList] = useState([])
   const [code, setCode] = useState('')
   const [languageId, setLanguageId] = useState(1)
   const [testResult, setTestResult] = useState(null)
+
+  // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)
+  const [isSubmit, setIsSubmit] = useState(false)
 
   // 문제 번호 클릭 시, 제출내역 저장
   useEffect(() => {
@@ -46,7 +47,14 @@ export default function SolvePage() {
 
   // 코드 제출
   const submitCode = (type) => {
-    const apiKey = type === 'submit' ? 'submitCode' : 'testCode'
+    let apiKey = ''
+    if (type === 'submit') {
+      apiKey = 'submitCode'
+      setIsSubmit(true)
+    } else {
+      apiKey = 'testCode'
+      setIsSubmit(false)
+    }
     const codeString = code
     const formData = new FormData()
     formData.append('formFile', new Blob([codeString], { type: 'text/plain' }))
@@ -155,6 +163,7 @@ export default function SolvePage() {
                   submit={() => {
                     submitCode('submit')
                   }}
+                  isSubmit={isSubmit}
                 />
               </Resizable>
             </FlexColumn>

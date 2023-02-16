@@ -1,4 +1,4 @@
-import { React, useMemo } from 'react'
+import { React } from 'react'
 import styled from 'styled-components'
 import { setExpiration } from 'redux/expSlice'
 import { toggleTheme } from 'redux/themeSlice'
@@ -9,16 +9,9 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import api from 'constants/api'
 import axios from 'libs/axios'
 import checkLogin from 'libs/checkLogin'
+import getScoreIcon from 'libs/getScoreIcon'
 import Logo from 'components/common/Logo'
 import IconButton from 'components/common/IconButton'
-
-import {
-  FaChessQueen,
-  FaChessRook,
-  FaChessKnight,
-  FaChessBishop,
-  FaChessPawn,
-} from 'react-icons/fa'
 
 /*
 상단 네비게이션바 컴포넌트
@@ -34,24 +27,6 @@ export default function Navbar() {
   const user = useSelector((state) => state.user)
 
   const isLogin = checkLogin() // 로그인 여부 판단
-
-  const gradeIcons = [
-    <FaChessQueen />,
-    <FaChessRook />,
-    <FaChessKnight />,
-    <FaChessBishop />,
-    <FaChessPawn />,
-  ]
-
-  const index = useMemo(() => {
-    if (user === null) return 4
-    else {
-      if (user.score >= 1000000) return 0
-      if (user.score >= 30000) return 1
-      if (user.score >= 3000) return 2
-      return 3
-    }
-  }, [user])
 
   const logout = () => {
     navigate('/')
@@ -88,16 +63,9 @@ export default function Navbar() {
                 pathname.substring(0, 7) === '/mypage' ? 'active' : null
               }`}
             >
-              <IconWrapper>{gradeIcons[index]}</IconWrapper>
-            </NavStyle2>
-            <NavStyle
-              to="/mypage/study"
-              className={`${
-                pathname.substring(0, 7) === '/mypage' ? 'active' : null
-              }`}
-            >
+              <IconWrapper>{getScoreIcon(user.score)[0]}</IconWrapper>
               {user.nickname}
-            </NavStyle>
+            </NavStyle2>
             <StyledDiv onClick={logout}>Logout</StyledDiv>
           </>
         ) : (
@@ -155,7 +123,10 @@ const NavStyle = styled(NavLink)`
   }
 `
 const NavStyle2 = styled(NavLink)`
-  margin: 1rem 0rem;
+  display: flex;
+  align-items: center;
+
+  margin: 1rem 1.5rem 1rem 0rem;
   padding: 0rem 0.5rem 0rem 0rem;
 
   font-size: 1.7rem;
