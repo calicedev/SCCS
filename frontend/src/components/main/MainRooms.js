@@ -70,7 +70,7 @@ export default function MainRooms() {
     setCurrentPage(currentPage - 1)
   }
   const nextPagination = () => {
-    if (currentPage === pages - 1) return
+    if (currentPage >= pages - 1) return
     setCurrentPage(currentPage + 1)
   }
 
