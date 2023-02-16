@@ -74,7 +74,7 @@ export default function MainRooms() {
     setCurrentPage(currentPage + 1)
   }
 
-  // 언어 선택에 따른 languageIds 배열 변환 함수
+  // 언어 선택에 따른 languageIds 배열 변환 함수 2
   const changeLanguageIds = (e) => {
     const languageId = parseInt(e.target.id.split('-')[0])
     if (e.target.checked) {
