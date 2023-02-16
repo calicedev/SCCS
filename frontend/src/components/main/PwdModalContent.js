@@ -58,7 +58,7 @@ export default function PwdModalContent({ id }) {
     <Container>
       <h3 className="bold">비밀번호</h3>
       <StyledInput
-        type="number"
+        type="password"
         value={password}
         onKeyUp={(e) => {
           if (e.key === 'Enter') {
@@ -70,7 +70,7 @@ export default function PwdModalContent({ id }) {
       <p className={`c ${message.isValid ? 'pass' : 'error'}`}>
         {message.text}
       </p>
-      <Button type="secondary" value="제출" onClick={submitPassword}></Button>
+      <Button type="secondary" value="입장" onClick={submitPassword}></Button>
     </Container>
   )
 }
