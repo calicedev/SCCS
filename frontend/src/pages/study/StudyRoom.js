@@ -53,6 +53,9 @@ export default function StudyRoom() {
   const [message, setMessage] = useState('')
   const [chatList, setChatList] = useState([])
 
+  // 레디 상태를 비디오에 표시하기 위한 리스트
+  const [readyNicknameList, setReadyNicknameList] = useState([])
+
   // Opnvidu useState
   const [session, setSession] = useState(undefined)
   const [mainStreamManager, setMainStreamManager] = useState(undefined)
@@ -581,13 +584,19 @@ export default function StudyRoom() {
               setIsMicOn,
               mainStreamManager,
               setMainStreamManager,
+              readyNicknameList,
+              setReadyNicknameList,
             }}
           />
 
           {isVideos &&
             location.pathname.slice(-4) !== 'test' &&
             !isScreenShare && (
-              <VideoList publisher={publisher} subscribers={subscribers} />
+              <VideoList
+                publisher={publisher}
+                subscribers={subscribers}
+                readyList={readyNicknameList}
+              />
             )}
         </>
       ) : (

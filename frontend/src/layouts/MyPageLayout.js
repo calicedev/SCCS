@@ -63,9 +63,9 @@ const RightPane = styled.div`
   display: flex;
   justify-content: center;
 
-  height: 90%;
+  min-height: 80vh;
 
-  margin: 0rem 3rem;
+  margin: 0rem 3rem 3rem 3rem;
 
   border-radius: 1rem;
   box-shadow: 5px 5px 10px #00000050;
