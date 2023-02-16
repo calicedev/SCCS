@@ -13,15 +13,12 @@ import {
 /*
 페이지네이션 기능의 컴포넌트
 
-currentPage: 지금 선택된 페이지의 인덱스 -> 색깔을 다르게 표시
-lastPage: 가장 마지막 페이지의 인덱스
-startPagination: 페이지네이션에 현재 표시되는 시작 페이지의 인덱스
-numBtms: 페이지네이션에 표시할 버튼 갯수
-onClick: 페이지 버튼 클릭시 동작할 함수
-onClickLeft: 왼쪽 버튼 클릭시 동작할 함수
-onClickRight: 오른쪽 버튼 클릭시 동작할 함수
-onClickDoubleLeft: 왼쪽 더블버튼 클릭시 동작할 함수
-onClickDoubleRight: 오른쪽 더블버튼 클릭시 동작할 함수
+  numBtns,
+  currentPage,
+  setCurrentPage,
+  lastPage,
+  startPagination,
+  setStartPagination,
 */
 
 export default function Pagination({
