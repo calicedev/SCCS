@@ -13,6 +13,9 @@ import CheckDropdown from 'components/common/CheckDropdown'
 import RadioDropdown from 'components/common/RadioDropdown'
 import CreateRoomMdContent from 'components/main/CreateRoomMdContent'
 
+import IconButton from 'components/common/IconButton'
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
+
 const searchOptions = {
   title: '방 이름',
   id: '방 번호',
@@ -28,6 +31,10 @@ export default function MainRooms() {
   const [query, setQuery] = useState('')
   const [showModal, setShowModal] = useState(false)
 
+  // 방 갯수에 따른 Pagination
+  const [pages, setPages] = useState(null)
+  const [currentPage, setCurrentPage] = useState(0)
+
   // 컴포넌트 생성 시 방 검색 api 요청
   useEffect(() => {
     const [url, method] = api('searchRoom')
@@ -36,6 +43,10 @@ export default function MainRooms() {
       .then((res) => {
         setRooms(res.data)
       })
+      .then((res) => {
+        pageCount()
+      })
+      .then((res) => {})
       .catch((err) => {
         if (err.response.status === 400) {
           alert(err.response.data.message)
@@ -43,6 +54,25 @@ export default function MainRooms() {
         setRooms([])
       })
   }, [])
+
+  // 방 갯수에 따른 Page 갯수 설정 함수
+  const pageCount = () => {
+    if (rooms.length % 9 === 0) {
+      setPages(parseInt(rooms.length / 9))
+    } else {
+      setPages(parseInt(rooms.length / 9) + 1)
+    }
+  }
+
+  // 왼쪽, 오른쪽 버튼 클릭 시 방 Pagination 이동
+  const previousPagination = () => {
+    if (currentPage === 0) return
+    setCurrentPage(currentPage - 1)
+  }
+  const nextPagination = () => {
+    if (currentPage === pages - 1) return
+    setCurrentPage(currentPage + 1)
+  }
 
   // 언어 선택에 따른 languageIds 배열 변환 함수
   const changeLanguageIds = (e) => {
@@ -156,20 +186,34 @@ export default function MainRooms() {
           ></Button>
         </FlexBox>
         {rooms ? (
-          <GridBox>
-            {rooms.map((room) => (
-              <Room
-                key={room.id}
-                id={room.id}
-                title={room.title}
-                isSolving={room.isSolving}
-                isPrivate={room.isPrivate}
-                algoIds={room.algoIds}
-                languageIds={room.languageIds}
-                personnel={room.personnel}
-              />
-            ))}
-          </GridBox>
+          <FlexBox>
+            <IconButton
+              size="large"
+              type="gray"
+              icon={<FaAngleLeft />}
+              onClick={previousPagination}
+            ></IconButton>
+            <GridBox>
+              {rooms.slice(currentPage * 9, currentPage * 9 + 9).map((room) => (
+                <Room
+                  key={room.id}
+                  id={room.id}
+                  title={room.title}
+                  isSolving={room.isSolving}
+                  isPrivate={room.isPrivate}
+                  algoIds={room.algoIds}
+                  languageIds={room.languageIds}
+                  personnel={room.personnel}
+                />
+              ))}
+            </GridBox>
+            <IconButton
+              size="large"
+              type="gray"
+              icon={<FaAngleRight />}
+              onClick={nextPagination}
+            ></IconButton>
+          </FlexBox>
         ) : (
           <Loading height="30rem" />
         )}
