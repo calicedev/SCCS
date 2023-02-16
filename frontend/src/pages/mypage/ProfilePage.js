@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -7,7 +7,13 @@ import Button from 'components/common/Button'
 import ProfileImg from 'components/common/ProfileImg'
 import ProfileInput from 'components/mypage/ProfileInput'
 
+import getUserInfo from 'libs/getUserInfo'
+
 export default function Profile() {
+  useEffect(() => {
+    getUserInfo()
+  }, [])
+
   // 리덕스 -> 사용자 정보 읽어오기
   const user = useSelector((state) => state.user)
 
