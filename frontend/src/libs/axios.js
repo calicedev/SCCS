@@ -33,7 +33,10 @@ apiRequest.interceptors.response.use(
     const originalConfig = error.config // 기존 요청 정보 저장
     const response = error.response // 에러 정보 추출
     // accesstoken 재발급 로직
-    if (response.status === 403 && response.data === 'accessToken expired') {
+    if (
+      response.status === 403 &&
+      response.data.message === 'accessToken expired'
+    ) {
       console.log('accessToken 재발급 요청 보냄')
       // accessToken 재발급 요청
       const [url, method] = api('refreshToken')

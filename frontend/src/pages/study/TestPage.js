@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { useOutletContext, useNavigate } from 'react-router-dom'
@@ -52,7 +52,11 @@ export default function TestPage() {
   const [testResult, setTestResult] = useState(null)
 
   const [finished, setFinished] = useState(false)
-  const [finishedList, setFinishedList] = useState([])
+  const [finishedObject, setFinishedObject] = useState({})
+
+  const finishedList = useMemo(() => {
+    return finishedObject.keys()
+  }, [finishedObject])
 
   // 테스트, 제출 버튼 클릭 관련 state (true는 submit / false는 test)
   const [isSubmit, setIsSubmit] = useState(false)
@@ -116,7 +120,11 @@ export default function TestPage() {
       stomp.subscribe('/sub/studyroom/' + studyroomId, (chatDto) => {
         const content = JSON.parse(chatDto.body)
         if (content.status === 'study') {
-          setFinishedList((finishedList) => [...finishedList, chatDto.nickname])
+          setFinishedObject((finishedObject) => {
+            const newFinishedObject = { ...finishedObject }
+            newFinishedObject[content.nickame] = true
+            return newFinishedObject
+          })
         }
       }),
     )

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom'
 import stompjs from 'stompjs'
@@ -54,7 +54,11 @@ export default function StudyRoom() {
   const [chatList, setChatList] = useState([])
 
   // 레디 상태를 비디오에 표시하기 위한 리스트
-  const [readyNicknameList, setReadyNicknameList] = useState([])
+  const [readyNicknameObject, setReadyNicknameObject] = useState({})
+
+  const readyNicknameList = useMemo(() => {
+    return readyNicknameObject.keys()
+  }, [readyNicknameObject])
 
   // Opnvidu useState
   const [session, setSession] = useState(undefined)
@@ -584,8 +588,8 @@ export default function StudyRoom() {
               setIsMicOn,
               mainStreamManager,
               setMainStreamManager,
-              readyNicknameList,
-              setReadyNicknameList,
+              readyNicknameObject,
+              setReadyNicknameObject,
             }}
           />
 
