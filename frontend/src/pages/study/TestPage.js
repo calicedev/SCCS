@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import { setReduxProblems } from 'redux/roomSlice'
+import { setReduxFinished, setReduxFinishedObject } from 'redux/roomSlice'
 import api from 'constants/api'
 import axios from 'libs/axios'
 import Layout from 'layouts/TestPageLayout'
@@ -32,11 +33,14 @@ export default function TestPage() {
     studyroomId,
     roomInfo,
     stomp,
-    members,
+    memberList,
     problems,
     setProblems,
     setIsMicOn,
   } = useOutletContext()
+
+  // 리덕스 -> 기존 방 정보 읽어오기
+  const room = useSelector((state) => state.room)
 
   // 리액트 훅 관련 함수 선언
   const navigate = useNavigate()
@@ -51,8 +55,10 @@ export default function TestPage() {
   const [code, setCode] = useState(initialCode[languageId]) // langaugaeId 다음에 선언
   const [testResult, setTestResult] = useState(null)
 
-  const [finished, setFinished] = useState(false)
-  const [finishedObject, setFinishedObject] = useState({})
+  const [finished, setFinished] = useState(room.finished)
+  const [finishedObject, setFinishedObject] = useState(
+    room.finishedObject ? room.finishedObject : {},
+  )
 
   const finishedList = useMemo(() => {
     return Object.keys(finishedObject)
@@ -72,7 +78,7 @@ export default function TestPage() {
     const data = {
       id: studyroomId,
       memberId: user.id,
-      memberIds: members,
+      memberIds: memberList,
     }
     const [url, method] = api('codingTest')
     const config = { url, method, data }
@@ -93,7 +99,7 @@ export default function TestPage() {
 
   // 모두 시험을 종료하면 테스트 페이지로 이동
   useEffect(() => {
-    if (finishedList.length === members.length) {
+    if (finishedList.length === memberList.length) {
       navigate(`/room/${studyroomId}/study`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,6 +118,7 @@ export default function TestPage() {
       }),
     )
     setFinished(true)
+    dispatch(setReduxFinished(true))
   }
 
   // 웹 소켓 subscribe
@@ -123,6 +130,7 @@ export default function TestPage() {
           setFinishedObject((finishedObject) => {
             const newFinishedObject = { ...finishedObject }
             newFinishedObject[content.nickame] = true
+            dispatch(setReduxFinishedObject(newFinishedObject))
             return newFinishedObject
           })
         }

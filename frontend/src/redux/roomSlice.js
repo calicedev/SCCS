@@ -23,6 +23,12 @@ const roomSlice = createSlice({
     setReduxMainStreamManager: (state, action) => {
       state.mainStreamManager = action.payload
     },
+    setReduxFinished: (state, action) => {
+      state.finished = action.payload
+    },
+    setReduxFinishedObject: (state, action) => {
+      state.finishedObject = action.payload
+    },
     deleteRoom: (state, action) => {
       return {}
     },
@@ -39,4 +45,6 @@ export const {
   setReduxIsScreenShare,
   setReduxMainStreamManager,
   deleteRoom,
+  setReduxFinished,
+  setReduxFinishedObject,
 } = roomSlice.actions
