@@ -1,0 +1,11 @@
+- JVM
+    - 채점 서버 : Java 1.8.0_202
+    - 메인 서버 : Java 1.8.0_202
+- 웹서버
+    - nginx version : nginx/1.22.1
+- WAS
+    - 채점 서버 : Spring Boot 2.7.7, Port : 8201
+    - 메인 서버 : Spring Boot 2.7.7, Port : 8200
+- IDE 버전
+    - IntelliJ IDEA 2022.3.1 (Ultimate Edition)
+      Build #IU-223.8214.52, built on December 20, 2022
