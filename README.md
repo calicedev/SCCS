@@ -153,9 +153,10 @@
 ┣ 📜index.js<br>
 
 ## 주요 기술  
-- #### OpenVidu를 사용한 화상 기능
+- #### OpenVidu를 활용한 비디오 스터디 기능
   - 코딩 테스트가 끝난 직후, 참가자들과 얼굴을 보며 스터디를 진행할 수 있습니다.
-  - 발표자는 그림판 기능을 공유하고, 참가자들은 공유된 화면을 실시간으로 확인할 수 있습니다.   
+  - 스터디 진행 시, 버튼을 눌러 다른 사람이 제출한 코드를 실시간으로 확인할 수 있습니다.
+  - 발표자는 그림판 기능을 활용하여 코드 위에 글씨를 쓸 수 있고, 참가자들은 공유된 화면을 실시간으로 확인할 수 있습니다.   
 
 - #### WebSocket을 사용한 채팅 기능
   - 코딩 테스트 대기방 및 스터디 페이지에서 참가자들과 실시간으로 채팅을 주고 받을 수 있습니다.  
@@ -164,6 +165,7 @@
   - Java, Python 두가지 언어를 지원합니다.
   - 제출한 소스코드를 실행시켜 컴파일 에러, 런타임 에러, 메모리 초과, 시간 초과, 정답 여부 확인이 가능합니다.
   - Java processBuilder를 사용하여 외부 파일을 쉘 스크립트 파일로 실행합니다.  
+  
 - ### 로그인 및 회원가입
   - JWT를 사용한 stateless 기반 인증/인가를 적용하였습니다.
   - refreshToken을 redis에 저장하여 잦은 요청에 대한 성능을 고려하였습니다.
@@ -330,7 +332,7 @@
     <tr>
         <td height="140px" align="center"> <a href="https://github.com/Cr-Mo-Marco-3000">
             <img src="https://user-images.githubusercontent.com/59447235/218920837-d1e890a4-52dc-43d4-b0e7-fb0cc9374f02.png" width="140px" /> <br><br> 😶 박균탁 <br>(Front-End) </a> <br></td>
-        <td height="140px" align="center"> <a href="https://github.com/깃허브 링크">
+        <td height="140px" align="center"> <a href="https://github.com/blosson">
             <img src="https://user-images.githubusercontent.com/59447235/218920837-d1e890a4-52dc-43d4-b0e7-fb0cc9374f02.png" width="140px" /> <br><br> 🙂 손민혁 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/깃허브 링크">
             <img src="https://user-images.githubusercontent.com/59447235/218905766-f2d55a86-fbc8-4518-b82f-de23a7b6ec6a.png" width="140px" /> <br><br> 😆 이병호 <br>(Front-End) </a> <br></td>
