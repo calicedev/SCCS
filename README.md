@@ -153,7 +153,10 @@
 ┣ 📜index.js<br>  
 
 ## ERD  
-![SCCS_ERD](https://user-images.githubusercontent.com/59447235/219526877-c4365b40-b4d5-459d-bf94-4d2a9f0da251.png)
+![SCCS_ERD](https://user-images.githubusercontent.com/59447235/219526877-c4365b40-b4d5-459d-bf94-4d2a9f0da251.png)  
+
+## 와이어프레임  
+![image](https://user-images.githubusercontent.com/59447235/219537787-66eb5a7d-9c7b-4564-b615-89a7f4a8a0af.png)
 
 ## 주요 기술  
 - #### OpenVidu를 활용한 비디오 스터디 기능
