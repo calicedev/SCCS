@@ -150,7 +150,10 @@
 ┣ 📜App.css<br>
 ┣ 📜App.js<br>
 ┣ 📜index.css<br>
-┣ 📜index.js<br>
+┣ 📜index.js<br>  
+
+## ERD  
+![SCCS_ERD](https://user-images.githubusercontent.com/59447235/219526877-c4365b40-b4d5-459d-bf94-4d2a9f0da251.png)
 
 ## 주요 기술  
 - #### OpenVidu를 활용한 비디오 스터디 기능
@@ -216,19 +219,6 @@
 </tr>
 </table>
 
-
-|                           스터디 방 관련 페이지                      |
-| :--------------------------------------------------------------------: |
-<table>
-<tr>
-        <td align="center">
-              ![main](https://user-images.githubusercontent.com/53232881/219308427-465ecc8e-507f-473b-9a49-78bc4b78c166.gif)
-        </td>
-        <td align="center">  <br> <br>???<br><br> ???<br/><br/></td>
-</tr>
-</table>
-
-
 |                           About 사이트 소개 페이지                            |
 | :--------------------------------------------------------------------: |
 <table>
@@ -237,6 +227,52 @@
               ![about](https://user-images.githubusercontent.com/53232881/219398101-7b6b711d-0f9b-49ea-9806-3a0bfafa1775.gif)
         </td>
         <td align="center">  <br> <br>About 페이지<br><br> 사이트 소개 페이지 열람<br/><br/></td>
+</tr>
+</table>
+
+|                           방생성 페이지                            |
+| :--------------------------------------------------------------------: |
+<table>
+<tr>
+        <td align="center">
+              ![방생성](https://user-images.githubusercontent.com/59447235/219528851-c7ad27a9-63e2-416d-996e-b77c32f464f5.gif)
+        </td>
+        <td align="center">  <br> <br>원하는 조건으로 방 생성<br><br/></td>
+</tr>
+</table>
+
+
+
+|                           대기 페이지                      |
+| :--------------------------------------------------------------------: |
+<table>
+<tr>
+        <td align="center">
+              ![방생성222-min](https://user-images.githubusercontent.com/59447235/219528503-5c972fab-a846-4558-ae3b-bda521abd0bf.gif)
+        </td>
+        <td align="center">  <br> <br>실시간 소켓통신을 통한 채팅 기능<br><br> 실전같은 코테 안내문 열람<br/><br/></td>
+</tr>
+</table>
+
+|                           테스트 페이지                      |
+| :--------------------------------------------------------------------: |
+<table>
+<tr>
+        <td align="center">
+              ![테스트화면(리얼)](https://user-images.githubusercontent.com/59447235/219529036-3a1cd5de-3960-4e88-b388-a6a34b5e6337.gif)
+        </td>
+        <td align="center">  <br> <br>2가지 언어로 문제 풀이 가능<br><br> 테스트케이스 채점 기능<br/><br/></td>
+</tr>
+</table>
+
+|                           스터디 페이지                      |
+| :--------------------------------------------------------------------: |
+<table>
+<tr>
+        <td align="center">
+              ![스터디페이지2222-min](https://user-images.githubusercontent.com/59447235/219530060-a44c5c8d-0be8-481b-bf30-850682a5a7de.gif)
+        </td>
+        <td align="center">  <br> <br>그림판 공유 기능<br><br> 다른 사람이 제출한 코드 열람<br/><br/></td>
 </tr>
 </table>
 
@@ -294,9 +330,9 @@
         </td>
     </tr>
     <tr>
-        <td align="center">상세 설명 상세설명 상세 설명 상세<br/>상세설명 2<br/></td>
-        <td align="center">상세 설명 상세설명 상세 설명 상세<br/>상세설명 2<br/></td>
-        <td align="center">상세 설명 상세설명 상세 설명 상세<br/>상세설명 2<br/></td>
+        <td align="center"><br/></td>
+        <td align="center">1주 단위 스프린트 설정<br/>[FE],[BE],[CO] 형식으로 지라 이슈명 작성<br/></td>
+        <td align="center">우하향 그래프<br/></td>
     </tr>
 </table>
 
@@ -317,9 +353,9 @@
         </td>
     </tr>
     <tr>
-        <td align="center">상세 설명 상세설명 상세 설명 상세<br/>상세설명 2<br/></td>
-        <td align="center">상세 설명 상세설명 상세 설명 상세<br/>상세설명 2<br/></td>
-        <td align="center">상세 설명 상세설명 상세 설명 상세<br/>상세설명 2<br/></td>
+        <td align="center">카테고리별 정리<br/>프로젝트에 필요한 모든 자료 공유</td>
+        <td align="center">매일 아침 9시, 구성원 모두 일어서서 데일리 스크럼 진행 (진행시간: 최대 10분) <br/>어제 한 일, 오늘 할 일, 느낀점 작성<br/></td>
+        <td align="center">팀원들과 공통의 약속 설정<br/></td>
     </tr>
 </table>
 
@@ -331,24 +367,24 @@
 <table>
     <tr>
         <td height="140px" align="center"> <a href="https://github.com/Cr-Mo-Marco-3000">
-            <img src="https://user-images.githubusercontent.com/59447235/218920837-d1e890a4-52dc-43d4-b0e7-fb0cc9374f02.png" width="140px" /> <br><br> 😶 박균탁 <br>(Front-End) </a> <br></td>
+            <img src="https://user-images.githubusercontent.com/59447235/219530658-ad38ce28-0fd3-406c-b2e9-2d63ebc40d58.jpg" width="140px" /> <br><br> 😶 박균탁 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/blosson">
-            <img src="https://user-images.githubusercontent.com/59447235/218920837-d1e890a4-52dc-43d4-b0e7-fb0cc9374f02.png" width="140px" /> <br><br> 🙂 손민혁 <br>(Front-End) </a> <br></td>
+            <img src="https://user-images.githubusercontent.com/59447235/219530823-090d4fc9-058c-4f8c-ac9a-85967037d4b0.jpg" width="140px" /> <br><br> 🙂 손민혁 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/깃허브 링크">
-            <img src="https://user-images.githubusercontent.com/59447235/218905766-f2d55a86-fbc8-4518-b82f-de23a7b6ec6a.png" width="140px" /> <br><br> 😆 이병호 <br>(Front-End) </a> <br></td>
+            <img src="https://user-images.githubusercontent.com/59447235/219531062-33069267-6155-404d-9e96-342119d980ca.jpg" width="140px" /> <br><br> 😆 이병호 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/SilverLight96">
-            <img src="https://user-images.githubusercontent.com/59447235/218920837-d1e890a4-52dc-43d4-b0e7-fb0cc9374f02.png" width="140px" /> <br><br> 😁 이찬희 <br>(Back-End) </a> <br></td>
-        <td height="140px" align="center"> <a href="https://github.com/kkh9700">
-            <img src="https://user-images.githubusercontent.com/59447235/218920837-d1e890a4-52dc-43d4-b0e7-fb0cc9374f02.png" width="140px" /> <br><br> 👑 임혜은 <br>(Back-End) </a> <br></td>
+            <img src="https://user-images.githubusercontent.com/59447235/219526066-d820b36a-5760-415a-a133-058129c0f14d.jpg" width="140px" /> <br><br> 😁 이찬희 <br>(Back-End) </a> <br></td>
+        <td height="140px" align="center"> <a href="https://github.com/chancehee">
+            <img src="https://user-images.githubusercontent.com/59447235/219530742-3665943b-78e0-4485-8169-c2c68e8d9c20.jpg" width="140px" /> <br><br> 👑 임혜은 <br>(Back-End) </a> <br></td>
 				<td height="140px" align="center"> <a href="https://github.com/kkh9700">
-            <img src="https://user-images.githubusercontent.com/59447235/218920837-d1e890a4-52dc-43d4-b0e7-fb0cc9374f02.png" width="140px" /> <br><br> 😶 정해석 <br>(Back-End) </a> <br></td>
+            <img src="https://user-images.githubusercontent.com/59447235/219531203-c317a7b9-5c80-415a-9807-f5cfad6a142e.jpg" width="140px" /> <br><br> 😶 정해석 <br>(Back-End) </a> <br></td>
     </tr>
     <tr>
         <td align="center">UI/UX<br/>React<br/></td>
         <td align="center">UI/UX<br/>React<br/></td>
         <td align="center">UI/UX<br/>React<br/></td>
         <td align="center">REST API<br/>채점서버<br/></td>
-        <td align="center">REST API<br/>채점서버<br/></td>
+        <td align="center">REST API<br/>Socket통신<br/></td>
         <td align="center">REST API<br/>CI/CD<br/></td>
     </tr>
 </table>
