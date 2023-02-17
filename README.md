@@ -124,6 +124,34 @@
 
 <div id="5"></div>
 
+## Front-End 폴더구조
+📦src <br>
+┣ 📂assets <br>
+┃ ┣ 📂font<br>
+┃ ┣ 📂gif<br>
+┃ ┗ 📂img<br>
+┣ 📂components<br>
+┃ ┣ 📂auth<br>
+┃ ┣ 📂common<br>
+┃ ┣ 📂main<br>
+┃ ┣ 📂mypage<br>
+┃ ┗ 📂study<br>
+┣ 📂constants<br>
+┣ 📂hooks<br>
+┣ 📂layouts<br>
+┣ 📂libs<br>
+┣ 📂pages<br>
+┃ ┣ 📂auth<br>
+┃ ┣ 📂main<br>
+┃ ┣ 📂mypage<br>
+┃ ┣ 📂study<br>
+┣ 📂redux<br>
+┣ 📂styles<br>
+┣ 📜App.css<br>
+┣ 📜App.js<br>
+┣ 📜index.css<br>
+┣ 📜index.js<br>
+
 ## 주요 기술  
 - #### OpenVidu를 사용한 화상 기능
   - 코딩 테스트가 끝난 직후, 참가자들과 얼굴을 보며 스터디를 진행할 수 있습니다.
