@@ -55,7 +55,7 @@ apiRequest.interceptors.response.use(
         })
     }
     if (response.status >= 500) {
-      alert('서버와의 통신에 문제가 발생하였습니다.')
+      console.log('서버와의 통신에 문제가 발생하였습니다.')
     }
     return Promise.reject(error)
   },
