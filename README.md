@@ -96,9 +96,12 @@
 | FrontEnd      | HTML5           |                    | \-          |
 |               | CSS3            |                    | \-          |
 |               | JavaScript(ES6) |                    | \-          |
-|               | React           | React              | ?      |
-|               | Node.js         | npm                 | ?     |
-|               | IDE             | Visual Studio Code | ?      |
+|               | React           | React              | 18.2.0      |
+|               | Node.js         | npm                | 16.18.0     |
+|               | Openvidu        | Openvidu           | 2.25.0      |
+|               | Sockjs          | Sockjs             | 1.6.1       |
+|               | Stompjs         | Stompjs            | 2.3.3       |
+|               | IDE             | Visual Studio Code | 1.75.1      |
 | Server        | 서버            | AWS EC2            | \-          |
 |               | 플랫폼          | Ubuntu             | ? |
 |               | CI/CD           | Docker             | ?   |
