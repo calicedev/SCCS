@@ -14,7 +14,7 @@ public class CookieService {
    **/
   public Cookie createCookie(String name, String value) {
     Cookie cookie = new Cookie(name, value);
-    cookie.setMaxAge(10 * HOUR);
+    cookie.setMaxAge(8 * HOUR);
     cookie.setSecure(true);
     cookie.setHttpOnly(true);
     cookie.setPath("/");

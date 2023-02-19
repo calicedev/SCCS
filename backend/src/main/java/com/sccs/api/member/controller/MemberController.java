@@ -112,10 +112,10 @@ public class MemberController {
         logger.debug("[logIn]로그인 성공");
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
-                (MINUTE * 1));
-        long exp = System.currentTimeMillis() + (MINUTE * 1);
+                (MINUTE * 30));
+        long exp = System.currentTimeMillis() + (MINUTE * 30);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
-                (MINUTE * 2));
+                (HOUR * 8));
 
         // 쿠키 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", accessToken);
@@ -316,7 +316,7 @@ public class MemberController {
     String email = paramMap.get("email"); // 받는 사람 주소
     String id = paramMap.get("id"); // 회원 아이디
 
-    HashMap<String, String> resultMap = new HashMap();
+    HashMap<String, String> resultMap = new HashMap<>();
 
     MemberDto memberDto = memberService.memberInfo(id);
 
@@ -363,9 +363,9 @@ public class MemberController {
       logger.debug("[refreshToken]토큰 인증 성공");
       if (id.equals(redisService.getRefreshTokenWithRedis(refreshToken))) {
         logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
-        String newAccessToken = jwtService.createToken(id, "accessToken", MINUTE * 1);
+        String newAccessToken = jwtService.createToken(id, "accessToken", MINUTE * 30);
 
-        long exp = System.currentTimeMillis() + (MINUTE * 1);
+        long exp = System.currentTimeMillis() + (MINUTE * 30);
 
         // 토큰 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);
@@ -445,10 +445,10 @@ public class MemberController {
   /**
    * 레디스 전체 키-밸류 삭제
    **/
-  @DeleteMapping("/redisKeys")
-  public ResponseEntity<?> deleteKeys() {
-    redisService.deleteAllKeys();
-    return new ResponseEntity<>("모든 키 삭제 성공", HttpStatus.OK);
-  }
+//  @DeleteMapping("/redisKeys")
+//  public ResponseEntity<?> deleteKeys() {
+//    redisService.deleteAllKeys();
+//    return new ResponseEntity<>("모든 키 삭제 성공", HttpStatus.OK);
+//  }
 
 }
