@@ -99,10 +99,6 @@ public class StudyroomServiceImpl implements StudyroomService {
                     int randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
                     String path = Integer.toString(randomAlgo) + "-" + Integer.toString(randomProblem);
                     int problemId = studyroomMapper.selectProblemId(path);
-//                    StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
-//                    studyroomProblemDto.setStudyroomId(id);
-//                    studyroomProblemDto.setProblemId(problemId);
-//                    studyroomMapper.insertProblemId(studyroomProblemDto);
                     numbers.add(problemId);
                 }
             } else if (algo_ids.size() == 1 && algo_ids.get(0)!=0) {
@@ -110,26 +106,8 @@ public class StudyroomServiceImpl implements StudyroomService {
                 studyroomAlgoDto.setAlgoId(algo_ids.get(0));
                 studyroomMapper.insertAlgoId(studyroomAlgoDto);
                 // 저장한 1개 알고리즘 유형 중에서 문제 랜덤으로 2개 선택하기
-                int algoCount = studyroomMapper.selectProblemCount(studyroomAlgoDto.getAlgoId());
-                int n[] = new int[2];
-                int randomProblem = 0;
-                for (int i = 0; i < n.length; i++) {
-                    do {
-                        int min2 = 1;
-                        int max2 = algoCount;
-                        randomProblem = (int) (Math.random() * (max2 - min2 + 1)) + min2;
-                    } while (checkout(n, randomProblem));
-                    n[i] = randomProblem;
-                }
-//                StudyroomProblemDto studyroomProblemDto = new StudyroomProblemDto();
-//                studyroomProblemDto.setStudyroomId(id);
-                for (int i = 0; i < 2; i++) {
-                    String path = Integer.toString(algo_ids.get(0)) + "-" + Integer.toString(n[i]);
-                    int problemId = studyroomMapper.selectProblemId(path);
-                    numbers.add(problemId);
-//                    studyroomProblemDto.setProblemId(problemId);
-//                    studyroomMapper.insertProblemId(studyroomProblemDto);
-                }
+                numbers.add(1);
+                numbers.add(10);
 
             } else if (algo_ids.size() == 2) {
                 // 알고리즘 유형 2개 저장
