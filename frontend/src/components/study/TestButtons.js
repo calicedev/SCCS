@@ -20,7 +20,6 @@ export default function TestButtons({ isFinished, finish, test, submit }) {
         value={isFinished ? 'Finished' : 'Finish'}
         type="danger"
         size="small"
-        disabled={isFinished ? true : false}
         onClick={finish}
       />
       <FlexBox>
