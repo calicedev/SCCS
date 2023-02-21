@@ -28,7 +28,7 @@ export default function StudyDetailCodeList({ codeList }) {
         <FlexEle flex={1}>아이디</FlexEle>
         <FlexEle flex={1}>언어</FlexEle>
         <FlexEle flex={1}>실행시간</FlexEle>
-        <FlexEle flex={1}>메모리</FlexEle>
+        {/* <FlexEle flex={1}>메모리</FlexEle> */}
         <FlexEle flex={1}>결과</FlexEle>
       </FlexBox>
       {codeList.map((code) => (
