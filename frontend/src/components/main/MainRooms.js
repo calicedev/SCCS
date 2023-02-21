@@ -92,6 +92,11 @@ export default function MainRooms() {
     setAlgoIds(algoIds.filter((id) => id !== algoId))
   }
 
+  // 검색 옵션 변경 함수
+  const changeOption = (e) => {
+    setSelectedOption(e.target.id.split('-')[0])
+  }
+
   // 방생성 버튼 클릭 시
   const createRoom = () => {
     if (!isLogin) {
@@ -163,11 +168,10 @@ export default function MainRooms() {
             />
             <InputBox>
               <RadioDropdown
-                selectedId={selectedOption}
-                name="검색 옵션"
+                name="Search-Option"
                 options={searchOptions}
-                selectedKey="title"
-                onChange={(e) => setSelectedOption(e.target.id)}
+                selectedKey={selectedOption}
+                onChange={changeOption}
               />
               <StyledInput
                 type={selectedOption === 'title' ? 'text' : 'number'}

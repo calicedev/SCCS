@@ -27,6 +27,6 @@ export const languagePk = {
 }
 
 export const languageIconPk = {
-  1: <FaPython />,
-  2: <FaJava />,
+  1: <FaPython key={1} />,
+  2: <FaJava key={2} />,
 }
