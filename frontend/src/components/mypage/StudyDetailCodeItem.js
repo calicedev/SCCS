@@ -69,7 +69,7 @@ export default function StudyDetailCodeItem({
           />
         </FlexEle>
         <FlexEle flex={1}>{runtime}s</FlexEle>
-        <FlexEle flex={1}>{memory}MB</FlexEle>
+        {/* <FlexEle flex={1}>{memory}MB</FlexEle> */}
         <FlexEle flex={1} className={result ? 'pass' : 'error'}>
           {result ? 'success' : 'fail'}
         </FlexEle>

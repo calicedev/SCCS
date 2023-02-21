@@ -48,9 +48,7 @@ export default function ResultSection({
                     className={problem.result ? 'c pass' : 'c error'}
                     key={`${index}-problem-result`}
                   >
-                    {index + 1}번{') '} {problem.message} : {problem.memory}MB
-                    {' / '}
-                    {problem.runtime}s
+                    {index + 1}번{') '} {problem.message} : {problem.runtime}s
                   </p>
                 ))}
 
@@ -58,16 +56,14 @@ export default function ResultSection({
               <p className="pass ">
                 <br />
                 통과했습니다.
-                <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:
-                {results.avgMemory}MB
+                <br /> 런타임 평균: {results.avgRuntime}s
               </p>
             ) : (
               <>
                 <p className="error c">
                   <br />
                   틀렸습니다.
-                  <br /> 런타임 평균: {results.avgRuntime}s 메모리 평균:
-                  {results.avgMemory}MB
+                  <br /> 런타임 평균: {results.avgRuntime}s
                 </p>
               </>
             )}

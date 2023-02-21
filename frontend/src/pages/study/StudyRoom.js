@@ -405,12 +405,12 @@ export default function StudyRoom() {
           const publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined, // The source of audio. If undefined default microphone
             videoSource: undefined, // The source of video. If undefined default webcam
-            publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+            publishAudio: false, // Whether you want to start publishing with your audio unmuted or not
             publishVideo: true, // Whether you want to start publishing with your video enabled or not
             resolution: '640x480', // The resolution of your video
             frameRate: 30, // The frame rate of your video
             insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-            mirror: false, // Whether to mirror your local video or not
+            mirror: true, // Whether to mirror your local video or not
           })
           // --- 6) Publish your stream ---
 
@@ -463,9 +463,9 @@ export default function StudyRoom() {
       )
       const newPublisher = OV.current.initPublisher(undefined, {
         videoSource: videoDevices[0].deviceId,
-        publishAudio: true,
+        publishAudio: isMicOn,
         publishVideo: true,
-        mirror: false,
+        mirror: true,
       })
       await session.unpublish(publisher)
       await session.publish(newPublisher)
