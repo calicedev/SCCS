@@ -39,6 +39,7 @@ export default function StudyPage() {
     setPublisher,
     subscribers,
     setIsVideos,
+    isMicOn,
     isVideos,
     isScreenShare,
     setIsScreenShare,
@@ -246,7 +247,7 @@ export default function StudyPage() {
       )
       const newPublisher = OV.current.initPublisher(undefined, {
         videoSource: videoDevices[0].deviceId,
-        publishAudio: true,
+        publishAudio: isMicOn,
         publishVideo: true,
         mirror: false,
       })
