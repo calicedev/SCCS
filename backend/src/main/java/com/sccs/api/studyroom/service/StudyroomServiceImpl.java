@@ -106,7 +106,7 @@ public class StudyroomServiceImpl implements StudyroomService {
                 studyroomAlgoDto.setAlgoId(algo_ids.get(0));
                 studyroomMapper.insertAlgoId(studyroomAlgoDto);
                 // 저장한 1개 알고리즘 유형 중에서 문제 랜덤으로 2개 선택하기
-                numbers.add(1);
+                numbers.add(9);
                 numbers.add(10);
 
             } else if (algo_ids.size() == 2) {
