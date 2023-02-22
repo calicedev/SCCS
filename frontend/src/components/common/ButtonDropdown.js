@@ -11,6 +11,7 @@ size: Button Component의 사이즈
 type: Button Component의 색깔 
 options: {key: value}형태의 옵션 객체. 버튼의 id = "key-value". 버튼의 글씨 = value.
 onClick: 클릭 시 동작할 함수
+isLeft: 버튼 정렬을 오른쪽에 맞출지 결정하는 인자.
 */
 
 export default function ButtonDropdown({
@@ -19,6 +20,7 @@ export default function ButtonDropdown({
   type,
   options,
   onClick,
+  isLeft,
 }) {
   // 옵션 버튼들의 display 여부
   const [showOptions, setShowOptions] = useState(false)
@@ -26,12 +28,12 @@ export default function ButtonDropdown({
   // 버튼 사이즈에 따라 옵션 버튼들의 위치 조정
   const top =
     size === 'tiny'
-      ? '2rem'
+      ? '1.5rem'
       : size === 'small'
-      ? '3rem'
+      ? '2rem'
       : size === 'medium'
-      ? '3.5rem'
-      : '4rem'
+      ? '2.5rem'
+      : '3rem'
 
   const handleClick = (e) => {
     setShowOptions(false)
@@ -46,7 +48,11 @@ export default function ButtonDropdown({
         value={title}
         onClick={() => setShowOptions(!showOptions)}
       />
-      <OptionWrapper display={showOptions ? 'flex' : 'none'} top={top}>
+      <OptionWrapper
+        display={showOptions ? 'flex' : 'none'}
+        top={top}
+        isLeft={isLeft}
+      >
         {Object.keys(options).map((key) => (
           <Button
             key={key + '-' + options[key].toString()}
@@ -68,18 +74,22 @@ ButtonDropdown.propTypes = {
   type: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'gray', 'danger']), // 버튼 커스터마이징 (글자색, 배경색, border-radius)
   options: PropTypes.object.isRequired,
   onClick: PropTypes.func,
+  isLeft: PropTypes.bool,
 }
 
 ButtonDropdown.defaultProps = {
   size: 'medium',
   type: 'primary',
   onClick: undefined,
+  isLeft: true,
 }
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  position: relative;
 `
 
 const OptionWrapper = styled.div`
@@ -89,6 +99,7 @@ const OptionWrapper = styled.div`
 
   position: absolute;
   top: ${({ top }) => top};
+  ${({ isLeft }) => (isLeft ? 'left: 0rem' : 'right: 0rem')};
 
   z-index: 6;
 

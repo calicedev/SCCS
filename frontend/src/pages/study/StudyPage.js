@@ -340,6 +340,7 @@ export default function StudyPage() {
               type="primary"
               options={candidatesObject}
               onClick={(e) => changeCode(e.target.id.split('-')[0])}
+              isLeft={false}
             />
           </>
           {/* LowerPane */}

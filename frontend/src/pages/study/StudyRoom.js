@@ -456,7 +456,7 @@ export default function StudyRoom() {
         clearInterval(faceInterval.current)
         faceInterval.current = null
       }
-      // 1-2. default video device로 stream 생성
+      // 1-2. default video device로 stream 생성ㅎ
       const devices = await OV.current.getDevices()
       const videoDevices = devices.filter(
         (device) => device.kind === 'videoinput',

@@ -134,6 +134,7 @@ export default function SolvePage() {
                   type="primary"
                   options={codesObject}
                   onClick={(e) => fetchData(e.target.id.split('-'))}
+                  isLeft={false}
                 />
               </FlexBox>
               <Code value={code} setValue={setCode} languageId={languageId} />
