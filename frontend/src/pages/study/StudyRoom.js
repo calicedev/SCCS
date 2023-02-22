@@ -620,6 +620,7 @@ export default function StudyRoom() {
               setIsVideos,
               isScreenShare,
               setIsScreenShare,
+              isMicOn,
               setIsMicOn,
               mainStreamManager,
               setMainStreamManager,
