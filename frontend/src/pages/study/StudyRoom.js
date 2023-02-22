@@ -76,7 +76,7 @@ export default function StudyRoom() {
   const [subscribers, setSubscribers] = useState([])
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
 
-  const [isMicOn, setIsMicOn] = useState(true)
+  const [isMicOn, setIsMicOn] = useState(false)
   const [isVideos, setIsVideos] = useState(true)
   const [isCameraOn, setIsCameraOn] = useState(true)
   const [isScreenShare, setIsScreenShare] = useState(room.isScreenShare)
