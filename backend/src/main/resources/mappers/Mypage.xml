@@ -53,7 +53,7 @@
   <resultMap id="ParticipantWithCode" type="HashMap">
     <result column="submission_id" property="submissionId" javaType="int"></result>
     <result column="submission_FileName" property="submissionFileName"></result>
-    <result column="submission_runtime" property="submissionRuntime" javaType="int"></result>
+    <result column="submission_runtime" property="submissionRuntime" javaType="double"></result>
     <result column="submission_memory" property="submissionMemory" javaType="int"></result>
     <result column="submission_result" property="submissionResult" javaType="int"></result>
     <result column="submission_submitDatetime" property="submissionSubmitDateTime"></result>
