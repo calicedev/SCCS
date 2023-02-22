@@ -113,7 +113,7 @@ public class MemberController {
 
         String accessToken = jwtService.createToken(paramMap.get("id"), "accessToken",
                 (MINUTE * 30));
-        long exp = System.currentTimeMillis() + (MINUTE * 30);
+        long exp = System.currentTimeMillis() + (HOUR * 8);
         String refreshToken = jwtService.createToken(paramMap.get("id"), "refreshToken",
                 (HOUR * 8));
 
@@ -365,7 +365,7 @@ public class MemberController {
         logger.debug("[refreshToken]레디스에서 토큰 조회 성공");
         String newAccessToken = jwtService.createToken(id, "accessToken", MINUTE * 30);
 
-        long exp = System.currentTimeMillis() + (MINUTE * 30);
+//        long exp = System.currentTimeMillis() + (MINUTE * 30);
 
         // 토큰 생성
         Cookie accessTokenCookie = cookieService.createCookie("accessToken", newAccessToken);
@@ -374,7 +374,7 @@ public class MemberController {
         response.addCookie(accessTokenCookie);
 
         resultMap.put(MESSAGE, SUCCESS);
-        resultMap.put("expiration", exp);
+//        resultMap.put("expiration", exp);
       }
     } else {
       logger.debug("리프레쉬 토큰 사용 불가");
