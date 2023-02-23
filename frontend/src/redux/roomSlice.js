@@ -5,7 +5,6 @@ const roomSlice = createSlice({
   initialState: {},
   reducers: {
     setReduxRoomInfo: (state, action) => {
-      console.log('redux', action.payload)
       return { state, ...action.payload }
     },
     setReduxMembers: (state, action) => {

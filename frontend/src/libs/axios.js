@@ -41,14 +41,14 @@ apiRequest.interceptors.response.use(
       await axios
         .request(config)
         .then((res) => {
-          console.log('accessToken 재발급 요청 response', res)
+          console.log('accessToken 재발급 요청 response')
           // accessToken 재발급 성공 시, 새로운 accessToken으로 기존 요청 반복
           return apiRequest(originalConfig)
         })
         .catch((err) => {
-          console.log('accessToken 재발급 요청 error', err)
+          console.log('accessToken 재발급 요청 error')
           // accessToken 재발급 실패 시, 로그인 페이지로 사용자 이동
-          // alert('다시 로그인 해주세요')
+          console.log('다시 로그인 해주세요')
           window.location.href = 'https://sccs.kr/auth/login'
         })
     }
