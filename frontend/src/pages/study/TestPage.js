@@ -5,6 +5,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom'
 import { setReduxProblems } from 'redux/roomSlice'
 import { setReduxFinished } from 'redux/roomSlice'
 import api from 'constants/api'
+import { languagePkInitialCode } from 'constants/pk'
 import axios from 'libs/axios'
 import Layout from 'layouts/TestPageLayout'
 import Timer from 'components/study/Timer'
@@ -14,18 +15,6 @@ import RoomInfo from 'components/study/RoomInfo'
 import CodeSection from 'components/study/CodeSection'
 import ProblemImage from 'components/common/ProblemImage'
 import ResultSection from 'components/study/ResultSection'
-
-const initialCode = {
-  1: `class Solution:
-  print("sccs")
-`,
-  2: `class Solution{
-  public static void main(String[] args) {
-    System.out.println("sccs");
-  }
-}
-`,
-}
 
 export default function TestPage() {
   const {
@@ -55,7 +44,7 @@ export default function TestPage() {
   const [problemIdx, setProblemIdx] = useState(0) // 현재 선택된 문제의 인덱스
 
   const [languageId, setLanguageId] = useState(roomInfo.languageIds[0])
-  const [code, setCode] = useState(initialCode[languageId]) // langaugaeId 다음에 선언
+  const [code, setCode] = useState(languagePkInitialCode[languageId]) // langaugaeId 다음에 선언
   const [testResult, setTestResult] = useState(null)
 
   const [finished, setFinished] = useState(
@@ -91,7 +80,7 @@ export default function TestPage() {
 
   // 문제 번호나, 언어 변경 시 초기화
   useEffect(() => {
-    setCode(initialCode[languageId])
+    setCode(languagePkInitialCode[languageId])
     setTestResult(null)
   }, [problemIdx, languageId])
 

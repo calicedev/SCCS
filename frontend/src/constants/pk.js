@@ -26,6 +26,18 @@ export const languagePk = {
   2: 'Java',
 }
 
+export const languagePkInitialCode = {
+  1: `class Solution:
+  print("sccs")
+`,
+  2: `class Solution{
+  public static void main(String[] args) {
+    System.out.println("sccs");
+  }
+}
+`,
+}
+
 export const languageIconPk = {
   1: <FaPython key={1} />,
   2: <FaJava key={2} />,

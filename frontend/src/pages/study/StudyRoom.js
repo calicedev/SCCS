@@ -51,7 +51,6 @@ export default function StudyRoom() {
   const memberList = useMemo(() => {
     return Object.keys(memberObject)
   }, [memberObject])
-  console.log('memberList', memberList)
 
   // 웹소켓 useState
   const [stomp, setStomp] = useState(null)
@@ -67,7 +66,6 @@ export default function StudyRoom() {
   const readyNicknameList = useMemo(() => {
     return Object.keys(readyNicknameObject)
   }, [readyNicknameObject])
-  console.log('readyNicknameList', readyNicknameList)
 
   // Opnvidu useState
   const [session, setSession] = useState(undefined)
@@ -89,12 +87,10 @@ export default function StudyRoom() {
   const [finishedObject, setFinishedObject] = useState(
     room.finishedObject ? room.finishedObject : {},
   )
-  console.log('finishedObject', finishedObject)
 
   const finishedList = useMemo(() => {
     return Object.keys(finishedObject)
   }, [finishedObject])
-  console.log('finishedList', finishedList)
 
   // 스터디룸 정보 axios 요청
   useEffect(() => {
