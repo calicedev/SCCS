@@ -25,7 +25,7 @@ import presentImg from 'assets/img/webRTC_present_image.png'
 
 //Openvidu AppServer
 // const APPLICATION_SERVER_URL = 'http://localhost:5000/'
-const APPLICATION_SERVER_URL = 'https://i8a301.p.ssafy.io/'
+const APPLICATION_SERVER_URL = 'https://sccs.kr/'
 
 export default function StudyRoom() {
   // 리덕스 -> 기존 방 정보 읽어오기
