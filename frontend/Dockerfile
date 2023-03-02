@@ -1,32 +1,19 @@
-# FROM node:16 as builder
+FROM node:16 as builder
 
-# WORKDIR /app
+FROM nginx
 
-# COPY package*.json .
-
-# RUN npm install --force
-
-# COPY . .
-
-# RUN npm run build
-
-# FROM nginx
-
-# EXPOSE 3001
-
-# COPY ./defalut.conf /etc/nginx/conf.d/default.conf
-# COPY --from=builder /app/build  /usr/share/nginx/html
-
-FROM node:16
+RUN mkdir /app
 
 WORKDIR /app
 
-COPY package.json .
+RUN mkdir ./build
 
-RUN npm install --force
+ADD ./build ./build
 
-COPY . .
+RUN rm /etc/nginx/conf.d/default.conf
 
-CMD ["npm", "start"]
+COPY ./nginx.conf /etc/nginx/conf.d
 
-EXPOSE 3000
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
