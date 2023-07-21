@@ -366,34 +366,7 @@
 
 <br />
 
-## 👪 개발 멤버 소개
 
-<table>
-    <tr>
-        <td height="140px" align="center"> <a href="https://github.com/Gyuntak">
-            <img src="https://user-images.githubusercontent.com/59447235/219530658-ad38ce28-0fd3-406c-b2e9-2d63ebc40d58.jpg" width="140px" /> <br><br> 😶 박균탁 <br>(Front-End) </a> <br></td>
-        <td height="140px" align="center"> <a href="https://github.com/blosson">
-            <img src="https://user-images.githubusercontent.com/59447235/219530823-090d4fc9-058c-4f8c-ac9a-85967037d4b0.jpg" width="140px" /> <br><br> 🙂 손민혁 <br>(Front-End) </a> <br></td>
-        <td height="140px" align="center"> <a href="https://github.com/Byongho96">
-            <img src="https://user-images.githubusercontent.com/59447235/219531062-33069267-6155-404d-9e96-342119d980ca.jpg" width="140px" /> <br><br> 😆 이병호 <br>(Front-End) </a> <br></td>
-        <td height="140px" align="center"> <a href="https://github.com/chancehee">
-            <img src="https://user-images.githubusercontent.com/59447235/219526066-d820b36a-5760-415a-a133-058129c0f14d.jpg" width="140px" /> <br><br> 😁 이찬희 <br>(Back-End) </a> <br></td>
-        <td height="140px" align="center"> <a href="https://github.com/calicedev">
-            <img src="https://user-images.githubusercontent.com/59447235/219530742-3665943b-78e0-4485-8169-c2c68e8d9c20.jpg" width="140px" /> <br><br> 👑 임혜은 <br>(Back-End) </a> <br></td>
-		<td height="140px" align="center"> <a href="https://github.com/holicmiku">
-            <img src="https://user-images.githubusercontent.com/59447235/219531203-c317a7b9-5c80-415a-9807-f5cfad6a142e.jpg" width="140px" /> <br><br> 😶 정해석 <br>(Back-End) </a> <br></td>
-    </tr>
-    <tr>
-        <td align="center">UX/UI<br/>Canvas<br/></td>
-        <td align="center">UX/UI<br/>WebSocket<br/></td>
-        <td align="center">UX/UI<br/>WebRTC<br/></td>
-        <td align="center">REST API<br/>채점서버<br/></td>
-        <td align="center">REST API<br/>Socket통신<br/></td>
-        <td align="center">REST API<br/>CI/CD<br/></td>
-    </tr>
-</table>
-
-<br />
 
 <div id="8"></div>
 
