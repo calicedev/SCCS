@@ -1,6 +1,7 @@
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=wave&color=1364D1&height=200&section=header&text=SCCS&fontSize=60" />
 </p>
+
 ![제목을-입력해주세요_-001](https://user-images.githubusercontent.com/53232881/219299375-cea4f482-af58-4dfa-aa9e-11b4fe5bcd57.png)
 
 ## 목차
